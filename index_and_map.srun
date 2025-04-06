@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH --partition=day-long-cpu
+#SBATCH --job-name=bwamem2
+#SBATCH --cpus-per-task=8
+#SBATCH -N 1 #nodes
+#SBATCH -o bwamem_%j.o
+
+cd ~/Projects/SRA
+source ~/.bashrc
+
+conda activate /nfs/home/jlamb/bin/miniconda3/envs/map_trim
+
+reads1=$1
+reads2=$2
+mito_genome=$3
+base=$4
+
+bwa index $mito_genome
+bwa mem -t 8 $mito_genome $reads1 $reads2 > ${base}_mapped_reads.sam
+samtools view -@ 8 -bS ${base}_mapped_reads.sam > ${base}_mapped_reads.bam
+samtools sort -@ 8 ${base}_mapped_reads.bam -o sorted_${base}_mapped_reads.bam
+samtools view -@ 8 -b -f 12 -F 256 sorted_${base}_mapped_reads.bam > ${base}_nuclear_reads.bam
+exit
+
+
+
+
