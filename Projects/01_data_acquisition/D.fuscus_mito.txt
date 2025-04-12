@@ -1,2 +1,0 @@
-RefSeq,GenBank,
-NC_006339.1,AY728227.1

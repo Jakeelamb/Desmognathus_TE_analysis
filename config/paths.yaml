@@ -1,0 +1,40 @@
+# Path configuration for the TE analysis project
+
+# Base directories
+data:
+  # Raw data
+  raw: "data/raw"
+  phylogeny: "data/raw/Phylogeny"
+  lookup: "data/raw/lookup"
+  # Interim data
+  interim: 
+    root: "data/interim"
+    pivot_tables: "data/interim/pivot_tables"
+  # Processed data
+  processed:
+    root: "data/processed"
+    diversity: "data/processed/diversity"
+    te_superfamily: "data/processed/te_superfamily"
+    te_landscape: "data/processed/te_landscape"
+  
+# Results
+results:
+  # Figures
+  figures:
+    diversity: "results/figures/diversity"
+    pca: "results/figures/pca"
+    landscape: "results/figures/landscape"
+    phylo_landscape: "results/figures/phylo_landscape"
+  
+  # Tables
+  tables:
+    diversity: "results/tables/diversity"
+    pca: "results/tables/pca"
+  
+  # Landscapes
+  landscapes: "results/landscapes"
+
+# Scripts
+scripts:
+  python: "scripts/python"
+  R: "scripts/R" 
