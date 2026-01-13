@@ -1,0 +1,28 @@
+# Configuration for project directory paths (relative to project root)
+
+# Input Data: Raw data sources
+input_data:
+  root: "input_data"
+  phylogeny: "input_data/phylogeny"
+  dnaPipeTE: "input_data/dnaPipeTE"
+  repeatmasker: "input_data/repeatmasker"
+  morphological: "input_data/morphological"
+  ectopic_recombination: "input_data/ectopic_recombination"
+  lookup_table: "input_data/lookup_table.txt"
+
+# Interim Directory: For temporary files generated during processing
+interim:
+  root: "interim"
+  # Define subdirectories if needed by specific scripts, e.g.:
+  # pivot_tables: "interim/pivot_tables"
+
+# Results: Final outputs of analyses
+results:
+  root: "results"
+  data: "results/data"      # For final .csv, .tsv, .tree files etc.
+  figures: "results/figures" # For final .png, .pdf plots etc.
+
+# Scripts: Location of source code
+scripts:
+  processing: "scripts/processing"        # For Python, R, Shell scripts doing data manipulation
+  visualization: "scripts/visualization"    # For Python, R scripts generating plots

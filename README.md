@@ -1,202 +1,248 @@
 # Desmognathus TE Analysis
 
-This repository contains scripts and tools for analyzing transposable elements (TEs) in Desmognathus salamander genomes.
+Analysis of transposable elements (TEs) in Desmognathus salamander genomes.
 
-## Important Note
-
-**All scripts must be run within the "Dusky" conda environment.**
-
-Always ensure the Dusky environment is active before running any scripts:
+## Quick Start
 
 ```bash
+# Activate the conda environment
+source $HOME/miniconda3/etc/profile.d/conda.sh
 conda activate Dusky
+
+# Verify setup
+python verify_setup.py
+
+# Run a processing script
+python scripts/processing/dnaPipe.py
 ```
 
 ## Project Structure
 
 ```
-desmognathus_te/
-├── config/               # Configuration files
-│   └── paths.yaml        # Path configuration for data, results, and scripts
-├── data/                 # Data directory
-│   ├── raw/              # Raw data files (fastq, assemblies, etc.)
-│   ├── interim/          # Intermediate data files
-│   │   └── pivot_tables/ # Pivot tables for analyses
-│   └── processed/        # Processed data ready for analysis
-│       ├── diversity/    # Diversity analysis data
-│       └── te_superfamily/ # TE superfamily data
-├── results/              # Results and outputs
-│   ├── figures/          # Generated figures and visualizations
-│   │   ├── diversity/    # Diversity analysis figures
-│   │   ├── landscape/    # TE landscape figures
-│   │   └── pca/          # PCA analysis figures
-│   └── tables/           # Generated data tables
-│       ├── diversity/    # Diversity analysis tables
-│       └── pca/          # PCA analysis tables
-└── scripts/              # Analysis scripts
-    ├── python/           # Python scripts
-    │   ├── preprocessing/ # Data preprocessing scripts
-    │   ├── analysis/     # Analysis scripts
-    │   ├── utils/        # Utility functions and modules
-    │   └── visualization/ # Visualization scripts
-    └── R/                # R scripts
-        ├── analysis/     # Analysis scripts
-        └── visualization/ # Visualization scripts
+./
+├── input_data/                    # Raw input data (not tracked in git)
+│   ├── dnaPipeTE/                 # dnaPipeTE classification files
+│   ├── repeatmasker/              # RepeatMasker .align files
+│   ├── phylogeny/                 # Phylogenetic tree files
+│   ├── ectopic_recombination/     # LTR domain data
+│   └── lookup_table.txt           # Species ID mapping
+│
+├── results/                       # Analysis outputs (not tracked in git)
+│   ├── data/                      # Processed CSV files
+│   └── figures/                   # Generated visualizations
+│
+├── interim/                       # Intermediate processing files
+│
+├── scripts/
+│   ├── config.py                  # Centralized path configuration
+│   ├── processing/                # Data processing scripts
+│   │   ├── dnaPipe.py             # dnaPipeTE data processing
+│   │   ├── repeatmask.py          # RepeatMasker data processing
+│   │   ├── ec.py                  # Ectopic recombination analysis
+│   │   ├── divergence.py          # Divergence calculations
+│   │   ├── diversity.py           # Diversity metrics
+│   │   ├── diversity_stats.py     # Diversity statistics
+│   │   ├── pca.R                  # PCA analysis
+│   │   ├── pca_utils.R            # Shared PCA utilities
+│   │   ├── phylogenetic_pca_analysis.R
+│   │   ├── clean_tree_phylo.R     # Phylogeny cleaning
+│   │   └── analyze_phylogenetic_signal.R
+│   └── visualization/             # Plotting scripts
+│       ├── divergence.R
+│       ├── hierarchical_donut_TE_diversity.R
+│       └── plot_*.R
+│
+├── paths.yaml                     # Path configuration
+├── Dusky.yml                      # Conda environment specification
+├── verify_setup.py                # Setup verification script
+└── README.md
 ```
 
-## Workflows
+## Environment Setup
 
-The project supports several analysis workflows:
-
-### TE Landscape Analysis
-
-The TE landscape analysis workflow includes the following steps:
-
-1. **Generate superfamily proportions**: Calculate the proportions of each TE superfamily.
-2. **Diversity analysis**: Calculate diversity metrics for TE superfamilies.
-3. **PCA analysis**: Perform principal component analysis on TE superfamily proportions.
-
-Run the complete workflow with:
+### Using Conda (Recommended)
 
 ```bash
+# Install Miniconda if not already installed
+curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
+bash miniconda.sh -b -p $HOME/miniconda3
+
+# Create the Dusky environment
+source $HOME/miniconda3/etc/profile.d/conda.sh
+conda env create -f Dusky.yml
+
+# Activate the environment
 conda activate Dusky
-python scripts/process_te_landscape.py
+
+# Verify installation
+python verify_setup.py
 ```
 
-#### Workflow Options
+### Environment Contents
 
-- `--skip-proportions`: Skip generating superfamily proportions
-- `--skip-diversity`: Skip diversity analysis
-- `--skip-pca`: Skip PCA analysis
-- `--min-species-presence INT`: Minimum number of species a TE must be present in (default: 3)
-- `--verbose`: Enable verbose logging
+The Dusky environment includes:
+- **Python 3.8** with pandas, numpy, matplotlib, seaborn, biopython, pysam
+- **R 4.x** with tidyverse, ggplot2, ape, phytools, factoextra
+- **Bioinformatics tools**: samtools, bowtie2, bedtools, RepeatMasker, trf, tesorter
 
-## Individual Scripts
+## Input Data
 
-### Generate Superfamily Proportions
+Input data is not tracked in git due to size. Required files:
 
-Generates the proportions of each TE superfamily from a breakdown CSV file:
+| Directory | Contents | Source |
+|-----------|----------|--------|
+| `input_data/dnaPipeTE/` | `SRX*_reads_per_component_and_annotation` | dnaPipeTE output |
+| `input_data/repeatmasker/` | `SRX*_Trinity.align` | RepeatMasker output |
+| `input_data/phylogeny/` | `desmo900dated_test.tre` | Phylogenetic tree |
+| `input_data/ectopic_recombination/` | `GCA_*_tabout.csv`, coverage files | TEsorter output |
+| `input_data/lookup_table.txt` | Species-SRA-Genome mapping | Manual |
+
+## Processing Workflows
+
+### 1. dnaPipeTE Processing
+
+Classifies TEs from dnaPipeTE output into Class/Order/Superfamily.
 
 ```bash
-conda activate Dusky
-python scripts/python/preprocessing/generate_superfamily_proportions.py [OPTIONS]
+python scripts/processing/dnaPipe.py
 ```
 
-Options:
-- `--input PATH`: Path to superfamily breakdown CSV
-- `--output PATH`: Path to save the output file
-- `--diversity-copy`: Copy output to diversity directory for PCA analysis
-- `--verbose`: Enable verbose logging
+**Outputs:**
+- `results/data/dnaPipeTE_merged_classifications.csv`
+- `results/data/dnaPipeTE_class_breakdown.csv`
+- `results/data/dnaPipeTE_order_breakdown.csv`
+- `results/data/dnaPipeTE_superfamily_breakdown.csv`
 
-### Run Diversity Analysis
+### 2. RepeatMasker Processing
 
-Calculates diversity metrics (Shannon, Simpson, etc.) for TE superfamily proportions:
+Parses RepeatMasker alignment files and merges with dnaPipeTE classifications.
 
 ```bash
-conda activate Dusky
-python scripts/python/analysis/run_diversity_analysis.py [OPTIONS]
+python scripts/processing/repeatmask.py
 ```
 
-Options:
-- `--input PATH`: Path to superfamily proportions CSV
-- `--output-dir PATH`: Directory to save output files
-- `--no-plots`: Skip generating plots
-- `--verbose`: Enable verbose logging
+**Outputs:**
+- `results/data/merged_repeatmasker_data.csv`
+- `results/data/repeatmasker_detailed_classification_combined.csv`
 
-### Run PCA Analysis
+### 3. Ectopic Recombination Analysis
 
-Performs principal component analysis on TE superfamily proportions:
+Analyzes LTR depth ratios to identify potential ectopic recombination.
 
 ```bash
-conda activate Dusky
-Rscript scripts/R/analysis/te_pca_analysis.R [OPTIONS]
+python scripts/processing/ec.py
 ```
 
-Options:
-- `--input PATH`: Path to superfamily proportions CSV
-- `--output PATH`: Directory to save output files
-- `--min-species-presence INT`: Minimum number of species a TE must be present in (default: 3)
-- `--verbose`: Enable verbose logging
+**Outputs:**
+- `results/data/ectopic_recombination_master.csv`
+- `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
 
-### Generate TE Landscape Visualizations
+### 4. Divergence Analysis
 
-Creates visualizations for TE landscape analysis:
+Calculates sequence divergence metrics grouped by TE classification.
 
 ```bash
-conda activate Dusky
-Rscript scripts/R/visualization/te_landscape_plots.R [OPTIONS]
+python scripts/processing/divergence.py
 ```
 
-Options:
-- `--verbose`: Enable verbose logging
+**Outputs:**
+- `interim/divergence/class/*.csv`
+- `interim/divergence/order/*.csv`
+- `interim/divergence/superfamily/*.csv`
 
-## Project Cleanup
+### 5. Diversity Statistics
 
-A cleanup script is provided to remove legacy directories after migrating to the new structure:
+Calculates Shannon, Simpson, and Pielou's evenness indices.
 
 ```bash
-conda activate Dusky
-./cleanup_legacy_dirs.sh
+python scripts/processing/diversity_stats.py
 ```
 
-This script will:
-1. Remove redundant directories within the new structure
-2. Optionally remove legacy directories (Data, Projects, Results, Output, old_scripts)
+**Outputs:**
+- `results/data/diversity_order_stats.csv`
+- `results/data/diversity_superfamily_stats.csv`
 
-**Note:** Make sure you have a backup before running this script, as it permanently deletes files.
+### 6. Phylogeny Cleaning
 
-## Dependencies
-
-### Python Dependencies
-
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- PyYAML
-
-### R Dependencies
-
-- tidyverse
-- FactoMineR
-- factoextra
-- yaml
-
-## Installation
-
-Clone the repository and install dependencies:
+Cleans and prepares phylogenetic tree for analysis.
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/desmognathus_te.git
-cd desmognathus_te
+Rscript scripts/processing/clean_tree_phylo.R
+```
 
-# Create and activate the Dusky conda environment
-conda create -n Dusky python=3.12
+**Outputs:**
+- `results/data/desmo900dated_test_cleaned_phylo.tre`
+- `results/figures/rectangular_phylogeny.png`
+
+### 7. PCA Analysis
+
+Performs PCA on TE composition data.
+
+```bash
+Rscript scripts/processing/pca.R
+```
+
+**Outputs:**
+- `results/figures/*_pca_scatter_plot.png`
+- `results/figures/*_scree_plot.png`
+
+### 8. Phylogenetic PCA
+
+PCA with phylogenetic correction and phylomorphospace visualization.
+
+```bash
+Rscript scripts/processing/phylogenetic_pca_analysis.R
+```
+
+**Outputs:**
+- `results/figures/*_pPCA_phylomorphospace_plot.png`
+
+## Configuration
+
+Path configuration is centralized in `paths.yaml`. Python scripts use `scripts/config.py` and R scripts use `scripts/processing/pca_utils.R` to load paths consistently.
+
+```python
+# Python usage
+from config import paths, PROJECT_ROOT
+
+input_dir = paths.input_data.dnaPipeTE
+output_dir = paths.results.data
+```
+
+```r
+# R usage
+source("scripts/processing/pca_utils.R")
+config <- load_config()
+data_dir <- config$results$data
+```
+
+## Git Management
+
+Large data files are excluded from git tracking:
+- `input_data/` - Raw input data
+- `results/` - Generated outputs
+- `interim/` - Intermediate files
+
+Only scripts, configuration, and documentation are tracked.
+
+## Troubleshooting
+
+### Conda not found
+```bash
+source $HOME/miniconda3/etc/profile.d/conda.sh
+```
+
+### Import errors
+Ensure you're in the Dusky environment:
+```bash
 conda activate Dusky
+```
 
-# Install Python dependencies
-conda install -y pandas numpy matplotlib seaborn pyyaml
-
-# Install R and required packages
-conda install -y -c conda-forge r-base r-tidyverse r-factoextra r-factominer r-yaml
+### Verify setup
+```bash
+python verify_setup.py
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Git Management
-
-This repository is configured to track only essential code files while ignoring large data files:
-
-- All scripts and configuration files are tracked
-- Raw data, processed outputs, and results files are ignored
-- Directory structure is maintained using `.gitkeep` files
-
-To generate `.gitkeep` files for proper directory tracking:
-
-```bash
-conda activate Dusky
-python scripts/python/utils/create_gitkeep.py
-```
+MIT License

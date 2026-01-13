@@ -1,0 +1,97 @@
+# .gitignore for Desmognathus_TE project (Simplified - No Exceptions)
+
+##### GENERAL #####
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor/IDE specific
+.vscode/
+.idea/
+.cursor/
+.claude/
+*.swp
+*~
+
+# Log files
+*.log
+*.out
+
+##### LANGUAGE ARTIFACTS #####
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+*.egg
+env/
+venv/
+.env
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rcheck/
+*utf8.md
+*_.utf8.md
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Exploratory notebooks (keep in scripts but don't track)
+*.ipynb
+
+##### LARGE DATA / BIOINFORMATICS FORMATS #####
+# Generally ignore large sequence/alignment/compressed files everywhere
+*.fasta
+*.fa
+*.fna
+*.fastq
+*.fq
+*.bam
+*.sam
+*.bai
+*.sai
+*.crai
+*.gz
+*.bz2
+*.zip
+*.tar
+*.tgz
+
+# Specific tool outputs (add more as needed)
+*.masked
+*.cat
+*.out.gff
+*.tbl
+*.html
+*.cls.tsv
+*.cls.pep
+*.cls.rexdb
+*.dom.faa
+*.dom.gff
+*.dom.tsv
+
+##### PROJECT STRUCTURE SPECIFIC #####
+
+# Ignore all contents of the main data/results directories
+# NO exceptions below this line for these directories
+input_data/
+interim/
+results/
+
+# Note: Core files like README.md, Dusky.yml, .gitignore in the root,
+# and all files within the scripts/ directory ARE tracked by default
+# unless explicitly ignored by a rule above (which they are not).
+
