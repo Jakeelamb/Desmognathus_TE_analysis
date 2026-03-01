@@ -17,6 +17,20 @@ dependencies:
   - r-viridis
   - r-dplyr
   - r-gridextra
+  # Phylogenetic analysis packages (added 2026-01-31)
+  - r-ape
+  - r-phytools
+  - r-geiger
+  - r-caper
+  - r-vegan
+  - r-nlme
+  - r-pheatmap
+  - r-compositions
+  - r-factoextra
+  - r-ggrepel
+  - r-yaml
+  - r-cluster
+  - r-broom
   - tesorter
   - pysam
   - bowtie2
@@ -27,3 +41,6 @@ dependencies:
   - pip
   - pip:
     - tqdm
+    - dask
+    - pyyaml
+    - scipy

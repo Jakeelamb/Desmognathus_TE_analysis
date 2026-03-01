@@ -5,8 +5,18 @@
 #'
 #' @usage Rscript scripts/processing/pca.R
 
-# Load shared utilities
-source(file.path(dirname(sys.frame(1)$ofile %||% "."), "pca_utils.R"))
+# Load shared utilities - find script directory robustly
+script_dir <- tryCatch({
+    args <- commandArgs(trailingOnly = FALSE)
+    file_arg <- grep("^--file=", args, value = TRUE)
+    if (length(file_arg) > 0) {
+        dirname(normalizePath(sub("^--file=", "", file_arg[1])))
+    } else {
+        "scripts/processing"
+    }
+}, error = function(e) "scripts/processing")
+
+source(file.path(script_dir, "pca_utils.R"))
 
 # --- Configuration ---
 config <- load_config()

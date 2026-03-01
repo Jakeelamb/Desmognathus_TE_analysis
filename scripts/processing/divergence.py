@@ -204,7 +204,8 @@ for group_level, interim_dir in interim_dirs.items():
                 agg_funcs['count'] = (FILTER_COL, 'count') 
 
                 # Group by species and aggregate
-                grouped_stats = filtered_ddf.groupby(SPECIES_COL).agg(**agg_funcs) # Use ** to unpack dict
+                # shuffle='tasks' required for median aggregation in dask
+                grouped_stats = filtered_ddf.groupby(SPECIES_COL).agg(**agg_funcs, shuffle='tasks')
 
                 # Column names are now already correct due to named aggregation
                 # grouped_stats.columns = ['_'.join(col).strip() for col in grouped_stats.columns.values]

@@ -38,12 +38,20 @@ invisible(lapply(required_packages, function(pkg) {
 #'
 #' @return Character string of project root path
 find_project_root <- function() {
-  # Try to find paths.yaml starting from script location
-  script_dir <- tryCatch({
-    dirname(sys.frame(1)$ofile)
-  }, error = function(e) {
-    getwd()
-  })
+  # Try multiple methods to find script location
+  script_dir <- NULL
+
+  # Method 1: commandArgs for Rscript execution
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    script_dir <- dirname(normalizePath(sub("^--file=", "", file_arg[1])))
+  }
+
+  # Method 2: Use current working directory as fallback
+  if (is.null(script_dir) || !dir.exists(script_dir)) {
+    script_dir <- getwd()
+  }
 
   current <- normalizePath(script_dir, mustWork = FALSE)
 

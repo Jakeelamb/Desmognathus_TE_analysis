@@ -1,6 +1,6 @@
 # Desmognathus TE Analysis
 
-Analysis of transposable elements (TEs) in Desmognathus salamander genomes.
+Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), LTR insertion age estimation, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
 
 ## Quick Start
 
@@ -196,6 +196,54 @@ Rscript scripts/processing/phylogenetic_pca_analysis.R
 
 **Outputs:**
 - `results/figures/*_pPCA_phylomorphospace_plot.png`
+
+### 9. Trait Evolution Modeling
+
+Compares Brownian Motion vs Ornstein-Uhlenbeck models for TE trait evolution using `geiger::fitContinuous()` with AICc model selection and ancestral state reconstruction via `phytools::fastAnc()`.
+
+```bash
+Rscript scripts/processing/trait_evolution.R
+```
+
+**Outputs:**
+- `results/data/trait_evolution/evolutionary_model_comparison.csv`
+- `results/figures/trait_evolution/ancestral_*.png`
+
+### 10. LTR Insertion Age Estimation
+
+Estimates LTR retrotransposon insertion times from intra-element (5' vs 3' LTR) divergence, converted to age via substitution rate.
+
+```bash
+python scripts/processing/ltr_age_estimation.py
+```
+
+**Outputs:**
+- `results/data/ltr_age/ltr_insertion_ages.csv`
+- `results/figures/ltr_age/ltr_age_by_species.png`
+
+### 11. PGLS Regression
+
+Phylogenetic Generalized Least Squares regression for phylogenetically-corrected pairwise correlations between TE orders and superfamilies using `caper::pgls()` with ML lambda estimation and BH-corrected p-values.
+
+```bash
+Rscript scripts/processing/pgls_analysis.R
+```
+
+**Outputs:**
+- `results/data/pgls/pgls_order_pairwise.csv`
+- `results/figures/pgls/pgls_volcano_plot.png`
+
+### 12. PERMANOVA Group Comparisons
+
+Formal statistical tests for TE compositional differences between phylogenetic clades using `vegan::adonis2()` with Bray-Curtis and CLR-Euclidean distances, beta dispersion tests, and PCoA ordination.
+
+```bash
+Rscript scripts/processing/permanova_analysis.R
+```
+
+**Outputs:**
+- `results/data/permanova/permanova_summary.csv`
+- `results/figures/permanova/pcoa_*_bray.png`
 
 ## Configuration
 
