@@ -116,12 +116,19 @@ def parse_description_size(text: str | None) -> tuple[float | None, float | None
     mixed_stage_range_patterns = [
         r"juveniles and adults ranging from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
         r"(?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL\s*for juveniles and adults",
-        r"(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL\s*for transformed specimens",
     ]
     for pattern in mixed_stage_range_patterns:
         match = re.search(pattern, normalized, flags=re.IGNORECASE)
         if match:
             return (parse_numeric(match.group(1)), parse_numeric(match.group(2)), "mixed_stage_range")
+
+    transformed_range_patterns = [
+        r"(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL\s*for transformed specimens",
+    ]
+    for pattern in transformed_range_patterns:
+        match = re.search(pattern, normalized, flags=re.IGNORECASE)
+        if match:
+            return (parse_numeric(match.group(1)), parse_numeric(match.group(2)), "transformed_range")
 
     metamorphosed_range_patterns = [
         r"metamorphosed (?:individuals|specimens)(?: [a-z]+){0,12} ranging from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",

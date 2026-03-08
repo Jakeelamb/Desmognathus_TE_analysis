@@ -100,7 +100,8 @@ def load_diversity_table(path: Path, prefix: str) -> pd.DataFrame:
 def load_ectopic_summary(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path, sep="\t")
     df["species"] = df["species"].map(canonical_species)
-    df["complete_flag"] = df["Complete"].astype(str).str.strip().str.lower().eq("yes").astype(float)
+    complete_state = df["Complete"].astype(str).str.strip().str.lower()
+    df["complete_flag_known"] = complete_state.map({"yes": 1.0, "no": 0.0})
     numeric_cols = [
         "ratio_terminal_internal",
         "mean_depth_terminal",
@@ -113,13 +114,15 @@ def load_ectopic_summary(path: Path) -> pd.DataFrame:
     out = (
         df.groupby("species", dropna=True)
         .agg(
-            ectopic_n_elements=("sequence", "size"),
+            ectopic_n_rows_total=("sequence", "size"),
+            ectopic_n_elements=("ratio_terminal_internal", "count"),
             ectopic_mean_ratio=("ratio_terminal_internal", "mean"),
             ectopic_median_ratio=("ratio_terminal_internal", "median"),
             ectopic_mean_terminal_depth=("mean_depth_terminal", "mean"),
             ectopic_mean_internal_depth=("mean_depth_internal", "mean"),
             ectopic_mean_domain_count=("domain_count", "mean"),
-            ectopic_complete_fraction=("complete_flag", "mean"),
+            ectopic_n_complete_known=("complete_flag_known", "count"),
+            ectopic_complete_fraction=("complete_flag_known", "mean"),
         )
         .reset_index()
     )
@@ -249,7 +252,7 @@ def build_master_table(project_root: Path, cellprofiler_root: Path) -> tuple[pd.
     master["has_tree_tip"] = master["species"].isin(tree_tips)
     master["has_te"] = master["has_te_order"] & master["has_te_superfamily"]
     master["has_genome"] = master["genome_size_pg"].notna()
-    master["has_ectopic"] = master["ectopic_n_elements"].notna()
+    master["has_ectopic"] = master["ectopic_mean_ratio"].notna()
     master["has_morphology"] = (
         master["morph_cell_area_um2"].notna() & master["morph_nucleus_area_um2"].notna()
     )

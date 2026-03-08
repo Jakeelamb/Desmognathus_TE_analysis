@@ -35,17 +35,41 @@ print_help <- function() {
   cat(
     paste(
       "Usage:",
-      "  Rscript path_analysis/scripts/path_model_scaffold.R [--family FAMILY] [--derived-dir DIR] [--summary-only]",
+      "  Rscript path_analysis/scripts/path_model_scaffold.R [--family FAMILY] [--panel PANEL_NAME] [--derived-dir DIR] [--summary-only]",
       "",
       "Families:",
       "  te_genome",
+      "  te_genome_organismal",
       "  te_genome_ectopic",
+      "  te_genome_ectopic_organismal",
       "  genome_morphology",
       "  te_genome_morphology",
+      "",
+      "Panels:",
+      "  te_genome_all",
+      "  te_genome_primary",
+      "  te_genome_primary_mediumplus",
+      "  te_genome_primary_phylofill",
+      "  te_genome_primary_strict_body",
+      "  te_genome_organismal_primary_mediumplus",
+      "  te_genome_organismal_primary_phylofill",
+      "  te_genome_organismal_primary_strict_body",
+      "  te_genome_ectopic_all",
+      "  te_genome_ectopic_primary_mediumplus",
+      "  te_genome_ectopic_organismal_primary_mediumplus",
+      "  te_genome_ectopic_organismal_primary_phylofill",
+      "  te_genome_ectopic_organismal_primary_strict_body",
+      "  te_genome_ectopic_primary_phylofill",
+      "  te_genome_ectopic_primary_strict_body",
+      "  te_genome_morphology_all",
+      "  te_genome_morphology_primary_mediumplus",
+      "  te_genome_morphology_primary_phylofill",
+      "  te_genome_morphology_primary_strict_body",
       "",
       "Examples:",
       "  Rscript path_analysis/scripts/path_model_scaffold.R --summary-only",
       "  Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --summary-only",
+      "  Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_strict_body",
       sep = "\n"
     )
   )
@@ -54,6 +78,7 @@ print_help <- function() {
 parse_args <- function(args) {
   opts <- list(
     family = "te_genome",
+    panel = NULL,
     derived_dir = NULL,
     summary_only = FALSE
   )
@@ -67,6 +92,9 @@ parse_args <- function(args) {
     } else if (arg == "--family") {
       i <- i + 1
       opts$family <- args[[i]]
+    } else if (arg == "--panel") {
+      i <- i + 1
+      opts$panel <- args[[i]]
     } else if (arg == "--derived-dir") {
       i <- i + 1
       opts$derived_dir <- args[[i]]
@@ -136,10 +164,40 @@ dataset_file_for_family <- function(family) {
   switch(
     family,
     te_genome = "dataset_te_genome.csv",
+    te_genome_organismal = file.path("panels", "te_genome_organismal_primary_mediumplus.csv"),
     te_genome_ectopic = "dataset_te_genome_ectopic.csv",
+    te_genome_ectopic_organismal = file.path("panels", "te_genome_ectopic_organismal_primary_mediumplus.csv"),
     genome_morphology = "dataset_genome_morphology.csv",
     te_genome_morphology = "dataset_te_genome_morphology.csv",
     stop("Unknown family: ", family)
+  )
+}
+
+input_spec_for_run <- function(family, panel, derived_dir) {
+  if (is.null(panel)) {
+    return(
+      list(
+        input_file = file.path(derived_dir, dataset_file_for_family(family)),
+        output_tag = family
+      )
+    )
+  }
+
+  compatible_prefixes <- c(family)
+  if (family == "te_genome_organismal") {
+    compatible_prefixes <- c(compatible_prefixes, "te_genome")
+  }
+  if (family == "te_genome_ectopic_organismal") {
+    compatible_prefixes <- c(compatible_prefixes, "te_genome_ectopic")
+  }
+
+  if (!any(startsWith(panel, paste0(compatible_prefixes, "_")))) {
+    stop("Panel '", panel, "' does not match family '", family, "'.")
+  }
+
+  list(
+    input_file = file.path(derived_dir, "panels", paste0(panel, ".csv")),
+    output_tag = panel
   )
 }
 
@@ -154,10 +212,17 @@ load_tree <- function(project_root, species) {
   ape::drop.tip(tree, setdiff(tree$tip.label, keep))
 }
 
-prepare_analysis_input <- function(df, family) {
+prepare_analysis_input <- function(df, family, panel = NULL) {
   df$species <- standardize_species(df$species)
+  use_phylofill <- !is.null(panel) && grepl("phylofill", panel)
 
-  needs_te_features <- family %in% c("te_genome", "te_genome_ectopic", "te_genome_morphology")
+  needs_te_features <- family %in% c(
+    "te_genome",
+    "te_genome_organismal",
+    "te_genome_ectopic",
+    "te_genome_ectopic_organismal",
+    "te_genome_morphology"
+  )
   if (needs_te_features) {
     order_cols <- c(
       "order_dirs", "order_helitron", "order_line", "order_ltr",
@@ -178,11 +243,15 @@ prepare_analysis_input <- function(df, family) {
       df$te_pc2 <- NA_real_
     }
 
-    ltr <- df$order_ltr
-    line <- df$order_line
-    ltr_line_positive <- c(ltr[ltr > 0], line[line > 0])
-    pseudocount <- if (length(ltr_line_positive)) min(ltr_line_positive) / 2 else 1e-6
-    df$ltr_balance <- log((ltr + pseudocount) / (line + pseudocount))
+    if ("ltr_line_logratio" %in% colnames(df)) {
+      df$ltr_balance <- as.numeric(df$ltr_line_logratio)
+    } else {
+      ltr <- df$order_ltr
+      line <- df$order_line
+      ltr_line_positive <- c(ltr[ltr > 0], line[line > 0])
+      pseudocount <- if (length(ltr_line_positive)) min(ltr_line_positive) / 2 else 1e-6
+      df$ltr_balance <- log((ltr + pseudocount) / (line + pseudocount))
+    }
   }
 
   df$gs <- zscore(log10(df$genome_size_pg))
@@ -191,6 +260,8 @@ prepare_analysis_input <- function(df, family) {
   }
   if ("ectopic_mean_ratio" %in% colnames(df)) {
     df$ectopic_index <- zscore(log10(df$ectopic_mean_ratio))
+  } else if ("ectopic_log10_mean_ratio" %in% colnames(df)) {
+    df$ectopic_index <- zscore(df$ectopic_log10_mean_ratio)
   }
   if ("morph_nucleus_area_um2" %in% colnames(df)) {
     df$ns <- zscore(log10(df$morph_nucleus_area_um2))
@@ -198,13 +269,33 @@ prepare_analysis_input <- function(df, family) {
   if ("morph_cell_area_um2" %in% colnames(df)) {
     df$cs <- zscore(log10(df$morph_cell_area_um2))
   }
+  if ("body_size_proxy_mm" %in% colnames(df)) {
+    body_size_col <- if (use_phylofill && "body_size_proxy_mm_phylofill" %in% colnames(df)) {
+      "body_size_proxy_mm_phylofill"
+    } else {
+      "body_size_proxy_mm"
+    }
+    df$body_size <- zscore(log10(df[[body_size_col]]))
+  }
+  if ("aquaticity_index" %in% colnames(df)) {
+    aquaticity_col <- if (use_phylofill && "aquaticity_index_phylofill" %in% colnames(df)) {
+      "aquaticity_index_phylofill"
+    } else {
+      "aquaticity_index"
+    }
+    df$aquaticity <- zscore(as.numeric(df[[aquaticity_col]]))
+  }
 
   analysis_df <- switch(
     family,
     te_genome = df %>%
       transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness),
+    te_genome_organismal = df %>%
+      transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, body_size, aquaticity),
     te_genome_ectopic = df %>%
       transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, ectopic_index),
+    te_genome_ectopic_organismal = df %>%
+      transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, ectopic_index, body_size),
     genome_morphology = df %>%
       transmute(species, gs, ns, cs),
     te_genome_morphology = df %>%
@@ -228,11 +319,29 @@ model_set_for_family <- function(family, phylopath_ns) {
       additive_load_evenness = c(gs ~ ltr_balance + te_evenness),
       mediated_evenness = c(te_evenness ~ ltr_balance, gs ~ te_evenness)
     ),
+    te_genome_organismal = phylopath_ns$define_model_set(
+      te_baseline = c(te_evenness ~ ltr_balance, gs ~ te_evenness),
+      body_size_additive = c(te_evenness ~ ltr_balance, gs ~ te_evenness + body_size),
+      aquaticity_additive = c(te_evenness ~ ltr_balance, gs ~ te_evenness + aquaticity),
+      organismal_additive = c(te_evenness ~ ltr_balance, gs ~ te_evenness + body_size + aquaticity),
+      aquaticity_confounds_body_and_te = c(
+        body_size ~ aquaticity,
+        te_evenness ~ ltr_balance + aquaticity,
+        gs ~ te_evenness + body_size
+      )
+    ),
     te_genome_ectopic = phylopath_ns$define_model_set(
       ectopic_only = c(gs ~ ectopic_index),
       ltr_to_ectopic = c(ectopic_index ~ ltr_balance, gs ~ ectopic_index),
       evenness_and_ectopic = c(ectopic_index ~ ltr_balance, gs ~ te_evenness + ectopic_index),
       full_mechanism = c(ectopic_index ~ ltr_balance + te_evenness, gs ~ ltr_balance + te_evenness + ectopic_index)
+    ),
+    te_genome_ectopic_organismal = phylopath_ns$define_model_set(
+      ectopic_baseline = c(gs ~ ectopic_index),
+      ectopic_body_size_additive = c(gs ~ ectopic_index + body_size),
+      te_body_size_baseline = c(te_evenness ~ ltr_balance, gs ~ te_evenness + body_size),
+      te_ectopic_body_size = c(te_evenness ~ ltr_balance, gs ~ te_evenness + ectopic_index + body_size),
+      ltr_to_ectopic_body_size = c(ectopic_index ~ ltr_balance, gs ~ ectopic_index + body_size)
     ),
     genome_morphology = phylopath_ns$define_model_set(
       morphology_null = c(),
@@ -285,7 +394,7 @@ write_model_warnings <- function(fit, output_path) {
   invisible(NULL)
 }
 
-run_phylopath_family <- function(family, analysis_df, tree, results_dir) {
+run_phylopath_family <- function(family, analysis_df, tree, results_dir, output_tag = family) {
   if (!requireNamespace("phylopath", quietly = TRUE)) {
     stop(
       paste(
@@ -303,33 +412,33 @@ run_phylopath_family <- function(family, analysis_df, tree, results_dir) {
 
   fit <- phylopath_ns$phylo_path(model_set, data = analysis_df, tree = tree)
   summary_tbl <- as.data.frame(summary(fit))
-  readr::write_csv(summary_tbl, file.path(results_dir, paste0(family, "_model_ranking.csv")))
-  write_model_warnings(fit, file.path(results_dir, paste0(family, "_model_warnings.txt")))
+  readr::write_csv(summary_tbl, file.path(results_dir, paste0(output_tag, "_model_ranking.csv")))
+  write_model_warnings(fit, file.path(results_dir, paste0(output_tag, "_model_warnings.txt")))
 
   best_fit <- phylopath_ns$best(fit)
   best_edges <- matrix_to_edges(best_fit$coef, best_fit$se)
-  readr::write_csv(best_edges, file.path(results_dir, paste0(family, "_best_model_edges.csv")))
+  readr::write_csv(best_edges, file.path(results_dir, paste0(output_tag, "_best_model_edges.csv")))
 
   avg_fit <- try(phylopath_ns$average(fit, cut_off = 2), silent = TRUE)
   if (!inherits(avg_fit, "try-error")) {
     avg_edges <- matrix_to_edges(avg_fit$coef, avg_fit$se)
-    readr::write_csv(avg_edges, file.path(results_dir, paste0(family, "_average_model_edges.csv")))
+    readr::write_csv(avg_edges, file.path(results_dir, paste0(output_tag, "_average_model_edges.csv")))
   }
 
-  pdf(file.path(results_dir, paste0(family, "_model_set.pdf")), width = 10, height = 7)
+  pdf(file.path(results_dir, paste0(output_tag, "_model_set.pdf")), width = 10, height = 7)
   phylopath_ns$plot_model_set(model_set)
   dev.off()
 
-  pdf(file.path(results_dir, paste0(family, "_model_summary.pdf")), width = 10, height = 7)
+  pdf(file.path(results_dir, paste0(output_tag, "_model_summary.pdf")), width = 10, height = 7)
   plot(summary(fit))
   dev.off()
 
-  pdf(file.path(results_dir, paste0(family, "_best_model.pdf")), width = 10, height = 7)
+  pdf(file.path(results_dir, paste0(output_tag, "_best_model.pdf")), width = 10, height = 7)
   plot(best_fit)
   dev.off()
 
   if (!inherits(avg_fit, "try-error")) {
-    pdf(file.path(results_dir, paste0(family, "_average_model.pdf")), width = 10, height = 7)
+    pdf(file.path(results_dir, paste0(output_tag, "_average_model.pdf")), width = 10, height = 7)
     plot(avg_fit)
     dev.off()
   }
@@ -345,14 +454,14 @@ main <- function() {
   results_dir <- file.path(workspace_root, "results")
   dir.create(results_dir, showWarnings = FALSE, recursive = TRUE)
 
-  dataset_file <- file.path(derived_dir, dataset_file_for_family(opts$family))
-  if (!file.exists(dataset_file)) {
-    stop("Derived dataset not found: ", dataset_file, "\nRun build_master_dataset.py first.")
+  input_spec <- input_spec_for_run(opts$family, opts$panel, derived_dir)
+  if (!file.exists(input_spec$input_file)) {
+    stop("Derived dataset not found: ", input_spec$input_file, "\nRun the dataset/panel builders first.")
   }
 
-  df <- readr::read_csv(dataset_file, show_col_types = FALSE)
-  analysis_df <- prepare_analysis_input(df, opts$family)
-  readr::write_csv(analysis_df, file.path(results_dir, paste0(opts$family, "_analysis_input.csv")))
+  df <- readr::read_csv(input_spec$input_file, show_col_types = FALSE)
+  analysis_df <- prepare_analysis_input(df, opts$family, opts$panel)
+  readr::write_csv(analysis_df, file.path(results_dir, paste0(input_spec$output_tag, "_analysis_input.csv")))
 
   if (opts$family %in% c("genome_morphology", "te_genome_morphology")) {
     warning(
@@ -367,7 +476,7 @@ main <- function() {
   }
 
   tree <- load_tree(project_root, analysis_df$species)
-  run_phylopath_family(opts$family, analysis_df, tree, results_dir)
+  run_phylopath_family(opts$family, analysis_df, tree, results_dir, input_spec$output_tag)
 }
 
 if (sys.nframe() == 0) {

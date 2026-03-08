@@ -243,7 +243,7 @@ Rscript scripts/processing/phylogenetic_pca_analysis.R
 
 ### 9. Phylogenetic Signal Analysis
 
-**Script:** `phylo_signal.py` or `analyze_phylogenetic_signal.R`
+**Script:** `analyze_phylogenetic_signal.R`
 
 **Purpose:** Analyze phylogenetic signal in TE composition
 

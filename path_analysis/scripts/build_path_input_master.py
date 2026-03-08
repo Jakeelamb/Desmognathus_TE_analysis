@@ -16,6 +16,7 @@ TE_FEATURE_FILE = DERIVED_DIR / "te_path_features.csv"
 AMPHIBIO_FILE = EXTERNAL_DERIVED_DIR / "amphibio_desmognathus_traits.csv"
 CONANTI_FILE = EXTERNAL_DERIVED_DIR / "conanti_fuscus_morphometrics_summary.csv"
 ORGANISMAL_FILE = DERIVED_DIR / "organismal_traits_curated.csv"
+PHYLO_INFERENCE_FILE = DERIVED_DIR / "organismal_traits_phylo_inference.csv"
 
 OUTPUT_MASTER = DERIVED_DIR / "path_input_master.csv"
 OUTPUT_COVERAGE = DERIVED_DIR / "path_input_coverage_summary.csv"
@@ -101,16 +102,25 @@ def main() -> None:
     amphibio = pd.read_csv(AMPHIBIO_FILE) if AMPHIBIO_FILE.exists() else pd.DataFrame(columns=["species"])
     conanti = pd.read_csv(CONANTI_FILE) if CONANTI_FILE.exists() else pd.DataFrame(columns=["species"])
     organismal = pd.read_csv(ORGANISMAL_FILE) if ORGANISMAL_FILE.exists() else pd.DataFrame(columns=["species"])
+    phylo_inference = (
+        pd.read_csv(PHYLO_INFERENCE_FILE) if PHYLO_INFERENCE_FILE.exists() else pd.DataFrame(columns=["species"])
+    )
 
     merged = master.merge(te, on="species", how="left", suffixes=("", "_te"))
     merged = merged.merge(amphibio, on="species", how="left")
     merged = merged.merge(with_prefix(conanti, "cf_"), on="species", how="left")
     merged = merged.merge(organismal, on="species", how="left")
+    merged = merged.merge(phylo_inference, on="species", how="left")
 
     merged["has_te_feature_table"] = merged["ltr_line_logratio"].notna()
     merged["has_amphibio_traits"] = merged["amphibio_source_id"].notna()
     merged["has_conanti_fuscus_morphometrics"] = merged["cf_source_id"].notna()
     merged["has_curated_organismal_traits"] = merged["organismal_source_ids"].notna()
+    phylo_status_cols = [c for c in merged.columns if c.startswith("phylo_") and c.endswith("_status")]
+    if phylo_status_cols:
+        merged["has_phylogenetic_trait_inference"] = merged[phylo_status_cols].notna().any(axis=1)
+    else:
+        merged["has_phylogenetic_trait_inference"] = False
 
     coverage = summarize_coverage(merged)
     priority_species = summarize_priority_species(merged)

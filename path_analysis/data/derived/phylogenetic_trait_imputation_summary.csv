@@ -1,0 +1,5 @@
+"trait_name","trait_type","training_species_n","cv_n","cv_primary_metric_type","cv_primary_metric_value","cv_secondary_metric_type","cv_secondary_metric_value","n_missing","n_low_confidence"
+"body_size_proxy_mm","continuous",31,31,"mae",12.3681631502174,"rmse",16.5698646886079,1,0
+"development_mode","discrete",31,31,"accuracy",0.967741935483871,"mean_vote_share",0.993664105173269,1,0
+"aquaticity_index","discrete",30,30,"accuracy",0.666666666666667,"mean_vote_share",0.824593953872022,1,1
+"microhabitat_class","discrete",30,30,"accuracy",0.666666666666667,"mean_vote_share",0.824593953872022,1,1

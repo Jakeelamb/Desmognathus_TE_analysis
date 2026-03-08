@@ -1,6 +1,8 @@
 # Session Handoff
 
-This document is the restart point for the Desmognathus phylogenetic path-analysis work. It captures what this workspace is for, what has already been built, the current dataset state, and the exact next steps.
+This document is the secondary restart log for the Desmognathus phylogenetic path-analysis work. It captures what this workspace is for, what has already been built, the current dataset state, and the exact next steps.
+
+For the main evergreen analysis map, read `PATH_ANALYSIS_STATUS.md` before this file.
 
 ## What We Are Trying To Do
 
@@ -30,6 +32,7 @@ The work is now consolidated in [`path_analysis/`](/home/jake/Projects/Desmognat
 
 Core planning and workflow files:
 
+- [`PATH_ANALYSIS_STATUS.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/PATH_ANALYSIS_STATUS.md)
 - [`README.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/README.md)
 - [`INPUT_PREPARATION_PLAN.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/INPUT_PREPARATION_PLAN.md)
 - [`TE_MODEL_INPUTS.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/TE_MODEL_INPUTS.md)
@@ -63,6 +66,7 @@ Traceability and input products:
 
 - Built a consolidated `path_analysis/` workspace instead of scattering scripts.
 - Added a `phylopath` scaffold with prespecified DAG families.
+- Extended the `phylopath` scaffold so it can run directly on the panel CSVs via `--panel`, writing panel-specific result files instead of overwriting the legacy family outputs.
 - Ran the initial path-model families and saved outputs to [`results/`](/home/jake/Projects/Desmognathus_TE/path_analysis/results).
 
 Current first-pass ranking winners:
@@ -78,6 +82,19 @@ Model ranking tables:
 - [`te_genome_ectopic_model_ranking.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/results/te_genome_ectopic_model_ranking.csv)
 - [`genome_morphology_model_ranking.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/results/genome_morphology_model_ranking.csv)
 - [`te_genome_morphology_model_ranking.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/results/te_genome_morphology_model_ranking.csv)
+
+Panel-aware reruns now available in [`results/`](/home/jake/Projects/Desmognathus_TE/path_analysis/results):
+
+- `te_genome_primary_mediumplus`: best model remains `mediated_evenness`
+- `te_genome_primary_strict_body`: best model remains `mediated_evenness`
+- `te_genome_ectopic_primary_mediumplus`: best model remains `ectopic_only`
+- `te_genome_ectopic_primary_strict_body`: best model remains `ectopic_only`
+- `te_genome_morphology_primary_mediumplus`: best model remains `te_evenness_path`
+- `te_genome_morphology_primary_strict_body`: not interpretable as a ranking result because `n = 9` and CICc is unavailable for models where `q >= n`
+- `te_genome_organismal_primary_mediumplus`: best model is now `body_size_additive`
+- `te_genome_organismal_primary_strict_body`: best model is also `body_size_additive`
+- `te_genome_ectopic_organismal_primary_mediumplus`: best model is `te_body_size_baseline`
+- `te_genome_ectopic_organismal_primary_strict_body`: best model is also `te_body_size_baseline`
 
 ### 2. TE preparation
 
@@ -122,6 +139,15 @@ Notable recent upgrades:
 - `marmoratus` is now a high-confidence adult SVL range from NC text.
 - `folkertsi` is now a high-confidence sex-specific adult SVL range.
 - TL-based proxies now use range midpoints where possible instead of maxima.
+- `auriculatus` now uses a source-linked transformed-specimen mean SVL from Graham et al. 2010 plus explicit blackwater-swamp lifestyle coding.
+- `apalachicolae` now uses a source-linked transformed-specimen mean SVL from Graham et al. 2010 plus explicit seepage/streamside lifestyle coding.
+- `valtos` now parses NC `transformed specimens` SVL phrasing as a medium-confidence transformed-body proxy instead of collapsing it into the lowest mixed-stage bucket.
+- `monticola` now has a source-linked mean SVL from the 2023 revision abstract, which is enough to move it into medium-plus panels while still keeping it out of strict-body sets.
+- New online rescue pass added source-linked adult SVL evidence for `aeneus`, `ocoee`, `orestes`, `organi`, `welteri`, and `wrighti`.
+- `welteri` now also has thesis-backed high-confidence lifestyle coding (`stream_aquatic`, aquaticity `2`) from the Felix 2001 Marshall thesis.
+- `prepare_curated_organismal_traits.py` now supports `adult_svl_mean_mm` so adult-only morphometric means can be used as medium-confidence body-size inputs when ranges are unavailable.
+- `pascagoula` is no longer missing core organismal traits: the Plazi treatment now provides an adult SVL range, aquatic-larval development, and swamp-coastal-plain lifestyle coding.
+- `ochrophaeus` now has a source-linked adult SVL range from the Canadian status report, upgrading it from a low-confidence AmphiBIO body-size proxy.
 
 ## Current Data State
 
@@ -141,10 +167,10 @@ These are the main comparative overlap sizes currently available:
 
 From [`organismal_traits_curated.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/organismal_traits_curated.csv):
 
-- body-size confidence: `7 high / 16 medium / 13 low / 2 missing`
-- missing body size: `2`
-- missing development: `2`
-- missing lifestyle: `2`
+- body-size confidence: `9 high / 26 medium / 2 low / 1 missing`
+- missing body size: `1`
+- missing development: `1`
+- missing lifestyle: `1`
 - non-missing elevation midpoints: `10`
 
 Interpretation:
@@ -158,16 +184,16 @@ Interpretation:
 From [`analysis_panel_summary.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/analysis_panel_summary.csv):
 
 - `te_genome_all`: `27`
-- `te_genome_primary_mediumplus`: `17`
-- `te_genome_primary_strict_body`: `10`
+- `te_genome_primary_mediumplus`: `27`
+- `te_genome_primary_strict_body`: `16`
 - `te_genome_ectopic_all`: `24`
-- `te_genome_ectopic_primary_mediumplus`: `15`
-- `te_genome_ectopic_primary_strict_body`: `9`
+- `te_genome_ectopic_primary_mediumplus`: `24`
+- `te_genome_ectopic_primary_strict_body`: `15`
 - `te_genome_morphology_all`: `18`
-- `te_genome_morphology_primary_mediumplus`: `12`
-- `te_genome_morphology_primary_strict_body`: `7`
+- `te_genome_morphology_primary_mediumplus`: `18`
+- `te_genome_morphology_primary_strict_body`: `9`
 
-This is better than before the latest curation pass. The strict panels each gained one species after improving body-size extraction.
+The key consequence of the latest rescue pass is that there are no longer any low-body-confidence exclusions inside the current `TE + genome` overlap. The medium-plus panels now equal the full overlap panels for `te_genome` and `te_genome_ectopic`, and the strict-body sets gained six species because the new rescues are adult-only SVL metrics rather than TL or mixed-stage proxies.
 
 ### Species-level readiness
 
@@ -209,53 +235,81 @@ The path models should stay small and prespecified.
 - Keep elevation out of the core model unless coverage improves a lot.
 - Keep `N/C ratio` out of DAGs that already include cell area and nucleus area.
 
+### 4. Phylogenetic backfilling is sensitivity-only
+
+The repo now has a separate phylogenetic-imputation layer built from:
+
+- [`results/phylogeny/processed_phylogeny.nwk`](/home/jake/Projects/Desmognathus_TE/results/phylogeny/processed_phylogeny.nwk)
+- [`organismal_traits_curated.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/organismal_traits_curated.csv)
+
+Outputs:
+
+- [`phylogenetic_trait_imputation_long.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/phylogenetic_trait_imputation_long.csv)
+- [`organismal_traits_phylo_inference.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/organismal_traits_phylo_inference.csv)
+- [`phylogenetic_trait_imputation_summary.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/phylogenetic_trait_imputation_summary.csv)
+
+Rules:
+
+- do not overwrite `organismal_traits_curated.csv` with phylogenetic predictions
+- keep inferred values in explicit `phylo_` columns only
+- use phylogenetic fills for sensitivity analysis or manual-review triage, not as silent replacements for observed facts
+
+Current practical limit:
+
+- the processed tree currently excludes `bairdi`, `brimleyorum`, `folkertsi`, `gvnigeusgwotli`, `imitator`, and `ochrophaeus`
+- that means the present phylogenetic backfill only touches `abditus` and `catahoula`
+- `abditus` now has a sensitivity-only phylogenetic body-size fill plus phylogenetic support for its low-confidence lifestyle coding
+- `catahoula` now has sensitivity-only phylogenetic fills for `development_mode`, `aquaticity_index`, and `microhabitat_class`
+- [`phylofill_panel_comparison.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/phylofill_panel_comparison.csv) currently shows no species-set change for `te_genome`, `te_genome_ectopic`, or `te_genome_morphology`: all `primary_phylofill` panels are identical to the observed-only `primary_mediumplus` panels
+- the same no-change result now also holds for `te_genome_organismal` and `te_genome_ectopic_organismal`
+
 ## Tomorrow: Best Next Steps
 
-### Priority 1. Upgrade the body-size block where it changes panel membership
+### Priority 1. Interpret the new panel-aware path-model reruns
 
-Highest-impact body-size rescue targets in the current `te_genome` overlap:
+The panel-aware reruns are now on disk, so the next work is interpretation rather than more infrastructure.
 
-- `aeneus`
-- `apalachicolae`
-- `auriculatus`
-- `monticola`
-- `ocoee`
-- `orestes`
-- `organi`
-- `valtos`
-- `welteri`
-- `wrighti`
+Immediate next analyses:
+
+- compare coefficient tables and averaged-path outputs between `all`, `primary_mediumplus`, and `primary_strict_body`
+- compare the new organismal-augmented family against the TE-only baseline, especially whether body size is a robust additive covariate or mostly a proxy for the same variance
+- compare the new ectopic-plus-organismal family against both `te_genome_ectopic` and `te_genome_organismal`, because the current winner suggests ectopic loses priority once body size is allowed to compete
+- decide whether the strict-body morphology family should be dropped from sensitivity reporting because `n = 9` is too small for stable CICc ranking
+- decide whether the unchanged winning models across panel definitions are strong enough to summarize in the chapter draft
 
 Reason:
 
-- these are the species currently keeping medium-plus or strict-body panels smaller than they could be
-- the exact blocker labels are already in [`analysis_species_readiness.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/analysis_species_readiness.csv)
+- the highest-value question is now model stability across panel definitions, not further species rescue inside the current overlap
+- the TE and ectopic families remained stable in winner identity after the organismal rescue pass
+- the first organismal-augmented family is now in place, and it currently points to body size rather than aquaticity as the only organismal covariate that materially competes with the TE-only baseline
+- the combined ectopic-plus-organismal family goes further: once body size is allowed in the candidate set, the winning models drop `ectopic_index` entirely and revert to the TE-evenness-plus-body-size structure
+- the morphology strict-body subset is visibly underpowered and should not be treated like the larger sensitivity sets
 
-### Priority 2. Acquire revision-supplement morphometric data from primary repositories
+### Priority 2. Treat remaining data gathering as coverage expansion, not rescue within current panels
 
-This is likely the biggest remaining dataset-improvement opportunity.
+The current bottlenecks are now mostly outside online organismal backfilling.
 
 Targets:
 
-- Dryad / Zenodo repositories linked to the recent `Desmognathus` revision papers
-- appendices with adult SVL or broader external morphometrics
-- supplementary tables for species diagnoses or specimen summaries
+- missing genome-size coverage for species such as `adatsihi`, `balsameus`, `carolinensis`, and `conanti`
+- missing morphology coverage for `aeneus`, `orestes`, `organi`, and `wrighti`
+- any future primary supplements that would become useful once new genome or morphology estimates arrive
 
 Important note:
 
 - direct command-line fetch attempts against Dryad file streams returned `403 Forbidden`
 - this likely needs browser/manual retrieval or a different authenticated download method tomorrow
 
-### Priority 3. Mine additional organismal covariates only after the core block is stronger
+### Priority 3. Mine additional organismal covariates only after model reruns
 
-Do this after the body-size rescue pass:
+Do this after the model reruns:
 
 - elevation
 - reproductive timing / clutch size
 - fecundity
 - additional habitat/lifestyle variables
 
-These are valuable, but they are lower leverage than getting body size and primary organismal confidence tiers as strong as possible.
+These are valuable, but they are now lower leverage than exploiting the newly expanded panel sizes.
 
 ### Priority 4. Revisit TE presentation only as a modeling/input question
 
@@ -267,11 +321,11 @@ The TE data are already usable, but tomorrow’s TE-focused work should be about
 
 ## Exact Restart Workflow
 
-If restarting fresh tomorrow, open these first:
+If restarting fresh later, open these first:
 
-1. [`SESSION_HANDOFF.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/SESSION_HANDOFF.md)
-2. [`analysis_species_readiness.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/analysis_species_readiness.csv)
-3. [`INPUT_PREPARATION_PLAN.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/INPUT_PREPARATION_PLAN.md)
+1. [`PATH_ANALYSIS_STATUS.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/PATH_ANALYSIS_STATUS.md)
+2. [`SESSION_HANDOFF.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/SESSION_HANDOFF.md)
+3. [`analysis_species_readiness.csv`](/home/jake/Projects/Desmognathus_TE/path_analysis/data/derived/analysis_species_readiness.csv)
 4. [`TE_MODEL_INPUTS.md`](/home/jake/Projects/Desmognathus_TE/path_analysis/TE_MODEL_INPUTS.md)
 
 Then rebuild if needed:
@@ -283,6 +337,7 @@ python3 path_analysis/scripts/prepare_amphibio_traits.py
 python3 path_analysis/scripts/prepare_external_morphometrics.py
 python3 path_analysis/scripts/prepare_nc_biodiversity_traits.py
 python3 path_analysis/scripts/prepare_curated_organismal_traits.py
+Rscript path_analysis/scripts/build_phylogenetic_trait_imputation.R
 python3 path_analysis/scripts/build_te_model_panel.py
 python3 path_analysis/scripts/build_path_input_master.py
 python3 path_analysis/scripts/build_analysis_panels.py
@@ -326,4 +381,4 @@ What exists now is:
 - species-level readiness/exclusion tracking
 - publication-grade source traceability
 
-Tomorrow’s highest-value work is to improve the remaining weak organismal inputs from primary revision sources, especially adult body-size and external morphometric tables, because that is the cleanest way to make the final comparative panels stronger before the independent genome-size estimates arrive.
+Tomorrow’s highest-value work is to interpret the new panel-aware `phylopath` outputs, especially whether the unchanged winners across medium-plus and strict-body subsets are robust enough to narrate. There are no obvious remaining online body-size rescues left that would enlarge the current `TE + genome` medium-plus panels; the next data push, if needed, should target missing genome/morphology coverage or richer ecological covariates.

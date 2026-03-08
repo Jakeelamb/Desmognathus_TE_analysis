@@ -91,7 +91,10 @@ input_data/
 interim/
 results/
 
+# Keep local literature/source PDFs out of git while retaining their hashes in
+# the path-analysis source inventory.
+path_analysis/data/external/raw/*.pdf
+
 # Note: Core files like README.md, Dusky.yml, .gitignore in the root,
 # and all files within the scripts/ directory ARE tracked by default
 # unless explicitly ignored by a rule above (which they are not).
-

@@ -24,6 +24,20 @@ def sha256_for_file(path: Path) -> str:
 def infer_source_id(path: Path) -> str:
     if path.name == "AmphiBIO_v1.zip":
         return "amphibio_2017"
+    if path.name == "Felix_2001_welteri_natural_history.pdf":
+        return "felix_2001_welteri_thesis"
+    if path.name == "Bruce_2014_reproductive_allometry_dusky_salamanders.pdf":
+        return "bruce_2014_reproductive_allometry_article"
+    if path.name == "Bruce_2016_gompertz_dusky_salamanders.pdf":
+        return "bruce_2016_gompertz_dusky_salamanders_article"
+    if path.name == "Kozak_etal_2005_desmognathus_ecomorphology.pdf":
+        return "kozak_larson_bonett_harmon_2005_ecomorphology_article"
+    if path.name == "Kessler_etal_2024_wrighti_reproductive_ecology.pdf":
+        return "kessler_crawford_peterman_hocking_2024_wrighti_article"
+    if path.name == "VHS_pygmy_salamander_organi.html":
+        return "vhs_northern_pygmy_salamander_organi"
+    if path.name == "Canada_Allegheny_Mountain_Dusky_ochrophaeus.html":
+        return "canada_ochrophaeus_status_report"
     if path.name == "Pyron_Beamer_conanti_fuscus_Appendix_S1.csv":
         return "pyron_beamer_2023_conanti_fuscus_appendix_s1"
     if path.parent.name == "plazi_treatments":
@@ -43,6 +57,20 @@ def infer_source_id(path: Path) -> str:
 def infer_source_url(path: Path) -> str:
     if path.name == "AmphiBIO_v1.zip":
         return "https://figshare.com/articles/dataset/Oliveira_et_al_AmphiBIO_v1/4644424"
+    if path.name == "Felix_2001_welteri_natural_history.pdf":
+        return "https://mds.marshall.edu/etd/400/"
+    if path.name == "Bruce_2014_reproductive_allometry_dusky_salamanders.pdf":
+        return "https://research.fs.usda.gov/treesearch/47960"
+    if path.name == "Bruce_2016_gompertz_dusky_salamanders.pdf":
+        return "https://www.srs.fs.usda.gov/pubs/ja/2016/ja_2016_bruce_001.pdf"
+    if path.name == "Kozak_etal_2005_desmognathus_ecomorphology.pdf":
+        return "https://biolinux2.wustl.edu/larsonlab/Kozak-Evolution_2005.pdf"
+    if path.name == "Kessler_etal_2024_wrighti_reproductive_ecology.pdf":
+        return "https://doi.org/10.1655/Herpetologica-D-23-00049"
+    if path.name == "VHS_pygmy_salamander_organi.html":
+        return "https://virginiaherpetologicalsociety.com/amphibians/salamanders/pygmy-salamander/index.php"
+    if path.name == "Canada_Allegheny_Mountain_Dusky_ochrophaeus.html":
+        return "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/allegheny-mountain-dusky-salamander/chapter-5.html"
     if path.name == "Pyron_Beamer_conanti_fuscus_Appendix_S1.csv":
         return "https://zenodo.org/records/7972011"
     if path.parent.name == "plazi_treatments":
@@ -65,6 +93,20 @@ def infer_source_url(path: Path) -> str:
 def infer_notes(path: Path) -> str:
     if path.name == "AmphiBIO_v1.zip":
         return "Downloaded from Figshare API article 4644424 and used to generate Desmognathus trait subset"
+    if path.name == "Felix_2001_welteri_natural_history.pdf":
+        return "Marshall Digital Scholar PDF used for manual welteri body-size and lifestyle extraction"
+    if path.name == "Bruce_2014_reproductive_allometry_dusky_salamanders.pdf":
+        return "Direct PDF used for manual adult SVL extraction in D. aeneus"
+    if path.name == "Bruce_2016_gompertz_dusky_salamanders.pdf":
+        return "Direct PDF used for manual adult SVL extraction in D. ocoee"
+    if path.name == "Kozak_etal_2005_desmognathus_ecomorphology.pdf":
+        return "Direct PDF used for adult-only mean SVL extraction from Table 2"
+    if path.name == "Kessler_etal_2024_wrighti_reproductive_ecology.pdf":
+        return "NOAA-hosted PDF used for adult SVL extraction in D. wrighti"
+    if path.name == "VHS_pygmy_salamander_organi.html":
+        return "HTML snapshot of VHS Northern Pygmy Salamander account used for explicit SVL backfill"
+    if path.name == "Canada_Allegheny_Mountain_Dusky_ochrophaeus.html":
+        return "HTML snapshot of Canadian status report used for explicit adult SVL range in D. ochrophaeus"
     if path.name == "Pyron_Beamer_conanti_fuscus_Appendix_S1.csv":
         return "Downloaded directly from Zenodo and used to generate conanti-fuscus morphometric summaries"
     if path.parent.name == "plazi_treatments":

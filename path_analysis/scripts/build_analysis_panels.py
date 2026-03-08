@@ -14,11 +14,46 @@ PANEL_DIR = DERIVED_DIR / "panels"
 INPUT_FILE = DERIVED_DIR / "path_input_master.csv"
 OUTPUT_SUMMARY = DERIVED_DIR / "analysis_panel_summary.csv"
 OUTPUT_READINESS = DERIVED_DIR / "analysis_species_readiness.csv"
+OUTPUT_PHYLO_COMPARE = DERIVED_DIR / "phylofill_panel_comparison.csv"
 
 
 def confidence_score(series: pd.Series) -> pd.Series:
     mapping = {"low": 1, "medium": 2, "high": 3}
     return series.map(mapping)
+
+
+def annotate_phylofill_trait(
+    observed: pd.Series,
+    confidence_score_series: pd.Series,
+    inferred: pd.Series,
+    status: pd.Series,
+) -> tuple[pd.Series, pd.Series, pd.Series]:
+    effective = observed.copy()
+    mode = pd.Series(pd.NA, index=observed.index, dtype="object")
+    usable = pd.Series(False, index=observed.index, dtype="boolean")
+
+    observed_mediumplus = observed.notna() & confidence_score_series.ge(2)
+    mode.loc[observed_mediumplus] = "observed_mediumplus"
+    usable.loc[observed_mediumplus] = True
+
+    low_supported = observed.notna() & confidence_score_series.eq(1) & status.eq(
+        "low_confidence_observed_supported_by_phylogeny"
+    )
+    mode.loc[low_supported] = "observed_low_conf_supported_by_phylogeny"
+    usable.loc[low_supported] = True
+
+    missing_inferred = observed.isna() & inferred.notna() & status.eq("phylo_inferred_for_missing")
+    effective.loc[missing_inferred] = inferred.loc[missing_inferred]
+    mode.loc[missing_inferred] = "phylo_inferred_for_missing"
+    usable.loc[missing_inferred] = True
+
+    observed_low_unusable = observed.notna() & confidence_score_series.eq(1) & mode.isna()
+    mode.loc[observed_low_unusable] = "observed_low_conf_not_phylo_supported"
+
+    observed_missing = observed.isna() & mode.isna()
+    mode.loc[observed_missing] = "missing_no_phylofill"
+
+    return effective, mode, usable
 
 
 def prepare_flags(df: pd.DataFrame) -> pd.DataFrame:
@@ -42,12 +77,70 @@ def prepare_flags(df: pd.DataFrame) -> pd.DataFrame:
         case=False,
     )
     out["uses_mixed_stage_body_proxy"] = out["body_size_proxy_measurement"].fillna("").str.contains(
-        "mixed|all_specimens_mixed_life_stages|transformed",
+        "all_specimens|mixed|transformed",
         case=False,
         regex=True,
     )
     out["is_low_confidence_body_proxy"] = out["body_size_proxy_confidence"].eq("low")
     out["is_low_confidence_lifestyle_proxy"] = out["lifestyle_confidence"].eq("low")
+
+    (
+        out["body_size_proxy_mm_phylofill"],
+        out["body_size_phylofill_mode"],
+        out["body_size_phylofill_usable"],
+    ) = annotate_phylofill_trait(
+        out["body_size_proxy_mm"],
+        out["body_size_conf_score"],
+        out["phylo_body_size_proxy_mm"],
+        out["phylo_body_size_proxy_mm_status"],
+    )
+    (
+        out["development_mode_phylofill"],
+        out["development_phylofill_mode"],
+        out["development_phylofill_usable"],
+    ) = annotate_phylofill_trait(
+        out["development_mode"],
+        out["development_conf_score"],
+        out["phylo_development_mode"],
+        out["phylo_development_mode_status"],
+    )
+    (
+        out["aquaticity_index_phylofill"],
+        out["aquaticity_phylofill_mode"],
+        out["aquaticity_phylofill_usable"],
+    ) = annotate_phylofill_trait(
+        out["aquaticity_index"],
+        out["lifestyle_conf_score"],
+        out["phylo_aquaticity_index"],
+        out["phylo_aquaticity_index_status"],
+    )
+    (
+        out["microhabitat_class_phylofill"],
+        out["microhabitat_phylofill_mode"],
+        out["microhabitat_phylofill_usable"],
+    ) = annotate_phylofill_trait(
+        out["microhabitat_class"],
+        out["lifestyle_conf_score"],
+        out["phylo_microhabitat_class"],
+        out["phylo_microhabitat_class_status"],
+    )
+    out["has_core_organismal_phylofill"] = (
+        out["body_size_phylofill_usable"]
+        & out["development_phylofill_usable"]
+        & out["aquaticity_phylofill_usable"]
+        & out["microhabitat_phylofill_usable"]
+    )
+    phylo_assist_modes = {
+        "phylo_inferred_for_missing",
+        "observed_low_conf_supported_by_phylogeny",
+    }
+    out["n_core_traits_with_phylo_assistance"] = (
+        out["body_size_phylofill_mode"].isin(phylo_assist_modes).astype(int)
+        + out["development_phylofill_mode"].isin(phylo_assist_modes).astype(int)
+        + out["aquaticity_phylofill_mode"].isin(phylo_assist_modes).astype(int)
+        + out["microhabitat_phylofill_mode"].isin(phylo_assist_modes).astype(int)
+    )
+    out["uses_any_phylo_assistance"] = out["n_core_traits_with_phylo_assistance"].gt(0)
     return out
 
 
@@ -62,6 +155,7 @@ def build_exclusion_reasons(
     require_morphology: bool = False,
     require_core: bool = False,
     require_mediumplus: bool = False,
+    require_phylofill: bool = False,
     require_strict_body: bool = False,
 ) -> str:
     reasons: list[str] = []
@@ -86,6 +180,16 @@ def build_exclusion_reasons(
             reasons.append("missing_aquaticity")
         if pd.isna(row.get("microhabitat_class")):
             reasons.append("missing_microhabitat")
+
+    if require_phylofill:
+        if not bool(row.get("body_size_phylofill_usable")):
+            reasons.append("body_size_not_usable_after_phylofill")
+        if not bool(row.get("development_phylofill_usable")):
+            reasons.append("development_not_usable_after_phylofill")
+        if not bool(row.get("aquaticity_phylofill_usable")):
+            reasons.append("aquaticity_not_usable_after_phylofill")
+        if not bool(row.get("microhabitat_phylofill_usable")):
+            reasons.append("microhabitat_not_usable_after_phylofill")
 
     if require_mediumplus or require_strict_body:
         body_score = row.get("body_size_conf_score")
@@ -136,22 +240,37 @@ def main() -> None:
         "body_size_proxy_measurement",
         "body_size_proxy_source_id",
         "body_size_proxy_confidence",
+        "body_size_proxy_mm_phylofill",
+        "body_size_phylofill_mode",
+        "body_size_phylofill_usable",
         "development_mode",
         "development_source_id",
         "development_confidence",
+        "development_mode_phylofill",
+        "development_phylofill_mode",
+        "development_phylofill_usable",
         "aquaticity_index",
+        "aquaticity_index_phylofill",
+        "aquaticity_phylofill_mode",
+        "aquaticity_phylofill_usable",
         "microhabitat_class",
+        "microhabitat_class_phylofill",
+        "microhabitat_phylofill_mode",
+        "microhabitat_phylofill_usable",
         "lifestyle_source_id",
         "lifestyle_confidence",
         "elevation_mid_m",
         "elevation_source_id",
         "has_core_organismal_complete",
         "has_core_organismal_mediumplus",
+        "has_core_organismal_phylofill",
         "has_elevation",
         "uses_total_length_body_proxy",
         "uses_mixed_stage_body_proxy",
         "is_low_confidence_body_proxy",
         "is_low_confidence_lifestyle_proxy",
+        "n_core_traits_with_phylo_assistance",
+        "uses_any_phylo_assistance",
         "organismal_source_ids",
         "te_feature_source_ids",
         "genome_source_id",
@@ -164,7 +283,24 @@ def main() -> None:
         "te_genome_primary_mediumplus": (
             df["has_tree_tip"] & df["has_te"] & df["has_genome"] & df["has_core_organismal_mediumplus"]
         ),
+        "te_genome_organismal_primary_mediumplus": (
+            df["has_tree_tip"] & df["has_te"] & df["has_genome"] & df["has_core_organismal_mediumplus"]
+        ),
+        "te_genome_organismal_primary_phylofill": (
+            df["has_tree_tip"] & df["has_te"] & df["has_genome"] & df["has_core_organismal_phylofill"]
+        ),
+        "te_genome_primary_phylofill": (
+            df["has_tree_tip"] & df["has_te"] & df["has_genome"] & df["has_core_organismal_phylofill"]
+        ),
         "te_genome_primary_strict_body": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_core_organismal_mediumplus"]
+            & ~df["uses_total_length_body_proxy"]
+            & ~df["uses_mixed_stage_body_proxy"]
+        ),
+        "te_genome_organismal_primary_strict_body": (
             df["has_tree_tip"]
             & df["has_te"]
             & df["has_genome"]
@@ -180,7 +316,37 @@ def main() -> None:
             & df["has_ectopic"]
             & df["has_core_organismal_mediumplus"]
         ),
+        "te_genome_ectopic_organismal_primary_mediumplus": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_ectopic"]
+            & df["has_core_organismal_mediumplus"]
+        ),
+        "te_genome_ectopic_organismal_primary_phylofill": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_ectopic"]
+            & df["has_core_organismal_phylofill"]
+        ),
+        "te_genome_ectopic_primary_phylofill": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_ectopic"]
+            & df["has_core_organismal_phylofill"]
+        ),
         "te_genome_ectopic_primary_strict_body": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_ectopic"]
+            & df["has_core_organismal_mediumplus"]
+            & ~df["uses_total_length_body_proxy"]
+            & ~df["uses_mixed_stage_body_proxy"]
+        ),
+        "te_genome_ectopic_organismal_primary_strict_body": (
             df["has_tree_tip"]
             & df["has_te"]
             & df["has_genome"]
@@ -197,6 +363,13 @@ def main() -> None:
             & df["has_morphology"]
             & df["has_core_organismal_mediumplus"]
         ),
+        "te_genome_morphology_primary_phylofill": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_morphology"]
+            & df["has_core_organismal_phylofill"]
+        ),
         "te_genome_morphology_primary_strict_body": (
             df["has_tree_tip"]
             & df["has_te"]
@@ -211,7 +384,15 @@ def main() -> None:
         "te_genome_all": {},
         "te_genome_primary": {"require_core": True},
         "te_genome_primary_mediumplus": {"require_core": True, "require_mediumplus": True},
+        "te_genome_organismal_primary_mediumplus": {"require_core": True, "require_mediumplus": True},
+        "te_genome_organismal_primary_phylofill": {"require_phylofill": True},
+        "te_genome_primary_phylofill": {"require_phylofill": True},
         "te_genome_primary_strict_body": {
+            "require_core": True,
+            "require_mediumplus": True,
+            "require_strict_body": True,
+        },
+        "te_genome_organismal_primary_strict_body": {
             "require_core": True,
             "require_mediumplus": True,
             "require_strict_body": True,
@@ -222,7 +403,26 @@ def main() -> None:
             "require_core": True,
             "require_mediumplus": True,
         },
+        "te_genome_ectopic_organismal_primary_mediumplus": {
+            "require_ectopic": True,
+            "require_core": True,
+            "require_mediumplus": True,
+        },
+        "te_genome_ectopic_organismal_primary_phylofill": {
+            "require_ectopic": True,
+            "require_phylofill": True,
+        },
+        "te_genome_ectopic_primary_phylofill": {
+            "require_ectopic": True,
+            "require_phylofill": True,
+        },
         "te_genome_ectopic_primary_strict_body": {
+            "require_ectopic": True,
+            "require_core": True,
+            "require_mediumplus": True,
+            "require_strict_body": True,
+        },
+        "te_genome_ectopic_organismal_primary_strict_body": {
             "require_ectopic": True,
             "require_core": True,
             "require_mediumplus": True,
@@ -233,6 +433,10 @@ def main() -> None:
             "require_morphology": True,
             "require_core": True,
             "require_mediumplus": True,
+        },
+        "te_genome_morphology_primary_phylofill": {
+            "require_morphology": True,
+            "require_phylofill": True,
         },
         "te_genome_morphology_primary_strict_body": {
             "require_morphology": True,
@@ -254,6 +458,10 @@ def main() -> None:
                 "n_low_body_proxy": int(panel["is_low_confidence_body_proxy"].sum()),
                 "n_total_length_body_proxy": int(panel["uses_total_length_body_proxy"].sum()),
                 "n_mixed_stage_body_proxy": int(panel["uses_mixed_stage_body_proxy"].sum()),
+                "n_with_phylo_assistance": int(panel["uses_any_phylo_assistance"].sum()),
+                "species_with_phylo_assistance": ";".join(
+                    panel.loc[panel["uses_any_phylo_assistance"], "species"].tolist()
+                ),
                 "species_list": ";".join(panel["species"].tolist()),
             }
         )
@@ -271,6 +479,13 @@ def main() -> None:
         "lifestyle_confidence",
         "has_core_organismal_complete",
         "has_core_organismal_mediumplus",
+        "has_core_organismal_phylofill",
+        "body_size_phylofill_mode",
+        "development_phylofill_mode",
+        "aquaticity_phylofill_mode",
+        "microhabitat_phylofill_mode",
+        "n_core_traits_with_phylo_assistance",
+        "uses_any_phylo_assistance",
         "uses_total_length_body_proxy",
         "uses_mixed_stage_body_proxy",
         "has_elevation",
@@ -296,10 +511,44 @@ def main() -> None:
         )
 
     pd.DataFrame(summary_rows).to_csv(OUTPUT_SUMMARY, index=False)
+    comparison_specs = [
+        ("te_genome_primary_mediumplus", "te_genome_primary_phylofill"),
+        ("te_genome_organismal_primary_mediumplus", "te_genome_organismal_primary_phylofill"),
+        ("te_genome_ectopic_primary_mediumplus", "te_genome_ectopic_primary_phylofill"),
+        ("te_genome_ectopic_organismal_primary_mediumplus", "te_genome_ectopic_organismal_primary_phylofill"),
+        ("te_genome_morphology_primary_mediumplus", "te_genome_morphology_primary_phylofill"),
+    ]
+    comparison_rows = []
+    for observed_panel, phylofill_panel in comparison_specs:
+        observed_species = set(df.loc[masks[observed_panel], "species"])
+        phylofill_species = set(df.loc[masks[phylofill_panel], "species"])
+        added_species = sorted(phylofill_species - observed_species)
+        removed_species = sorted(observed_species - phylofill_species)
+        phylofill_subset = df.loc[masks[phylofill_panel]]
+        species_with_assistance = sorted(
+            phylofill_subset.loc[phylofill_subset["uses_any_phylo_assistance"], "species"].tolist()
+        )
+        comparison_rows.append(
+            {
+                "observed_panel": observed_panel,
+                "phylofill_panel": phylofill_panel,
+                "n_observed_panel": int(len(observed_species)),
+                "n_phylofill_panel": int(len(phylofill_species)),
+                "n_added_species": int(len(added_species)),
+                "added_species": ";".join(added_species),
+                "n_removed_species": int(len(removed_species)),
+                "removed_species": ";".join(removed_species),
+                "n_species_with_phylo_assistance": int(len(species_with_assistance)),
+                "species_with_phylo_assistance": ";".join(species_with_assistance),
+                "is_species_set_identical": observed_species == phylofill_species,
+            }
+        )
+    pd.DataFrame(comparison_rows).to_csv(OUTPUT_PHYLO_COMPARE, index=False)
     readiness.to_csv(OUTPUT_READINESS, index=False)
 
     print(f"Wrote panel directory {PANEL_DIR}")
     print(f"Wrote {OUTPUT_SUMMARY}")
+    print(f"Wrote {OUTPUT_PHYLO_COMPARE}")
     print(f"Wrote {OUTPUT_READINESS}")
 
 

@@ -134,6 +134,84 @@ Interpretation goal:
 
 - This is the eventual integrated chapter analysis, but not the first result to prioritize.
 
+## Family 5: `te_genome_organismal`
+
+Purpose: test whether the core TE-genome association remains after adding the most defensible organismal covariates from the curated trait layer.
+
+Nodes:
+
+- `ltr_balance`
+- `te_evenness`
+- `body_size`: scaled log adult-oriented body-size proxy
+- `aquaticity`: scaled aquaticity index
+- `gs`
+
+Design note:
+
+- `development_mode` is intentionally omitted from this first organismal family because the current TE+genome overlap contains only three direct developers and those are largely nested inside the lowest aquaticity class.
+
+Candidate models:
+
+1. `te_baseline`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness`
+2. `body_size_additive`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness + body_size`
+3. `aquaticity_additive`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness + aquaticity`
+4. `organismal_additive`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness + body_size + aquaticity`
+5. `aquaticity_confounds_body_and_te`
+   `body_size <- aquaticity`
+   `te_evenness <- ltr_balance + aquaticity`
+   `gs <- te_evenness + body_size`
+
+Interpretation goal:
+
+- Does body size or broad aquaticity explain genome-size variation better than the current TE summary?
+- Does the TE signal survive after a compact organismal adjustment?
+
+## Family 6: `te_genome_ectopic_organismal`
+
+Purpose: test whether body size still matters after adding the current ectopic-recombination proxy, or whether the ectopic signal absorbs the same variance.
+
+Nodes:
+
+- `ltr_balance`
+- `te_evenness`
+- `ectopic_index`
+- `body_size`
+- `gs`
+
+Design note:
+
+- `aquaticity` is omitted because the first organismal family showed little support for it.
+- The key comparison here is between `ectopic_index`, `body_size`, and the previous TE-only path.
+
+Candidate models:
+
+1. `ectopic_baseline`
+   `gs <- ectopic_index`
+2. `ectopic_body_size_additive`
+   `gs <- ectopic_index + body_size`
+3. `te_body_size_baseline`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness + body_size`
+4. `te_ectopic_body_size`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness + ectopic_index + body_size`
+5. `ltr_to_ectopic_body_size`
+   `ectopic_index <- ltr_balance`
+   `gs <- ectopic_index + body_size`
+
+Interpretation goal:
+
+- Does ectopic signal remain the best genome-size predictor once body size is included?
+- Does the TE-evenness path still help once ectopic and body size are both available?
+
 ## What Not To Do Yet
 
 - Do not put `morph_nc_ratio` in the same DAG as both `ns` and `cs`.

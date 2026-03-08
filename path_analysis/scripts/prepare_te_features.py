@@ -170,17 +170,21 @@ def load_divergence_features(order_weights: pd.DataFrame) -> pd.DataFrame:
 def load_ectopic_features() -> pd.DataFrame:
     ectopic = pd.read_csv(ECTOPIC_FILE, sep="\t")
     ectopic["species"] = standardize_species(ectopic["species"])
-    ectopic["complete_yes"] = (ectopic["Complete"].astype(str).str.lower() == "yes").astype(float)
+    ectopic["ratio_terminal_internal"] = pd.to_numeric(ectopic["ratio_terminal_internal"], errors="coerce")
+    complete_state = ectopic["Complete"].astype(str).str.strip().str.lower()
+    ectopic["complete_flag_known"] = complete_state.map({"yes": 1.0, "no": 0.0})
 
     grouped = ectopic.groupby("species", dropna=False)
     summary = grouped.agg(
-        ectopic_n_elements=("ratio_terminal_internal", "size"),
+        ectopic_n_rows_total=("sequence", "size"),
+        ectopic_n_elements=("ratio_terminal_internal", "count"),
         ectopic_mean_ratio=("ratio_terminal_internal", "mean"),
         ectopic_median_ratio=("ratio_terminal_internal", "median"),
         ectopic_mean_terminal_depth=("mean_depth_terminal", "mean"),
         ectopic_mean_internal_depth=("mean_depth_internal", "mean"),
         ectopic_mean_domain_count=("domain_count", "mean"),
-        ectopic_complete_fraction=("complete_yes", "mean"),
+        ectopic_n_complete_known=("complete_flag_known", "count"),
+        ectopic_complete_fraction=("complete_flag_known", "mean"),
     )
     summary["ectopic_log10_mean_ratio"] = summary["ectopic_mean_ratio"].apply(
         lambda x: math.log10(x) if pd.notna(x) and x > 0 else np.nan

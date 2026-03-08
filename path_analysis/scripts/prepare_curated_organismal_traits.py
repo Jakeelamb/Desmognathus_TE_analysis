@@ -139,6 +139,8 @@ def load_manual_trait_summary(path: Path) -> pd.DataFrame:
             "adult_svl_min_mm",
             "adult_svl_max_mm",
             "adult_svl_mid_mm",
+            "adult_svl_mean_mm",
+            "svl_mean_all_specimens_mm",
             "adult_total_length_min_mm",
             "adult_total_length_max_mm",
             "adult_total_length_mid_mm",
@@ -147,6 +149,8 @@ def load_manual_trait_summary(path: Path) -> pd.DataFrame:
             "adult_svl_min_mm": "manual_adult_svl_min_mm",
             "adult_svl_max_mm": "manual_adult_svl_max_mm",
             "adult_svl_mid_mm": "manual_adult_svl_mid_mm",
+            "adult_svl_mean_mm": "manual_adult_svl_mean_mm",
+            "svl_mean_all_specimens_mm": "manual_svl_mean_all_specimens_mm",
             "adult_total_length_min_mm": "manual_adult_tl_min_mm",
             "adult_total_length_max_mm": "manual_adult_tl_max_mm",
             "adult_total_length_mid_mm": "manual_adult_tl_mid_mm",
@@ -247,6 +251,20 @@ def choose_body_size(row: pd.Series) -> tuple[float | None, str | None, str | No
             row.get("manual_body_size_source_id"),
             "medium",
         )
+    if pd.notna(row.get("manual_adult_svl_mean_mm")):
+        return (
+            float(row["manual_adult_svl_mean_mm"]),
+            "manual_adult_svl_mean_mm",
+            row.get("manual_body_size_source_id"),
+            "medium",
+        )
+    if pd.notna(row.get("manual_svl_mean_all_specimens_mm")):
+        return (
+            float(row["manual_svl_mean_all_specimens_mm"]),
+            "manual_svl_mean_all_specimens_mm",
+            row.get("manual_body_size_source_id"),
+            "medium",
+        )
     if pd.notna(row.get("nc_adult_svl_mid_mm")) and nc_phrase_type == "adult_range":
         return (
             float(row["nc_adult_svl_mid_mm"]),
@@ -318,6 +336,13 @@ def choose_body_size(row: pd.Series) -> tuple[float | None, str | None, str | No
         return (
             float(row["nc_adult_svl_mid_mm"]),
             "metamorphosed_svl_range_mid_mm",
+            "nc_biodiversity_amphibians",
+            "medium",
+        )
+    if pd.notna(row.get("nc_adult_svl_mid_mm")) and nc_phrase_type == "transformed_range" and not has_conanti_proxy:
+        return (
+            float(row["nc_adult_svl_mid_mm"]),
+            "transformed_svl_range_mid_mm",
             "nc_biodiversity_amphibians",
             "medium",
         )
