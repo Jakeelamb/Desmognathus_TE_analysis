@@ -6,6 +6,8 @@ This folder is a temporary, consolidated workspace for the phylogenetic path ana
 
 - `README.md`
   This overview and the current staged plan.
+- `SESSION_HANDOFF.md`
+  Current project-state handoff document for restarting work quickly.
 - `DATA_DICTIONARY.md`
   Variable definitions, preferred observed proxies, and current caveats.
 - `INPUT_PREPARATION_PLAN.md`
