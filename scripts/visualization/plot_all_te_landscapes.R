@@ -8,6 +8,18 @@
 # Usage: Rscript visualize_all_landscapes.R
 #
 
+script_args <- commandArgs(trailingOnly = FALSE)
+script_path_arg <- grep("^--file=", script_args, value = TRUE)
+if (length(script_path_arg) > 0) {
+  script_path <- normalizePath(sub("^--file=", "", script_path_arg[1]), mustWork = FALSE)
+  script_dir <- dirname(script_path)
+} else {
+  script_dir <- "scripts/visualization"
+}
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # Load required libraries
 suppressPackageStartupMessages({
   library(tidyverse)
@@ -18,10 +30,11 @@ suppressPackageStartupMessages({
   library(RColorBrewer)
 })
 
-# Define paths
-landscapes_dir <- "results/landscapes"
-output_dir <- "results/figures"
-lookup_table_path <- "data/raw/lookup/lookup_table.txt"
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
+landscapes_dir <- resolve_config_path(project_root, config$results$landscapes, "results/landscapes")
+output_dir <- resolve_config_path(project_root, config$results$figures$landscape, "results/figures/landscape")
+lookup_table_path <- resolve_config_path(project_root, config$input_data$lookup_table %||% config$data$lookup, "input_data/lookup_table.txt")
 
 # Create output directory if it doesn't exist
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
@@ -218,4 +231,4 @@ main <- function() {
 }
 
 # Run the main function
-main() 
+main()

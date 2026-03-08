@@ -43,9 +43,9 @@ desmognathus_te/
 **Purpose**: Analyze TE landscapes for individual samples
 
 **Input Files**:
-- `data/raw/repeatmasker/{SRX_ID}_Trinity.align`
-- `data/interim/{SRX_ID}_reads_per_component_and_annotation_processed`
-- `data/raw/lookup/lookup_table.txt`  # Species mapping
+- `input_data/repeatmasker/{SRX_ID}_Trinity.align`
+- `results/data/dnaPipeTE_merged_classifications.csv`  # canonical classification source
+- `input_data/lookup_table.txt`  # Species mapping
 
 **Output Files**:
 - `results/landscapes/repeat_landscape_{SRX_ID}.csv`
@@ -71,7 +71,7 @@ desmognathus_te/
 
 **Input Files**:
 - All files in `results/landscapes/`
-- `data/raw/lookup/lookup_table.txt`  # Species mapping
+- `input_data/lookup_table.txt`  # Species mapping
 
 **Output Files**:
 - `results/figures/combined_te_landscape_all_samples.png`
@@ -130,7 +130,8 @@ python scripts/python/preprocessing/generate_superfamily_proportions.py
 python scripts/python/analysis/run_diversity_analysis.py
 
 # Run PCA analysis
-Rscript scripts/R/analysis/te_pca_analysis.R
+Rscript scripts/processing/pca.R
+Rscript scripts/processing/phylogenetic_pca_analysis.R
 ```
 
 ## Dependencies

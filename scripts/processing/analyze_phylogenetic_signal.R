@@ -2,88 +2,53 @@
 # Description: Tests for phylogenetic signal (Pagel's Lambda and Blomberg's K)
 #              in TE superfamily proportions using a given phylogeny.
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/processing"
+  }
+}, error = function(...) {
+  "scripts/processing"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # Load required libraries
 suppressPackageStartupMessages({
   library(ape)
   library(phytools)
   library(dplyr)
   library(tibble)
-  library(here) # Using 'here' for robust path management
   library(yaml)
 })
 
 # === Configuration ===
-project_root <- here::here()
-config_file <- file.path(project_root, "config/paths.yaml")
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
-# Set default paths first (relative to project root)
-default_tree_path <- "results/phylogeny/processed_phylogeny.nwk"
-default_traits_path <- "data/processed/diversity/superfamily_proportions.csv"
-default_output_subdir <- "results/tables/phylogenetic_signal"
+phylo_dir <- resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny")
+results_data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+output_dir <- resolve_config_path(project_root, config$results$tables$phylo_signal, "results/tables/phylogenetic_signal")
 
-# Initialize with defaults
-tree_file <- file.path(project_root, default_tree_path)
-traits_file <- file.path(project_root, default_traits_path)
-output_dir_relative <- default_output_subdir # Keep relative path for constructing output filename later
-output_dir <- file.path(project_root, output_dir_relative) # Full path used for dir.create
-
-if (file.exists(config_file)) {
-  tryCatch({
-    config <- yaml::read_yaml(config_file)
-    cat("Config file found. Reading paths.\n")
-
-    # Safely get paths from config, use default if specific key is missing or NULL
-    tree_path_from_config <- config$results$phylogeny
-    if (!is.null(tree_path_from_config) && is.character(tree_path_from_config) && nzchar(tree_path_from_config)) {
-      tree_file <- file.path(project_root, tree_path_from_config, "processed_phylogeny.nwk")
-      cat("  Using tree path from config:", tree_path_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'results$phylogeny'. Using default: ", default_tree_path)
-      tree_file <- file.path(project_root, default_tree_path) # Reaffirm default
-    }
-
-    traits_path_from_config <- config$data$processed$diversity
-    if (!is.null(traits_path_from_config) && is.character(traits_path_from_config) && nzchar(traits_path_from_config)) {
-      traits_file <- file.path(project_root, traits_path_from_config, "superfamily_proportions.csv")
-      cat("  Using traits path from config:", traits_path_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'data$processed$diversity'. Using default: ", default_traits_path)
-      traits_file <- file.path(project_root, default_traits_path) # Reaffirm default
-    }
-
-    output_dir_from_config <- config$results$tables$phylo_signal
-    if (!is.null(output_dir_from_config) && is.character(output_dir_from_config) && nzchar(output_dir_from_config)) {
-      output_dir <- file.path(project_root, output_dir_from_config)
-      output_dir_relative <- output_dir_from_config # Store relative path for output file name
-      cat("  Using output directory from config:", output_dir_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'results$tables$phylo_signal'. Using default: ", default_output_subdir)
-      output_dir <- file.path(project_root, default_output_subdir) # Reaffirm default full path
-      output_dir_relative <- default_output_subdir # Reaffirm default relative path
-    }
-
-  }, error = function(e) {
-    warning("Error reading config file '", config_file, "': ", conditionMessage(e), ". Using default paths.")
-    # Ensure defaults are set if config reading fails
-    tree_file <- file.path(project_root, default_tree_path)
-    traits_file <- file.path(project_root, default_traits_path)
-    output_dir <- file.path(project_root, default_output_subdir)
-  })
-} else {
-  warning("config/paths.yaml not found. Using default paths relative to project root.")
-  # Defaults are already set, output_dir is the full path
-  output_dir <- file.path(project_root, default_output_subdir)
+tree_file <- file.path(phylo_dir, "desmo900dated_test.tre")
+if (!file.exists(tree_file)) {
+  tree_file <- file.path(project_root, "results", "phylogeny", "processed_phylogeny.nwk")
 }
 
-# Construct final output file path using the determined output directory
+traits_file <- file.path(results_data_dir, "dnaPipeTE_superfamily_breakdown.csv")
+if (!file.exists(traits_file)) {
+  legacy_traits_dir <- resolve_config_path(project_root, config$data$processed$diversity, "data/processed/diversity")
+  traits_file <- file.path(legacy_traits_dir, "superfamily_proportions.csv")
+}
+
 output_file <- file.path(output_dir, "phylogenetic_signal_results.csv")
 
-# Ensure output directory exists
+cat("Project root:", project_root, "\n")
 cat("Ensuring output directory exists:", output_dir, "\n")
-# Add an explicit check just before dir.create
-if (is.null(output_dir) || !is.character(output_dir) || nchar(output_dir) == 0) {
-  stop("Output directory path is invalid before dir.create: Check config/paths.yaml or defaults.")
-}
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
 # === Load Data ===
@@ -96,25 +61,31 @@ if (!file.exists(traits_file)) stop("Traits file not found: ", traits_file)
 # Assuming the first column is the species name/identifier
 traits_raw <- read.csv(traits_file, header = TRUE, check.names = FALSE)
 
+if (ncol(traits_raw) > 0 && !nzchar(colnames(traits_raw)[1])) {
+  colnames(traits_raw)[1] <- "species"
+}
+
 # Check if the first column is 'Species' or similar and set it as row names
 if (ncol(traits_raw) > 0 && tolower(colnames(traits_raw)[1]) == "species") {
-  traits <- traits_raw %>%
+  traits <- as.data.frame(traits_raw, check.names = FALSE) %>%
     tibble::column_to_rownames(var = colnames(traits_raw)[1])
   cat("Using column '", colnames(traits_raw)[1], "' as species identifiers.\n")
 } else if (ncol(traits_raw) > 0) {
    warning("First column is not named 'Species'. Assuming it contains species identifiers and setting as row names.")
-   traits <- traits_raw %>%
+   traits <- as.data.frame(traits_raw, check.names = FALSE) %>%
      tibble::column_to_rownames(var = colnames(traits_raw)[1])
 } else {
   stop("Trait data file is empty or has no columns.")
 }
 
+rownames(traits) <- gsub("^D\\.", "", rownames(traits))
+
 
 # Convert trait data to numeric, coercing errors to NA
 # Store original column names before manipulation
 original_colnames <- colnames(traits)
-numeric_traits <- traits %>%
-  mutate(across(everything(), function(x) as.numeric(as.character(x))))
+numeric_traits <- as.data.frame(lapply(traits, function(x) as.numeric(as.character(x))), check.names = FALSE)
+rownames(numeric_traits) <- rownames(traits)
 
 # Check which columns became all NA after conversion (potential non-numeric columns)
 all_na_cols <- names(which(sapply(numeric_traits, function(col) all(is.na(col)))) & !sapply(traits, function(col) all(is.na(col))))

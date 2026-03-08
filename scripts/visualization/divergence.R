@@ -16,22 +16,25 @@ library(scales)       # percent labels
 library(yaml)         # for config loading
 
 # --- Configuration ---
-# Find project root and load config
-find_project_root <- function() {
-  current <- getwd()
-  for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml"))) return(current)
-    current <- dirname(current)
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/visualization"
   }
-  stop("Could not find project root (paths.yaml)")
-}
+}, error = function(...) {
+  "scripts/visualization"
+})
 
-project_root <- find_project_root()
-config <- yaml::read_yaml(file.path(project_root, "paths.yaml"))
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
 # Define paths from config
-results_data <- file.path(project_root, config$results$data)
-results_figures <- file.path(project_root, config$results$figures)
+results_data <- resolve_config_path(project_root, config$results$data, "results/data")
+results_figures <- resolve_config_path(project_root, config$results$figures, "results/figures")
 
 input_file <- file.path(results_data, "divergence/divergence_summary_statistics_by_species.csv")
 
@@ -48,7 +51,7 @@ dir.create(base_phylo_output_dir, showWarnings = FALSE, recursive = TRUE)
 # ─────────────────────────────────────────────────────────────
 # Load Tree and Get Coordinates (for Phylogeny Plots)
 # ─────────────────────────────────────────────────────────────
-tree_file <- "results/data/desmo900dated_test_cleaned_phylo.tre"
+tree_file <- file.path(results_data, "desmo900dated_test_cleaned_phylo.tre")
 if (!file.exists(tree_file)) {
   stop("Tree file not found: ", tree_file)
 }
@@ -339,4 +342,3 @@ for (level in unique_group_levels_phylo) {
 }
 
 message("Phylogeny plot generation complete. Plots saved in subdirectories under ", base_phylo_output_dir)
-

@@ -1,158 +1,185 @@
-#' PCA Analysis for Desmognathus TE Composition
-#'
-#' Performs Principal Component Analysis on TE order and superfamily
-#' composition data with optional CLR transformation.
-#'
-#' @usage Rscript scripts/processing/pca.R
+#!/usr/bin/env Rscript
 
-# Load shared utilities - find script directory robustly
+# Canonical TE compositional PCA workflow.
+#
+# This script is the single supported entrypoint for non-phylogenetic TE PCA.
+# It intentionally replaces the older raw-proportion and clustering-heavy
+# variants with a compositional workflow that:
+# 1. uses frozen repo-local TE breakdown tables
+# 2. filters features explicitly
+# 3. applies deterministic zero replacement
+# 4. runs CLR PCA with no post-CLR variance scaling
+# 5. writes the exact transformed matrices used downstream
+
 script_dir <- tryCatch({
-    args <- commandArgs(trailingOnly = FALSE)
-    file_arg <- grep("^--file=", args, value = TRUE)
-    if (length(file_arg) > 0) {
-        dirname(normalizePath(sub("^--file=", "", file_arg[1])))
-    } else {
-        "scripts/processing"
-    }
-}, error = function(e) "scripts/processing")
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[1]), mustWork = FALSE))
+  } else {
+    "scripts/processing"
+  }
+}, error = function(...) {
+  "scripts/processing"
+})
 
 source(file.path(script_dir, "pca_utils.R"))
 
-# --- Configuration ---
-config <- load_config()
-data_dir <- config$results$data
-output_dir <- config$results$figures
-variance_threshold <- 0.80
-k_range <- 2:10
 
-# Ensure output directory exists
-dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
+parse_args <- function() {
+  args <- commandArgs(trailingOnly = TRUE)
+  params <- list(
+    analysis = NULL,
+    list_analyses = FALSE,
+    no_plots = FALSE
+  )
 
-# --- Load Data ---
-message("Loading TE composition data...")
-order_df <- load_te_data(config, "order")
-superfamily_df <- load_te_data(config, "superfamily")
-
-# --- Function: Perform PCA and Plot ---
-perform_pca_and_plot <- function(df, title_prefix, id_col = names(df)[1], apply_clr = TRUE) {
-    analysis_type_suffix <- if (apply_clr) "CLR" else "Raw"
-    full_title_prefix <- paste0(title_prefix, "_", analysis_type_suffix)
-
-    message(paste("\n--- Performing PCA for:", full_title_prefix, "---"))
-
-    # Prepare data using shared utility
-    prepared <- prepare_pca_data(df, id_col, apply_clr, verbose = TRUE)
-
-    if (ncol(prepared$data) == 0 || nrow(prepared$data) == 0) {
-        message(paste("No data remaining for", full_title_prefix, "PCA."))
-        return(list(principal_components = NULL, n_components = 0))
-    }
-
-    # Check for zero variance columns
-    variances <- apply(prepared$data, 2, var, na.rm = TRUE)
-    zero_var_cols <- names(variances)[variances == 0]
-    if (length(zero_var_cols) > 0) {
-        warning(paste("Removing zero variance columns:", paste(zero_var_cols, collapse = ", ")))
-        prepared$data <- prepared$data[, variances > 0, drop = FALSE]
-    }
-
-    if (ncol(prepared$data) == 0) {
-        message(paste("No columns with variance remain for", full_title_prefix, "PCA."))
-        return(list(principal_components = NULL, n_components = 0))
-    }
-
-    # Perform PCA
-    pca_result <- prcomp(as.matrix(prepared$data), center = TRUE, scale. = FALSE)
-
-    # Calculate explained variance
-    explained_variance <- pca_result$sdev^2 / sum(pca_result$sdev^2)
-    cumulative_variance <- cumsum(explained_variance)
-
-    # Determine number of components for threshold
-    n_components_thresh <- get_n_components(pca_result, variance_threshold)
-    message(paste(full_title_prefix, ": Components for >=", variance_threshold * 100, "% variance:", n_components_thresh))
-
-    # Display loadings
-    message(paste("\n---", full_title_prefix, ": Top", min(n_components_thresh, 3), "Component Loadings ---"))
-    if (n_components_thresh > 0) {
-        print(round(pca_result$rotation[, 1:min(n_components_thresh, 3)], 3))
-    }
-
-    # Identify top contributors
-    top_contributors_pc1 <- character(0)
-    top_contributors_pc2 <- character(0)
-    if (ncol(pca_result$rotation) >= 1) {
-        loadings_pc1 <- abs(pca_result$rotation[, 1])
-        top_contributors_pc1 <- names(sort(loadings_pc1, decreasing = TRUE)[1:min(3, length(loadings_pc1))])
-        message(paste("Top 3 contributors to PC1:", paste(top_contributors_pc1, collapse = ", ")))
-    }
-    if (ncol(pca_result$rotation) >= 2) {
-        loadings_pc2 <- abs(pca_result$rotation[, 2])
-        top_contributors_pc2 <- names(sort(loadings_pc2, decreasing = TRUE)[1:min(3, length(loadings_pc2))])
-        message(paste("Top 3 contributors to PC2:", paste(top_contributors_pc2, collapse = ", ")))
-    }
-
-    # Generate Scree Plot
-    create_scree_plot(
-        pca_result,
-        title = paste(full_title_prefix, "- Scree Plot"),
-        output_path = file.path(output_dir, paste0(title_prefix, "_scree_plot.png"))
-    )
-
-    # Extract principal components
-    if (n_components_thresh > 0) {
-        principal_components <- as.data.frame(pca_result$x[, 1:n_components_thresh, drop = FALSE])
-        colnames(principal_components) <- paste0("PC", 1:n_components_thresh)
+  i <- 1L
+  while (i <= length(args)) {
+    arg <- args[[i]]
+    if (arg == "--analysis") {
+      i <- i + 1L
+      params$analysis <- args[[i]]
+    } else if (arg == "--list-analyses") {
+      params$list_analyses <- TRUE
+    } else if (arg == "--no-plots") {
+      params$no_plots <- TRUE
     } else {
-        principal_components <- data.frame(matrix(ncol = 0, nrow = nrow(prepared$data)))
+      stop("Unknown argument: ", arg, call. = FALSE)
     }
+    i <- i + 1L
+  }
 
-    # Add identifier back
-    if (nrow(principal_components) == length(prepared$ids)) {
-        principal_components[[id_col]] <- prepared$ids
-    }
-
-    # Generate PCA Scatter Plot
-    if (n_components_thresh >= 2 && id_col %in% names(principal_components)) {
-        xlab_text <- sprintf("PC1 (%.2f%%)\nTop: %s",
-                            explained_variance[1] * 100,
-                            paste(top_contributors_pc1, collapse = ", "))
-        ylab_text <- sprintf("PC2 (%.2f%%)\nTop: %s",
-                            explained_variance[2] * 100,
-                            paste(top_contributors_pc2, collapse = ", "))
-
-        pca_scatter_plot <- ggplot(principal_components,
-                                   aes(x = PC1, y = PC2, label = !!sym(id_col))) +
-            geom_point(alpha = 0.8, color = "steelblue", size = 3) +
-            ggrepel::geom_text_repel(size = 3, max.overlaps = 15) +
-            labs(
-                title = paste(full_title_prefix, "- PCA Scatter Plot"),
-                x = xlab_text,
-                y = ylab_text
-            ) +
-            theme_minimal() +
-            coord_fixed()
-
-        ggsave(file.path(output_dir, paste0(full_title_prefix, "_pca_scatter_plot.png")),
-               plot = pca_scatter_plot, width = 10, height = 8, dpi = 300)
-    }
-
-    # Return results
-    list(
-        principal_components = principal_components,
-        numeric_pcs = principal_components %>% select(starts_with("PC")),
-        filtered_ids = prepared$ids,
-        n_components = n_components_thresh
-    )
+  params
 }
 
-# --- Main Execution ---
-message("\n========== Order Diversity PCA ==========")
-order_pca_raw <- perform_pca_and_plot(order_df, "Order_Diversity", apply_clr = FALSE)
-order_pca_clr <- perform_pca_and_plot(order_df, "Order_Diversity", apply_clr = TRUE)
 
-message("\n========== Superfamily Diversity PCA ==========")
-superfamily_pca_raw <- perform_pca_and_plot(superfamily_df, "Superfamily_Diversity", apply_clr = FALSE)
-superfamily_pca_clr <- perform_pca_and_plot(superfamily_df, "Superfamily_Diversity", apply_clr = TRUE)
+print_available_analyses <- function() {
+  specs <- build_te_pca_specs()
+  cat("Available TE PCA analyses:\n")
+  for (spec in specs) {
+    cat("- ", spec$id, ": ", spec$description, "\n", sep = "")
+  }
+}
 
-message(paste("\nPCA analysis complete. Plots saved in", output_dir))
+
+relative_to_root <- function(path, project_root) {
+  root_norm <- normalizePath(project_root, winslash = "/", mustWork = FALSE)
+  path_norm <- normalizePath(path, winslash = "/", mustWork = FALSE)
+  sub(paste0(root_norm, "/"), "", path_norm, fixed = TRUE)
+}
+
+
+main <- function() {
+  params <- parse_args()
+  if (params$list_analyses) {
+    print_available_analyses()
+    return(invisible(NULL))
+  }
+
+  required_pca_packages("ggplot2")
+
+  paths <- get_pca_paths()
+  ensure_dir(paths$pca_table_dir)
+  ensure_dir(paths$pca_figure_dir)
+
+  specs <- select_pca_specs(parse_csv_arg(params$analysis))
+  metric_context <- compute_te_context_metrics(paths)
+
+  manifest_rows <- list()
+  correlation_rows <- list()
+  stability_summary_rows <- list()
+  stability_detail_rows <- list()
+
+  for (spec in specs) {
+    message("\n--- Running canonical TE PCA: ", spec$id, " ---")
+
+    raw_matrix <- load_breakdown_matrix(paths, spec$level)
+    prepared <- prepare_compositional_dataset(raw_matrix, spec)
+    result <- run_standard_pca(prepared$clr_matrix)
+    stability <- compute_pca_stability(prepared$clr_matrix, result$pca, spec$id)
+    correlations <- compute_pc_metric_correlations(result$scores, metric_context, spec$id)
+
+    prefix <- file.path(paths$pca_table_dir, spec$id)
+    write_matrix_with_species(prepared$zero_replaced_matrix, paste0(prefix, "_zero_replaced_composition.csv"))
+    write_matrix_with_species(prepared$clr_matrix, paste0(prefix, "_clr_matrix.csv"))
+    write_csv_if_nonempty(prepared$feature_manifest, paste0(prefix, "_feature_manifest.csv"))
+    write_csv_if_nonempty(result$scores, paste0(prefix, "_scores.csv"))
+    write_csv_if_nonempty(result$loadings, paste0(prefix, "_loadings.csv"))
+    write_csv_if_nonempty(result$variance, paste0(prefix, "_variance.csv"))
+
+    if (!params$no_plots) {
+      plot_pca_scree(
+        result$variance,
+        title = paste(spec$id, "CLR PCA scree plot"),
+        output_path = file.path(paths$pca_figure_dir, paste0(spec$id, "_scree_plot.png"))
+      )
+      plot_pca_scores(
+        result$scores,
+        result$variance,
+        result$loadings,
+        title = paste(spec$id, "CLR PCA scores"),
+        output_path = file.path(paths$pca_figure_dir, paste0(spec$id, "_scores_pc1_pc2.png"))
+      )
+    }
+
+    manifest_rows[[length(manifest_rows) + 1L]] <- data.frame(
+      analysis_id = spec$id,
+      level = spec$level,
+      role = spec$role,
+      feature_set = spec$feature_set,
+      min_presence = spec$min_presence,
+      n_species = nrow(prepared$clr_matrix),
+      n_features = ncol(prepared$clr_matrix),
+      zero_fraction = prepared$zero_fraction,
+      zero_replacement = if (prepared$pseudocount > 0) "half_min_positive_global" else "not_needed",
+      min_positive_fraction = prepared$min_positive,
+      pseudocount_fraction = prepared$pseudocount,
+      pc1_variance = result$variance$proportion_variance[result$variance$pc == "PC1"],
+      pc2_variance = if ("PC2" %in% result$variance$pc) {
+        result$variance$proportion_variance[result$variance$pc == "PC2"]
+      } else {
+        NA_real_
+      },
+      source_path = relative_to_root(prepared$source_path, paths$project_root),
+      description = spec$description,
+      stringsAsFactors = FALSE
+    )
+
+    if (nrow(correlations) > 0) {
+      correlation_rows[[length(correlation_rows) + 1L]] <- correlations
+    }
+    if (nrow(stability$summary) > 0) {
+      stability_summary_rows[[length(stability_summary_rows) + 1L]] <- stability$summary
+      stability_detail_rows[[length(stability_detail_rows) + 1L]] <- stability$detail
+    }
+  }
+
+  manifest_df <- do.call(rbind, manifest_rows)
+  write_csv_if_nonempty(manifest_df, file.path(paths$pca_table_dir, "te_pca_analysis_manifest.csv"))
+
+  if (length(correlation_rows) > 0) {
+    write_csv_if_nonempty(
+      do.call(rbind, correlation_rows),
+      file.path(paths$pca_table_dir, "te_pca_pc_metric_correlations.csv")
+    )
+  }
+
+  if (length(stability_summary_rows) > 0) {
+    write_csv_if_nonempty(
+      do.call(rbind, stability_summary_rows),
+      file.path(paths$pca_table_dir, "te_pca_stability_summary.csv")
+    )
+    write_csv_if_nonempty(
+      do.call(rbind, stability_detail_rows),
+      file.path(paths$pca_table_dir, "te_pca_stability_detail.csv")
+    )
+  }
+
+  message("\nCanonical TE PCA complete.")
+  message("Tables: ", relative_to_root(paths$pca_table_dir, paths$project_root))
+  message("Figures: ", relative_to_root(paths$pca_figure_dir, paths$project_root))
+}
+
+
+main()

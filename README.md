@@ -41,8 +41,8 @@ python scripts/processing/dnaPipe.py
 │   │   ├── ec.py                  # Ectopic recombination analysis
 │   │   ├── divergence.py          # Divergence calculations
 │   │   ├── diversity_stats.py     # Canonical diversity writer
-│   │   ├── pca.R                  # PCA analysis
-│   │   ├── pca_utils.R            # Shared PCA utilities
+│   │   ├── pca.R                  # Canonical compositional PCA
+│   │   ├── pca_utils.R            # Shared compositional PCA utilities
 │   │   ├── phylogenetic_pca_analysis.R
 │   │   ├── clean_tree_phylo.R     # Phylogeny cleaning
 │   │   └── analyze_phylogenetic_signal.R
@@ -51,7 +51,7 @@ python scripts/processing/dnaPipe.py
 │       ├── hierarchical_donut_TE_diversity.R
 │       └── plot_*.R
 │
-├── paths.yaml                     # Path configuration
+├── config/paths.yaml              # Path configuration
 ├── Dusky.yml                      # Conda environment specification
 ├── verify_setup.py                # Setup verification script
 └── README.md
@@ -186,30 +186,42 @@ Rscript scripts/processing/clean_tree_phylo.R
 
 **Outputs:**
 - `results/data/desmo900dated_test_cleaned_phylo.tre`
-- `results/figures/rectangular_phylogeny.png`
+- `results/figures/phylogeny/rectangular_phylogeny.png`
 
 ### 7. PCA Analysis
 
-Performs PCA on TE composition data.
+Runs the canonical compositional PCA workflow on the frozen TE breakdown
+tables. This is intended as a supplementary ordination layer, not the primary
+comparative predictor block. See `TE_PCA_METHODS.md` for the exact filtering,
+zero-replacement, and CLR rules.
 
 ```bash
 Rscript scripts/processing/pca.R
 ```
 
 **Outputs:**
-- `results/figures/*_pca_scatter_plot.png`
-- `results/figures/*_scree_plot.png`
+- `results/tables/pca/te_pca_analysis_manifest.csv`
+- `results/tables/pca/*_clr_matrix.csv`
+- `results/tables/pca/*_scores.csv`
+- `results/tables/pca/*_loadings.csv`
+- `results/figures/pca/*_scores_pc1_pc2.png`
+- `results/figures/pca/*_scree_plot.png`
 
 ### 8. Phylogenetic PCA
 
-PCA with phylogenetic correction and phylomorphospace visualization.
+Runs supplementary phylogenetic PCA from the exact CLR matrices written by the
+standard PCA workflow.
 
 ```bash
 Rscript scripts/processing/phylogenetic_pca_analysis.R
 ```
 
 **Outputs:**
-- `results/figures/*_pPCA_phylomorphospace_plot.png`
+- `results/tables/pca/te_ppca_analysis_manifest.csv`
+- `results/tables/pca/*_ppca_scores.csv`
+- `results/tables/pca/*_ppca_loadings.csv`
+- `results/figures/pca/*_ppca_scores_pc1_pc2.png`
+- `results/figures/pca/*_ppca_phylomorphospace.png`
 
 ### 9. Trait Evolution Modeling
 
@@ -261,7 +273,10 @@ Rscript scripts/processing/permanova_analysis.R
 
 ## Configuration
 
-Path configuration is centralized in `paths.yaml`. Python scripts use `scripts/config.py` and R scripts use `scripts/processing/pca_utils.R` to load paths consistently.
+Path configuration is centralized in the repository-root `paths.yaml`, with
+`config/paths.yaml` retained as a compatibility mirror for older callers.
+Python scripts use `scripts/config.py`, and the rebuilt R helper layer resolves
+either location relative to the repository root.
 
 ```python
 # Python usage

@@ -26,12 +26,12 @@ def sha256_for_file(path: Path) -> str:
 def find_project_root(start: Path | None = None) -> Path:
     current = (start or Path(__file__).resolve()).parent
     for _ in range(8):
-        if (current / "paths.yaml").exists():
+        if (current / "paths.yaml").exists() or (current / "config" / "paths.yaml").exists():
             return current
         if current.parent == current:
             break
         current = current.parent
-    raise FileNotFoundError("Could not locate project root containing paths.yaml")
+    raise FileNotFoundError("Could not locate project root containing paths.yaml or config/paths.yaml")
 
 
 def canonical_species(value: object) -> str | pd.NA:

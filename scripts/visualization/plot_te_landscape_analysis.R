@@ -3,60 +3,73 @@
 # TE_LANDSCAPE_PLOTS.R
 # 
 # Description: Creates visualizations for Transposable Element landscape analysis
-# using outputs from the process_te_landscape.py script. This script assumes all
-# input data files are generated and available in the appropriate data directories.
+# using the current frozen dnaPipeTE breakdown tables in results/data.
 #
-# Input: 
-#   - CSV files in data/interim/pivot_tables/ and data/processed/te_superfamily/
+# Input:
+#   - CSV files in results/data/
 #
 # Output: Plot files (PNG) saved to results/figures/te_landscape/
 #
 
-# Load necessary libraries (assumes these are already installed)
-suppressPackageStartupMessages({
-  library(ggrepel)
-  library(tidyverse)
-  library(ggplot2)
-  library(Rtsne)
-  library(umap)
-  library(plotly)
-  library(cluster)
-  library(factoextra)
-  library(gridExtra)
-  library(yaml)
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/visualization"
+  }
+}, error = function(...) {
+  "scripts/visualization"
 })
 
-# Read the configuration file
-config_file <- "config/paths.yaml"
-if (file.exists(config_file)) {
-  config <- yaml::read_yaml(config_file)
-  
-  # Define paths from configuration
-  data_dir <- file.path(config$data$processed$te_superfamily)
-  pivot_dir <- file.path(config$data$interim$pivot_tables)
-  plot_dir <- file.path(config$results$figures$landscape)
-} else {
-  # Fallback paths if config file is not found
-  data_dir <- "data/processed/te_superfamily"
-  pivot_dir <- "data/interim/pivot_tables"
-  plot_dir <- "results/figures/te_landscape"
-}
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
+# Load necessary libraries (assumes these are already installed)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(ggplot2)
+})
+
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
+data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+figures_dir <- resolve_config_path(project_root, config$results$figures, "results/figures")
+plot_dir <- file.path(figures_dir, "te_landscape")
 
 # Create output directory for plots
 dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
 
-# Check if pivot table directory exists
-if (!dir.exists(pivot_dir)) {
-  stop(paste("Pivot table directory", pivot_dir, "not found.",
-             "Please run process_te_landscape.py first to generate required data files."))
+# Check if frozen TE data directory exists
+if (!dir.exists(data_dir)) {
+  stop(paste("TE data directory", data_dir, "not found."))
 }
 
 # Load the CSV data & define variables
-Class <- read.csv(file.path(pivot_dir, "class_breakdown.csv"))
-Order <- read.csv(file.path(pivot_dir, "order_breakdown.csv"))
-Superfamily <- read.csv(file.path(pivot_dir, "superfamily_breakdown.csv"))
-dna_vs_retro <- read.csv(file.path(pivot_dir, "dna_vs_retro.csv"))
-known_vs_unknown <- read.csv(file.path(pivot_dir, "known_vs_unknown.csv"))
+Class <- read.csv(file.path(data_dir, "dnaPipeTE_class_breakdown.csv"))
+Order <- read.csv(file.path(data_dir, "dnaPipeTE_order_breakdown.csv"))
+Superfamily <- read.csv(file.path(data_dir, "dnaPipeTE_superfamily_breakdown.csv"))
+
+# Standardize the leading species column across the frozen tables.
+colnames(Class)[1] <- "Species"
+colnames(Order)[1] <- "Species"
+colnames(Superfamily)[1] <- "Species"
+
+# Derive legacy helper tables on the fly from the current class breakdown.
+dna_vs_retro <- Class %>%
+  transmute(
+    Species = Species,
+    DNA = DNAtransposons.Subclass1 + DNAtransposons.Subclass2 + DNAtransposons.Unknown,
+    Retrotransposons = Retrotransposons.Autonomous + Retrotransposons.Non.autonomous + Retrotransposons.Unknown
+  )
+
+known_vs_unknown <- Class %>%
+  transmute(
+    Species = Species,
+    Known = rowSums(across(-Species), na.rm = TRUE) - Unknown,
+    Unknown = Unknown
+  )
 
 # Define key classification lists
 Retro_classes <- c("Retrotransposons Autonomous", "Retrotransposons Non-Autonomous", "Retrotransposons Unknown")
@@ -389,5 +402,3 @@ cat("Generated plot files:\n")
 for (f in plot_files) {
   cat("  -", f, "\n")
 }
-
-

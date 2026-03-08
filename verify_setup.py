@@ -8,6 +8,8 @@ import sys
 import os
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parent
+
 # Color codes for terminal output
 GREEN = '\033[92m'
 RED = '\033[91m'
@@ -32,15 +34,16 @@ def check_python_packages():
     """Check if required Python packages are installed."""
     print_header("Python Packages")
     
-    # Map display name to actual import name
     required_packages = [
         ('pandas', 'pandas'),
         ('numpy', 'numpy'),
         ('matplotlib', 'matplotlib'),
         ('seaborn', 'seaborn'),
-        ('biopython', 'Bio'),
         ('tqdm', 'tqdm'),
         ('yaml', 'yaml')
+    ]
+    optional_packages = [
+        ('biopython', 'Bio', "Only needed by legacy utility helpers")
     ]
     
     all_ok = True
@@ -51,6 +54,15 @@ def check_python_packages():
         except ImportError:
             print_status(display_name, False, "Not installed")
             all_ok = False
+
+    if optional_packages:
+        print(f"\n  {YELLOW}Optional packages:{RESET}")
+        for display_name, import_name, note in optional_packages:
+            try:
+                __import__(import_name)
+                print_status(display_name, True, note)
+            except ImportError:
+                print_status(display_name, True, f"Optional: {note}")
     
     return all_ok
 
@@ -71,7 +83,8 @@ def check_r_availability():
                 text=True,
                 timeout=5
             )
-            version = result.stderr.split('\n')[0] if result.stderr else "Unknown"
+            version_output = result.stderr.strip() or result.stdout.strip()
+            version = version_output.split('\n')[0] if version_output else "Unknown"
             print(f"    Version: {version}")
         except:
             pass
@@ -82,7 +95,7 @@ def check_directory_structure():
     """Check if required directories exist."""
     print_header("Directory Structure")
     
-    base_dir = Path("/home/jake/Projects/Desmognathus_TE")
+    base_dir = PROJECT_ROOT
     
     required_dirs = {
         "Input Data": [
@@ -95,6 +108,7 @@ def check_directory_structure():
             "results",
             "results/data",
             "results/figures",
+            "results/tables",
             "interim"
         ],
         "Scripts": [
@@ -119,7 +133,7 @@ def check_input_files():
     """Check for critical input files."""
     print_header("Critical Input Files")
     
-    base_dir = Path("/home/jake/Projects/Desmognathus_TE")
+    base_dir = PROJECT_ROOT
     
     files_to_check = {
         "input_data/lookup_table.txt": "Species lookup table",
@@ -153,7 +167,7 @@ def check_scripts():
     """Check that processing scripts exist and are readable."""
     print_header("Processing Scripts")
     
-    base_dir = Path("/home/jake/Projects/Desmognathus_TE")
+    base_dir = PROJECT_ROOT
     
     scripts = [
         ("scripts/processing/dnaPipe.py", "dnaPipeTE processing"),
@@ -164,6 +178,8 @@ def check_scripts():
         ("scripts/processing/pca.R", "PCA analysis"),
         ("scripts/processing/clean_tree_phylo.R", "Phylogeny cleaning"),
         ("scripts/processing/phylogenetic_pca_analysis.R", "Phylogenetic PCA"),
+        ("scripts/processing/analyze_phylogenetic_signal.R", "Phylogenetic signal"),
+        ("scripts/processing/analyze_phylogenetic_correlogram.R", "Phylogenetic correlogram"),
     ]
     
     all_ok = True
@@ -180,8 +196,9 @@ def check_existing_outputs():
     """Check what output files already exist."""
     print_header("Existing Output Files")
     
-    base_dir = Path("/home/jake/Projects/Desmognathus_TE")
+    base_dir = PROJECT_ROOT
     results_data = base_dir / "results/data"
+    results_tables = base_dir / "results/tables"
     
     if not results_data.exists():
         print("  Results directory doesn't exist yet")
@@ -192,6 +209,9 @@ def check_existing_outputs():
     
     print(f"\n  CSV files: {len(csv_files)}")
     print(f"  Tree files: {len(tre_files)}")
+    if results_tables.exists():
+        table_csv_files = list(results_tables.rglob("*.csv"))
+        print(f"  Table CSV files: {len(table_csv_files)}")
     
     if csv_files or tre_files:
         print(f"\n  {YELLOW}Note: Some analyses may have been run already{RESET}")

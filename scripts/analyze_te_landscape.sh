@@ -45,39 +45,32 @@ echo "Analyzing TE landscape for sample: $SRX_ID"
 
 # Define paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARSER_SCRIPT="${SCRIPT_DIR}/python/preprocessing/parse_repeatmasker_landscape.py"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PARSER_SCRIPT="${SCRIPT_DIR}/processing/parse_repeatmasker_landscape.py"
 PLOT_SCRIPT="${SCRIPT_DIR}/R/visualization/plot_te_landscape.R"
 
 # Create necessary directories
-mkdir -p "/home/jake/Projects/Desmognathus_TE/data/raw/repeatmasker"
-mkdir -p "/home/jake/Projects/Desmognathus_TE/data/interim"
-mkdir -p "/home/jake/Projects/Desmognathus_TE/results/landscapes"
-mkdir -p "/home/jake/Projects/Desmognathus_TE/results/figures/landscape"
+mkdir -p "${PROJECT_ROOT}/results/landscapes"
+mkdir -p "${PROJECT_ROOT}/results/figures/landscape"
 
 # Check if input files exist
-ALIGN_FILE="/home/jake/Projects/Desmognathus_TE/data/raw/repeatmasker/${SRX_ID}_Trinity.align"
-CLASS_FILE="/home/jake/Projects/Desmognathus_TE/data/interim/${SRX_ID}_reads_per_component_and_annotation_processed"
+ALIGN_FILE="${PROJECT_ROOT}/input_data/repeatmasker/${SRX_ID}_Trinity.align"
 
 if [ ! -f "$ALIGN_FILE" ]; then
     echo "Error: Align file not found: $ALIGN_FILE"
     exit 1
 fi
 
-if [ ! -f "$CLASS_FILE" ]; then
-    echo "Error: Classification file not found: $CLASS_FILE"
-    exit 1
-fi
-
 echo "Input files:"
 echo "- Alignment file: $ALIGN_FILE"
-echo "- Classification file: $CLASS_FILE"
+echo "- Classification source: ${PROJECT_ROOT}/results/data/dnaPipeTE_merged_classifications.csv (preferred)"
 
 # Make scripts executable
 chmod +x "$PARSER_SCRIPT" "$PLOT_SCRIPT"
 
 # Step 1: Parse the .align file
 echo "Step 1: Parsing RepeatMasker .align file..."
-python "$PARSER_SCRIPT" "$SRX_ID"
+python3 "$PARSER_SCRIPT" "$SRX_ID"
 if [ $? -ne 0 ]; then
     echo "Error: Parsing failed"
     exit 1
@@ -93,9 +86,9 @@ fi
 
 echo "Analysis completed successfully."
 echo "Output files:"
-echo "- CSV data: /home/jake/Projects/Desmognathus_TE/results/landscapes/repeat_landscape_${SRX_ID}.csv"
-echo "- Plots: /home/jake/Projects/Desmognathus_TE/results/figures/landscape/"
+echo "- CSV data: ${PROJECT_ROOT}/results/landscapes/repeat_landscape_${SRX_ID}.csv"
+echo "- Plots: ${PROJECT_ROOT}/results/figures/landscape/"
 
 # List generated files
 echo "Generated plots:"
-ls -l "/home/jake/Projects/Desmognathus_TE/results/figures/landscape/"*"${SRX_ID}"* 
+ls -l "${PROJECT_ROOT}/results/figures/landscape/"*"${SRX_ID}"*

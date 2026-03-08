@@ -1,17 +1,36 @@
-library(ggplot2)
-library(dplyr)
-library(stringr)
-library(treeio)       # read.tree()
-library(ggtree)       # base tree plotting
-library(ape)          # node.depth.edgelength
-library(fs)           # path manipulation
-library(scales)       # pretty_breaks, etc.
-library(viridis)
+script_args <- commandArgs(trailingOnly = FALSE)
+script_path_arg <- grep("^--file=", script_args, value = TRUE)
+if (length(script_path_arg) > 0) {
+  script_path <- normalizePath(sub("^--file=", "", script_path_arg[1]), mustWork = FALSE)
+  script_dir <- dirname(script_path)
+} else {
+  script_dir <- "scripts/visualization"
+}
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(dplyr)
+  library(stringr)
+  library(treeio)
+  library(ggtree)
+  library(ape)
+  library(fs)
+  library(scales)
+  library(viridis)
+})
+
+if (!exists("is.waive", mode = "function")) {
+  is.waive <- function(x) inherits(x, "waiver")
+}
 
 # --- Configuration ---
-BASE_DIR <- "/home/jake/Projects/Desmognathus_TE"
-INPUT_DATA_DIR <- file.path(BASE_DIR, "results/data")
-FIGURE_DIR <- file.path(BASE_DIR, "results/figures/diversity_phylogeny")
+BASE_DIR <- find_project_root(script_dir)
+config <- load_project_config(BASE_DIR)
+INPUT_DATA_DIR <- resolve_config_path(BASE_DIR, config$results$data, "results/data")
+FIGURE_DIR <- file.path(resolve_config_path(BASE_DIR, config$results$figures$root, "results/figures"), "diversity_phylogeny")
 TREE_FILE <- file.path(INPUT_DATA_DIR, "desmo900dated_test_cleaned_phylo.tre")
 ORDER_DIVERSITY_FILE <- file.path(INPUT_DATA_DIR, "long_format_diversity_order_stats.csv")
 SUPERFAMILY_DIVERSITY_FILE <- file.path(INPUT_DATA_DIR, "long_format_diversity_superfamily_stats.csv")

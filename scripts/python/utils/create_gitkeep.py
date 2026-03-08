@@ -1,17 +1,11 @@
 #!/usr/bin/env python3
-"""
-Create .gitkeep files in essential directories to ensure the directory structure
-is maintained in the git repository even if the directories are empty.
-"""
+"""Create .gitkeep files in essential directories."""
 
 import os
-import yaml
 from pathlib import Path
 
 def main():
-    # Load config file
-    with open('config/paths.yaml', 'r') as file:
-        config = yaml.safe_load(file)
+    project_root = Path(__file__).resolve().parents[3]
 
     # Essential directory structure
     essential_dirs = [
@@ -33,19 +27,19 @@ def main():
 
     # Create .gitkeep files
     for directory in essential_dirs:
-        dir_path = Path(directory)
+        dir_path = project_root / directory
         
         # Create directory if it doesn't exist
         if not dir_path.exists():
             os.makedirs(dir_path, exist_ok=True)
-            print(f"Created directory: {dir_path}")
+            print(f"Created directory: {dir_path.relative_to(project_root)}")
         
         # Create .gitkeep file
         gitkeep_path = dir_path / '.gitkeep'
         if not gitkeep_path.exists():
             with open(gitkeep_path, 'w') as f:
                 pass  # Create empty file
-            print(f"Created .gitkeep in: {dir_path}")
+            print(f"Created .gitkeep in: {dir_path.relative_to(project_root)}")
 
     print("Directory structure prepared for Git tracking.")
 

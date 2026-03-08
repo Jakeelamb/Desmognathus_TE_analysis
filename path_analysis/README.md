@@ -16,6 +16,8 @@ If returning after a context switch or changing focus within the project, start 
   Variable definitions, preferred observed proxies, and current caveats.
 - `TE_DATA_AUDIT.md`
   Current audit status of the frozen TE source tables and derived path-analysis TE products, including validated checks and remaining warnings.
+- `TE_METHODS_LANGUAGE.md`
+  Manuscript-ready wording for the TE methods section, including Simpson and ectopic denominator semantics.
 - `TE_DIVERSITY_CANONICALIZATION.md`
   Non-destructive reconstruction note for the TE diversity summary tables, including the audited path from threshold-grid outputs to the current canonical diversity snapshots.
 - `TE_PROVENANCE_AUDIT.md`

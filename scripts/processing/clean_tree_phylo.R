@@ -1,21 +1,38 @@
+script_args <- commandArgs(trailingOnly = FALSE)
+script_path_arg <- grep("^--file=", script_args, value = TRUE)
+if (length(script_path_arg) > 0) {
+  script_path <- normalizePath(sub("^--file=", "", script_path_arg[1]), mustWork = FALSE)
+  script_dir <- dirname(script_path)
+} else {
+  script_dir <- "scripts/processing"
+}
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # --- Libraries ---
-library(ape)      # For phylogenetic tree manipulation
-library(readr)    # For reading the lookup table efficiently
-library(stringr)  # For string manipulation
-library(fs)       # For path manipulation and directory creation
-library(dplyr)    # For data manipulation
+suppressPackageStartupMessages({
+  library(ape)
+  library(readr)
+  library(stringr)
+  library(fs)
+  library(dplyr)
+})
 
 # --- Configuration ---
-BASE_DIR <- path("/home/jake/Projects/Desmognathus_TE")
-INPUT_DATA_DIR <- path(BASE_DIR, "input_data")
-OUTPUT_DATA_DIR <- path(BASE_DIR, "results/data") # Or wherever cleaned tree should go
+BASE_DIR <- path_norm(find_project_root(script_dir))
+config <- load_project_config(BASE_DIR)
 
-LOOKUP_PATH <- path(INPUT_DATA_DIR, "lookup_table.txt")
-INPUT_TREE_PATH <- path(INPUT_DATA_DIR, "phylogeny/desmo900dated_test.tre")
-OUTPUT_TREE_PATH <- path(OUTPUT_DATA_DIR, "desmo900dated_test_cleaned_phylo.tre") # Changed extension
+INPUT_DATA_DIR <- path_norm(resolve_config_path(BASE_DIR, config$input_data$root, "input_data"))
+OUTPUT_DATA_DIR <- path_norm(resolve_config_path(BASE_DIR, config$results$data, "results/data"))
+FIGURE_DIR <- path_norm(resolve_config_path(BASE_DIR, config$results$figures$phylogeny, "results/figures/phylogeny"))
 
-# Ensure the output directory exists before proceeding
-dir_create(path_dir(OUTPUT_TREE_PATH)) 
+LOOKUP_PATH <- path_norm(resolve_config_path(BASE_DIR, config$input_data$lookup_table %||% config$data$lookup, "input_data/lookup_table.txt"))
+INPUT_TREE_PATH <- path(INPUT_DATA_DIR, "phylogeny", "desmo900dated_test.tre")
+OUTPUT_TREE_PATH <- path(OUTPUT_DATA_DIR, "desmo900dated_test_cleaned_phylo.tre")
+
+dir_create(path_dir(OUTPUT_TREE_PATH))
+dir_create(FIGURE_DIR)
 
 message("--- Starting Tree Cleaning Script (R version) ---")
 
@@ -48,7 +65,7 @@ load_lookup_species <- function(lookup_path) {
     # Clean names: remove "D.", trim whitespace, filter out empty strings
     valid_species <- species_raw %>%
       str_trim() %>%                     # Trim whitespace
-      str_remove("^D\\\\\\.\\\\s*") %>%        # Remove "D." prefix (and any following space)
+      str_remove("^D\\.\\s*") %>%        # Remove "D." prefix (and any following space)
       str_trim() %>%                     # Trim again after removal
       .[. != ""] %>%                     # Remove empty strings
       unique()                           # Get unique names
@@ -199,7 +216,7 @@ if (length(tips_to_remove) > 0) {
 message("Visualizing cleaned tree...")
 tryCatch({
   # Create a PNG file for the tree plot
-  plot_file <- path("results/", "figures/rectangular_phylogeny.png")
+  plot_file <- path(FIGURE_DIR, "rectangular_phylogeny.png")
   png(plot_file, width = 1200, height = 1800, res = 150)
   
   # Set up the plot with proper margins

@@ -2,68 +2,39 @@
 # Description: Plots phylogenetic signal results (Blomberg's K and Pagel's Lambda)
 #              from the analysis output CSV.
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/visualization"
+  }
+}, error = function(...) {
+  "scripts/visualization"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # Load required libraries
 suppressPackageStartupMessages({
   library(ggplot2)
   library(dplyr)
-  library(readr) # Using readr for robust CSV reading
-  library(here)
+  library(readr)
   library(yaml)
-  library(forcats) # For reordering factor levels
-  library(stringr) # For text manipulation if needed
+  library(forcats)
+  library(stringr)
 })
 
 # === Configuration ===
-project_root <- here::here()
-config_file <- file.path(project_root, "config/paths.yaml")
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
-# Set default paths first
-default_input_subdir <- "results/tables/phylogenetic_signal"
-default_output_subdir <- "results/figures/phylo_signal" # Save alongside other phylogeny figs
-
-# Initialize with defaults
-input_dir <- file.path(project_root, default_input_subdir)
-output_dir <- file.path(project_root, default_output_subdir)
+input_dir <- resolve_config_path(project_root, config$results$tables$phylo_signal, "results/tables/phylogenetic_signal")
+output_dir <- resolve_config_path(project_root, config$results$figures$phylo_signal, "results/figures/phylo_signal")
 input_file <- file.path(input_dir, "phylogenetic_signal_results.csv")
 
-if (file.exists(config_file)) {
-  tryCatch({
-    config <- yaml::read_yaml(config_file)
-    cat("Config file found. Reading paths.\n")
-
-    # Safely get paths from config
-    input_dir_from_config <- config$results$tables$phylo_signal
-    if (!is.null(input_dir_from_config) && is.character(input_dir_from_config) && nzchar(input_dir_from_config)) {
-      input_dir <- file.path(project_root, input_dir_from_config)
-      input_file <- file.path(input_dir, "phylogenetic_signal_results.csv") # Reconstruct full input path
-      cat("  Using input directory from config:", input_dir_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'results$tables$phylo_signal'. Using default input dir.")
-      # Default input_file is already set
-    }
-
-    output_dir_from_config <- config$results$figures$phylo_signal
-    if (!is.null(output_dir_from_config) && is.character(output_dir_from_config) && nzchar(output_dir_from_config)) {
-      output_dir <- file.path(project_root, output_dir_from_config)
-      cat("  Using output directory from config:", output_dir_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'results$figures$phylo_signal'. Using default output dir.")
-      # Default output_dir is already set
-    }
-
-  }, error = function(e) {
-    warning("Error reading config file '", config_file, "': ", conditionMessage(e), ". Using default paths.")
-    # Ensure defaults are set
-    input_dir <- file.path(project_root, default_input_subdir)
-    output_dir <- file.path(project_root, default_output_subdir)
-    input_file <- file.path(input_dir, "phylogenetic_signal_results.csv")
-  })
-} else {
-  warning("config/paths.yaml not found. Using default paths.")
-  # Defaults are already set
-}
-
-# Ensure output directory exists
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
 # === Load Data ===
@@ -130,7 +101,7 @@ create_signal_plot <- function(data, value_col, p_col, title, y_label, h_lines =
   # Add horizontal lines if specified
   if (!is.null(h_lines)) {
     for (line_val in h_lines) {
-      plot <- plot + geom_hline(yintercept = line_val, linetype = "dashed", color = "black", size = 0.8)
+      plot <- plot + geom_hline(yintercept = line_val, linetype = "dashed", color = "black", linewidth = 0.8)
     }
   }
 

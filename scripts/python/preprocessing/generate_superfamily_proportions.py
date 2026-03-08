@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate superfamily proportions from a superfamily breakdown CSV file.
-
-This script reads the superfamily breakdown CSV file and calculates the proportions
-of each superfamily, then saves the results to a CSV file.
+Generate canonical species-by-superfamily proportions from a breakdown table.
 """
 
 import pandas as pd
@@ -11,12 +8,12 @@ import numpy as np
 import os
 import sys
 import logging
-import warnings
 from pathlib import Path
 
 # Add the parent directory to the path so we can import the path utils
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from python.utils.path_utils import resolve_path, ensure_directory
+from python.utils.te_table_utils import coerce_feature_table_to_species_matrix
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -26,8 +23,7 @@ logger = logging.getLogger(__name__)
 
 def create_superfamily_proportions(input_file, output_file):
     """
-    Create a superfamily proportions file from a superfamily breakdown CSV.
-    Assumes input CSV has 'Species' as the first column (or index) and superfamilies as subsequent columns.
+    Create a canonical species-by-superfamily proportions file.
     
     Parameters:
     -----------
@@ -42,34 +38,20 @@ def create_superfamily_proportions(input_file, output_file):
         True if successful, False otherwise
     """
     try:
-        # Read the superfamily breakdown CSV, using the first column as index
-        df = pd.read_csv(input_file, index_col=0)
+        df = pd.read_csv(input_file)
         logger.info(f"Read superfamily breakdown from: {input_file}")
+        matrix, orientation = coerce_feature_table_to_species_matrix(
+            df,
+            feature_axis_labels=("superfamily",),
+        )
+        logger.info(f"Detected input orientation: {orientation}")
 
-        # Identify numerical columns (superfamilies) - exclude 'Total' if present
-        numerical_cols = df.select_dtypes(include=np.number).columns
-        if 'Total' in numerical_cols:
-             numerical_cols = numerical_cols.drop('Total')
-        
-        # Calculate the total bases for each species (row sums)
-        # Use only numerical columns for sum, handle potential non-numeric Totals robustly
-        row_totals = df[numerical_cols].sum(axis=1)
+        row_totals = matrix.sum(axis=1)
+        prop_df = matrix.div(row_totals.replace(0, np.nan), axis=0).fillna(0)
+        prop_df.index.name = "Species"
 
-        # Create a copy for proportions to avoid modifying original df if needed elsewhere
-        prop_df = df[numerical_cols].copy()
-
-        # Calculate proportions row-wise
-        # Use .div() for safe division, axis=0 aligns row_totals with rows of prop_df
-        # Fill NaN results from 0/0 division with 0
-        prop_df = prop_df.div(row_totals, axis=0).fillna(0)
-
-        # Ensure proportions sum to 1 (or 100 if multiplying by 100 later) per species
-        # Add verification step (optional but recommended)
-        # logger.debug(f"Proportion sums per species:\\n{prop_df.sum(axis=1)}")
-
-        # Save the proportions to a CSV file, including the index ('Species')
-        ensure_directory(os.path.dirname(output_file)) # Use ensure_directory from utils
-        prop_df.to_csv(output_file, index=True) # index=True saves the 'Species' column
+        ensure_directory(os.path.dirname(output_file))
+        prop_df.to_csv(output_file, index=True)
         logger.info(f"Saved superfamily proportions to: {output_file}")
         
         # Free memory
@@ -93,7 +75,7 @@ def parse_args():
                         help="Path to save the output superfamily proportions CSV")
     parser.add_argument("--diversity-copy", action="store_true",
                         help="Copy the output file to the diversity directory for PCA analysis")
-    parser.add_argument("--config", "-c", type=str, default="config/paths.yaml",
+    parser.add_argument("--config", "-c", type=str, default="paths.yaml",
                         help="Path to configuration file")
     parser.add_argument("--verbose", "-v", action="store_true",
                         help="Enable verbose logging")
@@ -112,13 +94,13 @@ def main():
     if args.input:
         input_path = args.input
     else:
-        input_path = os.path.join(resolve_path('data.interim.pivot_tables'), 
+        input_path = os.path.join(resolve_path('data.interim.pivot_tables', args.config), 
                                   'superfamily_breakdown.csv')
     
     if args.output:
         output_path = args.output
     else:
-        output_dir = resolve_path('data.processed.te_superfamily')
+        output_dir = resolve_path('data.processed.te_superfamily', args.config)
         output_path = os.path.join(output_dir, 'superfamily_proportions.csv')
     
     # Check if input file exists
@@ -132,7 +114,7 @@ def main():
         
         # Copy to diversity directory if requested
         if args.diversity_copy:
-            diversity_dir = resolve_path('data.processed.diversity')
+            diversity_dir = resolve_path('data.processed.diversity', args.config)
             ensure_directory(diversity_dir)
             diversity_path = os.path.join(diversity_dir, 'superfamily_proportions.csv')
             

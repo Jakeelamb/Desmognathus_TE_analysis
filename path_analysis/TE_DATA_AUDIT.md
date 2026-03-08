@@ -178,6 +178,8 @@ within the current path-analysis staging layer.
 
 ## Recommended Next Steps
 
+- For manuscript writing, use the wording in `TE_METHODS_LANGUAGE.md` rather
+  than paraphrasing these caveats from memory.
 - Freeze `te_path_features.csv` and `te_model_feature_panel.csv` as the paper
   TE inputs unless a deliberate upstream TE rerun is planned.
 - Use `order_pielou` rather than `order_simpson` in narrative summaries unless

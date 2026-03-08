@@ -20,16 +20,31 @@ if (length(args) < 1) {
 srx_id <- args[1]
 cat(paste("Generating plots for sample:", srx_id, "\n"))
 
-# Load required libraries
+script_args <- commandArgs(trailingOnly = FALSE)
+script_path_arg <- grep("^--file=", script_args, value = TRUE)
+if (length(script_path_arg) > 0) {
+  script_path <- normalizePath(sub("^--file=", "", script_path_arg[1]), mustWork = FALSE)
+  script_dir <- dirname(script_path)
+} else {
+  script_dir <- "scripts/R/visualization"
+}
+
+source(file.path(dirname(dirname(script_dir)), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
+landscape_dir <- resolve_config_path(project_root, config$results$landscapes, "results/landscapes")
+output_dir <- resolve_config_path(project_root, config$results$figures$landscape, "results/figures/landscape")
+
+# Load required libraries after activating the conda R library path.
 suppressPackageStartupMessages({
   library(tidyverse)
   library(ggplot2)
   library(viridis)
 })
 
-# Define paths
-input_file <- paste0("/home/jake/Projects/Desmognathus_TE/results/landscapes/repeat_landscape_", srx_id, ".csv")
-output_dir <- "/home/jake/Projects/Desmognathus_TE/results/figures/landscape"
+input_file <- file.path(landscape_dir, paste0("repeat_landscape_", srx_id, ".csv"))
 
 # Check if input file exists
 if (!file.exists(input_file)) {

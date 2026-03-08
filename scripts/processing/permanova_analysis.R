@@ -7,6 +7,21 @@
 #'
 #' @usage Rscript scripts/processing/permanova_analysis.R
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/processing"
+  }
+}, error = function(...) {
+  "scripts/processing"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # --- Load Dependencies ---
 required_packages <- c(
   "vegan",        # PERMANOVA (adonis2), betadisper
@@ -29,48 +44,14 @@ invisible(lapply(required_packages, function(pkg) {
   library(pkg, character.only = TRUE)
 }))
 
-# Try to load pairwiseAdonis if available
-pairwise_available <- tryCatch({
-  if (!requireNamespace("pairwiseAdonis", quietly = TRUE)) {
-    # Try to install from GitHub
-    if (requireNamespace("devtools", quietly = TRUE)) {
-      devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
-    }
-  }
-  library(pairwiseAdonis)
-  TRUE
-}, error = function(e) {
-  message("Note: pairwiseAdonis not available. Skipping pairwise comparisons.")
-  FALSE
-})
-
 # --- Configuration ---
-find_project_root <- function() {
-  current <- getwd()
-  for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml"))) {
-      return(current)
-    }
-    parent <- dirname(current)
-    if (parent == current) break
-    current <- parent
-  }
-  candidates <- c("~/Projects/Desmognathus_TE", getwd())
-  for (candidate in candidates) {
-    if (file.exists(file.path(candidate, "paths.yaml"))) {
-      return(normalizePath(candidate))
-    }
-  }
-  stop("Could not find project root")
-}
-
-project_root <- find_project_root()
-config <- yaml::read_yaml(file.path(project_root, "paths.yaml"))
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
 # Paths
-data_dir <- file.path(project_root, config$results$data)
-figures_dir <- file.path(project_root, config$results$figures)
-phylo_dir <- file.path(project_root, config$input_data$phylogeny)
+data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+figures_dir <- resolve_config_path(project_root, config$results$figures, "results/figures")
+phylo_dir <- resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny")
 output_dir <- file.path(figures_dir, "permanova")
 output_data_dir <- file.path(data_dir, "permanova")
 
@@ -326,25 +307,62 @@ order_betadisp <- test_beta_dispersion(order_dist_bray, order_data$groups, "Orde
 superfamily_betadisp <- test_beta_dispersion(superfamily_dist_bray, superfamily_data$groups, "Superfamily Bray-Curtis")
 
 # --- Pairwise Comparisons ---
-if (pairwise_available) {
-  message("\n=== Pairwise PERMANOVA Comparisons ===")
+run_pairwise_permanova <- function(dist_matrix, groups, min_group_n = 2, nperm = 999) {
+  group_vec <- as.character(groups)
+  group_counts <- table(group_vec)
+  group_pairs <- combn(sort(unique(group_vec)), 2, simplify = FALSE)
 
-  # Order-level pairwise
-  message("\n--- Order-level Pairwise Comparisons ---")
-  order_pairwise <- pairwise.adonis2(
-    order_dist_bray ~ group,
-    data = data.frame(group = order_data$groups),
-    nperm = 999
-  )
+  pairwise_results <- lapply(group_pairs, function(pair) {
+    pair_counts <- group_counts[pair]
+    if (any(pair_counts < min_group_n)) {
+      return(NULL)
+    }
+
+    keep <- group_vec %in% pair
+    pair_groups <- factor(group_vec[keep], levels = pair)
+    pair_dist <- as.dist(as.matrix(dist_matrix)[keep, keep, drop = FALSE])
+    pair_df <- data.frame(group = pair_groups)
+    fit <- adonis2(pair_dist ~ group, data = pair_df, permutations = nperm)
+
+    tibble::tibble(
+      group_1 = pair[[1]],
+      group_2 = pair[[2]],
+      n_group_1 = unname(pair_counts[[1]]),
+      n_group_2 = unname(pair_counts[[2]]),
+      r_squared = fit$R2[[1]],
+      f_value = fit$F[[1]],
+      p_value = fit$`Pr(>F)`[[1]]
+    )
+  })
+
+  results <- dplyr::bind_rows(pairwise_results)
+  if (nrow(results) == 0) {
+    return(results)
+  }
+
+  results %>%
+    mutate(
+      p_adjusted = p.adjust(p_value, method = "BH"),
+      significant = p_adjusted < 0.05
+    ) %>%
+    arrange(p_adjusted, p_value)
+}
+
+message("\n=== Pairwise PERMANOVA Comparisons ===")
+
+message("\n--- Order-level Pairwise Comparisons ---")
+order_pairwise <- run_pairwise_permanova(order_dist_bray, order_data$groups)
+if (nrow(order_pairwise) == 0) {
+  message("No order-level pairwise comparisons met the minimum group size requirement.")
+} else {
   print(order_pairwise)
+}
 
-  # Superfamily-level pairwise
-  message("\n--- Superfamily-level Pairwise Comparisons ---")
-  superfamily_pairwise <- pairwise.adonis2(
-    superfamily_dist_bray ~ group,
-    data = data.frame(group = superfamily_data$groups),
-    nperm = 999
-  )
+message("\n--- Superfamily-level Pairwise Comparisons ---")
+superfamily_pairwise <- run_pairwise_permanova(superfamily_dist_bray, superfamily_data$groups)
+if (nrow(superfamily_pairwise) == 0) {
+  message("No superfamily-level pairwise comparisons met the minimum group size requirement.")
+} else {
   print(superfamily_pairwise)
 }
 
@@ -426,11 +444,22 @@ plot_pcoa <- function(dist_matrix, groups, species_names, title, output_file) {
     Clade = groups
   )
 
+  ellipse_df <- plot_df %>%
+    dplyr::add_count(Clade, name = "clade_n") %>%
+    dplyr::filter(clade_n >= 3)
+
   # Plot
   p <- ggplot(plot_df, aes(x = PCo1, y = PCo2, color = Clade, label = Species)) +
     geom_point(size = 3, alpha = 0.8) +
     ggrepel::geom_text_repel(size = 2.5, max.overlaps = 15) +
-    stat_ellipse(aes(group = Clade), level = 0.95, linetype = "dashed", alpha = 0.5) +
+    stat_ellipse(
+      data = ellipse_df,
+      mapping = aes(x = PCo1, y = PCo2, color = Clade, group = Clade),
+      inherit.aes = FALSE,
+      level = 0.95,
+      linetype = "dashed",
+      alpha = 0.5
+    ) +
     scale_color_brewer(palette = "Set1") +
     labs(
       title = title,
@@ -519,6 +548,16 @@ message("Saved distance matrices")
 # Save clade assignments
 write_csv(species_clades, file.path(output_data_dir, "species_clade_assignments.csv"))
 message("Saved clade assignments")
+
+if (exists("order_pairwise") && nrow(order_pairwise) > 0) {
+  write_csv(order_pairwise, file.path(output_data_dir, "permanova_order_pairwise.csv"))
+  message("Saved order pairwise PERMANOVA results")
+}
+
+if (exists("superfamily_pairwise") && nrow(superfamily_pairwise) > 0) {
+  write_csv(superfamily_pairwise, file.path(output_data_dir, "permanova_superfamily_pairwise.csv"))
+  message("Saved superfamily pairwise PERMANOVA results")
+}
 
 # --- Summary ---
 message("\n=== PERMANOVA Analysis Summary ===")

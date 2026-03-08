@@ -150,8 +150,8 @@ python3 scripts/processing/repeatmask.py
 **Purpose:** Clean and prepare phylogenetic tree for analysis
 
 **Output:**
-- `results/data/desmo900dated_test_cleaned.tre`
-- `results/figures/rectangular_phylogeny.png`
+- `results/data/desmo900dated_test_cleaned_phylo.tre`
+- `results/figures/phylogeny/rectangular_phylogeny.png`
 
 **Command:**
 ```bash
@@ -206,21 +206,25 @@ python3 scripts/processing/diversity_stats.py
 
 **Script:** `pca.R`
 
-**Purpose:** Perform principal component analysis on TE composition
+**Purpose:** Run the canonical compositional PCA workflow on frozen TE
+breakdown tables. This is a supplementary ordination workflow, not the main
+comparative predictor block.
 
 **Output:**
-- `results/figures/Superfamily_Diversity_CLR_pca_scatter_plot.png`
-- `results/figures/Order_Diversity_CLR_pca_scatter_plot.png`
-- Cluster analysis outputs (elbow plots, silhouette plots)
-- `results/data/cluster_assignments_superfamily.csv`
-- `results/data/cluster_assignments_order.csv`
+- `results/tables/pca/te_pca_analysis_manifest.csv`
+- `results/tables/pca/*_clr_matrix.csv`
+- `results/tables/pca/*_scores.csv`
+- `results/tables/pca/*_loadings.csv`
+- `results/figures/pca/*_scores_pc1_pc2.png`
+- `results/figures/pca/*_scree_plot.png`
 
 **Command:**
 ```bash
 Rscript scripts/processing/pca.R
 ```
 
-**Requirements:** Needs output from dnaPipe.py (the breakdown CSV files)
+**Requirements:** Needs the frozen order and superfamily breakdown CSVs in
+`results/data/`. See `TE_PCA_METHODS.md` for the exact analysis definitions.
 
 ---
 
@@ -228,11 +232,15 @@ Rscript scripts/processing/pca.R
 
 **Script:** `phylogenetic_pca_analysis.R`
 
-**Purpose:** Perform phylogenetic PCA with phylogeny overlay (phylomorphospace)
+**Purpose:** Perform supplementary phylogenetic PCA using the exact CLR
+matrices written by `scripts/processing/pca.R`
 
 **Output:**
-- `results/figures/Superfamily_Diversity_CLR_pPCA_phylomorphospace_plot.png`
-- `results/figures/Order_Diversity_CLR_pPCA_phylomorphospace_plot.png`
+- `results/tables/pca/te_ppca_analysis_manifest.csv`
+- `results/tables/pca/*_ppca_scores.csv`
+- `results/tables/pca/*_ppca_loadings.csv`
+- `results/figures/pca/*_ppca_scores_pc1_pc2.png`
+- `results/figures/pca/*_ppca_phylomorphospace.png`
 
 **Command:**
 ```bash
@@ -367,6 +375,7 @@ python3 scripts/processing/diversity_stats.py
 Rscript scripts/processing/pca.R
 Rscript scripts/processing/phylogenetic_pca_analysis.R
 Rscript scripts/processing/analyze_phylogenetic_signal.R
+Rscript scripts/processing/analyze_phylogenetic_correlogram.R
 
 # 6. Generate visualizations
 Rscript scripts/visualization/divergence.R
@@ -402,11 +411,7 @@ install.packages("<package_name>")
 
 ### Path Issues
 
-All scripts use absolute paths based on `/home/jake/Projects/Desmognathus_TE`. If you've moved the project, you'll need to update paths in:
-- `scripts/processing/dnaPipe.py` (line 25)
-- `scripts/processing/repeatmask.py` (line 21)
-- `scripts/processing/pca.R` (lines 13-14)
-- Other scripts as needed
+Most primary scripts now resolve paths relative to the repository root or `config/paths.yaml`. The remaining absolute-path mentions are commented historical examples in a few older visualization helpers and do not affect execution.
 
 ### Missing Input Data
 

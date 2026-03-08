@@ -6,11 +6,27 @@
 #'
 #' @usage Rscript scripts/processing/trait_evolution.R
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/processing"
+  }
+}, error = function(...) {
+  "scripts/processing"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # --- Load Dependencies ---
 required_packages <- c(
   "ape",          # Phylogenetic tree handling, pic, ace
   "caper",        # Comparative analysis
   "nlme",         # GLS for phylogenetic models
+  "phytools",     # Standard phylogenetic signal estimators
   "dplyr",        # Data manipulation
   "tidyr",        # Data reshaping
   "readr",        # CSV reading
@@ -28,32 +44,13 @@ for (pkg in required_packages) {
 }
 
 # --- Configuration ---
-find_project_root <- function() {
-  current <- getwd()
-  for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml"))) {
-      return(current)
-    }
-    parent <- dirname(current)
-    if (parent == current) break
-    current <- parent
-  }
-  candidates <- c("~/Projects/Desmognathus_TE", getwd())
-  for (candidate in candidates) {
-    if (file.exists(file.path(candidate, "paths.yaml"))) {
-      return(normalizePath(candidate))
-    }
-  }
-  stop("Could not find project root")
-}
-
-project_root <- find_project_root()
-config <- yaml::read_yaml(file.path(project_root, "paths.yaml"))
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
 # Paths
-data_dir <- file.path(project_root, config$results$data)
-figures_dir <- file.path(project_root, config$results$figures)
-phylo_dir <- file.path(project_root, config$input_data$phylogeny)
+data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+figures_dir <- resolve_config_path(project_root, config$results$figures, "results/figures")
+phylo_dir <- resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny")
 output_dir <- file.path(figures_dir, "trait_evolution")
 output_data_dir <- file.path(data_dir, "trait_evolution")
 
@@ -104,7 +101,9 @@ prepare_trait_data <- function(df, tree) {
   message("  Matching species: ", length(matching_species), " of ", length(tree$tip.label))
   pruned_tree <- drop.tip(tree, setdiff(tree$tip.label, matching_species))
 
-  df_filtered <- df %>% filter(.data[[species_col]] %in% matching_species)
+  df_filtered <- df %>%
+    filter(.data[[species_col]] %in% matching_species) %>%
+    as.data.frame()
   rownames(df_filtered) <- df_filtered[[species_col]]
   df_filtered <- df_filtered[pruned_tree$tip.label, ]
 
@@ -149,59 +148,26 @@ analyze_trait <- function(tree, trait_vector, trait_name) {
     pic_var = NA_real_, ancestral_root = NA_real_
   )
 
-  # Pagel's Lambda using caper
+  # Pagel's Lambda using a standard likelihood-based phylogenetic signal estimator.
   tryCatch({
-    # Create comparative data
-    trait_df <- data.frame(species = names(trait_vector), trait = trait_vector)
-    comp_data <- comparative.data(tree_pruned, trait_df, names.col = species, vcv = TRUE)
-
-    # Fit PGLS with ML lambda
-    pgls_ml <- pgls(trait ~ 1, data = comp_data, lambda = "ML")
-    result$lambda <- pgls_ml$param["lambda"]
-
-    # Test significance by comparing to lambda=0
-    pgls_0 <- pgls(trait ~ 1, data = comp_data, lambda = 0)
-    lrt <- 2 * (logLik(pgls_ml) - logLik(pgls_0))
-    result$lambda_p <- pchisq(as.numeric(lrt), df = 1, lower.tail = FALSE)
+    lambda_fit <- phytools::phylosig(tree_pruned, trait_vector, method = "lambda", test = TRUE)
+    result$lambda <- unname(lambda_fit$lambda)
+    result$lambda_p <- unname(lambda_fit$P)
   }, error = function(e) {
-    message("    Lambda estimation failed for ", trait_name)
+    message("    Lambda estimation failed for ", trait_name, ": ", e$message)
   })
 
   # Blomberg's K
   tryCatch({
-    # Calculate phylogenetically independent contrasts
+    k_fit <- phytools::phylosig(tree_pruned, trait_vector, method = "K", test = TRUE, nsim = 999)
+    result$K <- unname(k_fit$K)
+    result$K_p <- unname(k_fit$P)
+
+    # Also keep a simple PIC dispersion summary for downstream inspection.
     pics <- pic(trait_vector, tree_pruned)
     result$pic_var <- var(pics)
-
-    # Calculate K
-    n <- length(trait_vector)
-    V <- vcv.phylo(tree_pruned)
-
-    # Expected variance under BM
-    C_mean <- mean(V[lower.tri(V)])
-    V_obs <- var(trait_vector)
-    V_bm <- sum(diag(V)) / n - C_mean
-
-    # MSE from PICs
-    mse_pics <- mean(pics^2)
-    mse_bm <- V_bm
-
-    result$K <- (V_obs / C_mean) / (mse_pics / mse_bm)
-
-    # Randomization test for K
-    n_perm <- 999
-    K_null <- numeric(n_perm)
-    for (i in 1:n_perm) {
-      trait_rand <- sample(trait_vector)
-      names(trait_rand) <- names(trait_vector)
-      pics_rand <- pic(trait_rand, tree_pruned)
-      mse_rand <- mean(pics_rand^2)
-      V_obs_rand <- var(trait_rand)
-      K_null[i] <- (V_obs_rand / C_mean) / (mse_rand / mse_bm)
-    }
-    result$K_p <- mean(K_null >= result$K)
   }, error = function(e) {
-    message("    K estimation failed for ", trait_name)
+    message("    K estimation failed for ", trait_name, ": ", e$message)
   })
 
   # Ancestral state at root

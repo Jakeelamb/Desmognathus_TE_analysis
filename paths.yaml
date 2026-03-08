@@ -1,6 +1,10 @@
-# Configuration for project directory paths (relative to project root)
+# Canonical path configuration for the Desmognathus TE analysis project.
+#
+# This schema intentionally preserves compatibility with both:
+# - older scripts that expect `input_data`, `interim`, and `results.data`
+# - newer scripts that expect nested entries such as `results.figures.pca`
 
-# Input Data: Raw data sources
+# Input data used by the core TE processing pipeline.
 input_data:
   root: "input_data"
   phylogeny: "input_data/phylogeny"
@@ -10,19 +14,46 @@ input_data:
   ectopic_recombination: "input_data/ectopic_recombination"
   lookup_table: "input_data/lookup_table.txt"
 
-# Interim Directory: For temporary files generated during processing
+# Compatibility block used by some newer utility scripts.
+data:
+  raw: "input_data"
+  phylogeny: "input_data/phylogeny"
+  lookup: "input_data/lookup_table.txt"
+  interim:
+    root: "data/interim"
+    pivot_tables: "data/interim/pivot_tables"
+  processed:
+    root: "data/processed"
+    diversity: "data/processed/diversity"
+    te_superfamily: "data/processed/te_superfamily"
+    te_landscape: "data/processed/te_landscape"
+
+# Legacy interim workspace used by the main processing scripts.
 interim:
   root: "interim"
-  # Define subdirectories if needed by specific scripts, e.g.:
-  # pivot_tables: "interim/pivot_tables"
 
-# Results: Final outputs of analyses
 results:
   root: "results"
-  data: "results/data"      # For final .csv, .tsv, .tree files etc.
-  figures: "results/figures" # For final .png, .pdf plots etc.
+  data: "results/data"
+  phylogeny: "results/phylogeny"
+  figures:
+    root: "results/figures"
+    diversity: "results/figures/diversity"
+    pca: "results/figures/pca"
+    landscape: "results/figures/landscape"
+    phylogeny: "results/figures/phylogeny"
+    phylo_landscape: "results/figures/phylo_landscape"
+    phylo_signal: "results/figures/phylo_signal"
+  tables:
+    root: "results/tables"
+    diversity: "results/tables/diversity"
+    pca: "results/tables/pca"
+    phylogeny: "results/tables/phylogeny"
+    phylo_signal: "results/tables/phylogenetic_signal"
+  landscapes: "results/landscapes"
 
-# Scripts: Location of source code
 scripts:
-  processing: "scripts/processing"        # For Python, R, Shell scripts doing data manipulation
-  visualization: "scripts/visualization"    # For Python, R scripts generating plots
+  processing: "scripts/processing"
+  visualization: "scripts/visualization"
+  python: "scripts/python"
+  R: "scripts/R"

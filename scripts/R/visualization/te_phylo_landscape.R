@@ -13,6 +13,21 @@
 # Output: Plot files (PNG) saved to results/figures/phylo_landscape/
 #
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/R/visualization"
+  }
+}, error = function(...) {
+  "scripts/R/visualization"
+})
+
+source(file.path(dirname(dirname(script_dir)), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # Load necessary libraries (assumes these are already installed)
 suppressPackageStartupMessages({
   library(ape)
@@ -26,22 +41,26 @@ suppressPackageStartupMessages({
   library(scales)
 })
 
-# Read the configuration file
-config_file <- "config/paths.yaml"
-if (file.exists(config_file)) {
-  config <- yaml::read_yaml(config_file)
-  
-  # Define paths from configuration
-  landscape_dir <- config$results$landscapes
-  plot_dir <- config$results$figures$phylo_landscape
-  tree_file <- file.path(config$data$phylogeny, "desmo900dated_test.tre")
-  lookup_file <- file.path(config$data$lookup, "lookup_table.txt")
-} else {
-  # Fallback paths if config file is not found
-  landscape_dir <- "results/landscapes"
-  plot_dir <- "results/figures/phylo_landscape"
-  tree_file <- "data/raw/Phylogeny/desmo900dated_test.tre"
-  lookup_file <- "data/raw/lookup/lookup_table.txt"
+if (!exists("is.waive", mode = "function")) {
+  is.waive <- function(x) inherits(x, "waiver")
+}
+
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
+
+landscape_dir <- resolve_config_path(project_root, config$results$landscapes, "results/landscapes")
+plot_dir <- resolve_config_path(project_root, config$results$figures$phylo_landscape, "results/figures/phylo_landscape")
+phylo_dir <- resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny")
+results_data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+lookup_file <- resolve_config_path(project_root, config$input_data$lookup_table %||% config$data$lookup, "input_data/lookup_table.txt")
+
+tree_candidates <- c(
+  file.path(phylo_dir, "desmo900dated_test.tre"),
+  file.path(results_data_dir, "desmo900dated_test_cleaned_phylo.tre")
+)
+tree_file <- tree_candidates[file.exists(tree_candidates)][1]
+if (is.na(tree_file)) {
+  stop("No phylogeny file found for TE phylo landscape workflow.", call. = FALSE)
 }
 
 # Create output directory for plots
@@ -284,6 +303,78 @@ if (length(landscape_data) > 0) {
     ggtree_obj <- ggtree_obj + 
       annotate("text", x = age, y = 0, label = age, size = 3, vjust = -0.5)
   }
+
+  tip_positions <- ggtree(scaled_tree)$data %>%
+    filter(isTip) %>%
+    select(label, y)
+
+  add_tip_heatmap <- function(base_plot,
+                              matrix_data,
+                              fill_name,
+                              fill_option = "viridis",
+                              log_fill = FALSE,
+                              label_angle = 90,
+                              total_width = max_age * 0.8) {
+    if (is.null(matrix_data) || nrow(matrix_data) == 0 || ncol(matrix_data) == 0) {
+      stop("Heatmap matrix is empty.", call. = FALSE)
+    }
+
+    heatmap_start <- max_age * 1.25
+    cell_width <- total_width / max(ncol(matrix_data), 1)
+    column_lookup <- tibble(
+      column = colnames(matrix_data),
+      x = heatmap_start + (seq_along(colnames(matrix_data)) - 0.5) * cell_width
+    )
+
+    heatmap_long <- as.data.frame(matrix_data, check.names = FALSE) %>%
+      tibble::rownames_to_column("label") %>%
+      pivot_longer(cols = -label, names_to = "column", values_to = "value") %>%
+      left_join(tip_positions, by = "label") %>%
+      left_join(column_lookup, by = "column") %>%
+      mutate(plot_value = if (log_fill) pmax(value, 1) else value)
+
+    heatmap_end <- heatmap_start + total_width + cell_width
+    label_y <- max(tip_positions$y, na.rm = TRUE) + 1
+
+    plot <- base_plot +
+      geom_tile(
+        data = heatmap_long,
+        aes(x = x, y = y, fill = plot_value),
+        inherit.aes = FALSE,
+        width = cell_width * 0.95,
+        height = 0.9
+      ) +
+      geom_text(
+        data = column_lookup,
+        aes(x = x, y = label_y, label = column),
+        inherit.aes = FALSE,
+        angle = label_angle,
+        size = 2.5,
+        hjust = 1
+      ) +
+      theme(
+        legend.position = "right",
+        legend.key.size = unit(1, "cm")
+      ) +
+      coord_cartesian(xlim = c(0, heatmap_end), clip = "off")
+
+    if (log_fill) {
+      plot <- plot +
+        scale_fill_viridis_c(
+          name = fill_name,
+          option = fill_option,
+          trans = "log10",
+          labels = scales::label_number(accuracy = 1, scale_cut = scales::cut_short_scale()),
+          limits = c(1, NA),
+          oob = scales::squish
+        )
+    } else {
+      plot <- plot +
+        scale_fill_viridis_c(name = fill_name, option = fill_option)
+    }
+
+    plot
+  }
   
   #----------------------------------------
   # Create tree with TE landscape heatmap
@@ -291,34 +382,21 @@ if (length(landscape_data) > 0) {
   cat("Creating phylogeny with TE landscape heatmap...\n")
   
   # Create the phylogeny with heatmap
-  phylo_landscape <- ggtree(scaled_tree) +
+  phylo_landscape_base <- ggtree(scaled_tree) +
     geom_tiplab(aes(label = ifelse(isTip, basic_label_map[label], NA_character_)), 
                 size = 3, hjust = -0.1, na.rm = TRUE) +
     theme_tree2() +
-    xlim(0, max(nodeHeights(tree)[,2]) * 1.2)  # Add space for heatmap
-  
-  # Add the heatmap with improved visibility
-  phylo_landscape <- phylo_landscape %>%
-    gheatmap(heatmap_matrix, # Use the reordered matrix
-             offset = max(nodeHeights(tree)[,2]) * 0.3,  # Position heatmap further away
-             width = 8,  # Make the heatmap wider
-             colnames_angle = 90,  # Make column names vertical for better readability
-             colnames_offset_y = -0.5,  # Adjust label position
-             font.size = 4) +  # Increase font size
-    scale_fill_viridis_c(
-      name = "Aligned Base Pairs",
-      option = "magma",
-      trans = "log10", 
-      # Add pseudo-count (1) before log transform to handle zeros
-      labels = scales::label_number(accuracy = 1, scale_cut = scales::cut_short_scale()), # Nicer labels for log scale
-      limits = c(1, NA), # Ensure scale starts at 1 (log10(1)=0)
-      oob = scales::squish # Handle values slightly out of bounds
-    ) +
-    theme(
-      axis.text.x = element_text(size = 8, angle = 90, hjust = 1),  # Improve x-axis label readability
-      legend.position = "right",
-      legend.key.size = unit(1, "cm")
-    )
+    xlim(0, max_age * 2.3)
+
+  phylo_landscape <- add_tip_heatmap(
+    phylo_landscape_base,
+    heatmap_matrix,
+    fill_name = "Aligned Base Pairs",
+    fill_option = "magma",
+    log_fill = TRUE,
+    label_angle = 90,
+    total_width = max_age * 0.95
+  )
   
   #----------------------------------------
   # Create tree with TE class distribution
@@ -347,22 +425,21 @@ if (length(landscape_data) > 0) {
     as.matrix()
   
   # Create the phylogeny with class distribution
-  phylo_class <- ggtree(scaled_tree) +
+  phylo_class_base <- ggtree(scaled_tree) +
     geom_tiplab(aes(label = ifelse(isTip, basic_label_map[label], NA_character_)), 
                 size = 3, hjust = -0.1, na.rm = TRUE) +
     theme_tree2() +
-    xlim(0, max(nodeHeights(tree)[,2]) * 1.2)  # Add space for heatmap
-  
-  # Add the class distribution heatmap
-  phylo_class <- phylo_class %>%
-    gheatmap(class_matrix, 
-             offset = max(nodeHeights(tree)[,2]) * 0.3,  # Position heatmap further away
-             width = 6,  # Make the heatmap wider
-             colnames_angle = 45,
-             colnames_offset_y = 0,
-             font.size = 3) +
-    scale_fill_viridis_c(name = "Percentage",
-                         option = "viridis")
+    xlim(0, max_age * 1.9)
+
+  phylo_class <- add_tip_heatmap(
+    phylo_class_base,
+    class_matrix,
+    fill_name = "Percentage",
+    fill_option = "viridis",
+    log_fill = FALSE,
+    label_angle = 45,
+    total_width = max_age * 0.55
+  )
   
   #----------------------------------------
   # Create tree with circular layout and TE landscape

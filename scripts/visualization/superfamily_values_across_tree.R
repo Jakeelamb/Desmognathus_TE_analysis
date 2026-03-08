@@ -1,17 +1,47 @@
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/visualization"
+  }
+}, error = function(...) {
+  "scripts/visualization"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # ─────────────────────────────────────────────────────────────
 # Libraries & Setup
 # ─────────────────────────────────────────────────────────────
-library(treeio)       # read.tree()
-library(ggtree)       # base tree plotting
-library(tidyverse)    # data wrangling
-library(viridis)      # for color scales
-library(scales)       # for percent labels
-library(fs)           # for path manipulation
+suppressPackageStartupMessages({
+  library(treeio)
+  library(ggtree)
+  library(tidyverse)
+  library(viridis)
+  library(scales)
+  library(fs)
+})
 
-# Load the phylogenetic tree
-tree_file <- "results/data/desmo900dated_test_cleaned_phylo.tre"
-if (!file.exists(tree_file)) {
-  stop("Tree file not found: ", tree_file)
+if (!exists("is.waive", mode = "function")) {
+  is.waive <- function(x) inherits(x, "waiver")
+}
+
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
+
+results_data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+results_figures_dir <- resolve_config_path(project_root, config$results$figures$root, "results/figures")
+
+tree_candidates <- c(
+  file.path(results_data_dir, "desmo900dated_test_cleaned_phylo.tre"),
+  file.path(resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny"), "desmo900dated_test.tre")
+)
+tree_file <- tree_candidates[file.exists(tree_candidates)][1]
+if (is.na(tree_file)) {
+  stop("Tree file not found for superfamily-values-across-tree workflow.", call. = FALSE)
 }
 tree <- read.tree(tree_file)
 
@@ -196,14 +226,14 @@ process_and_plot_te <- function(data_file, output_dir, category_name) {
 # Define categories, input files, and output directories
 categories <- list(
   list(name = "Superfamily",
-       file = "results/data/dnaPipeTE_superfamily_breakdown.csv",
-       dir = "results/figures/superfamily_phylogeny"),
+       file = file.path(results_data_dir, "dnaPipeTE_superfamily_breakdown.csv"),
+       dir = file.path(results_figures_dir, "superfamily_phylogeny")),
   list(name = "Order",
-       file = "results/data/dnaPipeTE_order_breakdown.csv",
-       dir = "results/figures/order_phylogeny"),
+       file = file.path(results_data_dir, "dnaPipeTE_order_breakdown.csv"),
+       dir = file.path(results_figures_dir, "order_phylogeny")),
   list(name = "Class",
-       file = "results/data/dnaPipeTE_class_breakdown.csv",
-       dir = "results/figures/class_phylogeny")
+       file = file.path(results_data_dir, "dnaPipeTE_class_breakdown.csv"),
+       dir = file.path(results_figures_dir, "class_phylogeny"))
 )
 
 # Loop through each category and generate plots

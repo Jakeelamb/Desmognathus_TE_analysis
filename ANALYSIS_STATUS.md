@@ -1,6 +1,6 @@
 # Desmognathus TE Analysis Status
 
-**Last Updated:** 2026-01-31
+**Last Updated:** 2026-03-08
 **Project:** PhD Research - Transposable Element Evolution in Desmognathus Salamanders
 
 ---
@@ -22,10 +22,11 @@
 | Script | Purpose | Status |
 |--------|---------|--------|
 | `scripts/processing/clean_tree_phylo.R` | Validate and clean phylogenetic tree | Complete |
-| `scripts/processing/pca.R` | PCA with raw and CLR transformation | Complete |
-| `scripts/processing/pca_utils.R` | Shared R utilities for PCA | Complete |
-| `scripts/processing/phylogenetic_pca_analysis.R` | Phylomorphospace analysis | Complete |
+| `scripts/processing/pca.R` | Canonical compositional PCA on frozen TE breakdown tables | Rebuilt |
+| `scripts/processing/pca_utils.R` | Shared compositional PCA utilities and matrix builders | Rebuilt |
+| `scripts/processing/phylogenetic_pca_analysis.R` | Supplementary phylogenetic PCA from canonical CLR matrices | Rebuilt |
 | `scripts/processing/analyze_phylogenetic_signal.R` | Pagel's Lambda, Blomberg's K | Complete |
+| `scripts/processing/analyze_phylogenetic_correlogram.R` | Moran's I correlograms from binned phylogenetic distances | Complete |
 
 ### Visualization
 
@@ -33,15 +34,15 @@
 |--------|---------|--------|
 | `scripts/visualization/divergence.R` | Divergence boxplots and phylogeny bubble plots | Complete |
 | `scripts/visualization/hierarchical_donut_TE_diversity.R` | Nested donut charts per species | Complete |
-| `scripts/visualization/plot_te_landscape_analysis.R` | TE landscape heatmaps | Complete |
+| `scripts/visualization/plot_te_landscape_analysis.R` | TE landscape summary plots from frozen TE tables | Complete |
 | `scripts/visualization/plot_phylogenetic_signal.R` | Phylogenetic signal visualization | Complete |
 | `scripts/visualization/plot_ectopic_recombination.R` | Ectopic recombination plots | Complete |
 | `scripts/visualization/diversity_stats_phylogeny.R` | Phylogeny colored by diversity | Complete |
 | `scripts/visualization/donut_TE_diversity.R` | Simple donut charts | Complete |
 | `scripts/visualization/plot_simple_phylogeny.R` | Basic phylogeny plots | Complete |
-| `scripts/visualization/plot_single_te_landscape.R` | Single species TE landscape | Complete |
+| `scripts/R/visualization/plot_te_landscape.R` | Single species TE landscape | Complete |
 | `scripts/visualization/plot_all_te_landscapes.R` | All species TE landscapes | Complete |
-| `scripts/visualization/plot_phylogeny_with_te_landscape.R` | Combined phylo + landscape | Complete |
+| `scripts/visualization/plot_phylogeny_with_te_landscape.R` | Combined phylo + landscape | Repaired; output richness depends on populated `results/landscapes/` |
 | `scripts/visualization/superfamily_values_across_tree.R` | Superfamily traits on tree | Complete |
 
 ---
@@ -104,11 +105,13 @@
 - Automatic clade definition by tree-cutting (k=5 groups)
 - `vegan::adonis2()` PERMANOVA on Bray-Curtis and Euclidean (CLR) distances
 - Beta dispersion tests with `betadisper()` to check PERMANOVA assumptions
-- Pairwise comparisons with `pairwiseAdonis` (if available)
+- Built-in pairwise `adonis2` comparisons with BH-adjusted p-values
 - PCoA ordination colored by clade with 95% ellipses
 - Distance matrix heatmaps ordered by clade
 **Outputs:**
 - `results/data/permanova/permanova_summary.csv`
+- `results/data/permanova/permanova_order_pairwise.csv`
+- `results/data/permanova/permanova_superfamily_pairwise.csv`
 - `results/data/permanova/species_clade_assignments.csv`
 - `results/data/permanova/distance_matrix_order_bray.csv`
 - `results/data/permanova/distance_matrix_superfamily_bray.csv`
@@ -175,7 +178,8 @@ Rscript scripts/processing/permanova_analysis.R
 ```
 
 ### Notes on New Scripts
-- All scripts use the centralized `paths.yaml` configuration
+- Active scripts accept either repo-root `paths.yaml` or `config/paths.yaml`
 - Output directories are created automatically
 - Scripts can be run independently in any order
+- R entrypoints now prepend the active conda R library when `CONDA_PREFIX` is set
 - R packages will attempt to install from CRAN if missing

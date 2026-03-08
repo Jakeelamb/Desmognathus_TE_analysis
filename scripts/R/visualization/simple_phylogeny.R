@@ -1,5 +1,20 @@
 #!/usr/bin/env Rscript
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/R/visualization"
+  }
+}, error = function(...) {
+  "scripts/R/visualization"
+})
+
+source(file.path(dirname(dirname(script_dir)), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 suppressPackageStartupMessages({
   library(ape)
   library(yaml)
@@ -8,18 +23,24 @@ suppressPackageStartupMessages({
 })
 
 # === Configuration ===
-config_file <- "config/paths.yaml"
-if (file.exists(config_file)) {
-  config <- yaml::read_yaml(config_file)
-  plot_dir <- config$results$figures$phylo_landscape
-  tree_file <- file.path(config$data$phylogeny, "desmo900dated_test.tre")
-  lookup_file <- file.path(config$data$lookup, "lookup_table.txt")
-} else {
-  plot_dir <- "results/figures/phylo_landscape"
-  tree_file <- "data/raw/Phylogeny/desmo900dated_test.tre"
-  lookup_file <- "data/raw/lookup/lookup_table.txt"
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
+
+plot_dir <- resolve_config_path(project_root, config$results$figures$phylogeny, "results/figures/phylogeny")
+phylo_dir <- resolve_config_path(project_root, config$results$phylogeny, "results/phylogeny")
+lookup_file <- resolve_config_path(project_root, config$input_data$lookup_table %||% config$data$lookup, "input_data/lookup_table.txt")
+
+tree_candidates <- c(
+  file.path(resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny"), "desmo900dated_test.tre"),
+  file.path(project_root, "results", "data", "desmo900dated_test_cleaned_phylo.tre")
+)
+tree_file <- tree_candidates[file.exists(tree_candidates)][1]
+if (is.na(tree_file)) {
+  stop("No phylogeny file found for simple phylogeny workflow.", call. = FALSE)
 }
+
 dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(phylo_dir, recursive = TRUE, showWarnings = FALSE)
 
 # === Load Data ===
 cat("Loading phylogenetic tree from:", tree_file, "\n")
@@ -85,8 +106,6 @@ scaled_tree <- tree
 scaled_tree$edge.length <- scaled_tree$edge.length * 0.8
 
 # === Save Processed Tree ===
-phylo_dir <- gsub("figures/phylo_landscape", "phylogeny", plot_dir) # Define phylogeny results directory
-dir.create(phylo_dir, recursive = TRUE, showWarnings = FALSE)
 output_newick_file <- file.path(phylo_dir, "processed_phylogeny.nwk")
 cat("Saving processed Newick tree to:", output_newick_file, "\n")
 write.tree(scaled_tree, file = output_newick_file)

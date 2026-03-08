@@ -3,7 +3,8 @@
 Run diversity analysis on TE superfamily proportions.
 
 This script calculates diversity metrics (Shannon, Simpson, etc.) for TE superfamily
-proportions data and generates visualizations.
+proportions data and generates visualizations. The canonical proportions table is
+species-by-superfamily, but legacy feature-by-species input is also accepted.
 """
 
 import pandas as pd
@@ -17,6 +18,7 @@ from pathlib import Path
 # Add the parent directory to the path so we can import the path utils
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from python.utils.path_utils import resolve_path, ensure_directory
+from python.utils.te_table_utils import coerce_feature_table_to_species_matrix
 
 import logging
 logging.basicConfig(level=logging.INFO, 
@@ -40,8 +42,11 @@ def calculate_diversity_metrics(df, output_dir=None):
     pandas.DataFrame
         DataFrame with diversity metrics
     """
-    # Get species columns (all except the first column)
-    species_cols = df.columns[1:]
+    matrix, orientation = coerce_feature_table_to_species_matrix(
+        df,
+        feature_axis_labels=("superfamily", "order", "class"),
+    )
+    logger.info(f"Detected proportions orientation: {orientation}")
     
     # Create a dictionary to store diversity metrics
     metrics = {
@@ -54,16 +59,15 @@ def calculate_diversity_metrics(df, output_dir=None):
     }
     
     # Calculate diversity metrics for each species
-    for col in species_cols:
-        # Get the proportions for the current species
-        props = df[col].values
+    for species_name, row in matrix.iterrows():
+        props = row.to_numpy(dtype=float)
         
         # Remove NaN values
         props = props[~np.isnan(props)]
         
         # Skip if all values are zero
         if np.sum(props) == 0:
-            logger.warning(f"Skipping {col} - all proportions are zero")
+            logger.warning(f"Skipping {species_name} - all proportions are zero")
             continue
         
         # Calculate Shannon entropy (H)
@@ -88,7 +92,7 @@ def calculate_diversity_metrics(df, output_dir=None):
         pielou = shannon / np.log(richness) if richness > 0 else np.nan
         
         # Add metrics to the dictionary
-        metrics['species'].append(col)
+        metrics['species'].append(species_name)
         metrics['shannon_entropy'].append(shannon)
         metrics['simpson_diversity'].append(simpson)
         metrics['inverse_simpson'].append(inv_simpson)
@@ -206,7 +210,7 @@ def parse_args():
                         help="Directory to save output files")
     parser.add_argument("--no-plots", action="store_true",
                         help="Skip generating plots")
-    parser.add_argument("--config", "-c", type=str, default="config/paths.yaml",
+    parser.add_argument("--config", "-c", type=str, default="paths.yaml",
                         help="Path to configuration file")
     parser.add_argument("--verbose", "-v", action="store_true",
                         help="Enable verbose logging")
@@ -225,15 +229,15 @@ def main():
     if args.input:
         input_path = args.input
     else:
-        input_path = os.path.join(resolve_path('data.processed.diversity'), 
+        input_path = os.path.join(resolve_path('data.processed.diversity', args.config), 
                                   'superfamily_proportions.csv')
     
     if args.output_dir:
         output_dir = args.output_dir
     else:
-        output_dir = resolve_path('results.tables.diversity')
+        output_dir = resolve_path('results.tables.diversity', args.config)
     
-    figures_dir = resolve_path('results.figures.diversity')
+    figures_dir = resolve_path('results.figures.diversity', args.config)
     
     # Check if input file exists
     if not os.path.exists(input_path):

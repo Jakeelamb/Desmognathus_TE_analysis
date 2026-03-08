@@ -6,6 +6,21 @@
 #'
 #' @usage Rscript scripts/processing/pgls_analysis.R
 
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/processing"
+  }
+}, error = function(...) {
+  "scripts/processing"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
+
 # --- Load Dependencies ---
 required_packages <- c(
   "ape",          # Phylogenetic tree handling
@@ -29,32 +44,13 @@ invisible(lapply(required_packages, function(pkg) {
 }))
 
 # --- Configuration ---
-find_project_root <- function() {
-  current <- getwd()
-  for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml"))) {
-      return(current)
-    }
-    parent <- dirname(current)
-    if (parent == current) break
-    current <- parent
-  }
-  candidates <- c("~/Projects/Desmognathus_TE", getwd())
-  for (candidate in candidates) {
-    if (file.exists(file.path(candidate, "paths.yaml"))) {
-      return(normalizePath(candidate))
-    }
-  }
-  stop("Could not find project root")
-}
-
-project_root <- find_project_root()
-config <- yaml::read_yaml(file.path(project_root, "paths.yaml"))
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
 # Paths
-data_dir <- file.path(project_root, config$results$data)
-figures_dir <- file.path(project_root, config$results$figures)
-phylo_dir <- file.path(project_root, config$input_data$phylogeny)
+data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+figures_dir <- resolve_config_path(project_root, config$results$figures, "results/figures")
+phylo_dir <- resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny")
 output_dir <- file.path(figures_dir, "pgls")
 output_data_dir <- file.path(data_dir, "pgls")
 
@@ -166,12 +162,21 @@ run_pgls <- function(comp_data, response_var, predictor_vars, model_name = NULL)
   #'
   #' @return list with model, summary, and diagnostics
 
-  # Build formula
-  formula_str <- paste(response_var, "~", paste(predictor_vars, collapse = " + "))
+  quote_formula_var <- function(x) {
+    paste0("`", x, "`")
+  }
+
+  # Build a formula that remains valid for names like `Tc1-mariner`.
+  formula_label <- paste(response_var, "~", paste(predictor_vars, collapse = " + "))
+  formula_str <- paste(
+    quote_formula_var(response_var),
+    "~",
+    paste(vapply(predictor_vars, quote_formula_var, character(1)), collapse = " + ")
+  )
   formula_obj <- as.formula(formula_str)
 
   if (is.null(model_name)) {
-    model_name <- formula_str
+    model_name <- formula_label
   }
 
   # Check that variables exist
@@ -204,7 +209,7 @@ run_pgls <- function(comp_data, response_var, predictor_vars, model_name = NULL)
     # Extract key statistics
     list(
       model_name = model_name,
-      formula = formula_str,
+      formula = formula_label,
       model = pgls_model,
       summary = model_summary,
       coefficients = as.data.frame(model_summary$coefficients),
@@ -221,7 +226,7 @@ run_pgls <- function(comp_data, response_var, predictor_vars, model_name = NULL)
     warning("PGLS failed for ", model_name, ": ", e$message)
     list(
       model_name = model_name,
-      formula = formula_str,
+      formula = formula_label,
       success = FALSE,
       error = e$message
     )
@@ -264,6 +269,13 @@ summarize_pgls_results <- function(results_list) {
     return(data.frame())
   }
 
+  scalar_numeric <- function(x) {
+    if (is.null(x) || length(x) == 0) {
+      return(NA_real_)
+    }
+    as.numeric(x[[1]])
+  }
+
   summaries <- lapply(results_list, function(res) {
     if (!res$success) return(NULL)
 
@@ -273,26 +285,25 @@ summarize_pgls_results <- function(results_list) {
 
     if (nrow(predictor_row) == 0) return(NULL)
 
-    data.frame(
-      model = res$model_name,
-      formula = res$formula,
-      lambda = res$lambda,
-      lambda_lower = res$lambda_lower,
-      lambda_upper = res$lambda_upper,
-      r_squared = res$r_squared,
-      adj_r_squared = res$adj_r_squared,
-      aic = res$aic,
-      n = res$n,
-      predictor = rownames(predictor_row)[1],
-      estimate = predictor_row$Estimate[1],
-      std_error = predictor_row$`Std. Error`[1],
-      t_value = predictor_row$`t value`[1],
-      p_value = predictor_row$`Pr(>|t|)`[1],
-      stringsAsFactors = FALSE
+    tibble::tibble(
+      model = as.character(res$model_name),
+      formula = as.character(res$formula),
+      lambda = scalar_numeric(res$lambda),
+      lambda_lower = scalar_numeric(res$lambda_lower),
+      lambda_upper = scalar_numeric(res$lambda_upper),
+      r_squared = scalar_numeric(res$r_squared),
+      adj_r_squared = scalar_numeric(res$adj_r_squared),
+      aic = scalar_numeric(res$aic),
+      n = as.integer(res$n),
+      predictor = gsub("^`|`$", "", rownames(predictor_row)[1]),
+      estimate = as.numeric(predictor_row$Estimate[1]),
+      std_error = as.numeric(predictor_row$`Std. Error`[1]),
+      t_value = as.numeric(predictor_row$`t value`[1]),
+      p_value = as.numeric(predictor_row$`Pr(>|t|)`[1])
     )
   })
 
-  bind_rows(summaries)
+  dplyr::bind_rows(summaries)
 }
 
 # --- Main PGLS Analyses ---
@@ -388,87 +399,6 @@ if (length(available_major) >= 2) {
   }
 }
 
-# --- Save Results EARLY (before potential errors) ---
-message("\n=== Saving Results ===")
-
-# Save order pairwise results
-if (exists("order_pairwise_summary") && nrow(order_pairwise_summary) > 0) {
-  write_csv(order_pairwise_summary, file.path(output_data_dir, "pgls_order_pairwise.csv"))
-  message("Saved order pairwise results")
-}
-
-# Save superfamily pairwise results
-if (exists("superfamily_pairwise_summary") && nrow(superfamily_pairwise_summary) > 0) {
-  write_csv(superfamily_pairwise_summary, file.path(output_data_dir, "pgls_superfamily_pairwise.csv"))
-  message("Saved superfamily pairwise results")
-}
-
-# --- Diagnostic Plots ---
-message("\n=== Generating Diagnostic Plots ===")
-
-# Lambda distribution plot
-if (exists("order_pairwise_summary") && nrow(order_pairwise_summary) > 0) {
-  p_lambda <- ggplot(order_pairwise_summary, aes(x = lambda)) +
-    geom_histogram(bins = 20, fill = "steelblue", color = "black", alpha = 0.7) +
-    geom_vline(xintercept = 0, linetype = "dashed", color = "red") +
-    geom_vline(xintercept = 1, linetype = "dashed", color = "blue") +
-    labs(
-      title = "Distribution of Pagel's Lambda in PGLS Models",
-      subtitle = "Red = no phylogenetic signal, Blue = Brownian motion",
-      x = expression("Pagel's " * lambda),
-      y = "Count"
-    ) +
-    theme_minimal() +
-    theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-
-  ggsave(file.path(output_dir, "pgls_lambda_distribution.png"), p_lambda,
-         width = 8, height = 6, dpi = 300)
-  message("Saved lambda distribution plot")
-}
-
-# Volcano plot of PGLS results
-if (exists("order_pairwise_summary") && nrow(order_pairwise_summary) > 0) {
-  p_volcano <- ggplot(order_pairwise_summary,
-                      aes(x = estimate, y = -log10(p_value), color = significant)) +
-    geom_point(size = 3, alpha = 0.7) +
-    geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "gray50") +
-    scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red"),
-                      name = "Significant\n(p.adj < 0.05)") +
-    labs(
-      title = "PGLS Results: TE Order Correlations",
-      x = "Regression Coefficient",
-      y = "-log10(p-value)"
-    ) +
-    theme_minimal() +
-    theme(
-      plot.title = element_text(hjust = 0.5, face = "bold"),
-      legend.position = "right"
-    )
-
-  ggsave(file.path(output_dir, "pgls_volcano_plot.png"), p_volcano,
-         width = 10, height = 8, dpi = 300)
-  message("Saved volcano plot")
-}
-
-# R-squared vs Lambda plot
-if (exists("order_pairwise_summary") && nrow(order_pairwise_summary) > 0) {
-  p_rsq_lambda <- ggplot(order_pairwise_summary,
-                         aes(x = lambda, y = r_squared, color = significant)) +
-    geom_point(size = 3, alpha = 0.7) +
-    scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) +
-    labs(
-      title = "Model Fit vs Phylogenetic Signal",
-      x = expression("Pagel's " * lambda),
-      y = expression(R^2)
-    ) +
-    theme_minimal() +
-    theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-
-  ggsave(file.path(output_dir, "pgls_rsq_vs_lambda.png"), p_rsq_lambda,
-         width = 8, height = 6, dpi = 300)
-  message("Saved R-squared vs lambda plot")
-}
-
 # --- Analysis 4: PGLS with diversity metrics (if available) ---
 if (!is.null(diversity_order_df)) {
   message("\n--- Diversity vs TE Composition ---")
@@ -483,23 +413,26 @@ if (!is.null(diversity_order_df)) {
       tibble::rownames_to_column("species") %>%
       left_join(diversity_order_df_clean, by = "species")
 
-  # Test if Shannon diversity correlates with LINE content
-  if ("Simpson" %in% names(order_with_diversity) && "LINE" %in% names(order_with_diversity)) {
-    # Need to rebuild comparative.data with diversity
-    diversity_comp <- comparative.data(
-      phy = order_comp$phy,
-      data = as.data.frame(order_with_diversity),
-      names.col = species,
-      vcv = TRUE
-    )
+    # Test if Simpson diversity correlates with LINE content.
+    if ("Simpson" %in% names(order_with_diversity) && "LINE" %in% names(order_with_diversity)) {
+      # Need to rebuild comparative.data with diversity
+      diversity_comp <- comparative.data(
+        phy = order_comp$phy,
+        data = as.data.frame(order_with_diversity),
+        names.col = species,
+        vcv = TRUE
+      )
 
-    message("\nTesting: Simpson ~ LINE")
-    simpson_line <- run_pgls(diversity_comp, "Simpson", "LINE", "Simpson_vs_LINE")
-    if (!is.null(simpson_line) && simpson_line$success) {
-      message("  Lambda: ", round(simpson_line$lambda, 3))
-      message("  R-squared: ", round(simpson_line$r_squared, 3))
+      message("\nTesting: Simpson ~ LINE")
+      simpson_line <- run_pgls(diversity_comp, "Simpson", "LINE", "Simpson_vs_LINE")
+      if (!is.null(simpson_line) && simpson_line$success) {
+        message("  Lambda: ", round(simpson_line$lambda, 3))
+        message("  R-squared: ", round(simpson_line$r_squared, 3))
+      }
     }
-  }
+  }, error = function(e) {
+    message("Could not complete diversity vs composition PGLS block: ", e$message)
+  })
 }
 
 # --- Save Results ---

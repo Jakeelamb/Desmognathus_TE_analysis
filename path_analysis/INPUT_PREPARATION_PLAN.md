@@ -401,7 +401,12 @@ For supplement:
 - phylogenetic PCA / phylomorphospace figures
 - full TE landscape plots
 
-The existing `scripts/processing/phylogenetic_pca_analysis.R` and the figures in `results/figures/*pPCA*` are still useful, but they should stay exploratory or supplementary unless we deliberately redefine the TE PCA to avoid rare-order domination.
+The canonical TE PCA workflow now lives in `scripts/processing/pca.R`, with
+phylogenetic PCA in `scripts/processing/phylogenetic_pca_analysis.R` reading
+the exact saved CLR matrices from that workflow. Even with that cleanup, these
+ordination outputs should stay exploratory or supplementary unless a specific
+PC is shown to be stable and more interpretable than the direct TE summary
+variables.
 
 ## Recommended V1 Path-Analysis Input Set
 

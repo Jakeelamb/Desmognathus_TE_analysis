@@ -112,7 +112,7 @@ parse_args <- function(args) {
 find_project_root <- function() {
   current <- normalizePath(getwd(), mustWork = TRUE)
   for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml"))) {
+    if (file.exists(file.path(current, "paths.yaml")) || file.exists(file.path(current, "config", "paths.yaml"))) {
       return(current)
     }
     parent <- dirname(current)
@@ -123,7 +123,7 @@ find_project_root <- function() {
   script_dir <- normalizePath(dirname(sys.frame(1)$ofile %||% "path_analysis/scripts"), mustWork = FALSE)
   current <- script_dir
   for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml"))) {
+    if (file.exists(file.path(current, "paths.yaml")) || file.exists(file.path(current, "config", "paths.yaml"))) {
       return(normalizePath(current))
     }
     parent <- dirname(current)
@@ -131,7 +131,7 @@ find_project_root <- function() {
     current <- parent
   }
 
-  stop("Could not locate project root containing paths.yaml")
+  stop("Could not locate project root containing paths.yaml or config/paths.yaml")
 }
 
 `%||%` <- function(x, y) if (is.null(x)) y else x

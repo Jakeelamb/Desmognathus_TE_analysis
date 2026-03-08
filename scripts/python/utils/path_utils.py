@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""
-Path utility functions for the TE analysis project.
+"""Path utility functions for the TE analysis project."""
 
-This module provides functions for handling paths in the project.
-"""
-
-import os
-import sys
-import yaml
 from pathlib import Path
 import logging
+import os
+import sys
+
+import yaml
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -26,8 +23,10 @@ def get_project_root():
     pathlib.Path
         Path to the project root directory
     """
-    # This file is in scripts/python/utils/path_utils.py
-    # Go up three levels to get the project root
+    current = Path(__file__).resolve().parent
+    for candidate in [current, *current.parents]:
+        if (candidate / "paths.yaml").exists() or (candidate / "config" / "paths.yaml").exists():
+            return candidate
     return Path(__file__).resolve().parent.parent.parent.parent
 
 
@@ -46,7 +45,19 @@ def load_config(config_path=None):
         Configuration dictionary
     """
     if config_path is None:
-        config_path = get_project_root() / "config" / "paths.yaml"
+        project_root = get_project_root()
+        root_config = project_root / "paths.yaml"
+        legacy_config = project_root / "config" / "paths.yaml"
+        config_path = root_config if root_config.exists() else legacy_config
+    else:
+        config_path = Path(config_path)
+        if not config_path.is_absolute():
+            config_path = get_project_root() / config_path
+        if not config_path.exists():
+            root_config = get_project_root() / "paths.yaml"
+            legacy_config = get_project_root() / "config" / "paths.yaml"
+            if config_path == root_config and legacy_config.exists():
+                config_path = legacy_config
     
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
@@ -150,7 +161,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Path utilities for the Desmognathus_TE project')
     parser.add_argument('--check-paths', action='store_true',
                         help='Check if all paths in config exist')
-    parser.add_argument('--config', '-c', type=str, default='config/paths.yaml',
+    parser.add_argument('--config', '-c', type=str, default='paths.yaml',
                         help='Path to configuration file')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Enable verbose logging')

@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
-"""
-Path configuration utilities for the Desmognathus_TE project.
-This module loads the paths.yaml configuration and provides functions to access paths.
-"""
+"""Path configuration utilities for the Desmognathus_TE project."""
 
 import os
-import yaml
-from typing import Dict, Any, Union, Optional
+from pathlib import Path
+from typing import Any, Dict, Optional
 
-# Default paths
-DEFAULT_CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 
-                                 "config", "paths.yaml")
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+import yaml
+
+
+def find_project_root(start: Optional[Path] = None) -> Path:
+    """Find the nearest project root containing ``paths.yaml``."""
+    current = (start or Path(__file__).resolve()).parent
+    for candidate in [current, *current.parents]:
+      if (candidate / "paths.yaml").exists() or (candidate / "config" / "paths.yaml").exists():
+        return candidate
+    raise RuntimeError("Could not find project root containing paths.yaml or config/paths.yaml")
+
+
+PROJECT_ROOT = find_project_root()
+DEFAULT_CONFIG_PATH = PROJECT_ROOT / "paths.yaml"
+LEGACY_CONFIG_PATH = PROJECT_ROOT / "config" / "paths.yaml"
 
 # Global variable to store the configuration
 _config = None
@@ -30,15 +38,18 @@ def get_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     
     if _config is None:
         if config_path is None:
-            config_path = DEFAULT_CONFIG_PATH
+            config_path = DEFAULT_CONFIG_PATH if DEFAULT_CONFIG_PATH.exists() else LEGACY_CONFIG_PATH
         
         # Ensure the path is absolute
-        if not os.path.isabs(config_path):
-            config_path = os.path.join(PROJECT_ROOT, config_path)
+        config_path = Path(config_path)
+        if not config_path.is_absolute():
+            config_path = PROJECT_ROOT / config_path
+        if not config_path.exists() and config_path == DEFAULT_CONFIG_PATH and LEGACY_CONFIG_PATH.exists():
+            config_path = LEGACY_CONFIG_PATH
         
         # Load the YAML configuration
         try:
-            with open(config_path, 'r') as f:
+            with config_path.open('r') as f:
                 _config = yaml.safe_load(f)
         except Exception as e:
             raise RuntimeError(f"Error loading path configuration from {config_path}: {e}")
@@ -79,7 +90,7 @@ def get_path(path_key: str, default: Optional[str] = None) -> str:
     
     # Make the path absolute
     if not os.path.isabs(current):
-        current = os.path.join(PROJECT_ROOT, current)
+        current = str(PROJECT_ROOT / current)
     
     return current
 

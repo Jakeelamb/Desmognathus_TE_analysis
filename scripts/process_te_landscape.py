@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument('--test', action='store_true',
                       help='Use test data instead of full dataset')
     parser.add_argument('--min-species-presence', type=int, default=3,
-                      help='Minimum number of species a TE must be present in (for PCA analysis)')
+                      help='Deprecated legacy PCA flag; canonical PCA now uses predefined analysis thresholds')
     
     return parser.parse_args()
 
@@ -52,9 +52,9 @@ def main():
     
     # Define script paths
     scripts_dir = Path(__file__).parent
-    proportions_script = scripts_dir / "python" / "analysis" / "generate_superfamily_proportions.py"
+    proportions_script = scripts_dir / "python" / "preprocessing" / "generate_superfamily_proportions.py"
     diversity_script = scripts_dir / "python" / "analysis" / "run_diversity_analysis.py"
-    pca_script = scripts_dir / "R" / "analysis" / "te_pca_analysis.R"
+    pca_script = scripts_dir / "processing" / "pca.R"
     
     # Run superfamily proportions generation
     if not args.skip_proportions:
@@ -76,15 +76,11 @@ def main():
     if not args.skip_pca:
         logger.info("Running PCA analysis...")
         cmd = ["Rscript", str(pca_script)]
-        if args.min_species_presence:
-            cmd.extend(["--min-species-presence", str(args.min_species_presence)])
         if args.test:
-            cmd.append("--test")
+            logger.info("Canonical PCA uses the frozen results/data TE tables; --test does not alter this step")
         run_command(cmd)
     
     logger.info("TE landscape processing completed!")
 
 if __name__ == "__main__":
     main()
-
-

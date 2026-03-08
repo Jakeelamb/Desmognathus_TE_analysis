@@ -54,6 +54,8 @@ The important files are:
   Variable meanings and caveats.
 - `TE_DATA_AUDIT.md`
   Current audit status of the frozen TE source tables and derived path-analysis TE products.
+- `TE_METHODS_LANGUAGE.md`
+  Ready-to-paste manuscript wording for the TE methods and denominator caveats.
 - `TE_DIVERSITY_CANONICALIZATION.md`
   Documents the now-resolved TE diversity summary generation path and the non-destructive candidate reconstruction.
 - `TE_PROVENANCE_AUDIT.md`

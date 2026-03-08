@@ -1,79 +1,58 @@
 #!/usr/bin/env Rscript
 # Description: Calculates and plots phylogenetic correlograms (Moran's I vs. distance)
-#              for EACH TE superfamily proportion trait individually
-#              using the phylosignal package and ggplot2.
+#              for each TE superfamily trait using distance-binned Moran's I
+#              computed directly from the tree cophenetic matrix.
+
+script_dir <- tryCatch({
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  if (length(file_arg) > 0) {
+    dirname(normalizePath(sub("^--file=", "", file_arg[[1]]), mustWork = FALSE))
+  } else {
+    "scripts/processing"
+  }
+}, error = function(...) {
+  "scripts/processing"
+})
+
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
+prefer_active_conda_r_library()
 
 # Load required libraries
 suppressPackageStartupMessages({
-  library(phylosignal)
   library(ape)
-  library(phylobase) # Provides the phylo4d function/class
   library(readr)
   library(dplyr)
-  library(tidyr)
-  library(purrr)
   library(ggplot2)
-  library(here)
-  library(yaml)
-  library(forcats)
   library(stringr)
   library(RColorBrewer)
-  library(phytools)
 })
 
 # === Configuration ===
-project_root <- here::here()
-config_file <- file.path(project_root, "config/paths.yaml")
+project_root <- find_project_root(script_dir)
+config <- load_project_config(project_root)
 
-# Set default paths first
-default_tree_path <- "results/phylogeny/processed_phylogeny.nwk"
-default_traits_path <- "data/processed/diversity/superfamily_proportions.csv"
-default_output_subdir <- "results/figures/phylo_signal"
+phylo_dir <- resolve_config_path(project_root, config$input_data$phylogeny %||% config$data$phylogeny, "input_data/phylogeny")
+results_data_dir <- resolve_config_path(project_root, config$results$data, "results/data")
+output_dir <- resolve_config_path(project_root, config$results$figures$phylo_signal, "results/figures/phylo_signal")
+output_table_dir <- resolve_config_path(project_root, config$results$tables$phylo_signal, "results/tables/phylogenetic_signal")
 
-# Initialize with defaults
-tree_file <- file.path(project_root, default_tree_path)
-traits_file <- file.path(project_root, default_traits_path)
-output_dir <- file.path(project_root, default_output_subdir)
-plot_output_file <- file.path(output_dir, "phylogenetic_correlogram_moran_per_trait.png")
-
-if (file.exists(config_file)) {
-  tryCatch({
-    config <- yaml::read_yaml(config_file)
-    cat("Config file found. Reading paths.\n")
-
-    tree_path_from_config <- config$results$phylogeny
-    if (!is.null(tree_path_from_config) && is.character(tree_path_from_config) && nzchar(tree_path_from_config)) {
-      tree_file <- file.path(project_root, tree_path_from_config, "processed_phylogeny.nwk")
-      cat("  Using tree path from config:", tree_path_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'results$phylogeny'. Using default tree path.")
-    }
-
-    traits_path_from_config <- config$data$processed$diversity
-    if (!is.null(traits_path_from_config) && is.character(traits_path_from_config) && nzchar(traits_path_from_config)) {
-      traits_file <- file.path(project_root, traits_path_from_config, "superfamily_proportions.csv")
-      cat("  Using traits path from config:", traits_path_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'data$processed$diversity'. Using default traits path.")
-    }
-
-    output_dir_from_config <- config$results$figures$phylo_signal
-    if (!is.null(output_dir_from_config) && is.character(output_dir_from_config) && nzchar(output_dir_from_config)) {
-      output_dir <- file.path(project_root, output_dir_from_config)
-      plot_output_file <- file.path(output_dir, "phylogenetic_correlogram_moran_per_trait.png")
-      cat("  Using output directory from config:", output_dir_from_config, "\n")
-    } else {
-      warning("  Config missing or invalid 'results$figures$phylo_signal'. Using default output dir.")
-    }
-
-  }, error = function(e) {
-    warning("Error reading config file '", config_file, "': ", conditionMessage(e), ". Using default paths.")
-  })
-} else {
-  warning("config/paths.yaml not found. Using default paths.")
+tree_file <- file.path(phylo_dir, "desmo900dated_test.tre")
+if (!file.exists(tree_file)) {
+  tree_file <- file.path(project_root, "results", "phylogeny", "processed_phylogeny.nwk")
 }
 
+traits_file <- file.path(results_data_dir, "dnaPipeTE_superfamily_breakdown.csv")
+if (!file.exists(traits_file)) {
+  legacy_traits_dir <- resolve_config_path(project_root, config$data$processed$diversity, "data/processed/diversity")
+  traits_file <- file.path(legacy_traits_dir, "superfamily_proportions.csv")
+}
+
+plot_output_file <- file.path(output_dir, "phylogenetic_correlogram_moran_per_trait.png")
+table_output_file <- file.path(output_table_dir, "phylogenetic_correlogram_moran_per_trait.csv")
+
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(output_table_dir, recursive = TRUE, showWarnings = FALSE)
 
 # === Load Data ===
 cat("Loading phylogenetic tree from:", tree_file, "\n")
@@ -84,17 +63,24 @@ cat("Loading trait data from:", traits_file, "\n")
 if (!file.exists(traits_file)) stop("Traits file not found: ", traits_file)
 traits_raw <- readr::read_csv(traits_file, show_col_types = FALSE)
 
+if (ncol(traits_raw) > 0 && !nzchar(colnames(traits_raw)[1])) {
+  colnames(traits_raw)[1] <- "species"
+}
+
 if (ncol(traits_raw) > 0 && tolower(colnames(traits_raw)[1]) == "species") {
-  traits <- traits_raw %>% tibble::column_to_rownames(var = colnames(traits_raw)[1])
+  traits <- as.data.frame(traits_raw, check.names = FALSE) %>% tibble::column_to_rownames(var = colnames(traits_raw)[1])
   cat("Using column '", colnames(traits_raw)[1], "' as species identifiers.\n")
 } else if (ncol(traits_raw) > 0) {
   warning("First column is not named 'Species'. Assuming it contains species identifiers and setting as row names.")
-  traits <- traits_raw %>% tibble::column_to_rownames(var = colnames(traits_raw)[1])
+  traits <- as.data.frame(traits_raw, check.names = FALSE) %>% tibble::column_to_rownames(var = colnames(traits_raw)[1])
 } else {
   stop("Trait data file is empty or has no columns.")
 }
 
-traits <- traits %>% mutate(across(everything(), function(x) as.numeric(as.character(x))))
+rownames(traits) <- gsub("^D\\.", "", rownames(traits))
+trait_species <- rownames(traits)
+traits <- as.data.frame(lapply(traits, function(x) as.numeric(as.character(x))), check.names = FALSE)
+rownames(traits) <- trait_species
 
 # === Data Matching ===
 cat("Matching tree tips and trait data...\n")
@@ -120,72 +106,101 @@ cat("Analyzing", ncol(traits_filtered), "traits with sufficient data and varianc
 # === Calculate Phylogenetic Correlograms (Per Trait) ===
 cat("Calculating Moran's I phylogenetic correlograms for each trait...\n")
 
+distance_matrix <- cophenetic(tree)
+
+build_distance_bins <- function(distance_matrix, n_bins = 8) {
+  pairwise_distances <- distance_matrix[lower.tri(distance_matrix)]
+  pairwise_distances <- pairwise_distances[is.finite(pairwise_distances) & pairwise_distances > 0]
+
+  if (length(pairwise_distances) < n_bins) {
+    stop("Not enough pairwise distances to build correlogram bins.")
+  }
+
+  breaks <- unique(as.numeric(
+    stats::quantile(pairwise_distances, probs = seq(0, 1, length.out = n_bins + 1), type = 8, na.rm = TRUE)
+  ))
+
+  if (length(breaks) < 3) {
+    rng <- range(pairwise_distances, na.rm = TRUE)
+    breaks <- seq(rng[1], rng[2], length.out = min(5, length(unique(pairwise_distances))) + 1)
+  }
+
+  tibble(
+    bin_id = seq_len(length(breaks) - 1),
+    lower = breaks[-length(breaks)],
+    upper = breaks[-1]
+  ) %>%
+    filter(upper > lower) %>%
+    mutate(distance_mid = (lower + upper) / 2)
+}
+
+compute_binned_morans_i <- function(trait_vector, distance_matrix, distance_bins, min_pairs = 5) {
+  valid <- !is.na(trait_vector)
+  values <- as.numeric(trait_vector[valid])
+
+  if (length(values) < 4 || stats::var(values) <= 1e-8) {
+    return(NULL)
+  }
+
+  dist_sub <- distance_matrix[valid, valid, drop = FALSE]
+  z <- values - mean(values)
+  denom <- sum(z ^ 2)
+
+  if (!is.finite(denom) || denom <= 0) {
+    return(NULL)
+  }
+
+  z_outer <- tcrossprod(z)
+  lower_mask <- lower.tri(dist_sub)
+
+  binned_results <- lapply(seq_len(nrow(distance_bins)), function(i) {
+    lower <- distance_bins$lower[[i]]
+    upper <- distance_bins$upper[[i]]
+
+    pair_mask_lower <- lower_mask & dist_sub > lower & dist_sub <= upper
+    pair_count <- sum(pair_mask_lower)
+    if (pair_count < min_pairs) {
+      return(NULL)
+    }
+
+    weight_matrix <- (dist_sub > lower & dist_sub <= upper) * 1
+    diag(weight_matrix) <- 0
+    s0 <- sum(weight_matrix)
+    if (s0 <= 0) {
+      return(NULL)
+    }
+
+    morans_i <- (length(values) / s0) * sum(weight_matrix * z_outer) / denom
+
+    tibble(
+      bin_id = distance_bins$bin_id[[i]],
+      lower = lower,
+      upper = upper,
+      distance_mid = distance_bins$distance_mid[[i]],
+      pair_count = pair_count,
+      MoranI = morans_i
+    )
+  })
+
+  bind_rows(binned_results)
+}
+
+distance_bins <- build_distance_bins(distance_matrix, n_bins = 8)
+cat("Using", nrow(distance_bins), "quantile-based phylogenetic distance bins.\n")
+
 all_trait_correlograms <- list()
 
 for (trait_name in colnames(traits_filtered)) {
   cat("  Processing trait:", trait_name, "\n")
 
-  # Create single-trait data frame
-  trait_data_single <- traits_filtered[, trait_name, drop = FALSE]
-
-  # Create phylo4d object for this single trait
   tryCatch({
-      p4d_single <- phylo4d(tree, trait_data_single)
-
-      # Calculate correlogram (should compute Moran's I for single trait)
-      correlogram_result <- phyloCorrelogram(p4d_single)
-
-      # --- Process the result for this trait ---
-      # Check if the result is a list and contains $res
-      if (is.list(correlogram_result) && !is.null(correlogram_result$res)) {
-          res_trait <- as.data.frame(correlogram_result$res)
-
-          # Ensure res_trait is valid (not NULL and has rows and at least 2 columns)
-          if (!is.null(res_trait) && nrow(res_trait) > 0 && ncol(res_trait) >= 2) {
-              
-              # --- Assume Column 2 is Moran's I --- 
-              MoranI_values <- res_trait[[2]] # Select the second column
-              # --- End Assumption --- 
-
-              # Parse/Calculate distance midpoints
-              distance_mid <- numeric(nrow(res_trait))
-              parsed_ok <- FALSE
-              if (!is.null(rownames(res_trait))) {
-                  # Try parsing from rownames
-                  matches <- regmatches(rownames(res_trait), regexec("\\[([0-9.]+), *([0-9.]+)\\]", rownames(res_trait)))
-                  if(length(matches) == nrow(res_trait) && all(sapply(matches, length) == 3)) { # Check if parsing worked for all rows
-                      lower_bounds <- suppressWarnings(as.numeric(sapply(matches, `[`, 2)))
-                      upper_bounds <- suppressWarnings(as.numeric(sapply(matches, `[`, 3)))
-                       if (!any(is.na(lower_bounds)) && !any(is.na(upper_bounds))) {
-                           distance_mid <- (lower_bounds + upper_bounds) / 2
-                           parsed_ok <- TRUE
-                       }
-                  }
-              }
-              if (!parsed_ok) {
-                  # Fallback: Approximate midpoints
-                  warning("Could not parse distance from rownames for trait: ", trait_name, ". Approximating.")
-                  max_dist <- max(cophenetic(tree))
-                  n_bins <- nrow(res_trait)
-                  breaks_approx <- seq(0, max_dist, length.out = n_bins + 1)
-                  distance_mid <- (breaks_approx[-1] + breaks_approx[-length(breaks_approx)]) / 2
-              }
-
-              # Store results
-              all_trait_correlograms[[trait_name]] <- tibble(
-                  distance_mid = distance_mid,
-                  MoranI = MoranI_values, # Use the extracted values
-                  trait = trait_name
-              )
-
-          } else {
-               warning("phyloCorrelogram result $res was NULL, empty, or had fewer than 2 columns for trait: ", trait_name)
-          }
-
+      trait_result <- compute_binned_morans_i(traits_filtered[[trait_name]], distance_matrix, distance_bins)
+      if (!is.null(trait_result) && nrow(trait_result) > 0) {
+        all_trait_correlograms[[trait_name]] <- trait_result %>%
+          mutate(trait = trait_name, .before = 1)
       } else {
-          warning("phyloCorrelogram did not return expected list structure with $res for trait: ", trait_name)
+        warning("No valid correlogram bins retained for trait: ", trait_name)
       }
-
   }, error = function(e) {
     warning("Error processing trait ", trait_name, ": ", conditionMessage(e))
   })
@@ -201,11 +216,21 @@ cat("Generating combined Moran's I correlogram plot...\n")
 
 num_traits <- length(unique(plot_data$trait))
 color_palette <- RColorBrewer::brewer.pal(min(num_traits, 9), "Set1")
+if (num_traits > 9) {
+  color_palette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, "Dark2"))(num_traits)
+}
 
 plot_data <- plot_data %>%
   mutate(trait_display = str_replace_all(trait, "[._]", " ")) %>%
-  mutate(trait_display = str_to_title(trait_display)) %>%
-  mutate(trait_display = fct_reorder(trait_display, trait))
+  mutate(trait_display = str_to_title(trait_display))
+
+trait_levels <- plot_data %>%
+  distinct(trait, trait_display) %>%
+  arrange(trait) %>%
+  pull(trait_display)
+
+plot_data <- plot_data %>%
+  mutate(trait_display = factor(trait_display, levels = trait_levels))
 
 correlogram_plot <- ggplot(plot_data, aes(x = distance_mid, y = MoranI, color = trait_display, group = trait_display)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
@@ -228,6 +253,8 @@ correlogram_plot <- ggplot(plot_data, aes(x = distance_mid, y = MoranI, color = 
   ) +
   guides(color = guide_legend(ncol = 1))
 
+readr::write_csv(plot_data, table_output_file)
 ggsave(plot_output_file, plot = correlogram_plot, width = 10, height = 7, dpi = 300, bg = "white")
+cat("Saved correlogram data to:", table_output_file, "\n")
 cat("Saved Moran's I correlogram plot to:", plot_output_file, "\n")
 cat("Script finished.\n")

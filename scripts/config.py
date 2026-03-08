@@ -3,8 +3,9 @@ Centralized configuration management for the Desmognathus TE analysis project.
 
 This module provides consistent path handling across all Python scripts by:
 1. Auto-detecting the project root directory
-2. Loading paths from paths.yaml
-3. Providing Path objects for all configured directories
+2. Loading paths from the canonical root `paths.yaml`
+3. Falling back to `config/paths.yaml` for legacy callers
+4. Providing Path objects for all configured directories
 
 Usage:
     from config import paths, PROJECT_ROOT
@@ -12,41 +13,42 @@ Usage:
     # Access paths
     input_dir = paths.input_data.dnaPipeTE
     output_dir = paths.results.data
+    figure_dir = paths.results.figures / "custom_subdir"
     lookup_file = paths.input_data.lookup_table
 """
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 import yaml
 
 
 def find_project_root() -> Path:
     """
-    Find the project root by looking for paths.yaml.
+    Find the project root by looking for the canonical path configuration.
 
     Searches upward from this file's location until finding a directory
-    containing paths.yaml or reaching the filesystem root.
+    containing `paths.yaml` or `config/paths.yaml`.
 
     Returns:
         Path to the project root directory.
 
     Raises:
-        FileNotFoundError: If paths.yaml cannot be found.
+        FileNotFoundError: If no compatible path configuration can be found.
     """
     current = Path(__file__).resolve().parent
 
     while current != current.parent:
-        if (current / "paths.yaml").exists():
+        if (current / "paths.yaml").exists() or (current / "config" / "paths.yaml").exists():
             return current
         current = current.parent
 
     # Fallback: check if we're in the scripts directory
     scripts_parent = Path(__file__).resolve().parent.parent
-    if (scripts_parent / "paths.yaml").exists():
+    if (scripts_parent / "paths.yaml").exists() or (scripts_parent / "config" / "paths.yaml").exists():
         return scripts_parent
 
     raise FileNotFoundError(
-        "Could not find project root (no paths.yaml found). "
+        "Could not find project root (no paths.yaml or config/paths.yaml found). "
         "Ensure you're running from within the project directory."
     )
 
@@ -68,6 +70,11 @@ class PathConfig:
         """
         self._root = root
         self._config = config_dict
+        self._path = None
+
+        section_root = config_dict.get("root")
+        if isinstance(section_root, str):
+            self._path = root / section_root
 
         for key, value in config_dict.items():
             if isinstance(value, dict):
@@ -81,6 +88,25 @@ class PathConfig:
 
     def __repr__(self) -> str:
         return f"PathConfig({self._config})"
+
+    def __str__(self) -> str:
+        return str(self._path) if self._path is not None else super().__repr__()
+
+    def __fspath__(self) -> str:
+        if self._path is None:
+            raise TypeError("This PathConfig section does not define a root path.")
+        return str(self._path)
+
+    def __truediv__(self, other: Union[str, Path]) -> Path:
+        if self._path is None:
+            raise TypeError("This PathConfig section does not define a root path.")
+        return self._path / other
+
+    @property
+    def path(self) -> Path:
+        if self._path is None:
+            raise AttributeError("This PathConfig section does not define a root path.")
+        return self._path
 
     def get(self, key: str, default: Any = None) -> Any:
         """Get a path by key name."""
@@ -108,8 +134,17 @@ def load_config(config_path: Path = None) -> PathConfig:
     if config_path is None:
         root = find_project_root()
         config_path = root / "paths.yaml"
+        if not config_path.exists():
+            config_path = root / "config" / "paths.yaml"
     else:
-        root = config_path.parent
+        config_path = Path(config_path)
+        if not config_path.is_absolute():
+            root = find_project_root()
+            config_path = root / config_path
+        if config_path.parent.name == "config":
+            root = config_path.parent.parent
+        else:
+            root = config_path.parent
 
     with open(config_path, 'r') as f:
         config_dict = yaml.safe_load(f)
@@ -172,5 +207,5 @@ if __name__ == "__main__":
     print(f"  Lookup table: {paths.input_data.lookup_table}")
     print(f"\nResults paths:")
     print(f"  Data: {paths.results.data}")
-    print(f"  Figures: {paths.results.figures}")
+    print(f"  Figures root: {paths.results.figures.path}")
     print(f"\nInterim: {paths.interim.root}")

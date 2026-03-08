@@ -84,8 +84,8 @@ The Desmognathus TE Analysis workflow consists of several key steps:
 
 **Inputs**:
 - SRX ID (command-line argument)
-- RepeatMasker `.align` file: `data/raw/repeatmasker/{SRX_ID}_Trinity.align`
-- Classification file: `data/interim/{SRX_ID}_reads_per_component_and_annotation_processed`
+- RepeatMasker `.align` file: `input_data/repeatmasker/{SRX_ID}_Trinity.align`
+- Canonical classification table: `results/data/dnaPipeTE_merged_classifications.csv`
 
 **Outputs**:
 - CSV landscape data: `results/landscapes/repeat_landscape_{SRX_ID}.csv`
@@ -95,28 +95,24 @@ The Desmognathus TE Analysis workflow consists of several key steps:
 
 **Dependencies**:
 - Dusky conda environment
-- Python script: `scripts/python/preprocessing/parse_repeatmasker_landscape.py`
+- Python script: `scripts/processing/parse_repeatmasker_landscape.py`
 - R script: `scripts/R/visualization/plot_te_landscape.R`
 
 #### `scripts/python/preprocessing/parse_repeatmasker_landscape.py`
 
-**Purpose**: Parses RepeatMasker `.align` files and joins with classification metadata to generate a dataset for TE repeat landscape analysis.
+**Purpose**: Backward-compatible wrapper for the canonical RepeatMasker landscape parser.
 
 **Inputs**:
 - SRX ID (command-line argument)
-- RepeatMasker `.align` file: `data/raw/repeatmasker/{SRX_ID}_Trinity.align`
-- Classification file: `data/interim/{SRX_ID}_reads_per_component_and_annotation_processed`
+- RepeatMasker `.align` file: `input_data/repeatmasker/{SRX_ID}_Trinity.align`
+- Canonical classification table: `results/data/dnaPipeTE_merged_classifications.csv`
 
 **Outputs**:
 - CSV landscape data: `results/landscapes/repeat_landscape_{SRX_ID}.csv`
 
 **Usage**: `python scripts/python/preprocessing/parse_repeatmasker_landscape.py SRX19953421`
 
-**Key Functions**:
-- `parse_align_file()`: Extracts contig names, aligned base pairs, and Kimura distances
-- `load_classification_file()`: Loads TE classification metadata
-- `merge_align_classification()`: Merges alignment data with classification info
-- `aggregate_landscape()`: Aggregates data into Kimura distance bins
+**Note**: The canonical implementation now lives at `scripts/processing/parse_repeatmasker_landscape.py`. The preprocessing path remains as a compatibility wrapper so older commands still work.
 
 ### Batch Processing Scripts
 
@@ -197,15 +193,15 @@ The Desmognathus TE Analysis workflow consists of several key steps:
 **Purpose**: Creates visualizations that integrate TE landscape data with a phylogenetic tree of Desmognathus species.
 
 **Inputs**:
-- Phylogenetic tree file: `data/raw/Phylogeny/desmo900dated_test.tre`
-- Species lookup table: `data/raw/lookup/lookup_table.txt`
+- Phylogenetic tree file: `input_data/phylogeny/desmo900dated_test.tre`
+- Species lookup table: `input_data/lookup_table.txt`
 - Processed landscape files: `results/landscapes/repeat_landscape_*.csv`
 
 **Outputs**:
-- Basic tree visualization: `results/figures/phylo_landscape/desmognathus_phylogeny.png`
-- Phylogeny with TE landscape heatmap: `results/figures/phylo_landscape/phylogeny_with_te_landscape_heatmap.png`
-- Phylogeny with TE class distribution: `results/figures/phylo_landscape/phylogeny_with_te_class_distribution.png`
-- Circular phylogeny: `results/figures/phylo_landscape/desmognathus_circular_phylogeny.png`
+- Basic tree visualization: `results/figures/phylo_landscape/basic_phylogeny.png`
+- Phylogeny with TE landscape heatmap: `results/figures/phylo_landscape/phylogeny_with_landscape.png`
+- Phylogeny with TE class distribution: `results/figures/phylo_landscape/phylogeny_with_classes.png`
+- Runtime note: no figures are produced unless `results/landscapes/repeat_landscape_*.csv` is populated locally
 
 **Usage**: `Rscript scripts/R/visualization/te_phylo_landscape.R`
 
@@ -271,13 +267,15 @@ conda activate Dusky
 | `plot_te_landscape.R` | R | Single sample visualizations | SRX ID, landscape CSV | Various PNG plots |
 | `visualize_all_landscapes.R` | R | Combined visualizations | All landscape CSVs, lookup table | Combined plots, heatmaps |
 | `te_phylo_landscape.R` | R | Phylogenetic visualizations | Tree file, landscape CSVs, lookup table | Tree plots with TE data |
-| `te_landscape_plots.R` | R | TE landscape summary plots | Processed data tables | Summary visualizations |
+| `plot_te_landscape_analysis.R` | R | TE landscape summary plots | `results/data/dnaPipeTE_*_breakdown.csv` | Summary visualizations |
 | **Data Processing** |
 | `process_te_landscape.py` | Python | Complete TE analysis workflow | Raw data files | Processed data, plots |
 | `generate_superfamily_proportions.py` | Python | Calculate TE proportions | TE breakdown CSV | Proportion tables |
 | `run_diversity_analysis.py` | Python | Diversity metrics calculation | Superfamily proportions | Diversity metrics, plots |
 | **Phylogenetic Analysis** |
-| `te_pca_analysis.R` | R | PCA on TE distributions | Superfamily proportions | PCA plots, tables |
+| `pca.R` | R | Canonical compositional PCA on frozen TE breakdown tables | `results/data/dnaPipeTE_*_breakdown.csv` | PCA manifests, CLR matrices, loadings, scores, plots |
+| `phylogenetic_pca_analysis.R` | R | Supplementary phylogenetic PCA from saved CLR matrices | `results/tables/pca/*_clr_matrix.csv`, phylogeny | pPCA manifests, scores, loadings, phylomorphospace plots |
+| `analyze_phylogenetic_correlogram.R` | R | Moran's I correlograms across phylogenetic distance bins | `results/data/dnaPipeTE_superfamily_breakdown.csv`, phylogeny | `results/tables/phylogenetic_signal/phylogenetic_correlogram_moran_per_trait.csv`, correlogram plot |
 | **Utility Scripts** |
 | `create_gitkeep.py` | Python | Maintain git directory structure | None | .gitkeep files |
 | `split_fasta.py` | Python | Split FASTA files | FASTA file, chunk size | Multiple FASTA chunks |
