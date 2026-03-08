@@ -1,6 +1,6 @@
 # Desmognathus TE Analysis
 
-Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), LTR insertion age estimation, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
+Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), an audited LTR insertion-age readiness branch, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
 
 For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
 
@@ -276,17 +276,22 @@ Rscript scripts/processing/trait_evolution.R
 - `results/data/trait_evolution/evolutionary_model_comparison.csv`
 - `results/figures/trait_evolution/ancestral_*.png`
 
-### 10. LTR Insertion Age Estimation
+### 10. LTR Age Readiness Audit
 
-Estimates LTR retrotransposon insertion times from intra-element (5' vs 3' LTR) divergence, converted to age via substitution rate.
+Audits whether the local repo has the inputs needed for true sequence-based LTR
+insertion-age estimation. The current validated behavior is a readiness audit,
+not a paper-ready age estimate, because matching genome FASTA assemblies are
+not present locally. See `LTR_AGE_AUDIT.md`.
 
 ```bash
 python scripts/processing/ltr_age_estimation.py
 ```
 
 **Outputs:**
-- `results/data/ltr_age/ltr_insertion_ages.csv`
-- `results/figures/ltr_age/ltr_age_by_species.png`
+- `results/data/ltr_age/ltr_age_readiness_by_species.csv`
+- `results/data/ltr_age/ltr_age_readiness_overview.csv`
+- `results/data/ltr_age/ltr_age_candidate_inventory.csv`
+- `LTR_AGE_AUDIT.md`
 
 ### 11. PGLS Regression
 

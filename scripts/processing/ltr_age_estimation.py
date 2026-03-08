@@ -1,429 +1,333 @@
 #!/usr/bin/env python3
 """
-LTR Insertion Age Estimation Script
+LTR age readiness audit.
 
-Estimates LTR retrotransposon insertion times using intra-element divergence
-between 5' and 3' LTRs. This is a standard method for dating LTR insertions.
+This script intentionally does not estimate sequence-based LTR insertion ages
+from the current local repo state. The previous implementation attempted to
+derive insertion ages from RepeatMasker divergence-to-consensus hits on Trinity
+assemblies, which is not a defensible substitute for divergence between true
+paired 5' and 3' LTR sequences from the same genomic insertion.
 
-Methodology:
-1. Parse RepeatMasker or LTR_retriever output for paired LTR annotations
-2. Calculate sequence divergence between 5' and 3' LTRs
-3. Convert divergence to insertion time using substitution rate
-4. Generate age distribution plots
-
-Default substitution rate: 1.3e-8 substitutions/site/year (vertebrate rate)
+The canonical local source of paired-LTR structure is the ectopic master table
+written by `scripts/processing/ec.py`. This script audits that paired-element
+inventory, records how much age-estimation substrate exists, and reports why
+sequence-based age estimation is currently blocked.
 """
 
-import os
-import sys
-import re
-import logging
+from __future__ import annotations
+
+import argparse
 from pathlib import Path
-from collections import defaultdict
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, Iterable, List
 
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-# Add project root to path
+import sys
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from config import paths, PROJECT_ROOT, load_lookup_table
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-
-# --- Configuration ---
-INPUT_DIR = paths.input_data.repeatmasker
-ECTOPIC_DIR = paths.input_data.ectopic_recombination
-OUTPUT_DATA_DIR = paths.results.data / "ltr_age"
-OUTPUT_FIG_DIR = paths.results.figures / "ltr_age"
-
-# Create output directories
-OUTPUT_DATA_DIR.mkdir(parents=True, exist_ok=True)
-OUTPUT_FIG_DIR.mkdir(parents=True, exist_ok=True)
-
-# Substitution rate (substitutions per site per year)
-# Using vertebrate neutral substitution rate
-SUBSTITUTION_RATE = 1.3e-8  # Can be adjusted based on salamander-specific rates
-
-# Minimum LTR length for reliable divergence estimation
-MIN_LTR_LENGTH = 100
-
-
-def parse_repeatmasker_align(align_file: Path) -> pd.DataFrame:
-    """
-    Parse RepeatMasker .align file to extract LTR element information.
-
-    Returns DataFrame with columns:
-    - query_name: contig/scaffold name
-    - query_start, query_end: coordinates
-    - element_name: TE family name
-    - element_class: classification (e.g., LTR/Gypsy)
-    - percent_divergence: sequence divergence from consensus
-    - percent_deletions, percent_insertions: indel rates
-    """
-    records = []
-
-    try:
-        with open(align_file, 'r') as f:
-            for line in f:
-                # Skip header and empty lines
-                if line.startswith('#') or not line.strip():
-                    continue
-
-                # Parse alignment header lines
-                # Format: score div% del% ins% query_name query_start query_end (direction) match_name class ...
-                parts = line.split()
-                if len(parts) < 10:
-                    continue
-
-                try:
-                    # Check if this looks like a header line (starts with score)
-                    score = int(parts[0])
-
-                    # Extract fields
-                    percent_div = float(parts[1])
-                    percent_del = float(parts[2])
-                    percent_ins = float(parts[3])
-                    query_name = parts[4]
-                    query_start = int(parts[5])
-                    query_end = int(parts[6])
-
-                    # Direction and match info
-                    if parts[7] in ['(C)', 'C', '+']:
-                        direction = parts[7]
-                        match_idx = 8
-                    else:
-                        direction = '+'
-                        match_idx = 7
-
-                    if match_idx < len(parts):
-                        element_name = parts[match_idx]
-                        element_class = parts[match_idx + 1] if match_idx + 1 < len(parts) else "Unknown"
-                    else:
-                        continue
-
-                    # Only keep LTR elements
-                    if 'LTR' in element_class or 'Gypsy' in element_class or 'Copia' in element_class:
-                        records.append({
-                            'query_name': query_name,
-                            'query_start': query_start,
-                            'query_end': query_end,
-                            'direction': direction,
-                            'element_name': element_name,
-                            'element_class': element_class,
-                            'percent_divergence': percent_div,
-                            'percent_deletions': percent_del,
-                            'percent_insertions': percent_ins,
-                            'score': score
-                        })
-
-                except (ValueError, IndexError):
-                    continue
-
-    except Exception as e:
-        logging.error(f"Error parsing {align_file}: {e}")
-
-    return pd.DataFrame(records)
-
-
-def identify_ltr_pairs(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Identify paired 5' and 3' LTRs from the same element.
-
-    LTR pairs are identified by:
-    - Same element name/family
-    - Located on same contig
-    - Within reasonable distance (suggesting same insertion)
-    """
-    if df.empty:
-        return pd.DataFrame()
-
-    # Group by contig and element family
-    df = df.sort_values(['query_name', 'element_name', 'query_start'])
-
-    pairs = []
-    max_internal_region = 20000  # Maximum distance between LTRs (typical LTR element size)
-
-    for (contig, element), group in df.groupby(['query_name', 'element_name']):
-        if len(group) < 2:
-            continue
-
-        group = group.sort_values('query_start').reset_index(drop=True)
-
-        for i in range(len(group) - 1):
-            ltr1 = group.iloc[i]
-            ltr2 = group.iloc[i + 1]
-
-            # Check if they could be paired LTRs
-            distance = ltr2['query_start'] - ltr1['query_end']
-
-            if 0 < distance < max_internal_region:
-                # Potential pair found
-                ltr1_len = ltr1['query_end'] - ltr1['query_start']
-                ltr2_len = ltr2['query_end'] - ltr2['query_start']
-
-                # LTRs should be similar in length
-                len_ratio = min(ltr1_len, ltr2_len) / max(ltr1_len, ltr2_len) if max(ltr1_len, ltr2_len) > 0 else 0
-
-                if len_ratio > 0.7 and min(ltr1_len, ltr2_len) >= MIN_LTR_LENGTH:
-                    # Calculate intra-element divergence
-                    # Use average of divergence from consensus as proxy
-                    avg_div = (ltr1['percent_divergence'] + ltr2['percent_divergence']) / 2
-
-                    # The actual 5'/3' LTR divergence would be roughly 2x the consensus divergence
-                    # This is because both LTRs diverge from their common ancestor
-                    intra_element_div = avg_div
-
-                    pairs.append({
-                        'contig': contig,
-                        'element_name': element,
-                        'element_class': ltr1['element_class'],
-                        'ltr5_start': ltr1['query_start'],
-                        'ltr5_end': ltr1['query_end'],
-                        'ltr3_start': ltr2['query_start'],
-                        'ltr3_end': ltr2['query_end'],
-                        'ltr5_length': ltr1_len,
-                        'ltr3_length': ltr2_len,
-                        'internal_length': distance,
-                        'ltr5_divergence': ltr1['percent_divergence'],
-                        'ltr3_divergence': ltr2['percent_divergence'],
-                        'intra_element_divergence': intra_element_div,
-                        'length_ratio': len_ratio
-                    })
-
-    return pd.DataFrame(pairs)
-
-
-def calculate_insertion_age(divergence_percent: float,
-                           substitution_rate: float = SUBSTITUTION_RATE) -> float:
-    """
-    Calculate insertion age from sequence divergence.
-
-    Age = divergence / (2 * substitution_rate)
-
-    The factor of 2 accounts for divergence occurring in both LTRs
-    after the insertion event.
-
-    Args:
-        divergence_percent: Percent sequence divergence
-        substitution_rate: Substitutions per site per year
-
-    Returns:
-        Estimated age in millions of years (Mya)
-    """
-    divergence = divergence_percent / 100.0
-    age_years = divergence / (2 * substitution_rate)
-    age_mya = age_years / 1e6
-    return age_mya
-
-
-def process_species(species_name: str, align_file: Path) -> Optional[pd.DataFrame]:
-    """
-    Process a single species' RepeatMasker alignment file.
-    """
-    logging.info(f"Processing {species_name}...")
-
-    # Parse alignments
-    ltr_df = parse_repeatmasker_align(align_file)
-
-    if ltr_df.empty:
-        logging.warning(f"  No LTR elements found for {species_name}")
-        return None
-
-    logging.info(f"  Found {len(ltr_df)} LTR annotations")
-
-    # Identify LTR pairs
-    pairs_df = identify_ltr_pairs(ltr_df)
-
-    if pairs_df.empty:
-        logging.warning(f"  No LTR pairs identified for {species_name}")
-        return None
-
-    logging.info(f"  Identified {len(pairs_df)} LTR pairs")
-
-    # Calculate insertion ages
-    pairs_df['insertion_age_mya'] = pairs_df['intra_element_divergence'].apply(calculate_insertion_age)
-    pairs_df['species'] = species_name
-
-    return pairs_df
-
-
-def plot_age_distribution(all_ages_df: pd.DataFrame, output_dir: Path):
-    """
-    Generate age distribution plots.
-    """
-    if all_ages_df.empty:
-        logging.warning("No data for age distribution plots")
-        return
-
-    # 1. Overall age distribution histogram
-    fig, ax = plt.subplots(figsize=(12, 6))
-
-    ax.hist(all_ages_df['insertion_age_mya'], bins=50, edgecolor='black', alpha=0.7)
-    ax.set_xlabel('Insertion Age (Mya)', fontsize=12)
-    ax.set_ylabel('Number of LTR Elements', fontsize=12)
-    ax.set_title('LTR Retrotransposon Age Distribution Across All Species', fontsize=14)
-    ax.axvline(all_ages_df['insertion_age_mya'].median(), color='red',
-               linestyle='--', label=f"Median: {all_ages_df['insertion_age_mya'].median():.2f} Mya")
-    ax.legend()
-
-    plt.tight_layout()
-    plt.savefig(output_dir / 'ltr_age_distribution_all.png', dpi=300)
-    plt.close()
-
-    # 2. Age distribution by element class
-    fig, ax = plt.subplots(figsize=(14, 7))
-
-    # Get top element classes
-    top_classes = all_ages_df['element_class'].value_counts().head(10).index.tolist()
-    plot_df = all_ages_df[all_ages_df['element_class'].isin(top_classes)]
-
-    sns.boxplot(data=plot_df, x='element_class', y='insertion_age_mya', ax=ax)
-    ax.set_xlabel('LTR Element Class', fontsize=12)
-    ax.set_ylabel('Insertion Age (Mya)', fontsize=12)
-    ax.set_title('LTR Insertion Age by Element Class', fontsize=14)
-    plt.xticks(rotation=45, ha='right')
-
-    plt.tight_layout()
-    plt.savefig(output_dir / 'ltr_age_by_class.png', dpi=300)
-    plt.close()
-
-    # 3. Age distribution by species (if multiple species)
-    n_species = all_ages_df['species'].nunique()
-    if n_species > 1:
-        fig, ax = plt.subplots(figsize=(16, 8))
-
-        # Order species by median age
-        species_order = all_ages_df.groupby('species')['insertion_age_mya'].median().sort_values().index
-
-        sns.boxplot(data=all_ages_df, x='species', y='insertion_age_mya',
-                   order=species_order, ax=ax)
-        ax.set_xlabel('Species', fontsize=12)
-        ax.set_ylabel('Insertion Age (Mya)', fontsize=12)
-        ax.set_title('LTR Insertion Age Distribution by Species', fontsize=14)
-        plt.xticks(rotation=90)
-
-        plt.tight_layout()
-        plt.savefig(output_dir / 'ltr_age_by_species.png', dpi=300)
-        plt.close()
-
-    # 4. TE landscape plot (divergence histogram by class)
-    fig, axes = plt.subplots(2, 2, figsize=(14, 12))
-
-    for idx, (element_class, group) in enumerate(plot_df.groupby('element_class')):
-        if idx >= 4:
-            break
-        ax = axes[idx // 2, idx % 2]
-        ax.hist(group['intra_element_divergence'], bins=30, edgecolor='black', alpha=0.7)
-        ax.set_xlabel('Divergence (%)', fontsize=10)
-        ax.set_ylabel('Count', fontsize=10)
-        ax.set_title(f'{element_class}', fontsize=12)
-
-    plt.suptitle('LTR Divergence Distribution by Element Class', fontsize=14)
-    plt.tight_layout()
-    plt.savefig(output_dir / 'ltr_divergence_landscapes.png', dpi=300)
-    plt.close()
-
-
-def main():
-    """Main execution function."""
-    logging.info("=== LTR Insertion Age Estimation ===")
-    logging.info(f"Input directory: {INPUT_DIR}")
-    logging.info(f"Output directory: {OUTPUT_DATA_DIR}")
-    logging.info(f"Substitution rate: {SUBSTITUTION_RATE} subst/site/year")
-
-    # Load lookup table
-    try:
-        lookup_df = load_lookup_table()
-        sra_to_species = dict(zip(lookup_df['SRA_Accension'], lookup_df['Species']))
-        logging.info(f"Loaded lookup table with {len(sra_to_species)} species")
-    except Exception as e:
-        logging.error(f"Failed to load lookup table: {e}")
-        return
-
-    # Find all align files
-    align_files = list(INPUT_DIR.glob("*.align"))
-    logging.info(f"Found {len(align_files)} alignment files")
-
-    if not align_files:
-        logging.error("No .align files found. Check input directory.")
-        return
-
-    # Process each species
-    all_results = []
-
-    for align_file in align_files:
-        # Extract SRA ID from filename
-        sra_match = re.search(r'(SRX\d+)', align_file.name)
-        if sra_match:
-            sra_id = sra_match.group(1)
-            species_name = sra_to_species.get(sra_id, f"Unknown_{sra_id}")
-        else:
-            species_name = align_file.stem
-
-        result_df = process_species(species_name, align_file)
-
-        if result_df is not None and not result_df.empty:
-            all_results.append(result_df)
-
-    if not all_results:
-        logging.error("No LTR pairs found in any species")
-        return
-
-    # Combine all results
-    all_ages_df = pd.concat(all_results, ignore_index=True)
-    logging.info(f"\nTotal LTR pairs across all species: {len(all_ages_df)}")
-
-    # Save raw results
-    output_file = OUTPUT_DATA_DIR / "ltr_insertion_ages.csv"
-    all_ages_df.to_csv(output_file, index=False)
-    logging.info(f"Saved raw results to: {output_file}")
-
-    # Generate summary statistics
-    summary_stats = all_ages_df.groupby('species').agg({
-        'insertion_age_mya': ['count', 'mean', 'median', 'std', 'min', 'max'],
-        'intra_element_divergence': ['mean', 'median']
-    }).round(4)
-    summary_stats.columns = ['_'.join(col).strip() for col in summary_stats.columns.values]
-    summary_stats = summary_stats.reset_index()
-
-    summary_file = OUTPUT_DATA_DIR / "ltr_age_summary_by_species.csv"
-    summary_stats.to_csv(summary_file, index=False)
-    logging.info(f"Saved species summary to: {summary_file}")
-
-    # Generate summary by element class
-    class_summary = all_ages_df.groupby('element_class').agg({
-        'insertion_age_mya': ['count', 'mean', 'median', 'std'],
-        'intra_element_divergence': ['mean', 'median']
-    }).round(4)
-    class_summary.columns = ['_'.join(col).strip() for col in class_summary.columns.values]
-    class_summary = class_summary.reset_index()
-
-    class_file = OUTPUT_DATA_DIR / "ltr_age_summary_by_class.csv"
-    class_summary.to_csv(class_file, index=False)
-    logging.info(f"Saved class summary to: {class_file}")
-
-    # Generate plots
-    logging.info("\nGenerating plots...")
-    plot_age_distribution(all_ages_df, OUTPUT_FIG_DIR)
-
-    # Print summary
-    logging.info("\n=== Summary Statistics ===")
-    logging.info(f"Total LTR pairs analyzed: {len(all_ages_df)}")
-    logging.info(f"Species analyzed: {all_ages_df['species'].nunique()}")
-    logging.info(f"Element classes: {all_ages_df['element_class'].nunique()}")
-    logging.info(f"Median insertion age: {all_ages_df['insertion_age_mya'].median():.2f} Mya")
-    logging.info(f"Mean insertion age: {all_ages_df['insertion_age_mya'].mean():.2f} Mya")
-    logging.info(f"Age range: {all_ages_df['insertion_age_mya'].min():.2f} - {all_ages_df['insertion_age_mya'].max():.2f} Mya")
-
-    logging.info("\n=== LTR Age Estimation Complete ===")
+from config import PROJECT_ROOT, load_lookup_table, paths  # noqa: E402
+
+
+MASTER_TABLE = paths.results.data / "ectopic_recombination_master.csv"
+OUTPUT_DIR = paths.results.data / "ltr_age"
+AUDIT_PATH = PROJECT_ROOT / "LTR_AGE_AUDIT.md"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Audit readiness for sequence-based LTR insertion age estimation."
+    )
+    parser.add_argument(
+        "--min-ltr-length",
+        type=int,
+        default=100,
+        help="Minimum LTR length used for readiness counts (default: 100 bp).",
+    )
+    parser.add_argument(
+        "--fail-on-unready",
+        action="store_true",
+        help="Exit non-zero if genome FASTA files are unavailable for audited species.",
+    )
+    return parser.parse_args()
+
+
+def load_master_table() -> pd.DataFrame:
+    if not MASTER_TABLE.exists():
+        raise FileNotFoundError(f"Missing canonical ectopic master table: {MASTER_TABLE}")
+
+    df = pd.read_csv(MASTER_TABLE, sep="\t")
+    required = {
+        "species",
+        "sequence",
+        "element start",
+        "element end",
+        "lLTR start",
+        "lLTR end",
+        "lLTR length",
+        "rLTR start",
+        "rLTR end",
+        "rLTR length",
+        "Order",
+        "Superfamily",
+        "Complete",
+        "domain_count",
+    }
+    missing = sorted(required - set(df.columns))
+    if missing:
+        raise ValueError(f"Ectopic master table is missing required columns: {missing}")
+    return df
+
+
+def find_local_genome_files(gca_values: Iterable[str]) -> Dict[str, str]:
+    suffixes = (".fna", ".fa", ".fasta", ".fna.gz", ".fa.gz", ".fasta.gz")
+    search_roots = [
+        PROJECT_ROOT / "input_data" / "genomes",
+        PROJECT_ROOT / "input_data",
+        PROJECT_ROOT,
+    ]
+    found: Dict[str, str] = {}
+    for gca in gca_values:
+        for root in search_roots:
+            if not root.exists():
+                continue
+            for suffix in suffixes:
+                direct = root / f"{gca}{suffix}"
+                if direct.exists():
+                    found[gca] = str(direct.relative_to(PROJECT_ROOT))
+                    break
+            if gca in found:
+                break
+            for suffix in suffixes:
+                matches = list(root.glob(f"**/{gca}*{suffix}"))
+                if matches:
+                    found[gca] = str(matches[0].relative_to(PROJECT_ROOT))
+                    break
+            if gca in found:
+                break
+    return found
+
+
+def build_species_readiness(df: pd.DataFrame, lookup: pd.DataFrame, min_ltr_length: int) -> pd.DataFrame:
+    paired = df.copy()
+    paired["internal_length"] = paired["rLTR start"] - paired["lLTR end"] - 1
+    paired["has_valid_pair_coords"] = (
+        paired["lLTR start"].notna()
+        & paired["rLTR start"].notna()
+        & (paired["lLTR length"] > 0)
+        & (paired["rLTR length"] > 0)
+        & (paired["internal_length"] >= 0)
+    )
+    paired["passes_min_ltr_length"] = (
+        (paired["lLTR length"] >= min_ltr_length) & (paired["rLTR length"] >= min_ltr_length)
+    )
+    paired["is_complete_yes"] = paired["Complete"].astype(str).str.lower().eq("yes")
+    paired["is_ltr_order"] = paired["Order"].astype(str).eq("LTR")
+    paired["has_5plus_domains"] = paired["domain_count"].fillna(0).astype(float) >= 5
+
+    ltr = paired[paired["is_ltr_order"] & paired["has_valid_pair_coords"]].copy()
+
+    gca_to_species = dict(zip(lookup["Genome_Accension"], lookup["Species"]))
+    species_to_gca = {species: gca for gca, species in gca_to_species.items()}
+    genome_files = find_local_genome_files(species_to_gca.values())
+
+    readiness = (
+        ltr.groupby("species")
+        .agg(
+            n_ltr_pairs=("species", "size"),
+            n_complete_yes=("is_complete_yes", "sum"),
+            n_with_min_ltr_length=("passes_min_ltr_length", "sum"),
+            n_with_5plus_domains=("has_5plus_domains", "sum"),
+            median_ltr5_length=("lLTR length", "median"),
+            median_ltr3_length=("rLTR length", "median"),
+            median_internal_length=("internal_length", "median"),
+            gypsy_fraction=("Superfamily", lambda s: (s.astype(str) == "Gypsy").mean()),
+        )
+        .reset_index()
+    )
+
+    readiness["gca_accession"] = readiness["species"].map(species_to_gca)
+    readiness["local_genome_fasta_available"] = readiness["gca_accession"].map(genome_files).notna()
+    readiness["local_genome_fasta_path"] = readiness["gca_accession"].map(genome_files).fillna("")
+    readiness["ready_for_sequence_age_estimation"] = (
+        (readiness["n_with_min_ltr_length"] > 0) & readiness["local_genome_fasta_available"]
+    )
+    readiness = readiness.sort_values(
+        ["ready_for_sequence_age_estimation", "n_ltr_pairs"],
+        ascending=[False, False],
+    ).reset_index(drop=True)
+    return readiness
+
+
+def build_overview(df: pd.DataFrame, readiness: pd.DataFrame, min_ltr_length: int) -> pd.DataFrame:
+    paired = df.copy()
+    paired["internal_length"] = paired["rLTR start"] - paired["lLTR end"] - 1
+    paired["has_valid_pair_coords"] = (
+        paired["lLTR start"].notna()
+        & paired["rLTR start"].notna()
+        & (paired["lLTR length"] > 0)
+        & (paired["rLTR length"] > 0)
+        & (paired["internal_length"] >= 0)
+    )
+    paired["passes_min_ltr_length"] = (
+        (paired["lLTR length"] >= min_ltr_length) & (paired["rLTR length"] >= min_ltr_length)
+    )
+    paired["is_complete_yes"] = paired["Complete"].astype(str).str.lower().eq("yes")
+    paired["is_ltr_order"] = paired["Order"].astype(str).eq("LTR")
+    paired["has_5plus_domains"] = paired["domain_count"].fillna(0).astype(float) >= 5
+    ltr = paired[paired["is_ltr_order"] & paired["has_valid_pair_coords"]].copy()
+
+    overview_rows = [
+        {"metric": "n_total_master_rows", "value": int(len(df))},
+        {"metric": "n_ltr_valid_pairs", "value": int(len(ltr))},
+        {"metric": "n_species_with_ltr_pairs", "value": int(ltr["species"].nunique())},
+        {"metric": "n_complete_yes_ltr_pairs", "value": int(ltr["is_complete_yes"].sum())},
+        {"metric": f"n_ltr_pairs_min_{min_ltr_length}bp", "value": int(ltr["passes_min_ltr_length"].sum())},
+        {"metric": "n_ltr_pairs_5plus_domains", "value": int(ltr["has_5plus_domains"].sum())},
+        {"metric": "n_ready_species_with_local_genomes", "value": int(readiness["ready_for_sequence_age_estimation"].sum())},
+        {"metric": "dominant_superfamily", "value": ltr["Superfamily"].astype(str).value_counts().idxmax()},
+        {"metric": "dominant_superfamily_count", "value": int(ltr["Superfamily"].astype(str).value_counts().iloc[0])},
+    ]
+    return pd.DataFrame(overview_rows)
+
+
+def build_candidate_inventory(df: pd.DataFrame, min_ltr_length: int) -> pd.DataFrame:
+    paired = df.copy()
+    paired["internal_length"] = paired["rLTR start"] - paired["lLTR end"] - 1
+    paired["has_valid_pair_coords"] = (
+        paired["lLTR start"].notna()
+        & paired["rLTR start"].notna()
+        & (paired["lLTR length"] > 0)
+        & (paired["rLTR length"] > 0)
+        & (paired["internal_length"] >= 0)
+    )
+    paired["passes_min_ltr_length"] = (
+        (paired["lLTR length"] >= min_ltr_length) & (paired["rLTR length"] >= min_ltr_length)
+    )
+    paired["is_complete_yes"] = paired["Complete"].astype(str).str.lower().eq("yes")
+    paired["has_5plus_domains"] = paired["domain_count"].fillna(0).astype(float) >= 5
+    paired = paired[paired["Order"].astype(str).eq("LTR") & paired["has_valid_pair_coords"]].copy()
+
+    columns = [
+        "species",
+        "sequence",
+        "element start",
+        "element end",
+        "lLTR start",
+        "lLTR end",
+        "rLTR start",
+        "rLTR end",
+        "lLTR length",
+        "rLTR length",
+        "internal_length",
+        "Superfamily",
+        "Complete",
+        "domain_count",
+        "passes_min_ltr_length",
+        "has_5plus_domains",
+        "is_complete_yes",
+    ]
+    return paired[columns].sort_values(["species", "sequence", "element start"]).reset_index(drop=True)
+
+
+def render_audit_markdown(
+    readiness: pd.DataFrame,
+    overview: pd.DataFrame,
+    min_ltr_length: int,
+) -> str:
+    metric_map = dict(zip(overview["metric"], overview["value"]))
+    top_species = readiness.head(10)
+
+    lines: List[str] = []
+    lines.append("# LTR Age Audit")
+    lines.append("")
+    lines.append(
+        "This note records the audit status of the local LTR insertion-age branch."
+    )
+    lines.append("")
+    lines.append("## Bottom Line")
+    lines.append("")
+    lines.append(
+        "- The previous local approach was not suitable for paper use because it tried to infer insertion age from RepeatMasker divergence-to-consensus hits rather than divergence between true paired 5' and 3' LTR sequences."
+    )
+    lines.append(
+        "- The canonical local paired-element source is the ectopic master table produced by `scripts/processing/ec.py`, not the RepeatMasker adjacency heuristic."
+    )
+    lines.append(
+        "- Local sequence-based age estimation is currently blocked because matching genome FASTA assemblies are not present in the repository workspace."
+    )
+    lines.append("")
+    lines.append("## Current Local Readiness")
+    lines.append("")
+    lines.append(f"- Valid paired LTR elements in canonical ectopic master table: `{metric_map['n_ltr_valid_pairs']}`")
+    lines.append(f"- Species with at least one paired LTR element: `{metric_map['n_species_with_ltr_pairs']}`")
+    lines.append(f"- Complete (`Complete = yes`) LTR elements: `{metric_map['n_complete_yes_ltr_pairs']}`")
+    lines.append(f"- LTR pairs with both LTRs >= `{min_ltr_length}` bp: `{metric_map[f'n_ltr_pairs_min_{min_ltr_length}bp']}`")
+    lines.append(f"- LTR pairs with five or more annotated domains: `{metric_map['n_ltr_pairs_5plus_domains']}`")
+    lines.append(
+        f"- Dominant superfamily among paired LTR elements: `{metric_map['dominant_superfamily']}` (`{metric_map['dominant_superfamily_count']}` elements)"
+    )
+    lines.append(
+        f"- Species currently ready for true sequence-based age estimation with local genome FASTA present: `{metric_map['n_ready_species_with_local_genomes']}`"
+    )
+    lines.append("")
+    lines.append("## Highest-Coverage Species")
+    lines.append("")
+    for _, row in top_species.iterrows():
+        lines.append(
+            f"- `{row['species']}`: `{int(row['n_ltr_pairs'])}` paired LTR elements, "
+            f"`{int(row['n_complete_yes'])}` complete, median internal length `{row['median_internal_length']:.1f}` bp"
+        )
+    lines.append("")
+    lines.append("## Interpretation")
+    lines.append("")
+    lines.append(
+        "- The paired-LTR substrate exists locally and is substantial, so the biological question is still tractable."
+    )
+    lines.append(
+        "- What is missing is not paired-element annotation but the sequence-access layer required to compare the 5' and 3' LTRs directly."
+    )
+    lines.append(
+        "- Until genome FASTA assemblies are available locally and wired into a sequence-extraction workflow, this branch should be treated as `blocked for paper-ready age inference`."
+    )
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def main() -> int:
+    args = parse_args()
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    lookup = load_lookup_table()
+    master = load_master_table()
+
+    readiness = build_species_readiness(master, lookup, args.min_ltr_length)
+    overview = build_overview(master, readiness, args.min_ltr_length)
+    inventory = build_candidate_inventory(master, args.min_ltr_length)
+
+    readiness_path = OUTPUT_DIR / "ltr_age_readiness_by_species.csv"
+    overview_path = OUTPUT_DIR / "ltr_age_readiness_overview.csv"
+    inventory_path = OUTPUT_DIR / "ltr_age_candidate_inventory.csv"
+
+    readiness.to_csv(readiness_path, index=False)
+    overview.to_csv(overview_path, index=False)
+    inventory.to_csv(inventory_path, index=False)
+
+    AUDIT_PATH.write_text(
+        render_audit_markdown(readiness, overview, args.min_ltr_length),
+        encoding="utf-8",
+    )
+
+    ready_species = int(readiness["ready_for_sequence_age_estimation"].sum())
+    print(f"Wrote species readiness to {readiness_path}")
+    print(f"Wrote overview to {overview_path}")
+    print(f"Wrote candidate inventory to {inventory_path}")
+    print(f"Wrote audit note to {AUDIT_PATH}")
+    print(f"Species ready for true local sequence-based age estimation: {ready_species}")
+
+    if args.fail_on_unready and ready_species == 0:
+        return 2
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

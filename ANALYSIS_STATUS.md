@@ -68,21 +68,17 @@ For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.
 
 ### 2. LTR Insertion Age Estimation
 **Script:** `scripts/processing/ltr_age_estimation.py`
-**Purpose:** Estimate LTR retrotransposon insertion times using intra-element divergence
+**Purpose:** Audit readiness for true sequence-based LTR insertion-age estimation
 **Methods:**
-- Parse RepeatMasker .align files for LTR element annotations
-- Identify paired 5' and 3' LTRs based on proximity and length similarity
-- Calculate intra-element divergence as proxy for insertion age
-- Convert divergence to age using substitution rate (default: 1.3e-8 subst/site/year)
-- Generate age distribution histograms and boxplots by species/class
+- Read the canonical paired-LTR table from `results/data/ectopic_recombination_master.csv`
+- Inventory paired LTR elements by species, completeness, superfamily, and LTR length
+- Check whether local genome FASTA assemblies are available for true 5'/3' sequence comparison
+- Write a tracked audit note and readiness tables rather than unsupported age estimates
 **Outputs:**
-- `results/data/ltr_age/ltr_insertion_ages.csv`
-- `results/data/ltr_age/ltr_age_summary_by_species.csv`
-- `results/data/ltr_age/ltr_age_summary_by_class.csv`
-- `results/figures/ltr_age/ltr_age_distribution_all.png`
-- `results/figures/ltr_age/ltr_age_by_class.png`
-- `results/figures/ltr_age/ltr_age_by_species.png`
-- `results/figures/ltr_age/ltr_divergence_landscapes.png`
+- `results/data/ltr_age/ltr_age_readiness_by_species.csv`
+- `results/data/ltr_age/ltr_age_readiness_overview.csv`
+- `results/data/ltr_age/ltr_age_candidate_inventory.csv`
+- `LTR_AGE_AUDIT.md`
 
 ### 3. PGLS Regression Framework
 **Script:** `scripts/processing/pgls_analysis.R`
@@ -169,7 +165,7 @@ conda activate Dusky
 # 1. Trait Evolution Modeling (BM vs OU comparison)
 Rscript scripts/processing/trait_evolution.R
 
-# 2. LTR Insertion Age Estimation
+# 2. LTR age readiness audit
 python scripts/processing/ltr_age_estimation.py
 
 # 3. PGLS Regression Analysis
