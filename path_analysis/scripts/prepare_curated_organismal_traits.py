@@ -254,6 +254,13 @@ def choose_body_size(row: pd.Series) -> tuple[float | None, str | None, str | No
             "nc_biodiversity_amphibians",
             "high",
         )
+    if pd.notna(row.get("nc_adult_svl_mid_mm")) and nc_phrase_type == "adult_sex_specific_range":
+        return (
+            float(row["nc_adult_svl_mid_mm"]),
+            "adult_svl_sex_specific_range_mid_mm",
+            "nc_biodiversity_amphibians",
+            "high",
+        )
     if pd.notna(row.get("nc_adult_svl_max_mm")) and nc_phrase_type == "adult_max":
         return (
             float(row["nc_adult_svl_max_mm"]),
@@ -282,12 +289,37 @@ def choose_body_size(row: pd.Series) -> tuple[float | None, str | None, str | No
             row.get("manual_body_size_source_id"),
             "low",
         )
+    if (
+        pd.notna(row.get("nc_adult_tl_min_mm"))
+        and pd.notna(row.get("nc_adult_tl_max_mm"))
+        and pd.isna(row.get("nc_adult_svl_mid_mm"))
+    ):
+        return (
+            float((row["nc_adult_tl_min_mm"] + row["nc_adult_tl_max_mm"]) / 2.0),
+            "adult_total_length_range_mid_mm",
+            "nc_biodiversity_amphibians",
+            "low",
+        )
     if pd.notna(row.get("nc_adult_tl_max_mm")) and pd.isna(row.get("nc_adult_svl_mid_mm")):
         return (
             float(row["nc_adult_tl_max_mm"]),
             "adult_total_length_max_mm",
             "nc_biodiversity_amphibians",
             "low",
+        )
+    if pd.notna(row.get("nc_adult_svl_mid_mm")) and nc_phrase_type == "description_range_unspecified":
+        return (
+            float(row["nc_adult_svl_mid_mm"]),
+            "species_description_svl_range_mid_mm",
+            "nc_biodiversity_amphibians",
+            "medium",
+        )
+    if pd.notna(row.get("nc_adult_svl_mid_mm")) and nc_phrase_type == "metamorphosed_range" and not has_conanti_proxy:
+        return (
+            float(row["nc_adult_svl_mid_mm"]),
+            "metamorphosed_svl_range_mid_mm",
+            "nc_biodiversity_amphibians",
+            "medium",
         )
     if pd.notna(row.get("amphibio_body_size_mm")):
         return (

@@ -123,8 +123,18 @@ def parse_description_size(text: str | None) -> tuple[float | None, float | None
         if match:
             return (parse_numeric(match.group(1)), parse_numeric(match.group(2)), "mixed_stage_range")
 
+    metamorphosed_range_patterns = [
+        r"metamorphosed (?:individuals|specimens)(?: [a-z]+){0,12} ranging from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
+        r"with metamorphosed (?:individuals|specimens) varying from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
+    ]
+    for pattern in metamorphosed_range_patterns:
+        match = re.search(pattern, normalized, flags=re.IGNORECASE)
+        if match:
+            return (parse_numeric(match.group(1)), parse_numeric(match.group(2)), "metamorphosed_range")
+
     adult_range_patterns = [
         r"SVL of adults ranging from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm",
+        r"SVL of adults (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm",
         r"snout-vent-length of\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm",
         r"adults ranging from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
         r"adults range from (?:about|around|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
@@ -135,6 +145,27 @@ def parse_description_size(text: str | None) -> tuple[float | None, float | None
         match = re.search(pattern, normalized, flags=re.IGNORECASE)
         if match:
             return (parse_numeric(match.group(1)), parse_numeric(match.group(2)), "adult_range")
+
+    sex_specific_matches = list(
+        re.finditer(
+            r"adult (?:males|male|females|female)[^.;()]{0,120}?(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+    )
+    if sex_specific_matches:
+        lows = [parse_numeric(match.group(1)) for match in sex_specific_matches]
+        highs = [parse_numeric(match.group(2)) for match in sex_specific_matches]
+        return (min(lows), max(highs), "adult_sex_specific_range")
+
+    unspecified_description_range_patterns = [
+        r"(?:small|medium-sized|large|relatively large|moderately large|tiny)\s+Desmognathus\s*\((?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
+        r"species\s*\((?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
+    ]
+    for pattern in unspecified_description_range_patterns:
+        match = re.search(pattern, normalized, flags=re.IGNORECASE)
+        if match:
+            return (parse_numeric(match.group(1)), parse_numeric(match.group(2)), "description_range_unspecified")
 
     max_patterns = [
         r"maximum size of the adults (?:ca\.?|about|around|approximately)?\s*(\d+(?:\.\d+)?)\s*mm\s*SVL",
@@ -157,6 +188,7 @@ def parse_description_total_length(text: str | None) -> tuple[float | None, floa
     normalized = text.replace("\u2013", "-").replace("\u2014", "-")
 
     adult_range_patterns = [
+        r"total length of adults ranges from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\b",
         r"adults vary from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*(?:total length|TL)\b",
         r"adults range from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*(?:total length|TL)\b",
         r"adult size\s*\((\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm\s*(?:total length|TL)\b",
@@ -167,6 +199,7 @@ def parse_description_total_length(text: str | None) -> tuple[float | None, floa
             return (parse_numeric(match.group(1)), parse_numeric(match.group(2)))
 
     adult_range_patterns_cm = [
+        r"total length of adults ranges from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*cm\b",
         r"adults vary from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*cm\s*(?:total length|TL)\b",
         r"adults range from (?:around|about|approximately)?\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*cm\s*(?:total length|TL)\b",
     ]
@@ -203,6 +236,7 @@ def parse_elevation_range(*texts: str | None) -> tuple[float | None, float | Non
     normalized = combined.replace("\u2013", "-").replace("\u2014", "-")
 
     range_patterns = [
+        r"(?:at\s+)?elevations?\s+(?:of|from)\s+(?:approximately\s+)?(\d{1,4}(?:,\d{3})?)\s*-\s*(\d{1,4}(?:,\d{3})?)\s*m\b",
         r"elevations?[^.]{0,120}?(\d{1,4}(?:,\d{3})?)\s*-\s*(\d{1,4}(?:,\d{3})?)\s*m\b",
         r"between\s+(\d{1,4}(?:,\d{3})?)\s+and\s+(\d{1,4}(?:,\d{3})?)\s*m\b",
     ]
@@ -221,6 +255,10 @@ def parse_elevation_range(*texts: str | None) -> tuple[float | None, float | Non
     below_match = re.search(r"below\s+(?:approximately\s+)?(\d{1,4}(?:,\d{3})?)\s*m\b", normalized, flags=re.IGNORECASE)
     if below_match:
         return (None, parse_numeric(below_match.group(1)))
+
+    high_match = re.search(r"as high as\s+(?:approximately\s+)?(\d{1,4}(?:,\d{3})?)\s*m\b", normalized, flags=re.IGNORECASE)
+    if high_match:
+        return (None, parse_numeric(high_match.group(1)))
 
     return (None, None)
 
@@ -317,6 +355,7 @@ def parse_species_page(path: Path) -> dict[str, object]:
     species = standardize_species(path.stem.replace("Desmognathus_", "Desmognathus "))
     description_text = extract_field(html, "Description")
     size_text = extract_field(html, "Adult Body Size")
+    distribution_comments = extract_field(html, "Distribution Comments")
     habitat_text = extract_field(html, "Habitat")
     reproductive_text = extract_field(html, "Reproductive Mode")
     aquatic_text = extract_field(html, "Aquatic Life History")
@@ -343,7 +382,7 @@ def parse_species_page(path: Path) -> dict[str, object]:
                 size_phrase_type = size_phrase_type or "adult_tl_range"
             else:
                 size_phrase_type = size_phrase_type or "adult_tl_max"
-    elevation_min, elevation_max = parse_elevation_range(habitat_text, status_comments)
+    elevation_min, elevation_max = parse_elevation_range(habitat_text, distribution_comments, status_comments)
     development_mode, development_rule = infer_development_mode(
         description_text, reproductive_text, aquatic_text, terrestrial_text
     )
@@ -356,6 +395,7 @@ def parse_species_page(path: Path) -> dict[str, object]:
         "nc_common_name": extract_page_title_common_name(html),
         "nc_description_text": description_text,
         "nc_body_size_text": size_text,
+        "nc_distribution_comments_text": distribution_comments,
         "nc_habitat_text": habitat_text,
         "nc_reproductive_mode_text": reproductive_text,
         "nc_aquatic_life_history_text": aquatic_text,

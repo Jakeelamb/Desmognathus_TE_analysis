@@ -13,6 +13,7 @@ PANEL_DIR = DERIVED_DIR / "panels"
 
 INPUT_FILE = DERIVED_DIR / "path_input_master.csv"
 OUTPUT_SUMMARY = DERIVED_DIR / "analysis_panel_summary.csv"
+OUTPUT_READINESS = DERIVED_DIR / "analysis_species_readiness.csv"
 
 
 def confidence_score(series: pd.Series) -> pd.Series:
@@ -54,10 +55,63 @@ def build_panel(df: pd.DataFrame, mask: pd.Series, keep_cols: list[str]) -> pd.D
     return df.loc[mask, keep_cols].sort_values("species").reset_index(drop=True)
 
 
+def build_exclusion_reasons(
+    row: pd.Series,
+    *,
+    require_ectopic: bool = False,
+    require_morphology: bool = False,
+    require_core: bool = False,
+    require_mediumplus: bool = False,
+    require_strict_body: bool = False,
+) -> str:
+    reasons: list[str] = []
+
+    if not bool(row.get("has_tree_tip")):
+        reasons.append("missing_tree_tip")
+    if not bool(row.get("has_te")):
+        reasons.append("missing_te")
+    if not bool(row.get("has_genome")):
+        reasons.append("missing_genome")
+    if require_ectopic and not bool(row.get("has_ectopic")):
+        reasons.append("missing_ectopic")
+    if require_morphology and not bool(row.get("has_morphology")):
+        reasons.append("missing_morphology")
+
+    if require_core or require_mediumplus or require_strict_body:
+        if pd.isna(row.get("body_size_proxy_mm")):
+            reasons.append("missing_body_size")
+        if pd.isna(row.get("development_mode")):
+            reasons.append("missing_development")
+        if pd.isna(row.get("aquaticity_index")):
+            reasons.append("missing_aquaticity")
+        if pd.isna(row.get("microhabitat_class")):
+            reasons.append("missing_microhabitat")
+
+    if require_mediumplus or require_strict_body:
+        body_score = row.get("body_size_conf_score")
+        if pd.isna(body_score) or body_score < 2:
+            reasons.append("low_body_confidence")
+        development_score = row.get("development_conf_score")
+        if pd.isna(development_score) or development_score < 2:
+            reasons.append("low_development_confidence")
+        lifestyle_score = row.get("lifestyle_conf_score")
+        if pd.isna(lifestyle_score) or lifestyle_score < 2:
+            reasons.append("low_lifestyle_confidence")
+
+    if require_strict_body:
+        if bool(row.get("uses_total_length_body_proxy")):
+            reasons.append("total_length_body_proxy")
+        if bool(row.get("uses_mixed_stage_body_proxy")):
+            reasons.append("mixed_stage_body_proxy")
+
+    return ";".join(reasons)
+
+
 def main() -> None:
     PANEL_DIR.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(INPUT_FILE)
     df = prepare_flags(df)
+    df_indexed = df.set_index("species")
 
     base_cols = [
         "species",
@@ -153,6 +207,40 @@ def main() -> None:
             & ~df["uses_mixed_stage_body_proxy"]
         ),
     }
+    panel_requirements = {
+        "te_genome_all": {},
+        "te_genome_primary": {"require_core": True},
+        "te_genome_primary_mediumplus": {"require_core": True, "require_mediumplus": True},
+        "te_genome_primary_strict_body": {
+            "require_core": True,
+            "require_mediumplus": True,
+            "require_strict_body": True,
+        },
+        "te_genome_ectopic_all": {"require_ectopic": True},
+        "te_genome_ectopic_primary_mediumplus": {
+            "require_ectopic": True,
+            "require_core": True,
+            "require_mediumplus": True,
+        },
+        "te_genome_ectopic_primary_strict_body": {
+            "require_ectopic": True,
+            "require_core": True,
+            "require_mediumplus": True,
+            "require_strict_body": True,
+        },
+        "te_genome_morphology_all": {"require_morphology": True},
+        "te_genome_morphology_primary_mediumplus": {
+            "require_morphology": True,
+            "require_core": True,
+            "require_mediumplus": True,
+        },
+        "te_genome_morphology_primary_strict_body": {
+            "require_morphology": True,
+            "require_core": True,
+            "require_mediumplus": True,
+            "require_strict_body": True,
+        },
+    }
 
     summary_rows = []
     for name, mask in masks.items():
@@ -170,10 +258,49 @@ def main() -> None:
             }
         )
 
+    readiness_cols = [
+        "species",
+        "has_tree_tip",
+        "has_te",
+        "has_genome",
+        "has_ectopic",
+        "has_morphology",
+        "body_size_proxy_measurement",
+        "body_size_proxy_confidence",
+        "development_confidence",
+        "lifestyle_confidence",
+        "has_core_organismal_complete",
+        "has_core_organismal_mediumplus",
+        "uses_total_length_body_proxy",
+        "uses_mixed_stage_body_proxy",
+        "has_elevation",
+        "organismal_source_ids",
+        "te_feature_source_ids",
+        "genome_source_id",
+        "morphology_source_id",
+    ]
+    readiness = df[readiness_cols].sort_values("species").reset_index(drop=True)
+    for name, requirements in panel_requirements.items():
+        eligibility_map = df.assign(_eligible=masks[name]).set_index("species")["_eligible"]
+        readiness[f"eligible_{name}"] = readiness["species"].map(eligibility_map).fillna(False)
+        readiness[f"{name}_exclusion_reasons"] = readiness.apply(
+            lambda row: (
+                ""
+                if bool(row[f"eligible_{name}"])
+                else build_exclusion_reasons(
+                    df_indexed.loc[row["species"]],
+                    **requirements,
+                )
+            ),
+            axis=1,
+        )
+
     pd.DataFrame(summary_rows).to_csv(OUTPUT_SUMMARY, index=False)
+    readiness.to_csv(OUTPUT_READINESS, index=False)
 
     print(f"Wrote panel directory {PANEL_DIR}")
     print(f"Wrote {OUTPUT_SUMMARY}")
+    print(f"Wrote {OUTPUT_READINESS}")
 
 
 if __name__ == "__main__":

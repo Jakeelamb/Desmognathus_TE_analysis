@@ -29,7 +29,7 @@ This folder is a temporary, consolidated workspace for the phylogenetic path ana
 - `scripts/build_te_model_panel.py`
   Cuts the full TE feature table down to the compact predictor panel intended for comparative models.
 - `scripts/build_analysis_panels.py`
-  Writes panel files for each model family plus primary and sensitivity subsets with confidence flags.
+  Writes panel files for each model family plus primary and sensitivity subsets with confidence flags and species-level eligibility audits.
 - `scripts/refresh_source_file_inventory.py`
   Rebuilds the raw-file hash inventory for stored external inputs.
 - `scripts/audit_source_traceability.py`
@@ -39,7 +39,7 @@ This folder is a temporary, consolidated workspace for the phylogenetic path ana
 - `ANALYSIS_DATASETS.md`
   Defines the panel files that should be used for primary versus sensitivity path analyses.
 - `data/derived/`
-  Generated master tables and staged analysis datasets.
+  Generated master tables, staged analysis datasets, and species-level readiness audits.
 - `data/templates/`
   Templates for taxonomy crosswalks, source manifests, trait registries, and literature extraction.
 - `data/external/`
@@ -108,6 +108,15 @@ python3 path_analysis/scripts/build_path_input_master.py
 python3 path_analysis/scripts/build_analysis_panels.py
 python3 path_analysis/scripts/audit_source_traceability.py
 ```
+
+The main analysis-panel products are:
+
+- `path_analysis/data/derived/analysis_panel_summary.csv`
+  Panel-level counts and species lists.
+- `path_analysis/data/derived/analysis_species_readiness.csv`
+  Species-level eligibility and exclusion reasons for every panel.
+- `path_analysis/data/derived/source_traceability_gaps.csv`
+  Traceability audit report; this should stay empty for publication use.
 
 Inspect the overlap summary:
 

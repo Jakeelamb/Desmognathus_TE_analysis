@@ -17,6 +17,8 @@ These panels are intended to support a manuscript workflow where:
 ## Generated files
 
 All panel files are written to `data/derived/panels/`.
+The panel summary is written to `data/derived/analysis_panel_summary.csv`.
+The per-species inclusion audit is written to `data/derived/analysis_species_readiness.csv`.
 
 - `te_genome_all.csv`
   Tree + TE + genome overlap.
@@ -51,3 +53,28 @@ Each panel includes:
 - source ids for organismal, TE, genome, and morphology blocks
 
 These flags are meant to drive prespecified sensitivity analyses rather than post hoc species dropping.
+
+## Readiness audit
+
+`analysis_species_readiness.csv` stores the panel logic in a publication-auditable form. For each species, it records:
+
+- whether the species is eligible for each panel
+- the exclusion reasons when it is not eligible
+- the specific body-size proxy class and confidence tier that drove the decision
+
+Current exclusion reason codes include:
+
+- `missing_tree_tip`
+- `missing_te`
+- `missing_genome`
+- `missing_ectopic`
+- `missing_morphology`
+- `missing_body_size`
+- `missing_development`
+- `missing_aquaticity`
+- `missing_microhabitat`
+- `low_body_confidence`
+- `low_development_confidence`
+- `low_lifestyle_confidence`
+- `total_length_body_proxy`
+- `mixed_stage_body_proxy`

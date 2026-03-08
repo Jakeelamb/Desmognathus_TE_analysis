@@ -4,11 +4,11 @@ order_pielou,34,27,18
 weighted_te_divergence_p90,34,27,18
 weighted_te_deletions_p90,34,27,18
 ectopic_log10_mean_ratio,30,24,16
-body_size_proxy_mm,34,27,18
+body_size_proxy_mm,36,27,18
 development_mode,36,27,18
 aquaticity_index,36,27,18
 microhabitat_class,36,27,18
-elevation_mid_m,8,8,7
+elevation_mid_m,10,8,7
 amphibio_body_size_mm,16,11,7
 amphibio_body_mass_g,3,2,2
 amphibio_size_at_maturity_min_mm,13,10,7
