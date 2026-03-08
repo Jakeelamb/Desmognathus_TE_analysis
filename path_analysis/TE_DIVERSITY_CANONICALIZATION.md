@@ -94,5 +94,5 @@ Current safe operating rule:
    generation
 3. use `path_analysis/scripts/build_canonical_diversity_tables.py` when you
    want a non-destructive reconstruction audit against the frozen snapshots
-4. treat the older standalone diversity helpers as archived legacy utilities in
-   `archive/legacy_diversity/`, not as competing canonical writers
+4. treat the old standalone diversity-helper path as retired; the repo now
+   keeps only the canonical writer and the non-destructive audit builder

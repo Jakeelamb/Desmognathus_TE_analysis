@@ -180,8 +180,6 @@ Assessment:
 
 Relevant scripts found locally:
 
-- `archive/legacy_diversity/scripts/processing/diversity.py` (legacy helper)
-- `archive/legacy_diversity/scripts/python/utils/diversity.py` (legacy helper)
 - `scripts/processing/diversity_stats.py`
 
 Observed outputs:
@@ -206,9 +204,9 @@ Resolved generation path:
 - `path_analysis/scripts/build_canonical_diversity_tables.py` now reconstructs
   scratch candidates for both canonical files and audits them against the
   current `results/data/` snapshots
-- the simpler diversity helper scripts are not the current canonical writer
-  because they implement raw `1 - sum(p_i^2)` Simpson rather than the corrected
-  definition used by the stored diversity summaries
+- older standalone diversity helpers were removed after canonicalization
+  cleanup because they implemented raw `1 - sum(p_i^2)` Simpson rather than the
+  corrected definition used by the stored diversity summaries
 
 Assessment:
 

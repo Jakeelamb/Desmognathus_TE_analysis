@@ -33,9 +33,6 @@ python scripts/processing/dnaPipe.py
 │
 ├── interim/                       # Intermediate processing files
 │
-├── archive/
-│   └── legacy_diversity/          # Archived exploratory diversity scripts
-│
 ├── scripts/
 │   ├── config.py                  # Centralized path configuration
 │   ├── processing/                # Data processing scripts
