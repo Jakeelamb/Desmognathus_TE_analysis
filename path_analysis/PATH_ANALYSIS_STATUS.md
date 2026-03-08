@@ -40,6 +40,8 @@ So the project has shifted from "collect and rescue traits" to
 
 The important files are:
 
+- `../PAPER_FREEZE_MANIFEST.md`
+  Repo-level paper freeze manifest, including the checksum inventory for ignored generated outputs.
 - `README.md`
   General workspace overview and command examples.
 - `PATH_ANALYSIS_STATUS.md`

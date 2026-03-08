@@ -3,6 +3,8 @@
 **Last Updated:** 2026-03-08
 **Project:** PhD Research - Transposable Element Evolution in Desmognathus Salamanders
 
+For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
+
 ---
 
 ## Completed Analyses

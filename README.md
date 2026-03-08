@@ -2,6 +2,8 @@
 
 Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), LTR insertion age estimation, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
 
+For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
+
 ## Quick Start
 
 ```bash
@@ -11,6 +13,9 @@ conda activate Dusky
 
 # Verify setup
 python verify_setup.py
+
+# Rebuild the tracked paper freeze manifest
+python scripts/processing/build_paper_freeze_manifest.py
 
 # Run a processing script
 python scripts/processing/dnaPipe.py
@@ -218,6 +223,24 @@ Rscript scripts/processing/phylogenetic_pca_analysis.R
 
 **Outputs:**
 - `results/tables/pca/te_ppca_analysis_manifest.csv`
+
+## Paper Freeze
+
+The repo keeps `results/` out of git, so the current paper snapshot is captured
+by the tracked checksum inventories and freeze note rather than by versioning
+all generated outputs directly.
+
+Rebuild the manifest with:
+
+```bash
+python scripts/processing/build_paper_freeze_manifest.py
+```
+
+Tracked freeze artifacts:
+- `PAPER_FREEZE_MANIFEST.md`
+- `paper_freeze/key_file_manifest.csv`
+- `paper_freeze/results_inventory.csv`
+- `paper_freeze/results_summary.csv`
 - `results/tables/pca/*_ppca_scores.csv`
 - `results/tables/pca/*_ppca_loadings.csv`
 - `results/figures/pca/*_ppca_scores_pc1_pc2.png`
