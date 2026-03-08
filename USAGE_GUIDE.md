@@ -181,17 +181,23 @@ python3 scripts/processing/divergence.py
 
 ### 6. Diversity Statistics
 
-**Script:** `diversity.py` or `diversity_stats.py`
+**Script:** `diversity_stats.py`
 
-**Purpose:** Calculate diversity metrics (Shannon, Simpson) for TE superfamilies
+**Purpose:** Calculate diversity metrics (Shannon, Simpson, Pielou) for TE
+order and superfamily compositions and write the canonical repo-level diversity
+summary tables.
 
 **Output:**
+- `results/data/comparison_diversity_order_stats_granular_0_5pct.csv`
+- `results/data/comparison_diversity_superfamily_stats_granular_0_5pct.csv`
+- `results/data/long_format_diversity_order_stats.csv`
+- `results/data/long_format_diversity_superfamily_stats.csv`
 - `results/data/diversity_superfamily_stats.csv`
 - `results/data/diversity_order_stats.csv`
 
 **Command:**
 ```bash
-python3 scripts/processing/diversity.py
+python3 scripts/processing/diversity_stats.py
 ```
 
 ---
@@ -355,7 +361,7 @@ Rscript scripts/processing/clean_tree_phylo.R
 
 # 4. Calculate metrics
 python3 scripts/processing/divergence.py
-python3 scripts/processing/diversity.py
+python3 scripts/processing/diversity_stats.py
 
 # 5. Run analyses
 Rscript scripts/processing/pca.R
@@ -426,7 +432,7 @@ Some scripts (dnaPipe.py, repeatmask.py) use multiprocessing. If you encounter m
 | Activate environment | `source venv/bin/activate` |
 | Process dnaPipeTE | `python3 scripts/processing/dnaPipe.py` |
 | Process RepeatMasker | `python3 scripts/processing/repeatmask.py` |
-| Calculate diversity | `python3 scripts/processing/diversity.py` |
+| Calculate diversity | `python3 scripts/processing/diversity_stats.py` |
 | Run PCA | `Rscript scripts/processing/pca.R` |
 | Clean phylogeny | `Rscript scripts/processing/clean_tree_phylo.R` |
 | Divergence analysis | `python3 scripts/processing/divergence.py` |
@@ -435,4 +441,3 @@ Some scripts (dnaPipe.py, repeatmask.py) use multiprocessing. If you encounter m
 ---
 
 **Last Updated:** October 19, 2025
-

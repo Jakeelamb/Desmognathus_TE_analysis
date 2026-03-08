@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Diversity Indices Processor
+Shannon and Simpson Diversity Index Calculator for TE Data
 
-This script calculates Shannon and Simpson diversity indices for TE data
-and saves the results to CSV files for further visualization.
+This script calculates diversity indices for transposable element data, 
+including both Shannon and Simpson diversity indices.
+
+Legacy note:
+This is an older standalone plotting helper and is not the canonical writer
+for the current repo-level `results/data/diversity_*_stats.csv` files.
 """
 
-import pandas as pd
-import numpy as np
+import pandas as pd 
+import numpy as np 
 import os
-import argparse
+import matplotlib.pyplot as plt
+import seaborn as sns
 from pathlib import Path
 
 def load_and_filter_data(input_file):
@@ -63,7 +68,7 @@ def calculate_shannon_diversity(filtered_df, output_csv_path=None):
     output_csv_path (str, optional): Path to save results
     
     Returns:
-    pandas.DataFrame: Shannon Diversity Index for each unique species
+    pandas.Series: Shannon Diversity Index for each unique species
     """
     # Identify numerical columns (excluding 'Species')
     numerical_cols = filtered_df.select_dtypes(include=[np.number]).columns.tolist()
@@ -89,20 +94,20 @@ def calculate_shannon_diversity(filtered_df, output_csv_path=None):
     
     # Apply Shannon Diversity calculation to each species group
     shannon_indices = filtered_df.groupby('Species', group_keys=False).apply(shannon_diversity)
-    
-    # Convert to DataFrame
-    shannon_df = shannon_indices.reset_index()
-    shannon_df.columns = ['Species', 'Shannon_Diversity_Index']
 
     if output_csv_path is not None:
         # Ensure the directory exists
         os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
         
+        # Convert Series to DataFrame for easier CSV writing
+        shannon_df = shannon_indices.reset_index()
+        shannon_df.columns = ['Species', 'Shannon_Diversity_Index']
+        
         # Write to CSV
         shannon_df.to_csv(output_csv_path, index=False)
         print(f"Shannon Diversity Index results saved to {output_csv_path}")
     
-    return shannon_df
+    return shannon_indices
 
 def calculate_simpson_diversity(filtered_df, output_csv_path=None):
     """
@@ -115,7 +120,7 @@ def calculate_simpson_diversity(filtered_df, output_csv_path=None):
     output_csv_path (str, optional): Path to save results
     
     Returns:
-    pandas.DataFrame: Simpson Diversity Index for each unique species
+    pandas.Series: Simpson Diversity Index for each unique species
     """
     # Identify numerical columns (excluding 'Species')
     numerical_cols = filtered_df.select_dtypes(include=[np.number]).columns.tolist()
@@ -142,81 +147,110 @@ def calculate_simpson_diversity(filtered_df, output_csv_path=None):
     # Apply Simpson Diversity calculation to each species group
     simpson_indices = filtered_df.groupby('Species', group_keys=False).apply(simpson_diversity)
     
-    # Convert to DataFrame
-    simpson_df = simpson_indices.reset_index()
-    simpson_df.columns = ['Species', 'Simpson_Diversity_Index']
-    
     if output_csv_path is not None:
         # Ensure the directory exists
         os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
+        
+        # Convert Series to DataFrame for easier CSV writing
+        simpson_df = simpson_indices.reset_index()
+        simpson_df.columns = ['Species', 'Simpson_Diversity_Index']
         
         # Write to CSV
         simpson_df.to_csv(output_csv_path, index=False)
         print(f"Simpson Diversity Index results saved to {output_csv_path}")
     
-    return simpson_df
+    return simpson_indices
 
-def calculate_combined_diversity(filtered_df, output_csv_path=None):
+def create_diversity_plots(shannon_results, simpson_results, output_dir=None):
     """
-    Calculate both Shannon and Simpson diversity indices and combine them into a single DataFrame.
+    Create visualization plots for diversity indices
     
     Parameters:
-    filtered_df (pandas.DataFrame): DataFrame with a 'Species' column and numerical columns
-    output_csv_path (str, optional): Path to save combined results
-    
-    Returns:
-    pandas.DataFrame: Combined diversity indices for each unique species
+    shannon_results (pandas.Series): Shannon diversity results by species
+    simpson_results (pandas.Series): Simpson diversity results by species
+    output_dir (str, optional): Directory to save plot files
     """
-    # Calculate individual indices without saving
-    shannon_df = calculate_shannon_diversity(filtered_df)
-    simpson_df = calculate_simpson_diversity(filtered_df)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
     
-    # Merge results
-    combined_df = shannon_df.merge(simpson_df, on='Species')
+    # Combine results into a DataFrame
+    diversity_df = pd.DataFrame({
+        'Species': shannon_results.index,
+        'Shannon_Index': shannon_results.values,
+        'Simpson_Index': simpson_results.values
+    })
     
-    if output_csv_path is not None:
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
-        
-        # Write to CSV
-        combined_df.to_csv(output_csv_path, index=False)
-        print(f"Combined diversity indices saved to {output_csv_path}")
+    # Sort by Shannon index for better visualization
+    diversity_df = diversity_df.sort_values('Shannon_Index')
     
-    return combined_df
+    # Create plots
+    plt.figure(figsize=(12, 8))
+    
+    # Shannon plot
+    plt.subplot(2, 1, 1)
+    sns.barplot(x='Species', y='Shannon_Index', data=diversity_df)
+    plt.xticks(rotation=90)
+    plt.title('Shannon Diversity Index by Species')
+    plt.tight_layout()
+    
+    # Simpson plot
+    plt.subplot(2, 1, 2)
+    sns.barplot(x='Species', y='Simpson_Index', data=diversity_df)
+    plt.xticks(rotation=90)
+    plt.title('Simpson Diversity Index by Species')
+    plt.tight_layout()
+    
+    if output_dir:
+        plt.savefig(os.path.join(output_dir, 'diversity_indices.png'), dpi=300, bbox_inches='tight')
+        print(f"Diversity plots saved to {os.path.join(output_dir, 'diversity_indices.png')}")
+    
+    plt.close()
+    
+    # Create correlation plot
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(x='Shannon_Index', y='Simpson_Index', data=diversity_df)
+    
+    # Add species labels
+    for i, row in diversity_df.iterrows():
+        plt.text(row['Shannon_Index'], row['Simpson_Index'], row['Species'], 
+                fontsize=8, alpha=0.7)
+    
+    plt.title('Correlation between Shannon and Simpson Indices')
+    plt.tight_layout()
+    
+    if output_dir:
+        plt.savefig(os.path.join(output_dir, 'diversity_correlation.png'), dpi=300, bbox_inches='tight')
+        print(f"Correlation plot saved to {os.path.join(output_dir, 'diversity_correlation.png')}")
+    
+    plt.close()
 
 def main():
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description='Calculate diversity indices for TE data')
-    parser.add_argument('-i', '--input', default='data/diversity/dnaPipeTE_Trinity_master_tbl_with_species.csv',
-                        help='Input CSV file path')
-    parser.add_argument('-o', '--output_dir', default='data/results',
-                        help='Output directory for results')
-    args = parser.parse_args()
+    # Define paths
+    input_file = "/home/jake/Projects/dnaPipeTE/dnaPipeTE_Trinity_master_tbl_with_species.csv"
+    output_dir = "/home/jake/Projects/dnaPipeTE/Figure_datasets"
     
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
     
     # Load and filter data
-    filtered_df = load_and_filter_data(args.input)
-    
-    # Define output paths
-    shannon_output = os.path.join(args.output_dir, "shannon_diversity.csv")
-    simpson_output = os.path.join(args.output_dir, "simpson_diversity.csv")
-    combined_output = os.path.join(args.output_dir, "combined_diversity.csv")
+    filtered_df = load_and_filter_data(input_file)
     
     # Calculate Shannon diversity
-    calculate_shannon_diversity(filtered_df, shannon_output)
+    shannon_output = os.path.join(output_dir, "shannon_diversity_results.csv")
+    shannon_results = calculate_shannon_diversity(filtered_df, shannon_output)
+    print("Shannon Diversity Index results:")
+    print(shannon_results)
     
     # Calculate Simpson diversity
-    calculate_simpson_diversity(filtered_df, simpson_output)
+    simpson_output = os.path.join(output_dir, "simpson_diversity_results.csv")
+    simpson_results = calculate_simpson_diversity(filtered_df, simpson_output)
+    print("\nSimpson Diversity Index results:")
+    print(simpson_results)
     
-    # Calculate and combine both indices
-    calculate_combined_diversity(filtered_df, combined_output)
+    # Create diversity plots
+    create_diversity_plots(shannon_results, simpson_results, output_dir)
     
-    print("\nAll calculations completed!")
-    print(f"Results saved to: {args.output_dir}")
-    print("\nTo visualize the results, run:")
-    print(f"./diversity_indices_visualizer.R -d {args.output_dir} -o {args.output_dir}/plots")
+    print("\nAll calculations and visualizations completed!")
 
 if __name__ == "__main__":
     main() 

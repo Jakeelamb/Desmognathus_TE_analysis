@@ -3,6 +3,12 @@ Diversity Statistics Script
 
 Calculates diversity indices (Shannon, Simpson, Pielou's evenness) for
 transposable element compositions across Desmognathus species.
+
+This is the canonical writer for the repo-level diversity summary tables used
+downstream:
+
+- `results/data/diversity_order_stats.csv`
+- `results/data/diversity_superfamily_stats.csv`
 """
 
 import pandas as pd
@@ -27,6 +33,8 @@ FIGURE_DIR.mkdir(parents=True, exist_ok=True)
 
 ORDER_CSV = INPUT_DATA_DIR / "dnaPipeTE_order_breakdown.csv"
 SUPERFAMILY_CSV = INPUT_DATA_DIR / "dnaPipeTE_superfamily_breakdown.csv"
+CANONICAL_ORDER_CSV = OUTPUT_DATA_DIR / "diversity_order_stats.csv"
+CANONICAL_SUPERFAMILY_CSV = OUTPUT_DATA_DIR / "diversity_superfamily_stats.csv"
 
 def calculate_simpson_diversity(row):
     row = row[row > 0]
@@ -64,7 +72,7 @@ def calculate_diversity_for_threshold(df, threshold):
         metrics_df['Simpson'] = 0.0
         metrics_df['Shannon'] = 0.0
         metrics_df['Pielou'] = 0.0
-        return metrics_df
+        return metrics_df, 0
     print(f"Keeping {len(cols_to_keep)} columns out of {len(df_numeric.columns)} numeric columns.")
     df_filtered = df_numeric[cols_to_keep]
     metrics_df = pd.DataFrame(index=df.index)
@@ -93,6 +101,31 @@ def plot_diversity_vs_threshold(long_df, category_title, output_path):
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f'Plot saved to: {output_path}')
+
+
+def build_canonical_diversity_table(breakdown_df, comparison_df):
+    required_metric_cols = ['Simpson_0.0', 'Shannon_0.0', 'Pielou_0.0']
+    missing_cols = [col for col in required_metric_cols if col not in comparison_df.columns]
+    if missing_cols:
+        raise KeyError(
+            "Canonical diversity summary requires threshold-0.0 metrics; "
+            f"missing columns: {missing_cols}"
+        )
+
+    canonical_df = breakdown_df.reset_index().copy()
+    aligned_metrics = comparison_df.loc[
+        breakdown_df.index,
+        required_metric_cols,
+    ].rename(
+        columns={
+            'Simpson_0.0': 'Simpson_Diversity',
+            'Shannon_0.0': 'Shannon_Diversity',
+            'Pielou_0.0': 'Pielou_Evenness',
+        }
+    )
+    for col in aligned_metrics.columns:
+        canonical_df[col] = aligned_metrics[col].to_numpy()
+    return canonical_df
 
 # Load data
 print(f"Loading Order data from: {ORDER_CSV}")
@@ -161,6 +194,14 @@ superfamily_long_df.to_csv(superfamily_long_output_path, index=False)
 print(f'\nLong format diversity statistics saved:')
 print(f'- Order: {order_long_output_path}')
 print(f'- Superfamily: {superfamily_long_output_path}')
+
+canonical_order_df = build_canonical_diversity_table(order_df_orig, order_compare_df)
+canonical_superfamily_df = build_canonical_diversity_table(superfamily_df_orig, superfamily_compare_df)
+canonical_order_df.to_csv(CANONICAL_ORDER_CSV, index=False)
+canonical_superfamily_df.to_csv(CANONICAL_SUPERFAMILY_CSV, index=False)
+print('\nCanonical diversity summary tables saved:')
+print(f'- Order: {CANONICAL_ORDER_CSV}')
+print(f'- Superfamily: {CANONICAL_SUPERFAMILY_CSV}')
 
 print('\n--- Number of Columns Kept per Threshold ---')
 print(col_counts_df.to_string())

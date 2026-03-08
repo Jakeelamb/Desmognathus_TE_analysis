@@ -15,21 +15,23 @@ This document maps the conceptual nodes in the path-analysis plan to the current
 | N:C ratio | `morph_nc_ratio` | same as above | Available | Derived quantity. Do not include it in the same DAG as both cell area and nucleus area. |
 | TE composition, order level | `order_*` columns | `results/data/dnaPipeTE_order_breakdown.csv` | Available | Raw percentages, currently the cleanest TE-composition block. |
 | TE composition, superfamily level | `superfamily_*` columns | `results/data/dnaPipeTE_superfamily_breakdown.csv` | Available | Higher-dimensional block. Better for PCA or secondary analyses than for first-pass path models. |
-| TE diversity | `order_shannon`, `order_simpson`, `order_pielou` | `results/data/diversity_order_stats.csv` | Available | `order_pielou` is the current preferred evenness summary. |
+| TE diversity | `order_shannon`, `order_simpson`, `order_pielou` | `results/data/diversity_order_stats.csv` | Available | `order_pielou` is the current preferred evenness summary. Canonical diversity provenance is documented in `path_analysis/TE_DIVERSITY_CANONICALIZATION.md`. |
+| TE divergence / turnover | `weighted_te_divergence_p90` | aggregated from `results/data/divergence/divergence_summary_statistics_by_species.csv` | Available | Current species-level TE turnover summary used in the compact TE feature panel. |
+| DNA loss proxy | `weighted_te_deletions_p90` | aggregated from `results/data/divergence/divergence_summary_statistics_by_species.csv` | Available | Current species-level deletion summary; better treated as an alternative mechanistic summary rather than automatically combined with turnover in small models. |
 | Ectopic recombination proxy | `ectopic_mean_ratio`, `ectopic_median_ratio` | aggregated from `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv` | Available | Species-level summary of the terminal:internal depth ratio. Keep mechanistic interpretation cautious. |
-| Ectopic support | `ectopic_n_elements`, `ectopic_complete_fraction` | same as above | Available | Helpful for filtering weak species. |
+| Ectopic support | `ectopic_n_rows_total`, `ectopic_n_elements`, `ectopic_n_complete_known`, `ectopic_complete_fraction` | same as above | Available | `ectopic_n_rows_total` counts all stored rows, `ectopic_n_elements` counts usable non-missing ratio rows, and `ectopic_complete_fraction` is calculated only over known `yes`/`no` completion states. |
+| Body size | `body_size_proxy_mm` | `path_analysis/data/derived/organismal_traits_curated.csv` | Available | Current manuscript-facing size proxy with confidence and provenance tracking. |
+| Development mode | `development_mode` | same as above | Available | Currently the cleanest metamorphosis/direct-development axis. |
+| Lifestyle / aquaticity | `aquaticity_index`, `microhabitat_class` | same as above | Available | Curated ecological covariates now staged for organismal-augmented models. |
 
 ## Deferred Variables
 
 | Concept | Current state | Why deferred |
 |---|---|---|
 | True independent genome size | In progress in `cellprofiler_test` | Needed before formal `genome -> nucleus -> cell` interpretation. |
-| DNA loss rate | Not yet consolidated into a stable species-level path-analysis proxy | The divergence/deletion outputs exist, but the exact species-level summary still needs a deliberate definition. |
-| TE divergence rate | Not yet consolidated into a stable species-level path-analysis proxy | Same issue as DNA loss. |
-| Body size | Not yet staged in this repo | Mentioned in slides, but no curated comparative table lives in `Desmognathus_TE` yet. |
-| Life-history strategy | Not yet staged in this repo | Same. |
 | Developmental rate | Not yet staged in this repo | Same. |
-| Lifestyle / morphology class | Not yet staged in this repo | Can be added later as discrete or ordinal covariates once curated. |
+| Richer reproductive life-history rates | Not yet staged in a comparative-ready table | Useful later, but current organismal layer focuses on size, development mode, and broad habitat/lifestyle. |
+| Finer ecomorph / shape axes | Only partly staged | Broad habitat coding exists, but shape-residual and richer external morphology axes are still incomplete. |
 
 ## Preferred First-Pass Derived Variables
 

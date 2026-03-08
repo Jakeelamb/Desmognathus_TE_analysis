@@ -160,7 +160,7 @@ def check_scripts():
         ("scripts/processing/repeatmask.py", "RepeatMasker processing"),
         ("scripts/processing/ec.py", "Ectopic recombination"),
         ("scripts/processing/divergence.py", "Divergence analysis"),
-        ("scripts/processing/diversity.py", "Diversity metrics"),
+        ("scripts/processing/diversity_stats.py", "Canonical diversity metrics"),
         ("scripts/processing/pca.R", "PCA analysis"),
         ("scripts/processing/clean_tree_phylo.R", "Phylogeny cleaning"),
         ("scripts/processing/phylogenetic_pca_analysis.R", "Phylogenetic PCA"),
@@ -244,4 +244,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

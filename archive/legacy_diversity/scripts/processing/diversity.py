@@ -2,6 +2,11 @@
 """
 Diversity metrics for transposable element analysis.
 This module provides functions to calculate diversity indices for TE composition.
+
+Legacy note:
+This helper implements older exploratory Shannon/Simpson utilities and is not
+the canonical writer for the repo-level `results/data/diversity_*_stats.csv`
+files. Use `scripts/processing/diversity_stats.py` for the current pipeline.
 """
 
 import numpy as np

@@ -33,6 +33,9 @@ python scripts/processing/dnaPipe.py
 │
 ├── interim/                       # Intermediate processing files
 │
+├── archive/
+│   └── legacy_diversity/          # Archived exploratory diversity scripts
+│
 ├── scripts/
 │   ├── config.py                  # Centralized path configuration
 │   ├── processing/                # Data processing scripts
@@ -40,8 +43,7 @@ python scripts/processing/dnaPipe.py
 │   │   ├── repeatmask.py          # RepeatMasker data processing
 │   │   ├── ec.py                  # Ectopic recombination analysis
 │   │   ├── divergence.py          # Divergence calculations
-│   │   ├── diversity.py           # Diversity metrics
-│   │   ├── diversity_stats.py     # Diversity statistics
+│   │   ├── diversity_stats.py     # Canonical diversity writer
 │   │   ├── pca.R                  # PCA analysis
 │   │   ├── pca_utils.R            # Shared PCA utilities
 │   │   ├── phylogenetic_pca_analysis.R
@@ -161,6 +163,21 @@ python scripts/processing/diversity_stats.py
 **Outputs:**
 - `results/data/diversity_order_stats.csv`
 - `results/data/diversity_superfamily_stats.csv`
+- `results/data/comparison_diversity_order_stats_granular_0_5pct.csv`
+- `results/data/comparison_diversity_superfamily_stats_granular_0_5pct.csv`
+- `results/data/long_format_diversity_order_stats.csv`
+- `results/data/long_format_diversity_superfamily_stats.csv`
+
+For non-destructive verification of the existing canonical diversity snapshots,
+use:
+
+```bash
+python path_analysis/scripts/build_canonical_diversity_tables.py
+```
+
+That script writes scratch candidates and an audit report under
+`path_analysis/data/derived/` without overwriting the current `results/data/`
+files. See `path_analysis/TE_DIVERSITY_CANONICALIZATION.md`.
 
 ### 6. Phylogeny Cleaning
 
