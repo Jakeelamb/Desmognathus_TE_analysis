@@ -351,13 +351,19 @@ Rscript scripts/visualization/plot_simple_phylogeny.R
 Rscript scripts/visualization/plot_ectopic_recombination.R
 ```
 
+**Outputs:**
+- `results/figures/ectopic_recombination/ectopic_ratio_violin_log10.png`
+- `results/data/ectopic_recombination_species_summary.csv`
+- `results/data/ectopic_recombination_species_tests.txt`
+
 ---
 
 ## Complete Workflow (Recommended Order)
 
 ```bash
 # 1. Activate environment
-source venv/bin/activate  # or: conda activate Dusky
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate Dusky
 
 # 2. Process raw data
 python3 scripts/processing/dnaPipe.py

@@ -129,17 +129,16 @@ The Desmognathus TE Analysis workflow consists of several key steps:
 **Inputs**:
 - List of SRX IDs from command-line options
 - For each SRX ID:
-  - RepeatMasker `.align` file: `data/raw/repeatmasker/{SRX_ID}_Trinity.align`
-  - Classification file: `data/interim/{SRX_ID}_reads_per_component_and_annotation_processed`
+  - RepeatMasker `.align` file: `input_data/repeatmasker/{SRX_ID}_Trinity.align`
+  - Canonical classification table: `results/data/dnaPipeTE_merged_classifications.csv`
+  - Species lookup table: `input_data/lookup_table.txt`
 
 **Outputs**:
 - For each SRX ID:
   - CSV landscape data: `results/landscapes/repeat_landscape_{SRX_ID}.csv`
   - Individual plots in `results/figures/landscape/`
 - Combined visualization plots:
-  - `results/figures/combined_te_landscape_all_samples.png`
-  - `results/figures/heatmap_te_landscape_all_samples.png`
-  - `results/figures/te_order_distribution.png`
+  - `results/figures/landscape/te_order_distribution.png`
 - Summary file: `results/landscapes/landscape_analysis_summary.csv`
 
 **Usage**: `./scripts/batch_analyze_te_landscape.sh --samples SRX19952657,SRX19952891`
@@ -147,7 +146,8 @@ The Desmognathus TE Analysis workflow consists of several key steps:
 **Dependencies**:
 - Dusky conda environment
 - `scripts/analyze_te_landscape.sh`
-- `scripts/R/visualization/visualize_all_landscapes.R`
+- GNU Parallel when available; otherwise the script falls back to serial execution
+- `scripts/visualization/plot_all_te_landscapes.R`
 
 ### Visualization Scripts
 

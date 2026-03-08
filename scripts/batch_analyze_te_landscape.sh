@@ -15,7 +15,7 @@
 #
 
 # Exit on error
-set -e
+set -euo pipefail
 
 # --- Configuration ---
 NUM_CPUS=4 # Default number of parallel jobs
@@ -54,19 +54,19 @@ if [ "$CONDA_DEFAULT_ENV" != "Dusky" ]; then
     conda activate Dusky
 fi
 
-# Check for GNU Parallel
+PARALLEL_AVAILABLE=true
 if ! command -v parallel &> /dev/null; then
-    echo "Error: GNU Parallel is not installed."
-    echo "Please install it (e.g., 'conda install -c conda-forge parallel' or 'sudo apt-get install parallel')."
-    exit 1
+    PARALLEL_AVAILABLE=false
+    echo "Warning: GNU Parallel is not installed; falling back to serial execution."
 fi
 
 # Define paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")" # Assumes script is in scripts/
 ANALYSIS_SCRIPT="${PROJECT_ROOT}/scripts/analyze_te_landscape.sh"
-ALIGN_DIR="${PROJECT_ROOT}/data/raw/repeatmasker"
-CLASS_DIR="${PROJECT_ROOT}/data/interim"
+ALIGN_DIR="${PROJECT_ROOT}/input_data/repeatmasker"
+LOOKUP_FILE="${PROJECT_ROOT}/input_data/lookup_table.txt"
+CANONICAL_CLASSIFICATIONS="${PROJECT_ROOT}/results/data/dnaPipeTE_merged_classifications.csv"
 OUTPUT_DIR="${PROJECT_ROOT}/results/landscapes"
 FIGURE_DIR="${PROJECT_ROOT}/results/figures/landscape"
 LOG_DIR="${PROJECT_ROOT}/results/logs" # Directory for logs
@@ -83,26 +83,27 @@ mkdir -p "$LOG_DIR"
 
 # Function to get a list of all available samples
 get_all_samples() {
-    # Find all .align files and extract SRX IDs
-    for file in "$ALIGN_DIR"/*.align; do
-        # Check if file exists and is readable before processing
-        if [ -f "$file" ]; then
-            basename "$file" | sed 's/_Trinity.align//'
-        fi
-    done
+    awk -F'\t' 'NR > 1 && $2 != "" {print $2}' "$LOOKUP_FILE"
 }
 
-# Function to check if both align and classification files exist
+# Function to check if required inputs exist for a sample
 check_sample_files() {
     local srx_id="$1"
     local align_file="${ALIGN_DIR}/${srx_id}_Trinity.align"
-    local class_file="${CLASS_DIR}/${srx_id}_reads_per_component_and_annotation_processed"
 
-    if [ -f "$align_file" ] && [ -f "$class_file" ]; then
-        return 0  # Both files exist
-    else
-        return 1  # One or both files missing
+    if [ ! -f "$align_file" ]; then
+        return 1
     fi
+
+    if [ ! -f "$CANONICAL_CLASSIFICATIONS" ]; then
+        return 1
+    fi
+
+    if [ ! -f "$LOOKUP_FILE" ]; then
+        return 1
+    fi
+
+    return 0
 }
 
 # Initialize variables
@@ -219,65 +220,71 @@ if [ "$total_skipped" -gt 0 ]; then
     echo "$total_skipped samples were skipped."
 fi
 
-# --- Run Parallel Processing ---
+# --- Run Processing ---
 echo "----------------------------------------"
-echo "Starting parallel processing with $NUM_CPUS CPUs..."
-echo "Log file: $PARALLEL_LOG"
+if [ "$PARALLEL_AVAILABLE" = true ] && [ "$NUM_CPUS" -gt 1 ]; then
+    echo "Starting parallel processing with $NUM_CPUS CPUs..."
+    echo "Log file: $PARALLEL_LOG"
+else
+    echo "Starting serial processing..."
+fi
+echo "Using align directory: $ALIGN_DIR"
+echo "Using canonical classifications: $CANONICAL_CLASSIFICATIONS"
 
-# Export the path to the analysis script so parallel jobs can find it
-export ANALYSIS_SCRIPT
-
-# Run GNU Parallel
-# We pass the list of samples via stdin
-# --jobs specifies the number of parallel jobs
-# --joblog records the status of each job
-# --eta provides an estimated completion time
-# {} is the placeholder for each input line (sample ID)
-printf "%s\\n" "${sample_ids_to_process[@]}" | \
-    parallel --jobs "$NUM_CPUS" --joblog "$PARALLEL_LOG" --eta --bar \
-    "$ANALYSIS_SCRIPT" {}
-
-echo "Parallel processing finished."
-echo "----------------------------------------"
-
-# --- Process Parallel Log and Generate Summary ---
-echo "Processing job log and generating summary..."
 successful_samples=0
 failed_samples=0
 failed_list=""
+current_date=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Create CSV header for summary
 echo "SRX_ID,Status,Date_Processed" > "$SUMMARY_FILE"
 
 # Append skipped samples to summary
-current_date=$(date '+%Y-%m-%d %H:%M:%S')
 for srx_id in "${skipped_list[@]}"; do
     echo "$srx_id,Skipped,$current_date" >> "$SUMMARY_FILE"
 done
 
-# Process the parallel job log
-# Skip the header line and read tab-separated fields
-{
-    # Skip header line
-    read
-    while IFS=$'\t' read -r seq host starttime jobruntime send recv exitval signal command; do
-        # Extract SRX ID from the command (it's the last argument)
-        srx_id=$(echo "$command" | awk '{print $NF}')
-        
-        # Check exit value (0 = success)
-        if [ "$exitval" -eq 0 ]; then
-            ((successful_samples++))
-            status="Success"
+if [ "$PARALLEL_AVAILABLE" = true ] && [ "$NUM_CPUS" -gt 1 ]; then
+    export ANALYSIS_SCRIPT
+
+    printf "%s\\n" "${sample_ids_to_process[@]}" | \
+        parallel --jobs "$NUM_CPUS" --joblog "$PARALLEL_LOG" --eta --bar \
+        "$ANALYSIS_SCRIPT" {}
+
+    echo "Parallel processing finished."
+    echo "----------------------------------------"
+    echo "Processing job log and generating summary..."
+
+    {
+        read
+        while IFS=$'\t' read -r seq host starttime jobruntime send recv exitval signal command; do
+            srx_id=$(echo "$command" | awk '{print $NF}')
+
+            if [ "$exitval" -eq 0 ]; then
+                successful_samples=$((successful_samples + 1))
+                status="Success"
+            else
+                failed_samples=$((failed_samples + 1))
+                failed_list="$failed_list $srx_id"
+                status="Failed (Exit: $exitval)"
+            fi
+
+            echo "$srx_id,$status,$current_date" >> "$SUMMARY_FILE"
+        done
+    } < "$PARALLEL_LOG"
+else
+    for srx_id in "${sample_ids_to_process[@]}"; do
+        echo "Running sample: $srx_id"
+        if "$ANALYSIS_SCRIPT" "$srx_id"; then
+            successful_samples=$((successful_samples + 1))
+            echo "$srx_id,Success,$current_date" >> "$SUMMARY_FILE"
         else
-            ((failed_samples++))
+            failed_samples=$((failed_samples + 1))
             failed_list="$failed_list $srx_id"
-            status="Failed (Exit: $exitval)"
+            echo "$srx_id,Failed,$current_date" >> "$SUMMARY_FILE"
         fi
-        
-        # Add to summary file
-        echo "$srx_id,$status,$current_date" >> "$SUMMARY_FILE"
     done
-} < "$PARALLEL_LOG"
+fi
 
 # Sort summary file by SRX_ID (optional, keeps it tidy)
 { head -n 1 "$SUMMARY_FILE" && tail -n +2 "$SUMMARY_FILE" | sort -t, -k1; } > "${SUMMARY_FILE}.tmp" && mv "${SUMMARY_FILE}.tmp" "$SUMMARY_FILE"
@@ -305,7 +312,7 @@ if [ "$successful_samples" -gt 0 ]; then
     echo "----------------------------------------"
     echo "Generating combined visualizations..."
 
-    VISUALIZATION_SCRIPT="${PROJECT_ROOT}/scripts/R/visualization/visualize_all_landscapes.R"
+    VISUALIZATION_SCRIPT="${PROJECT_ROOT}/scripts/visualization/plot_all_te_landscapes.R"
 
     if [ -f "$VISUALIZATION_SCRIPT" ]; then
         chmod +x "$VISUALIZATION_SCRIPT"

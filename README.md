@@ -141,6 +141,17 @@ python scripts/processing/ec.py
 - `results/data/ectopic_recombination_master.csv`
 - `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
 
+The paper-facing visualization step for this branch is:
+
+```bash
+Rscript scripts/visualization/plot_ectopic_recombination.R
+```
+
+That script reads the canonical filtered ectopic table directly and writes:
+- `results/figures/ectopic_recombination/ectopic_ratio_violin_log10.png`
+- `results/data/ectopic_recombination_species_summary.csv`
+- `results/data/ectopic_recombination_species_tests.txt`
+
 ### 4. Divergence Analysis
 
 Calculates sequence divergence metrics grouped by TE classification.

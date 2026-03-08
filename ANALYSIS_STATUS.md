@@ -38,7 +38,7 @@ For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.
 | `scripts/visualization/hierarchical_donut_TE_diversity.R` | Nested donut charts per species | Complete |
 | `scripts/visualization/plot_te_landscape_analysis.R` | TE landscape summary plots from frozen TE tables | Complete |
 | `scripts/visualization/plot_phylogenetic_signal.R` | Phylogenetic signal visualization | Complete |
-| `scripts/visualization/plot_ectopic_recombination.R` | Ectopic recombination plots | Complete |
+| `scripts/visualization/plot_ectopic_recombination.R` | Canonical ectopic recombination plot + species summary + nonparametric tests | Complete |
 | `scripts/visualization/diversity_stats_phylogeny.R` | Phylogeny colored by diversity | Complete |
 | `scripts/visualization/donut_TE_diversity.R` | Simple donut charts | Complete |
 | `scripts/visualization/plot_simple_phylogeny.R` | Basic phylogeny plots | Complete |

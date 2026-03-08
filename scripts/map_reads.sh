@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Warning: scripts/map_reads.sh is an upstream raw-data utility that still expects the historical Data/ and Results/ layout."
+echo "The validated repo workflow starts from the frozen local TE summary tables rather than rerunning this mapping step."
+
 # --- Configuration ---
 DATA_DIR="Data"
 READS_DIR="${DATA_DIR}/Reads"

@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+echo "Warning: scripts/calculate_ti_ratio.sh is an upstream raw-data utility that still expects the historical Data/ and Output/ layout."
+echo "The canonical paper-facing ectopic workflow is scripts/processing/ec.py plus scripts/visualization/plot_ectopic_recombination.R."
+
 # --- Configuration ---
 DATA_DIR="Data"
 LOOKUP_FILE="${DATA_DIR}/Lookup_table.txt"
