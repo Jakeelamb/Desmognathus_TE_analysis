@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -12,6 +13,14 @@ import pandas as pd
 
 
 DEFAULT_CELLPROFILER_ROOT = Path.home() / "Projects" / "cellprofiler_test"
+
+
+def sha256_for_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def find_project_root(start: Path | None = None) -> Path:
@@ -164,25 +173,54 @@ def load_morphology_results(path: Path) -> pd.DataFrame:
 
 
 def build_master_table(project_root: Path, cellprofiler_root: Path) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
-    te_order = load_prefixed_table(project_root / "results" / "data" / "dnaPipeTE_order_breakdown.csv", "order")
+    te_order_path = project_root / "results" / "data" / "dnaPipeTE_order_breakdown.csv"
+    te_superfamily_path = project_root / "results" / "data" / "dnaPipeTE_superfamily_breakdown.csv"
+    order_diversity_path = project_root / "results" / "data" / "diversity_order_stats.csv"
+    superfamily_diversity_path = project_root / "results" / "data" / "diversity_superfamily_stats.csv"
+    ectopic_path = project_root / "results" / "data" / "ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv"
+    genome_path = cellprofiler_root / "output" / "qc_report_blockbalanced" / "final_species_results.csv"
+    morphology_path = cellprofiler_root / "output" / "publication_analysis" / "species_morphology_summary.csv"
+
+    te_order = load_prefixed_table(te_order_path, "order")
+    te_order["te_order_source_id"] = "repo_dnapipete_order_breakdown"
+    te_order["te_order_source_path"] = str(te_order_path.resolve())
+    te_order["te_order_source_sha256"] = sha256_for_file(te_order_path)
+
     te_superfamily = load_prefixed_table(
-        project_root / "results" / "data" / "dnaPipeTE_superfamily_breakdown.csv",
+        te_superfamily_path,
         "superfamily",
     )
-    div_order = load_diversity_table(project_root / "results" / "data" / "diversity_order_stats.csv", "order")
+    te_superfamily["te_superfamily_source_id"] = "repo_dnapipete_superfamily_breakdown"
+    te_superfamily["te_superfamily_source_path"] = str(te_superfamily_path.resolve())
+    te_superfamily["te_superfamily_source_sha256"] = sha256_for_file(te_superfamily_path)
+
+    div_order = load_diversity_table(order_diversity_path, "order")
+    div_order["order_diversity_source_id"] = "repo_diversity_order_stats"
+    div_order["order_diversity_source_path"] = str(order_diversity_path.resolve())
+    div_order["order_diversity_source_sha256"] = sha256_for_file(order_diversity_path)
+
     div_superfamily = load_diversity_table(
-        project_root / "results" / "data" / "diversity_superfamily_stats.csv",
+        superfamily_diversity_path,
         "superfamily",
     )
-    ectopic = load_ectopic_summary(
-        project_root / "results" / "data" / "ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv"
-    )
-    genome = load_genome_results(
-        cellprofiler_root / "output" / "qc_report_blockbalanced" / "final_species_results.csv"
-    )
-    morphology = load_morphology_results(
-        cellprofiler_root / "output" / "publication_analysis" / "species_morphology_summary.csv"
-    )
+    div_superfamily["superfamily_diversity_source_id"] = "repo_diversity_superfamily_stats"
+    div_superfamily["superfamily_diversity_source_path"] = str(superfamily_diversity_path.resolve())
+    div_superfamily["superfamily_diversity_source_sha256"] = sha256_for_file(superfamily_diversity_path)
+
+    ectopic = load_ectopic_summary(ectopic_path)
+    ectopic["ectopic_source_id"] = "repo_ectopic_recombination_filtered_3000bp_5plusdomains"
+    ectopic["ectopic_source_path"] = str(ectopic_path.resolve())
+    ectopic["ectopic_source_sha256"] = sha256_for_file(ectopic_path)
+
+    genome = load_genome_results(genome_path)
+    genome["genome_source_id"] = "cellprofiler_final_species_results"
+    genome["genome_source_path"] = str(genome_path.resolve())
+    genome["genome_source_sha256"] = sha256_for_file(genome_path)
+
+    morphology = load_morphology_results(morphology_path)
+    morphology["morphology_source_id"] = "cellprofiler_species_morphology_summary"
+    morphology["morphology_source_path"] = str(morphology_path.resolve())
+    morphology["morphology_source_sha256"] = sha256_for_file(morphology_path)
 
     tree_tips = parse_tree_tips(project_root / "input_data" / "phylogeny" / "desmo900dated_test.tre")
 

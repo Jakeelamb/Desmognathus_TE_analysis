@@ -1,0 +1,11 @@
+panel_name,n_species,n_with_elevation,n_low_body_proxy,n_total_length_body_proxy,n_mixed_stage_body_proxy,species_list
+te_genome_all,27,8,11,4,8,aeneus;amphileucus;anicetus;apalachicolae;aureatus;auriculatus;bairdi;campi;cheaha;fuscus;gvnigeusgwotli;intermedius;kanawha;lycos;marmoratus;mavrokoilius;monticola;ocoee;orestes;organi;perlapsus;santeetlah;tilleyi;valentinei;valtos;welteri;wrighti
+te_genome_primary,27,8,11,4,8,aeneus;amphileucus;anicetus;apalachicolae;aureatus;auriculatus;bairdi;campi;cheaha;fuscus;gvnigeusgwotli;intermedius;kanawha;lycos;marmoratus;mavrokoilius;monticola;ocoee;orestes;organi;perlapsus;santeetlah;tilleyi;valentinei;valtos;welteri;wrighti
+te_genome_primary_mediumplus,16,7,0,0,7,amphileucus;anicetus;aureatus;bairdi;campi;cheaha;fuscus;gvnigeusgwotli;intermedius;kanawha;lycos;mavrokoilius;perlapsus;santeetlah;tilleyi;valentinei
+te_genome_primary_strict_body,9,6,0,0,0,amphileucus;aureatus;cheaha;gvnigeusgwotli;intermedius;kanawha;mavrokoilius;perlapsus;valentinei
+te_genome_ectopic_all,24,7,10,4,6,aeneus;amphileucus;anicetus;apalachicolae;aureatus;auriculatus;bairdi;campi;cheaha;fuscus;gvnigeusgwotli;intermedius;marmoratus;mavrokoilius;monticola;ocoee;orestes;organi;perlapsus;santeetlah;tilleyi;valentinei;welteri;wrighti
+te_genome_ectopic_primary_mediumplus,14,6,0,0,6,amphileucus;anicetus;aureatus;bairdi;campi;cheaha;fuscus;gvnigeusgwotli;intermedius;mavrokoilius;perlapsus;santeetlah;tilleyi;valentinei
+te_genome_ectopic_primary_strict_body,8,5,0,0,0,amphileucus;aureatus;cheaha;gvnigeusgwotli;intermedius;mavrokoilius;perlapsus;valentinei
+te_genome_morphology_all,18,7,7,1,6,amphileucus;anicetus;apalachicolae;auriculatus;bairdi;campi;fuscus;gvnigeusgwotli;intermedius;kanawha;marmoratus;mavrokoilius;monticola;ocoee;perlapsus;tilleyi;valtos;welteri
+te_genome_morphology_primary_mediumplus,11,6,0,0,5,amphileucus;anicetus;bairdi;campi;fuscus;gvnigeusgwotli;intermedius;kanawha;mavrokoilius;perlapsus;tilleyi
+te_genome_morphology_primary_strict_body,6,5,0,0,0,amphileucus;gvnigeusgwotli;intermedius;kanawha;mavrokoilius;perlapsus

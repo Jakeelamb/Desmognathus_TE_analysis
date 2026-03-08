@@ -8,14 +8,42 @@ This folder is a temporary, consolidated workspace for the phylogenetic path ana
   This overview and the current staged plan.
 - `DATA_DICTIONARY.md`
   Variable definitions, preferred observed proxies, and current caveats.
+- `INPUT_PREPARATION_PLAN.md`
+  Detailed plan for literature trait mining, taxonomy crosswalks, and TE feature engineering.
+- `SOURCE_TRACKING.md`
+  Provenance rules and source-manifest workflow for publication-grade traceability.
 - `CANDIDATE_MODELS.md`
   The initial DAG families to compare with `phylopath`.
 - `scripts/build_master_dataset.py`
   Builds overlap-ready species tables from `Desmognathus_TE` plus `~/Projects/cellprofiler_test`.
 - `scripts/path_model_scaffold.R`
   Prepares transformed analysis inputs and defines the current candidate model sets.
+- `scripts/prepare_te_features.py`
+  Freezes TE composition, diversity, turnover, and ectopic proxies into a reusable feature table.
+- `scripts/prepare_external_morphometrics.py`
+  Summarizes raw external morphometric appendices into source-linked species tables.
+- `scripts/prepare_nc_biodiversity_traits.py`
+  Parses local NC Biodiversity Project HTML snapshots into a source-linked species trait table.
+- `scripts/prepare_curated_organismal_traits.py`
+  Collapses external trait sources into a manuscript-facing organismal trait table with retained provenance.
+- `scripts/build_te_model_panel.py`
+  Cuts the full TE feature table down to the compact predictor panel intended for comparative models.
+- `scripts/build_analysis_panels.py`
+  Writes panel files for each model family plus primary and sensitivity subsets with confidence flags.
+- `scripts/refresh_source_file_inventory.py`
+  Rebuilds the raw-file hash inventory for stored external inputs.
+- `scripts/audit_source_traceability.py`
+  Builds a source-file registry plus gap reports so every source id used in the path-input tables can be audited.
+- `TE_MODEL_INPUTS.md`
+  Notes on which TE predictors are recommended for the main and sensitivity path-analysis families.
+- `ANALYSIS_DATASETS.md`
+  Defines the panel files that should be used for primary versus sensitivity path analyses.
 - `data/derived/`
   Generated master tables and staged analysis datasets.
+- `data/templates/`
+  Templates for taxonomy crosswalks, source manifests, trait registries, and literature extraction.
+- `data/external/`
+  Raw and derived external source files with provenance tracking.
 - `results/`
   Placeholder for model-ranking tables, coefficient summaries, and figures.
 
@@ -70,6 +98,15 @@ Build the merged datasets:
 
 ```bash
 python3 path_analysis/scripts/build_master_dataset.py
+python3 path_analysis/scripts/prepare_te_features.py
+python3 path_analysis/scripts/prepare_amphibio_traits.py
+python3 path_analysis/scripts/prepare_external_morphometrics.py
+python3 path_analysis/scripts/prepare_nc_biodiversity_traits.py
+python3 path_analysis/scripts/prepare_curated_organismal_traits.py
+python3 path_analysis/scripts/build_te_model_panel.py
+python3 path_analysis/scripts/build_path_input_master.py
+python3 path_analysis/scripts/build_analysis_panels.py
+python3 path_analysis/scripts/audit_source_traceability.py
 ```
 
 Inspect the overlap summary:
