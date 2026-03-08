@@ -7,6 +7,7 @@ This file records the current paper-facing freeze state for the Desmognathus TE 
 - Source code commit used for the frozen analysis state: `8c98c12f83d072561ed212e7f06de3f6563baf28`
 - Manifest generated at: `2026-03-08 21:58:51 UTC`
 - Tracked inventory files: `paper_freeze/key_file_manifest.csv`, `paper_freeze/results_inventory.csv`, and `paper_freeze/results_summary.csv`
+- Manuscript-facing assets: `paper_freeze/manuscript_primary_results_summary.csv` and `paper_freeze/MANUSCRIPT_FIGURE_PLAN.md`
 - Ignored generated outputs inventoried locally: `555` files totaling `7.0 GB`
 
 ## Canonical Entry Points
@@ -124,4 +125,3 @@ These are the most important frozen inputs and downstream tables to reference in
 - `results/` remains git-ignored. The freeze state is therefore represented by the tracked checksum inventories rather than by versioning the generated files themselves.
 - Observed trait values remain primary. `phylo_` columns remain explicit sensitivity-only inference.
 - Morphology-linked path families remain excluded from the primary paper claims until independent final genome-size estimates are available.
-

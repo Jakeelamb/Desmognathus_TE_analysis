@@ -241,6 +241,13 @@ Tracked freeze artifacts:
 - `paper_freeze/key_file_manifest.csv`
 - `paper_freeze/results_inventory.csv`
 - `paper_freeze/results_summary.csv`
+
+To build the manuscript-facing summary table and figure plan from the frozen
+primary results:
+
+```bash
+python scripts/processing/build_manuscript_assets.py
+```
 - `results/tables/pca/*_ppca_scores.csv`
 - `results/tables/pca/*_ppca_loadings.csv`
 - `results/figures/pca/*_ppca_scores_pc1_pc2.png`
