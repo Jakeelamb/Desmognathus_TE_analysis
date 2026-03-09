@@ -17,6 +17,7 @@ AMPHIBIO_FILE = EXTERNAL_DERIVED_DIR / "amphibio_desmognathus_traits.csv"
 CONANTI_FILE = EXTERNAL_DERIVED_DIR / "conanti_fuscus_morphometrics_summary.csv"
 ORGANISMAL_FILE = DERIVED_DIR / "organismal_traits_curated.csv"
 PHYLO_INFERENCE_FILE = DERIVED_DIR / "organismal_traits_phylo_inference.csv"
+LTR_HISTORY_FILE = DERIVED_DIR / "ltr_history_features.csv"
 
 OUTPUT_MASTER = DERIVED_DIR / "path_input_master.csv"
 OUTPUT_COVERAGE = DERIVED_DIR / "path_input_coverage_summary.csv"
@@ -40,6 +41,11 @@ def summarize_coverage(df: pd.DataFrame) -> pd.DataFrame:
         "order_pielou",
         "weighted_te_divergence_p90",
         "weighted_te_deletions_p90",
+        "ltr_history_median_k2p_distance",
+        "ltr_history_age_low_mya",
+        "ltr_history_age_central_mya",
+        "ltr_history_age_high_mya",
+        "ltr_history_n_pairs_estimated",
         "ectopic_log10_mean_ratio",
         "body_size_proxy_mm",
         "development_mode",
@@ -105,17 +111,20 @@ def main() -> None:
     phylo_inference = (
         pd.read_csv(PHYLO_INFERENCE_FILE) if PHYLO_INFERENCE_FILE.exists() else pd.DataFrame(columns=["species"])
     )
+    ltr_history = pd.read_csv(LTR_HISTORY_FILE) if LTR_HISTORY_FILE.exists() else pd.DataFrame(columns=["species"])
 
     merged = master.merge(te, on="species", how="left", suffixes=("", "_te"))
     merged = merged.merge(amphibio, on="species", how="left")
     merged = merged.merge(with_prefix(conanti, "cf_"), on="species", how="left")
     merged = merged.merge(organismal, on="species", how="left")
     merged = merged.merge(phylo_inference, on="species", how="left")
+    merged = merged.merge(ltr_history, on="species", how="left")
 
     merged["has_te_feature_table"] = merged["ltr_line_logratio"].notna()
     merged["has_amphibio_traits"] = merged["amphibio_source_id"].notna()
     merged["has_conanti_fuscus_morphometrics"] = merged["cf_source_id"].notna()
     merged["has_curated_organismal_traits"] = merged["organismal_source_ids"].notna()
+    merged["has_ltr_history"] = merged["ltr_history_source_ids"].notna()
     phylo_status_cols = [c for c in merged.columns if c.startswith("phylo_") and c.endswith("_status")]
     if phylo_status_cols:
         merged["has_phylogenetic_trait_inference"] = merged[phylo_status_cols].notna().any(axis=1)

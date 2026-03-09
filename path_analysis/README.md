@@ -179,6 +179,7 @@ To run the same family on a panel-defined sensitivity subset without overwriting
 ```bash
 Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_mediumplus
 Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_organismal --panel te_genome_organismal_primary_strict_body
+Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ltr_history --panel te_genome_ltr_history_primary_mediumplus
 Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic_organismal --panel te_genome_ectopic_organismal_primary_mediumplus
 Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --panel te_genome_ectopic_primary_strict_body
 ```
@@ -188,7 +189,9 @@ When `--panel` is supplied, the scaffold reads `data/derived/panels/<panel>.csv`
 Current organismal-family result:
 
 - `te_genome_organismal_primary_mediumplus` currently prefers `body_size_additive` over the TE-only baseline, while `aquaticity`-heavy models rank poorly.
+- `te_genome_ltr_history_primary_mediumplus` currently prefers `history_additive`, but that support weakens in the stricter body-filtered subset, so the LTR-history family should remain sensitivity-only.
 - `te_genome_ectopic_organismal_primary_mediumplus` and `..._strict_body` currently prefer `te_body_size_baseline`, which means the combined family does not retain `ectopic_index` as a winning predictor once body size is allowed to compete.
+- The source-linked note for this historical-axis integration is `LTR_HISTORY_PATH_INTEGRATION.md`.
 
 ## External Inputs
 

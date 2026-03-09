@@ -212,6 +212,51 @@ Interpretation goal:
 - Does ectopic signal remain the best genome-size predictor once body size is included?
 - Does the TE-evenness path still help once ectopic and body size are both available?
 
+## Family 7: `te_genome_ltr_history`
+
+Purpose: test whether the species-level historical LTR divergence layer explains
+additional genome-size variation beyond the current TE-state variables.
+
+Nodes:
+
+- `ltr_history`: species-level median paired-LTR K2P divergence
+- `ltr_balance`
+- `te_evenness`
+- `gs`
+
+Design note:
+
+- This family uses divergence rather than a hard-dated age because any fixed
+  positive substitution-rate calibration is only a scalar rescaling of K2P and
+  therefore does not change the standardized path-model term.
+- The biological timescale interpretation is carried separately in
+  `LTR_SUBSTITUTION_RATE_CALIBRATION.md`.
+
+Candidate models:
+
+1. `te_baseline`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness`
+2. `history_direct`
+   `gs <- ltr_history`
+3. `history_additive`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness + ltr_history`
+4. `history_to_balance`
+   `ltr_balance <- ltr_history`
+   `te_evenness <- ltr_balance`
+   `gs <- te_evenness`
+5. `history_to_evenness`
+   `te_evenness <- ltr_balance + ltr_history`
+   `gs <- te_evenness`
+
+Interpretation goal:
+
+- Does retained historical LTR divergence add explanatory value beyond the
+  current TE composition summary?
+- Is any history signal better understood as upstream of current TE state or as
+  an additional direct correlate of genome size?
+
 ## What Not To Do Yet
 
 - Do not put `morph_nc_ratio` in the same DAG as both `ns` and `cs`.

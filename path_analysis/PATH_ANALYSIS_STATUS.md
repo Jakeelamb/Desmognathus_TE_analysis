@@ -143,6 +143,8 @@ Current panel sizes:
 - `te_genome_primary_strict_body = 16`
 - `te_genome_organismal_primary_mediumplus = 27`
 - `te_genome_organismal_primary_strict_body = 16`
+- `te_genome_ltr_history_primary_mediumplus = 24`
+- `te_genome_ltr_history_primary_strict_body = 15`
 - `te_genome_ectopic_primary_mediumplus = 24`
 - `te_genome_ectopic_primary_strict_body = 15`
 - `te_genome_ectopic_organismal_primary_mediumplus = 24`
@@ -184,6 +186,7 @@ model subsets:
 
 - `te_genome`
 - `te_genome_organismal`
+- `te_genome_ltr_history`
 - `te_genome_ectopic`
 - `te_genome_ectopic_organismal`
 - `te_genome_morphology`
@@ -276,7 +279,28 @@ Interpretation:
 This is currently the most important substantive modeling result added after the
 trait rescue phase.
 
-### 5. TE + genome + morphology
+### 5. TE + LTR history
+
+Files:
+
+- `results/te_genome_ltr_history_primary_mediumplus_model_ranking.csv`
+- `results/te_genome_ltr_history_primary_strict_body_model_ranking.csv`
+
+Winner:
+
+- medium-plus: `history_additive`
+- strict-body: `te_baseline`, with `history_additive` still competitive
+
+Interpretation:
+
+- the historical paired-LTR divergence axis adds useful signal in the broader
+  `n = 24` panel
+- that signal weakens under the stricter `n = 15` body-size filter, so this
+  family should remain sensitivity-focused rather than promoted into the primary
+  result tier
+- see `LTR_HISTORY_PATH_INTEGRATION.md` for the source-linked interpretation
+
+### 6. TE + genome + morphology
 
 Files:
 

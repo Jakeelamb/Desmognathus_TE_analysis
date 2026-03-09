@@ -153,6 +153,7 @@ def build_exclusion_reasons(
     *,
     require_ectopic: bool = False,
     require_morphology: bool = False,
+    require_ltr_history: bool = False,
     require_core: bool = False,
     require_mediumplus: bool = False,
     require_phylofill: bool = False,
@@ -170,6 +171,8 @@ def build_exclusion_reasons(
         reasons.append("missing_ectopic")
     if require_morphology and not bool(row.get("has_morphology")):
         reasons.append("missing_morphology")
+    if require_ltr_history and not bool(row.get("has_ltr_history")):
+        reasons.append("missing_ltr_history")
 
     if require_core or require_mediumplus or require_strict_body:
         if pd.isna(row.get("body_size_proxy_mm")):
@@ -224,6 +227,7 @@ def main() -> None:
         "has_genome",
         "has_ectopic",
         "has_morphology",
+        "has_ltr_history",
         "genome_size_pg",
         "genome_size_se_pg",
         "genome_result_status",
@@ -236,6 +240,16 @@ def main() -> None:
         "weighted_te_divergence_p90",
         "weighted_te_deletions_p90",
         "ectopic_log10_mean_ratio",
+        "ltr_history_median_k2p_distance",
+        "ltr_history_n_pairs_estimated",
+        "ltr_history_n_pairs_high_confidence",
+        "ltr_history_age_low_mya",
+        "ltr_history_age_central_mya",
+        "ltr_history_age_high_mya",
+        "ltr_history_source_id",
+        "ltr_history_calibration_source_id",
+        "ltr_history_rate_source_id",
+        "ltr_history_source_ids",
         "body_size_proxy_mm",
         "body_size_proxy_measurement",
         "body_size_proxy_source_id",
@@ -305,6 +319,22 @@ def main() -> None:
             & df["has_te"]
             & df["has_genome"]
             & df["has_core_organismal_mediumplus"]
+            & ~df["uses_total_length_body_proxy"]
+            & ~df["uses_mixed_stage_body_proxy"]
+        ),
+        "te_genome_ltr_history_primary_mediumplus": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_core_organismal_mediumplus"]
+            & df["has_ltr_history"]
+        ),
+        "te_genome_ltr_history_primary_strict_body": (
+            df["has_tree_tip"]
+            & df["has_te"]
+            & df["has_genome"]
+            & df["has_core_organismal_mediumplus"]
+            & df["has_ltr_history"]
             & ~df["uses_total_length_body_proxy"]
             & ~df["uses_mixed_stage_body_proxy"]
         ),
@@ -393,6 +423,17 @@ def main() -> None:
             "require_strict_body": True,
         },
         "te_genome_organismal_primary_strict_body": {
+            "require_core": True,
+            "require_mediumplus": True,
+            "require_strict_body": True,
+        },
+        "te_genome_ltr_history_primary_mediumplus": {
+            "require_ltr_history": True,
+            "require_core": True,
+            "require_mediumplus": True,
+        },
+        "te_genome_ltr_history_primary_strict_body": {
+            "require_ltr_history": True,
             "require_core": True,
             "require_mediumplus": True,
             "require_strict_body": True,

@@ -40,6 +40,7 @@ print_help <- function() {
       "Families:",
       "  te_genome",
       "  te_genome_organismal",
+      "  te_genome_ltr_history",
       "  te_genome_ectopic",
       "  te_genome_ectopic_organismal",
       "  genome_morphology",
@@ -54,6 +55,8 @@ print_help <- function() {
       "  te_genome_organismal_primary_mediumplus",
       "  te_genome_organismal_primary_phylofill",
       "  te_genome_organismal_primary_strict_body",
+      "  te_genome_ltr_history_primary_mediumplus",
+      "  te_genome_ltr_history_primary_strict_body",
       "  te_genome_ectopic_all",
       "  te_genome_ectopic_primary_mediumplus",
       "  te_genome_ectopic_organismal_primary_mediumplus",
@@ -165,6 +168,7 @@ dataset_file_for_family <- function(family) {
     family,
     te_genome = "dataset_te_genome.csv",
     te_genome_organismal = file.path("panels", "te_genome_organismal_primary_mediumplus.csv"),
+    te_genome_ltr_history = file.path("panels", "te_genome_ltr_history_primary_mediumplus.csv"),
     te_genome_ectopic = "dataset_te_genome_ectopic.csv",
     te_genome_ectopic_organismal = file.path("panels", "te_genome_ectopic_organismal_primary_mediumplus.csv"),
     genome_morphology = "dataset_genome_morphology.csv",
@@ -185,6 +189,9 @@ input_spec_for_run <- function(family, panel, derived_dir) {
 
   compatible_prefixes <- c(family)
   if (family == "te_genome_organismal") {
+    compatible_prefixes <- c(compatible_prefixes, "te_genome")
+  }
+  if (family == "te_genome_ltr_history") {
     compatible_prefixes <- c(compatible_prefixes, "te_genome")
   }
   if (family == "te_genome_ectopic_organismal") {
@@ -219,6 +226,7 @@ prepare_analysis_input <- function(df, family, panel = NULL) {
   needs_te_features <- family %in% c(
     "te_genome",
     "te_genome_organismal",
+    "te_genome_ltr_history",
     "te_genome_ectopic",
     "te_genome_ectopic_organismal",
     "te_genome_morphology"
@@ -285,6 +293,9 @@ prepare_analysis_input <- function(df, family, panel = NULL) {
     }
     df$aquaticity <- zscore(as.numeric(df[[aquaticity_col]]))
   }
+  if ("ltr_history_median_k2p_distance" %in% colnames(df)) {
+    df$ltr_history <- zscore(as.numeric(df$ltr_history_median_k2p_distance))
+  }
 
   analysis_df <- switch(
     family,
@@ -292,6 +303,8 @@ prepare_analysis_input <- function(df, family, panel = NULL) {
       transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness),
     te_genome_organismal = df %>%
       transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, body_size, aquaticity),
+    te_genome_ltr_history = df %>%
+      transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, ltr_history),
     te_genome_ectopic = df %>%
       transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, ectopic_index),
     te_genome_ectopic_organismal = df %>%
@@ -329,6 +342,13 @@ model_set_for_family <- function(family, phylopath_ns) {
         te_evenness ~ ltr_balance + aquaticity,
         gs ~ te_evenness + body_size
       )
+    ),
+    te_genome_ltr_history = phylopath_ns$define_model_set(
+      te_baseline = c(te_evenness ~ ltr_balance, gs ~ te_evenness),
+      history_direct = c(gs ~ ltr_history),
+      history_additive = c(te_evenness ~ ltr_balance, gs ~ te_evenness + ltr_history),
+      history_to_balance = c(ltr_balance ~ ltr_history, te_evenness ~ ltr_balance, gs ~ te_evenness),
+      history_to_evenness = c(te_evenness ~ ltr_balance + ltr_history, gs ~ te_evenness)
     ),
     te_genome_ectopic = phylopath_ns$define_model_set(
       ectopic_only = c(gs ~ ectopic_index),
