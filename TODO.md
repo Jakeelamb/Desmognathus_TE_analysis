@@ -3,9 +3,31 @@
 This file records the highest-value analyses to run while the cell size,
 nucleus size, and final genome size layers are still being generated.
 
-The goal is not more pipeline churn. The goal is to strengthen the causal
-claims around TE dynamics and genome-size evolution using the data already in
-hand.
+The original audit queue is now complete.
+
+Current state:
+
+- No active TE-side audit items remain.
+- The repo is in a waiting state for finalized cell size, nucleus size, and
+  genome size estimates.
+- The next major work block should begin only after those estimates are ready
+  for integration into the full causal chain.
+
+The goal is no longer more TE-side pipeline churn. The next goal is to merge
+the finalized size estimates into the now-audited TE framework and rerun the
+inside-out versus outside-in comparative tests.
+
+## Wait State
+
+- Status: waiting for finalized size estimates
+- Blocking inputs:
+  - final genome size estimates
+  - final nucleus size estimates
+  - final cell size estimates
+- Next trigger:
+  once those estimates are ready, reopen this file as a new integration queue
+  for full path-model reruns, updated figure selection, and manuscript-facing
+  synthesis.
 
 ## Working Rule
 
@@ -18,7 +40,7 @@ hand.
 - Keep primary claims tied to observed/source-backed data. Sensitivity layers
   must stay clearly labeled as such.
 
-## Priority Queue
+## Completed Queue
 
 ### 1. Assembly-Bias Audit
 
@@ -304,16 +326,25 @@ Deliverable for phase completion:
 - A revised statement of which path families are strong enough for the main
   text, and which belong in supplement/sensitivity only.
 
-## Script Plan
+## Implemented Scripts
 
-Planned new scripts, in order:
+Implemented in this queue:
 
 1. `scripts/processing/audit_assembly_bias.py`
 2. `scripts/processing/audit_cross_method_concordance.py`
 3. `scripts/processing/build_te_age_spectrum_metrics.py`
-4. `scripts/processing/audit_ltr_history_mechanism.R`
+4. `scripts/processing/audit_ltr_history_mechanism.py`
 5. `path_analysis/scripts/audit_model_stability.R`
 6. `scripts/processing/audit_phylogenetic_outliers.R`
+
+## Next Queue
+
+When the size estimates land, the next queue should include:
+
+1. rebuild the merged size-aware analysis inputs
+2. rerun the full TE -> genome size -> nucleus size -> cell size families
+3. compare inside-out versus outside-in support with the finalized size layer
+4. refresh manuscript tables, figure selection, and methods/results wording
 
 ## Stop Conditions
 
