@@ -3,6 +3,7 @@
 Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), a sequence-based paired-LTR divergence branch for insertion-age inference, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
 
 For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
+For the next queued validation and insight analyses, see `TODO.md`.
 
 ## Quick Start
 

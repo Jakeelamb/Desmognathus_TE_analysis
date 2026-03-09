@@ -4,6 +4,7 @@
 **Project:** PhD Research - Transposable Element Evolution in Desmognathus Salamanders
 
 For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
+For the next queued analyses while size data are still being generated, see `TODO.md`.
 
 ---
 
