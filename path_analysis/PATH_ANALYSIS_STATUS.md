@@ -27,14 +27,21 @@ The data-build phase is in good shape.
 The important current result is:
 
 - TE-only models are stable.
-- Ectopic-only models are stable when organismal covariates are absent.
-- Once organismal covariates are allowed, `body_size` matters.
-- Once `body_size` and `ectopic_index` compete in the same candidate family,
+- The combined `TE + body_size` family is also stable.
+- Ectopic-only models are stable when organismal covariates are absent, but
+  once `body_size` and `ectopic_index` compete in the same candidate family,
   the winning model drops `ectopic_index`.
+- `body_size` matters, but the organismal-only extension is near-tied and not
+  stable enough to overstate on its own.
+- The LTR-history family carries signal, but it stays best treated as a
+  sensitivity-backed historical axis rather than a first-tier primary result.
 - Phylogenetic trait backfilling currently changes no model panel membership.
+- The project now also has species-level phylogenetic outliers worth discussing,
+  not just clade-level summaries.
 
 So the project has shifted from "collect and rescue traits" to
-"interpret what the fitted families are now saying."
+"interpret what the fitted families are now saying, and which species depart
+from broad phylogenetic expectation."
 
 ## Workspace Structure
 

@@ -133,7 +133,7 @@ hand.
 
 ### 4. Path-Model Stability Diagnostics
 
-- Status: pending
+- Status: completed 2026-03-08
 - Question:
   Are the main winner families robust to species removal and clade subsampling?
 - Why this matters:
@@ -158,6 +158,11 @@ hand.
   Winner identity and main sign patterns are not driven by one or two species.
 - Escalation condition:
   If a family is highly unstable, it should be downgraded to supplementary.
+- Current result:
+  `MODEL_STABILITY_AUDIT.md` shows that `te_genome` and
+  `te_genome_ectopic_organismal` are highly stable, `te_genome_ltr_history` is
+  moderately stable, and `te_genome_organismal` is near-tied and unstable
+  enough to keep below the strongest result tier.
 
 ### 5. TE-History Mechanism Audit
 
@@ -194,7 +199,7 @@ hand.
 
 ### 6. Phylogenetic Residual / Outlier Audit
 
-- Status: pending
+- Status: completed 2026-03-08
 - Question:
   Which species are unusually TE-heavy, ectopic-heavy, or old-LTR-rich relative
   to phylogenetic expectation?
@@ -216,6 +221,12 @@ hand.
 - Pass condition:
   The project gains a small set of biologically interpretable species-level
   exceptions worth discussing in the paper.
+- Current result:
+  `PHYLOGENETIC_OUTLIER_AUDIT.md` identifies species-level terminal deviations
+  worth carrying into the paper, including recurrent outlier behavior for
+  `aeneus`, strong recentness in `fuscus`, unusual ectopic behavior in
+  `intermedius` and `mavrokoilius`, and unusual TE-balance/evenness in
+  `catahoula`.
 
 ## Execution Plan
 
@@ -272,6 +283,16 @@ Run third:
 
 5. Path-model stability diagnostics
 6. Phylogenetic residual / outlier audit
+
+Current phase outcome:
+
+- Passed with useful qualification.
+- The strongest primary-family support is now for `te_genome` and
+  `te_genome_ectopic_organismal`.
+- `te_genome_organismal` is too winner-fragile to overstate.
+- `te_genome_ltr_history` is informative but still sensitivity-grade.
+- The project now has concrete species-level phylogenetic exceptions to discuss
+  instead of only clade-level summaries.
 
 Reason:
 
