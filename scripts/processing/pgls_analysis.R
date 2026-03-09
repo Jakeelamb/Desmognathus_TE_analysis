@@ -102,6 +102,35 @@ if (file.exists(diversity_superfamily_file)) {
 
 message("Loaded TE composition data for ", nrow(superfamily_df), " species")
 
+clr_transform_composition_df <- function(df, df_name = "composition") {
+  species_col <- names(df)[1]
+  comp_mat <- as.matrix(df[, -1, drop = FALSE])
+  storage.mode(comp_mat) <- "double"
+
+  if (any(comp_mat < 0, na.rm = TRUE)) {
+    stop("Negative values found in ", df_name, " composition matrix")
+  }
+
+  min_positive <- min(comp_mat[comp_mat > 0], na.rm = TRUE)
+  zero_replacement <- min_positive / 2
+  comp_mat[comp_mat == 0] <- zero_replacement
+
+  clr_mat <- log(comp_mat)
+  clr_mat <- sweep(clr_mat, 1, rowMeans(clr_mat), "-")
+
+  out <- dplyr::bind_cols(df[, 1, drop = FALSE], as.data.frame(clr_mat))
+  attr(out, "zero_replacement") <- zero_replacement
+  out
+}
+
+order_df_clr <- clr_transform_composition_df(order_df, "order")
+superfamily_df_clr <- clr_transform_composition_df(superfamily_df, "superfamily")
+order_zero_replacement <- attr(order_df_clr, "zero_replacement")
+superfamily_zero_replacement <- attr(superfamily_df_clr, "zero_replacement")
+
+message("CLR-transformed order composition with zero replacement = ", signif(order_zero_replacement, 5))
+message("CLR-transformed superfamily composition with zero replacement = ", signif(superfamily_zero_replacement, 5))
+
 # --- Data Preparation ---
 message("\n=== Preparing Data ===")
 
@@ -311,10 +340,10 @@ message("\n=== Running PGLS Analyses ===")
 
 # Prepare comparative data
 message("\nPreparing Order-level comparative data...")
-order_comp <- prepare_comparative_data(tree, order_df, "order")
+order_comp <- prepare_comparative_data(tree, order_df_clr, "order_clr")
 
 message("\nPreparing Superfamily-level comparative data...")
-superfamily_comp <- prepare_comparative_data(tree, superfamily_df, "superfamily")
+superfamily_comp <- prepare_comparative_data(tree, superfamily_df_clr, "superfamily_clr")
 
 # Get numeric variable names
 order_vars <- names(order_comp$data)[sapply(order_comp$data, is.numeric)]
@@ -334,6 +363,8 @@ if (nrow(order_pairwise_summary) > 0) {
   order_pairwise_summary <- order_pairwise_summary %>%
     arrange(p_value) %>%
     mutate(
+      data_space = "clr",
+      zero_replacement = order_zero_replacement,
       p_adjusted = p.adjust(p_value, method = "BH"),
       significant = p_adjusted < 0.05
     )
@@ -350,11 +381,10 @@ if (nrow(order_pairwise_summary) > 0) {
 # --- Analysis 2: Key hypothesis tests ---
 message("\n--- Specific Hypothesis Tests ---")
 
-# Test: Do LINE elements correlate with Gypsy LTRs?
-# (Common pattern in genomes - autonomous and non-autonomous element dynamics)
+# Test: Do LINE and LTR CLR coordinates covary?
 if ("LINE" %in% order_vars && "LTR" %in% order_vars) {
-  message("\nTesting: LINE ~ LTR")
-  line_ltr <- run_pgls(order_comp, "LINE", "LTR", "LINE_vs_LTR")
+  message("\nTesting CLR covariation: LINE ~ LTR")
+  line_ltr <- run_pgls(order_comp, "LINE", "LTR", "clr_LINE_vs_clr_LTR")
   if (!is.null(line_ltr) && line_ltr$success) {
     message("  Lambda: ", round(line_ltr$lambda, 3))
     message("  R-squared: ", round(line_ltr$r_squared, 3))
@@ -362,20 +392,7 @@ if ("LINE" %in% order_vars && "LTR" %in% order_vars) {
   }
 }
 
-# Test: DNA transposons (TIR) vs Retrotransposons (LINE + LTR)
-if (all(c("TIR", "LINE", "LTR") %in% order_vars)) {
-  message("\nTesting: TIR ~ LINE + LTR")
-  # Add combined retrotransposon variable
-  order_comp$data$Retrotransposons <- order_comp$data$LINE + order_comp$data$LTR
-
-  tir_retro <- run_pgls(order_comp, "TIR", "Retrotransposons", "TIR_vs_Retrotransposons")
-  if (!is.null(tir_retro) && tir_retro$success) {
-    message("  Lambda: ", round(tir_retro$lambda, 3))
-    message("  R-squared: ", round(tir_retro$r_squared, 3))
-    coef_row <- tir_retro$summary$coefficients["Retrotransposons", ]
-    message("  P-value: ", format(coef_row["Pr(>|t|)"], scientific = TRUE))
-  }
-}
+message("Skipping raw-sum Retrotransposons block because that predictor is not coherent in CLR space.")
 
 # --- Analysis 3: Superfamily correlations within LTR ---
 message("\n--- Superfamily-level Correlations ---")
@@ -393,6 +410,8 @@ if (length(available_major) >= 2) {
     superfamily_pairwise_summary <- superfamily_pairwise_summary %>%
       arrange(p_value) %>%
       mutate(
+        data_space = "clr",
+        zero_replacement = superfamily_zero_replacement,
         p_adjusted = p.adjust(p_value, method = "BH"),
         significant = p_adjusted < 0.05
       )
@@ -413,8 +432,8 @@ if (!is.null(diversity_order_df)) {
       tibble::rownames_to_column("species") %>%
       left_join(diversity_order_df_clean, by = "species")
 
-    # Test if Simpson diversity correlates with LINE content.
-    if ("Simpson" %in% names(order_with_diversity) && "LINE" %in% names(order_with_diversity)) {
+    # Test if corrected Simpson diversity correlates with CLR LINE content.
+    if ("Simpson_Diversity" %in% names(order_with_diversity) && "LINE" %in% names(order_with_diversity)) {
       # Need to rebuild comparative.data with diversity
       diversity_comp <- comparative.data(
         phy = order_comp$phy,
@@ -423,8 +442,8 @@ if (!is.null(diversity_order_df)) {
         vcv = TRUE
       )
 
-      message("\nTesting: Simpson ~ LINE")
-      simpson_line <- run_pgls(diversity_comp, "Simpson", "LINE", "Simpson_vs_LINE")
+      message("\nTesting: Simpson_Diversity ~ clr(LINE)")
+      simpson_line <- run_pgls(diversity_comp, "Simpson_Diversity", "LINE", "SimpsonDiversity_vs_clrLINE")
       if (!is.null(simpson_line) && simpson_line$success) {
         message("  Lambda: ", round(simpson_line$lambda, 3))
         message("  R-squared: ", round(simpson_line$r_squared, 3))
@@ -461,7 +480,7 @@ if (exists("order_pairwise_summary") && nrow(order_pairwise_summary) > 0) {
     geom_vline(xintercept = 1, linetype = "dashed", color = "blue") +
     labs(
       title = "Distribution of Pagel's Lambda in PGLS Models",
-      subtitle = "Red = no phylogenetic signal, Blue = Brownian motion",
+      subtitle = "CLR-transformed compositional screening; red = no phylogenetic signal, blue = Brownian motion",
       x = expression("Pagel's " * lambda),
       y = "Count"
     ) +
@@ -482,7 +501,7 @@ if (exists("order_pairwise_summary") && nrow(order_pairwise_summary) > 0) {
                       name = "Significant\n(p.adj < 0.05)") +
     labs(
       title = "PGLS Results: TE Order Correlations",
-      x = "Regression Coefficient",
+      x = "Regression Coefficient (CLR coordinates)",
       y = "-log10(p-value)"
     ) +
     theme_minimal() +

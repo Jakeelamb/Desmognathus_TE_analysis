@@ -68,27 +68,36 @@ For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.
 
 ### 2. LTR Insertion Age Estimation
 **Script:** `scripts/processing/ltr_age_estimation.py`
-**Purpose:** Audit readiness for true sequence-based LTR insertion-age estimation
+**Purpose:** Audit paired-LTR readiness and compute true sequence-based 5'/3' LTR divergence when local genomes are available
 **Methods:**
 - Read the canonical paired-LTR table from `results/data/ectopic_recombination_master.csv`
 - Inventory paired LTR elements by species, completeness, superfamily, and LTR length
-- Check whether local genome FASTA assemblies are available for true 5'/3' sequence comparison
-- Write a tracked audit note and readiness tables rather than unsupported age estimates
+- Resolve accession-linked genome FASTA assemblies with `scripts/processing/fetch_genome_assemblies.py`
+- Match species to verified local genome FASTA assemblies from the repo accession table
+- Extract the relevant assembly scaffolds and align paired 5'/3' LTR sequences directly
+- Report p-distance and K2P divergence; only convert to absolute age if an explicit substitution rate is supplied
 **Outputs:**
 - `results/data/ltr_age/ltr_age_readiness_by_species.csv`
 - `results/data/ltr_age/ltr_age_readiness_overview.csv`
 - `results/data/ltr_age/ltr_age_candidate_inventory.csv`
+- `results/data/ltr_age/ltr_age_pairwise_divergence.csv`
+- `results/data/ltr_age/ltr_age_species_summary.csv`
+- `results/data/ltr_age/ltr_age_scaffold_extraction_summary.csv`
 - `LTR_AGE_AUDIT.md`
+- `LTR_DIVERGENCE_SIGNAL_AUDIT.md`
+- `LTR_SUBSTITUTION_RATE_CALIBRATION.md`
+- `LTR_AGE_INSIGHTS.md`
 
 ### 3. PGLS Regression Framework
 **Script:** `scripts/processing/pgls_analysis.R`
-**Purpose:** Phylogenetic Generalized Least Squares regression for phylogenetically-corrected correlations
+**Purpose:** Exploratory phylogenetically corrected compositional screening between TE components
 **Methods:**
+- CLR-transform closed TE compositions before fitting
 - `caper::pgls()` with maximum likelihood lambda estimation
-- Pairwise correlation tests between all TE order/superfamily pairs
+- Pairwise screening tests between TE order/superfamily CLR coordinates
 - BH-corrected p-values for multiple testing
-- Specific hypothesis tests (LINE~LTR, TIR~Retrotransposons)
 - Integration with diversity metrics if available
+- See `COMPARATIVE_INFERENCE_AUDIT.md` for interpretation limits
 **Outputs:**
 - `results/data/pgls/pgls_order_pairwise.csv`
 - `results/data/pgls/pgls_superfamily_pairwise.csv`
@@ -100,12 +109,13 @@ For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.
 **Script:** `scripts/processing/permanova_analysis.R`
 **Purpose:** Formal statistical tests for compositional differences between phylogenetic clades
 **Methods:**
-- Automatic clade definition by tree-cutting (k=5 groups)
+- Curated named clades with undersized named groups collapsed into `other`
 - `vegan::adonis2()` PERMANOVA on Bray-Curtis and Euclidean (CLR) distances
 - Beta dispersion tests with `betadisper()` to check PERMANOVA assumptions
-- Built-in pairwise `adonis2` comparisons with BH-adjusted p-values
+- Built-in pairwise `adonis2` comparisons restricted to adequately sampled named clades
 - PCoA ordination colored by clade with 95% ellipses
 - Distance matrix heatmaps ordered by clade
+- See `COMPARATIVE_INFERENCE_AUDIT.md` for the current audited interpretation
 **Outputs:**
 - `results/data/permanova/permanova_summary.csv`
 - `results/data/permanova/permanova_order_pairwise.csv`
@@ -165,8 +175,11 @@ conda activate Dusky
 # 1. Trait Evolution Modeling (BM vs OU comparison)
 Rscript scripts/processing/trait_evolution.R
 
-# 2. LTR age readiness audit
+# 2. LTR sequence-divergence audit
 python scripts/processing/ltr_age_estimation.py
+
+# 2b. Primary-literature LTR age calibration
+python scripts/processing/build_ltr_substitution_rate_calibration.py
 
 # 3. PGLS Regression Analysis
 Rscript scripts/processing/pgls_analysis.R

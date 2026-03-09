@@ -7,6 +7,7 @@
 # Input data used by the core TE processing pipeline.
 input_data:
   root: "input_data"
+  genomes: "input_data/genomes"
   phylogeny: "input_data/phylogeny"
   dnaPipeTE: "input_data/dnaPipeTE"
   repeatmasker: "input_data/repeatmasker"

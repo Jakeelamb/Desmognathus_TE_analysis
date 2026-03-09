@@ -1,6 +1,6 @@
 # Desmognathus TE Analysis
 
-Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), an audited LTR insertion-age readiness branch, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
+Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), a sequence-based paired-LTR divergence branch for insertion-age inference, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
 
 For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
 
@@ -276,14 +276,23 @@ Rscript scripts/processing/trait_evolution.R
 - `results/data/trait_evolution/evolutionary_model_comparison.csv`
 - `results/figures/trait_evolution/ancestral_*.png`
 
-### 10. LTR Age Readiness Audit
+### 10. LTR Sequence-Divergence and Age Audit
 
-Audits whether the local repo has the inputs needed for true sequence-based LTR
-insertion-age estimation. The current validated behavior is a readiness audit,
-not a paper-ready age estimate, because matching genome FASTA assemblies are
-not present locally. See `LTR_AGE_AUDIT.md`.
+Audits the paired-LTR substrate and, when local genome assemblies are present,
+computes true 5'/3' LTR sequence divergence directly from assembly coordinates.
+The default validated output is divergence rather than absolute age in years,
+because no substitution rate is imposed automatically. See `LTR_AGE_AUDIT.md`
+for workflow status, `LTR_DIVERGENCE_SIGNAL_AUDIT.md` for the current
+biological signal summary, and `LTR_SUBSTITUTION_RATE_CALIBRATION.md` for the
+primary-literature calibration window. The current interpretation note is
+tracked in `LTR_AGE_INSIGHTS.md`.
 
 ```bash
+# Resolve or download the accession-linked genome assemblies when needed
+python scripts/processing/fetch_genome_assemblies.py --download
+
+# Then run the local divergence audit/estimation
+conda activate Dusky
 python scripts/processing/ltr_age_estimation.py
 ```
 
@@ -291,11 +300,32 @@ python scripts/processing/ltr_age_estimation.py
 - `results/data/ltr_age/ltr_age_readiness_by_species.csv`
 - `results/data/ltr_age/ltr_age_readiness_overview.csv`
 - `results/data/ltr_age/ltr_age_candidate_inventory.csv`
+- `results/data/ltr_age/ltr_age_pairwise_divergence.csv`
+- `results/data/ltr_age/ltr_age_species_summary.csv`
+- `results/data/ltr_age/ltr_age_scaffold_extraction_summary.csv`
 - `LTR_AGE_AUDIT.md`
+
+To convert those divergence outputs into literature-backed age sensitivities
+without changing the canonical divergence table:
+
+```bash
+python scripts/processing/build_ltr_substitution_rate_calibration.py
+```
+
+**Calibration outputs:**
+- `results/data/ltr_age/ltr_substitution_rate_candidates.csv`
+- `results/data/ltr_age/ltr_age_calibration_summary.csv`
+- `results/data/ltr_age/ltr_age_species_summary_calibrated.csv`
+- `results/data/ltr_age/ltr_age_pairwise_divergence_calibrated.csv`
+- `LTR_SUBSTITUTION_RATE_CALIBRATION.md`
 
 ### 11. PGLS Regression
 
-Phylogenetic Generalized Least Squares regression for phylogenetically-corrected pairwise correlations between TE orders and superfamilies using `caper::pgls()` with ML lambda estimation and BH-corrected p-values.
+Phylogenetic Generalized Least Squares regression for exploratory compositional
+screening between TE orders and superfamilies using `caper::pgls()` on
+CLR-transformed compositions with ML lambda estimation and BH-corrected
+p-values. See `COMPARATIVE_INFERENCE_AUDIT.md` for scope and interpretation
+limits.
 
 ```bash
 Rscript scripts/processing/pgls_analysis.R
@@ -307,7 +337,10 @@ Rscript scripts/processing/pgls_analysis.R
 
 ### 12. PERMANOVA Group Comparisons
 
-Formal statistical tests for TE compositional differences between phylogenetic clades using `vegan::adonis2()` with Bray-Curtis and CLR-Euclidean distances, beta dispersion tests, and PCoA ordination.
+Formal statistical tests for TE compositional differences between curated
+phylogenetic clades using `vegan::adonis2()` with Bray-Curtis and
+CLR-Euclidean distances, beta dispersion tests, and PCoA ordination. See
+`COMPARATIVE_INFERENCE_AUDIT.md` for the current audited interpretation.
 
 ```bash
 Rscript scripts/processing/permanova_analysis.R

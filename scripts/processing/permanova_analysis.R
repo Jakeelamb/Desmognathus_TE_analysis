@@ -90,87 +90,56 @@ message("Loaded TE composition data")
 # --- Define Phylogenetic Clades ---
 message("\n=== Defining Phylogenetic Clades ===")
 
-# Define major clades based on Desmognathus phylogeny
-# These are the major clades within the genus
-define_clades <- function(tree) {
-  #' Define major clades from tree structure
-  #'
-  #' Uses tree structure to identify monophyletic groups
+define_curated_clades <- function(tree, min_named_clade_size = 4) {
+  #' Define biologically interpretable clades and collapse undersized groups.
 
-  # Get all tip labels
   tips <- tree$tip.label
-
-  # Define clades manually based on known Desmognathus phylogeny
-  # These groupings are based on the molecular phylogeny
-  clades <- list(
-    # Large-bodied clade (quadramaculatus group)
+  curated <- list(
     quadramaculatus_group = c("marmoratus", "intermedius", "quadramaculatus"),
-
-    # Medium-bodied mountain species
     mountain_clade = c("orestes", "carolinensis", "anicetus", "ocoee",
                        "imitator", "santeetlah", "conanti"),
-
-    # Small-bodied clade
     small_clade = c("wrighti", "aeneus", "aureatus", "gvnigeusgwotli"),
-
-    # Coastal/lowland clade
     coastal_clade = c("auriculatus", "brimleyorum", "fuscus",
                       "monticola", "apalachicolae"),
-
-    # Southern Appalachian
     southern_appalachian = c("organi", "valentinei", "welteri",
                              "folkertsi", "pascagoula")
   )
 
-  # Filter to only species present in tree
-  clades <- lapply(clades, function(x) intersect(x, tips))
-  clades <- clades[sapply(clades, length) > 0]
-
-  # Create species-to-clade mapping
-  species_clade <- data.frame(
-    species = character(),
-    clade = character(),
-    stringsAsFactors = FALSE
+  species_clade <- tibble::tibble(
+    species = tips,
+    clade = "other",
+    clade_source = "other"
   )
 
-  for (clade_name in names(clades)) {
-    for (sp in clades[[clade_name]]) {
-      species_clade <- rbind(species_clade,
-                             data.frame(species = sp, clade = clade_name))
+  for (clade_name in names(curated)) {
+    matched <- intersect(curated[[clade_name]], tips)
+    if (length(matched) == 0) {
+      next
     }
+    species_clade <- species_clade %>%
+      mutate(
+        clade = ifelse(species %in% matched, clade_name, clade),
+        clade_source = ifelse(species %in% matched, "curated_manual", clade_source)
+      )
   }
 
-  # Assign remaining species to "other"
-  unassigned <- setdiff(tips, species_clade$species)
-  if (length(unassigned) > 0) {
-    species_clade <- rbind(species_clade,
-                           data.frame(species = unassigned, clade = "other"))
+  clade_sizes <- table(species_clade$clade)
+  small_named <- names(clade_sizes)[names(clade_sizes) != "other" & clade_sizes < min_named_clade_size]
+  if (length(small_named) > 0) {
+    species_clade <- species_clade %>%
+      mutate(
+        clade_source = ifelse(clade %in% small_named, "collapsed_small_named", clade_source),
+        clade = ifelse(clade %in% small_named, "other", clade)
+      )
   }
 
-  return(species_clade)
+  species_clade %>%
+    mutate(pairwise_clade = ifelse(clade == "other", NA_character_, clade)) %>%
+    arrange(clade, species)
 }
 
-# Alternative: Define clades by cutting tree at specific height
-define_clades_by_cut <- function(tree, k = 5) {
-  #' Define clades by cutting tree into k groups
-
-  # Use cutree on hierarchical clustering of cophenetic distances
-  cophen <- cophenetic(tree)
-  hc <- hclust(as.dist(cophen))
-  clusters <- cutree(hc, k = k)
-
-  species_clade <- data.frame(
-    species = names(clusters),
-    clade = paste0("clade_", clusters),
-    stringsAsFactors = FALSE
-  )
-
-  return(species_clade)
-}
-
-# Use tree-cutting method for clades
-species_clades <- define_clades_by_cut(tree, k = 5)
-message("Defined ", length(unique(species_clades$clade)), " clades")
+species_clades <- define_curated_clades(tree, min_named_clade_size = 4)
+message("Defined curated clades for PERMANOVA:")
 print(table(species_clades$clade))
 
 # --- Prepare Data for PERMANOVA ---
@@ -209,6 +178,7 @@ prepare_permanova_data <- function(te_df, species_clades, te_level = "order") {
   list(
     matrix = composition_matrix,
     groups = te_df$clade,
+    pairwise_groups = te_df$pairwise_clade,
     species = te_df$species,
     metadata = te_df
   )
@@ -256,8 +226,7 @@ run_permanova <- function(dist_matrix, groups, nperm = 999) {
   result <- adonis2(
     dist_matrix ~ group,
     data = perm_df,
-    permutations = nperm,
-    method = "bray"  # Method is in the distance matrix, but specify anyway
+    permutations = nperm
   )
 
   return(result)
@@ -276,6 +245,10 @@ print(order_permanova_eucl)
 message("\n--- Superfamily-level PERMANOVA (Bray-Curtis) ---")
 superfamily_permanova_bray <- run_permanova(superfamily_dist_bray, superfamily_data$groups)
 print(superfamily_permanova_bray)
+
+message("\n--- Superfamily-level PERMANOVA (Euclidean on CLR) ---")
+superfamily_permanova_eucl <- run_permanova(superfamily_dist_eucl, superfamily_data$groups)
+print(superfamily_permanova_eucl)
 
 # --- Beta Dispersion Test ---
 message("\n=== Beta Dispersion Analysis ===")
@@ -307,10 +280,12 @@ order_betadisp <- test_beta_dispersion(order_dist_bray, order_data$groups, "Orde
 superfamily_betadisp <- test_beta_dispersion(superfamily_dist_bray, superfamily_data$groups, "Superfamily Bray-Curtis")
 
 # --- Pairwise Comparisons ---
-run_pairwise_permanova <- function(dist_matrix, groups, min_group_n = 2, nperm = 999) {
+run_pairwise_permanova <- function(dist_matrix, groups, min_group_n = 4, nperm = 999, exclude_groups = "other") {
   group_vec <- as.character(groups)
+  group_vec[group_vec %in% exclude_groups] <- NA_character_
   group_counts <- table(group_vec)
-  group_pairs <- combn(sort(unique(group_vec)), 2, simplify = FALSE)
+  valid_groups <- sort(unique(stats::na.omit(group_vec)))
+  group_pairs <- combn(valid_groups, 2, simplify = FALSE)
 
   pairwise_results <- lapply(group_pairs, function(pair) {
     pair_counts <- group_counts[pair]
@@ -342,6 +317,8 @@ run_pairwise_permanova <- function(dist_matrix, groups, min_group_n = 2, nperm =
 
   results %>%
     mutate(
+      distance_metric = "bray",
+      clade_scope = "named_curated_clades_only",
       p_adjusted = p.adjust(p_value, method = "BH"),
       significant = p_adjusted < 0.05
     ) %>%
@@ -351,7 +328,7 @@ run_pairwise_permanova <- function(dist_matrix, groups, min_group_n = 2, nperm =
 message("\n=== Pairwise PERMANOVA Comparisons ===")
 
 message("\n--- Order-level Pairwise Comparisons ---")
-order_pairwise <- run_pairwise_permanova(order_dist_bray, order_data$groups)
+order_pairwise <- run_pairwise_permanova(order_dist_bray, order_data$pairwise_groups)
 if (nrow(order_pairwise) == 0) {
   message("No order-level pairwise comparisons met the minimum group size requirement.")
 } else {
@@ -359,7 +336,7 @@ if (nrow(order_pairwise) == 0) {
 }
 
 message("\n--- Superfamily-level Pairwise Comparisons ---")
-superfamily_pairwise <- run_pairwise_permanova(superfamily_dist_bray, superfamily_data$groups)
+superfamily_pairwise <- run_pairwise_permanova(superfamily_dist_bray, superfamily_data$pairwise_groups)
 if (nrow(superfamily_pairwise) == 0) {
   message("No superfamily-level pairwise comparisons met the minimum group size requirement.")
 } else {
@@ -512,26 +489,38 @@ message("\n=== Saving Results ===")
 # Create summary data frame
 permanova_summary <- data.frame(
   analysis = c("Order_BrayCurtis", "Order_Euclidean_CLR",
-               "Superfamily_BrayCurtis"),
+               "Superfamily_BrayCurtis", "Superfamily_Euclidean_CLR"),
+  distance_space = c("bray", "clr_euclidean", "bray", "clr_euclidean"),
+  clade_scheme = "curated_manual_with_small_named_collapsed_to_other",
   R2 = c(
     order_permanova_bray$R2[1],
     order_permanova_eucl$R2[1],
-    superfamily_permanova_bray$R2[1]
+    superfamily_permanova_bray$R2[1],
+    superfamily_permanova_eucl$R2[1]
   ),
   F_value = c(
     order_permanova_bray$F[1],
     order_permanova_eucl$F[1],
-    superfamily_permanova_bray$F[1]
+    superfamily_permanova_bray$F[1],
+    superfamily_permanova_eucl$F[1]
   ),
   p_value = c(
     order_permanova_bray$`Pr(>F)`[1],
     order_permanova_eucl$`Pr(>F)`[1],
-    superfamily_permanova_bray$`Pr(>F)`[1]
+    superfamily_permanova_bray$`Pr(>F)`[1],
+    superfamily_permanova_eucl$`Pr(>F)`[1]
   ),
   beta_disp_p = c(
     order_betadisp$permutest$tab$`Pr(>F)`[1],
     NA,  # Only have beta dispersion for Bray-Curtis
-    superfamily_betadisp$permutest$tab$`Pr(>F)`[1]
+    superfamily_betadisp$permutest$tab$`Pr(>F)`[1],
+    NA  # Only have beta dispersion for Bray-Curtis
+  ),
+  significant = c(
+    order_permanova_bray$`Pr(>F)`[1] < 0.05,
+    order_permanova_eucl$`Pr(>F)`[1] < 0.05,
+    superfamily_permanova_bray$`Pr(>F)`[1] < 0.05,
+    superfamily_permanova_eucl$`Pr(>F)`[1] < 0.05
   )
 )
 
@@ -572,16 +561,18 @@ message("  F = ", round(superfamily_permanova_bray$F[1], 2))
 message("  p = ", format(superfamily_permanova_bray$`Pr(>F)`[1], scientific = FALSE))
 
 message("\nInterpretation:")
-if (order_permanova_bray$`Pr(>F)`[1] < 0.05) {
-  message("  - Order-level TE composition differs significantly between clades")
+if (order_permanova_bray$`Pr(>F)`[1] < 0.05 || order_permanova_eucl$`Pr(>F)`[1] < 0.05) {
+  message("  - Order-level signal is present in at least one distance space; inspect Bray and CLR results separately")
 } else {
-  message("  - No significant difference in order-level TE composition between clades")
+  message("  - No robust order-level clade difference was detected across the tested distance spaces")
 }
 
-if (superfamily_permanova_bray$`Pr(>F)`[1] < 0.05) {
-  message("  - Superfamily-level TE composition differs significantly between clades")
+if (superfamily_permanova_bray$`Pr(>F)`[1] < 0.05 && superfamily_permanova_eucl$`Pr(>F)`[1] < 0.05) {
+  message("  - Superfamily-level TE composition differs between clades in both Bray and CLR spaces")
+} else if (superfamily_permanova_bray$`Pr(>F)`[1] < 0.05 || superfamily_permanova_eucl$`Pr(>F)`[1] < 0.05) {
+  message("  - Superfamily-level clade structure is distance-sensitive: significant in one space but not the other")
 } else {
-  message("  - No significant difference in superfamily-level TE composition between clades")
+  message("  - No superfamily-level clade difference was detected in either distance space")
 }
 
 message("\n=== PERMANOVA Analysis Complete ===")
