@@ -13,6 +13,7 @@ import pandas as pd
 
 
 DEFAULT_CELLPROFILER_ROOT = Path.home() / "Projects" / "cellprofiler_test"
+CELLPROFILER_IMPORT_DIR = Path("path_analysis") / "data" / "external" / "derived"
 
 
 def sha256_for_file(path: Path) -> str:
@@ -21,6 +22,26 @@ def sha256_for_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(8192), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def resolve_source_path(
+    *,
+    project_root: Path,
+    preferred_rel: Path,
+    fallback_path: Path,
+    label: str,
+) -> Path:
+    preferred = project_root / preferred_rel
+    if preferred.exists():
+        return preferred
+    if fallback_path.exists():
+        return fallback_path
+    raise FileNotFoundError(
+        f"Could not locate {label}. Checked imported snapshot "
+        f"{preferred} and legacy source {fallback_path}. "
+        "Run path_analysis/scripts/pull_cellprofiler_estimates.py to refresh the "
+        "available CellProfiler bundle and audit missing inputs."
+    )
 
 
 def find_project_root(start: Path | None = None) -> Path:
@@ -181,8 +202,18 @@ def build_master_table(project_root: Path, cellprofiler_root: Path) -> tuple[pd.
     order_diversity_path = project_root / "results" / "data" / "diversity_order_stats.csv"
     superfamily_diversity_path = project_root / "results" / "data" / "diversity_superfamily_stats.csv"
     ectopic_path = project_root / "results" / "data" / "ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv"
-    genome_path = cellprofiler_root / "output" / "qc_report_blockbalanced" / "final_species_results.csv"
-    morphology_path = cellprofiler_root / "output" / "publication_analysis" / "species_morphology_summary.csv"
+    genome_path = resolve_source_path(
+        project_root=project_root,
+        preferred_rel=CELLPROFILER_IMPORT_DIR / "cellprofiler_final_species_results.csv",
+        fallback_path=cellprofiler_root / "output" / "qc_report_blockbalanced" / "final_species_results.csv",
+        label="CellProfiler genome species bundle",
+    )
+    morphology_path = resolve_source_path(
+        project_root=project_root,
+        preferred_rel=CELLPROFILER_IMPORT_DIR / "cellprofiler_species_morphology_summary.csv",
+        fallback_path=cellprofiler_root / "output" / "publication_analysis" / "species_morphology_summary.csv",
+        label="CellProfiler morphology species bundle",
+    )
 
     te_order = load_prefixed_table(te_order_path, "order")
     te_order["te_order_source_id"] = "repo_dnapipete_order_breakdown"

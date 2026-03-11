@@ -6,10 +6,10 @@ This document maps the conceptual nodes in the path-analysis plan to the current
 
 | Concept | Current column | Current source | Status | Notes |
 |---|---|---|---|---|
-| Genome size | `genome_size_pg` | `cellprofiler_test/output/qc_report_blockbalanced/final_species_results.csv` | Provisional | Current primary estimate is area-derived. Keep for TE-mechanism work and planning, but avoid final `genome -> nucleus` claims until the independent final estimates are ready. |
+| Genome size | `genome_size_pg` | `path_analysis/data/external/derived/cellprofiler_final_species_results.csv` | Provisional | Current primary estimate is derived from strict-core linked YOLO nucleus IOD. The imported snapshot is rebuilt by `path_analysis/scripts/pull_cellprofiler_estimates.py` from the mixed linkage run and audited against `cellprofiler_genome_state_summary.csv` rather than recovered from downstream path-analysis tables. |
 | Genome-size uncertainty | `genome_size_se_pg` | same as above | Available | Useful for screening species and sensitivity analyses. |
 | Genome QC status | `genome_result_status`, `genome_flag_summary` | same as above | Available | Use for stable-only or caution-exclusion sensitivity runs. |
-| Nucleus size | `morph_nucleus_area_um2` | `cellprofiler_test/output/publication_analysis/species_morphology_summary.csv` | Available | Median nucleus area from linked cell+nucleus morphology summary. |
+| Nucleus size | `morph_nucleus_area_um2` | `path_analysis/data/external/derived/cellprofiler_species_morphology_summary.csv` | Available | Median nucleus area from the active mixed-linkage morphology summary imported from `cellprofiler_test`. |
 | Cell size | `morph_cell_area_um2` | same as above | Available | Median cell area from linked morphology summary. |
 | Cytoplasm area | `morph_cytoplasm_area_um2` | same as above | Available | Optional downstream morphology proxy. |
 | N:C ratio | `morph_nc_ratio` | same as above | Available | Derived quantity. Do not include it in the same DAG as both cell area and nucleus area. |

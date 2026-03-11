@@ -22,6 +22,8 @@ If returning after a context switch or changing focus within the project, start 
   Non-destructive reconstruction note for the TE diversity summary tables, including the audited path from threshold-grid outputs to the current canonical diversity snapshots.
 - `TE_PROVENANCE_AUDIT.md`
   Upstream provenance map for the frozen TE summary tables, including the now-resolved diversity-summary reconstruction path.
+- `CELLPROFILER_PROVENANCE_AUDIT.md`
+  Human-readable audit note for the imported CellProfiler genome and morphology layer, including the raw-run reconstruction rule used when the legacy upstream species bundle is absent.
 - `INPUT_PREPARATION_PLAN.md`
   Detailed plan for literature trait mining, taxonomy crosswalks, and TE feature engineering.
 - `SOURCE_TRACKING.md`
@@ -29,7 +31,9 @@ If returning after a context switch or changing focus within the project, start 
 - `CANDIDATE_MODELS.md`
   The initial DAG families to compare with `phylopath`.
 - `scripts/build_master_dataset.py`
-  Builds overlap-ready species tables from `Desmognathus_TE` plus `~/Projects/cellprofiler_test`.
+  Builds overlap-ready species tables from the repo plus the imported CellProfiler snapshots in `path_analysis/data/external/derived/`.
+- `scripts/pull_cellprofiler_estimates.py`
+  Rebuilds the imported CellProfiler snapshots and traceability audits from the active `cellprofiler_test` run outputs, reconstructing the genome species bundle from linked YOLO nucleus measurements after cell linkage.
 - `scripts/path_model_scaffold.R`
   Prepares transformed analysis inputs and defines the current candidate model sets.
 - `scripts/prepare_te_features.py`
@@ -79,7 +83,7 @@ These counts reflect the current files already present in the workspace:
 
 ## Important Caveat
 
-The current `genome_size_pg` values imported from `cellprofiler_test` come from the current primary CellProfiler bundle and are still provisional for path-analysis purposes. In particular, the present `primary_genome_pg` values are area-derived estimates, so any model that simultaneously treats current genome size and nucleus size as separate causal variables should be interpreted as planning and sensitivity work, not the final manuscript result.
+The current `genome_size_pg` values imported from `cellprofiler_test` are still provisional for path-analysis purposes. The active imported snapshot is now derived from strict-core linked YOLO nucleus IOD, prefers analysis-ready linked images when available, and records that reconstruction in a machine-readable audit. Any model that simultaneously treats current genome size and nucleus size as separate causal variables should therefore be interpreted as planning and sensitivity work, not the final manuscript result.
 
 For now:
 
@@ -112,7 +116,13 @@ Rscript -e 'envlib <- file.path(Sys.getenv("CONDA_PREFIX"), "lib/R/library"); .l
 
 The scaffold script prefers the active conda R library when `CONDA_PREFIX` is set, so it does not accidentally load incompatible user-level packages.
 
-Build the merged datasets:
+Refresh the imported CellProfiler layer first:
+
+```bash
+python3 path_analysis/scripts/pull_cellprofiler_estimates.py
+```
+
+Then build the merged datasets:
 
 ```bash
 python3 path_analysis/scripts/build_master_dataset.py
@@ -126,6 +136,7 @@ python3 path_analysis/scripts/build_te_model_panel.py
 python3 path_analysis/scripts/build_path_input_master.py
 python3 path_analysis/scripts/build_analysis_panels.py
 python3 path_analysis/scripts/audit_source_traceability.py
+python3 path_analysis/scripts/audit_publication_readiness.py
 ```
 
 The main analysis-panel products are:
@@ -153,6 +164,13 @@ Important rule:
 - the curated observed table remains the primary data layer
 - `phylo_` columns are sensitivity-only and should never be silently substituted for source-backed values
 - the current `phylofill` panel comparison is a no-op for the TE/genome model families: no species are added to the present overlap sets
+
+For a publication-facing audit summary after the rebuild, inspect:
+
+```bash
+python3 path_analysis/scripts/audit_publication_readiness.py
+sed -n '1,120p' path_analysis/data/derived/publication_readiness_checks.csv
+```
 
 Inspect the overlap summary:
 
@@ -195,9 +213,18 @@ Current organismal-family result:
 
 ## External Inputs
 
-The dataset builder currently expects these `cellprofiler_test` outputs by default:
+The dataset builder now consumes imported snapshots under `path_analysis/data/external/derived/`:
 
-- `/home/jake/Projects/cellprofiler_test/output/qc_report_blockbalanced/final_species_results.csv`
-- `/home/jake/Projects/cellprofiler_test/output/publication_analysis/species_morphology_summary.csv`
+- `cellprofiler_final_species_results.csv`
+- `cellprofiler_genome_state_summary.csv`
+- `cellprofiler_species_morphology_summary.csv`
+- `cellprofiler_linked_genome_image_trace.csv`
+- `cellprofiler_traceability_audit_summary.csv`
+- `cellprofiler_traceability_audit_gaps.csv`
+- `cellprofiler_source_discovery.json`
 
-These defaults can be overridden on the command line if the bundle location changes later.
+Those snapshots are rebuilt from the active `cellprofiler_test` outputs:
+
+- `output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/`
+
+The pull step now reconstructs the imported genome bundle directly from the active linked YOLO nucleus measurements, writes a species-by-state summary sidecar, and records that reconstruction explicitly in the audit outputs rather than silently reusing downstream path-analysis tables.

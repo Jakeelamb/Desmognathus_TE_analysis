@@ -410,7 +410,7 @@ def robust_run_yolo_measurements(
     model_path: Path,
     yolo_python: Path,
     output_dir: Path,
-    background_cache: Path,
+    background_cache: Path | None,
     object_kind: str,
     device_request: str | None,
     batch: int,
@@ -458,8 +458,6 @@ def robust_run_yolo_measurements(
             str(chunk_tmp_dir),
             "--object-kind",
             object_kind,
-            "--background-cache",
-            str(background_cache),
             "--batch",
             str(batch),
             "--conf",
@@ -477,6 +475,8 @@ def robust_run_yolo_measurements(
             "--max-aspect-ratio",
             str(max_aspect_ratio),
         ]
+        if background_cache is not None:
+            cmd.extend(["--background-cache", str(background_cache)])
         if device_request:
             cmd.extend(["--device", device_request])
 
@@ -566,6 +566,7 @@ def robust_run_yolo_measurements(
         "model": str(model_path.resolve()),
         "output_dir": str(output_dir.resolve()),
         "object_kind": object_kind,
+        "background_cache": str(background_cache.resolve()) if background_cache is not None else "",
         "device": device_request or "auto",
         "n_images_requested": int(len(grouped)),
         "n_images_processed": int(len(summary_rows)),
@@ -957,6 +958,7 @@ def main() -> None:
             recorder=recorder,
         )
 
+    background_cache_path: Path | None = None
     if args.reuse_nucleus_run_tag:
         prewait_required: list[Path] = []
         if not args.wait_for_nucleus_run_complete:
@@ -999,27 +1001,23 @@ def main() -> None:
         missing = [str(path) for path in postwait_required if not path.exists()]
         if missing:
             raise FileNotFoundError(f"Missing completed reused nucleus-IOD run inputs: {missing}")
+        background_cache_path = raw_nucleus_stage_dir / "measurements" / "nucleus_iod_measurements.csv"
     else:
-        nucleus_cmd = [
-            sys.executable,
-            str(cellprofiler_root / "nucleus_iod_estimate_pipeline" / "run_from_manifest.py"),
-            "--manifest",
-            str(manifest),
-            "--output-dir",
-            str(raw_nucleus_stage_dir),
-            "--image-type",
-            args.image_type,
-            "--backend",
-            "imagej",
-            "--workers",
-            str(args.nucleus_workers),
-        ]
-        run_logged_command(
-            label="02_nucleus_iod",
-            cmd=nucleus_cmd,
-            cwd=cellprofiler_root,
-            log_path=log_dir / "02_nucleus_iod.log",
-            recorder=recorder,
+        recorder.append(
+            {
+                "label": "02_linked_nucleus_policy",
+                "returncode": 0,
+                "elapsed_seconds": 0.0,
+                "details": "Skipping standalone raw nucleus-IOD stage; publication default derives nucleus IOD from linked YOLO nuclei.",
+            }
+        )
+        log_json(
+            log_dir / "02_linked_nucleus_policy.json",
+            {
+                "policy": "linked_yolo_nucleus_iod_is_authoritative",
+                "background_cache_path": "",
+                "details": "No standalone background cache was supplied; YOLO tile measurements will compute i_bg directly from each tile.",
+            },
         )
 
     if args.reuse_prepare_run_tag:
@@ -1087,7 +1085,7 @@ def main() -> None:
             model_path=args.nucleus_model.resolve(),
             yolo_python=args.yolo_python.resolve(),
             output_dir=mixed_nucleus_dir,
-            background_cache=raw_nucleus_stage_dir / "measurements" / "nucleus_iod_measurements.csv",
+            background_cache=background_cache_path,
             object_kind="nucleus",
             device_request=args.yolo_device,
             batch=args.yolo_batch,
