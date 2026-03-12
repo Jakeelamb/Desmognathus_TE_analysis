@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -36,6 +37,62 @@ def _required_paths_missing(paths: list[Path]) -> list[str]:
     return [str(path.resolve()) for path in paths if not path.exists()]
 
 
+def _read_json(path: Path) -> dict[str, object]:
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return {}
+
+
+def _normalize_linked_yolo_trace_paths(
+    frame: pd.DataFrame,
+    *,
+    cellprofiler_root: Path,
+    mixed_run_tag: str,
+) -> pd.DataFrame:
+    if frame.empty or "filename" not in frame.columns:
+        return frame
+
+    mixed_root = get_run_paths(cellprofiler_root, mixed_run_tag).root
+    nucleus_root = mixed_root / "nucleus_measurements"
+    chunk_root = nucleus_root / "chunks"
+    out = frame.copy()
+
+    def normalized_mask_path(row: pd.Series) -> str:
+        value = str(row.get("nucleus_mask_path", "")).strip()
+        filename = str(row.get("filename", "")).strip()
+        tile_name = str(row.get("tile_name", "")).strip()
+        if not filename or not tile_name:
+            return value
+        image_stem = Path(filename).stem
+        candidate = chunk_root / image_stem / "masks" / image_stem / f"{Path(tile_name).stem}__labels.tiff"
+        if candidate.exists() and (not value or value.startswith("/tmp/") or not Path(value).exists()):
+            return str(candidate.resolve())
+        return value
+
+    def normalized_chunk_file(filename: str, relative_path: str, current: str) -> str:
+        filename = str(filename).strip()
+        if not filename:
+            return current
+        candidate = chunk_root / Path(filename).stem / relative_path
+        if candidate.exists() and (not current or current.startswith("/tmp/") or not Path(current).exists()):
+            return str(candidate.resolve())
+        return current
+
+    out["nucleus_mask_path"] = out.apply(normalized_mask_path, axis=1)
+    if "nucleus_tile_manifest_path" in out.columns:
+        out["nucleus_tile_manifest_path"] = [
+            normalized_chunk_file(filename, "tile_manifest.csv", str(current).strip())
+            for filename, current in zip(out["filename"], out["nucleus_tile_manifest_path"], strict=False)
+        ]
+    if "nucleus_run_manifest_path" in out.columns:
+        out["nucleus_run_manifest_path"] = [
+            normalized_chunk_file(filename, "summary.json", str(current).strip())
+            for filename, current in zip(out["filename"], out["nucleus_run_manifest_path"], strict=False)
+        ]
+    return out
+
+
 def build_morphology_bundle(
     cellprofiler_root: Path,
     out_dir: Path,
@@ -65,11 +122,17 @@ def build_morphology_bundle(
 
     linked_pairs = pd.read_csv(linked_pairs_path)
     species_summary = pd.read_csv(species_summary_path)
+    linkage_summary = _read_json(summary_json_path)
 
     for frame in [species_summary, linked_pairs]:
         frame["species"] = frame["species"].map(canonical_species)
 
     strict_pairs = linked_pairs[linked_pairs["keep_strict_core"].fillna(False)].copy()
+    strict_pairs = _normalize_linked_yolo_trace_paths(
+        strict_pairs,
+        cellprofiler_root=cellprofiler_root,
+        mixed_run_tag=mixed_run_tag,
+    )
     strict_pairs["cytoplasm_area_um2"] = pd.to_numeric(strict_pairs["cytoplasm_area_um2"], errors="coerce")
 
     if size_summary_path.exists():
@@ -165,6 +228,15 @@ def build_morphology_bundle(
     image_trace_out = out_dir / "cellprofiler_species_morphology_image_trace.csv"
     image_trace.to_csv(image_trace_out, index=False)
 
+    morphology_notes = "Strict-core linked morphology pairs are traceable to image, tile manifest, and saved cell/nucleus mask paths."
+    roi_unused = int(linkage_summary.get("n_roi_overlap_unique_hits", 0) or 0) == 0
+    mask_trace_present = round(existing_pct(strict_pairs["nucleus_mask_path"]), 2) > 0.0
+    if nonempty_pct(strict_pairs["roi_zip_path"]) == 0.0 and roi_unused and mask_trace_present:
+        morphology_notes = (
+            "Strict-core linked morphology pairs are traceable to image, tile manifest, and saved cell/nucleus mask "
+            "paths. ROI ZIP artifacts are legacy ImageJ outputs and were not used in this mask-based linked YOLO run."
+        )
+
     summary_rows.append(
         {
             "bundle": "morphology",
@@ -180,11 +252,11 @@ def build_morphology_bundle(
             "existing_mask_path_pct": round(existing_pct(strict_pairs["nucleus_mask_path"]), 2),
             "nonempty_roi_zip_path_pct": round(nonempty_pct(strict_pairs["roi_zip_path"]), 2),
             "existing_roi_zip_path_pct": round(existing_pct(strict_pairs["roi_zip_path"]), 2),
-            "notes": "Strict-core linked morphology pairs are traceable to image, tile manifest, and saved cell/nucleus mask paths.",
+            "notes": morphology_notes,
         }
     )
 
-    if nonempty_pct(strict_pairs["roi_zip_path"]) == 0.0:
+    if nonempty_pct(strict_pairs["roi_zip_path"]) == 0.0 and (not roi_unused or not mask_trace_present):
         gap_rows.append(
             {
                 "bundle": "morphology",
@@ -239,6 +311,7 @@ def build_linked_genome_trace(
 
     linked_pairs = pd.read_csv(linked_pairs_path, keep_default_na=False)
     image_summary = pd.read_csv(image_summary_path, keep_default_na=False)
+    linkage_summary = _read_json(summary_json_path)
     for frame in [linked_pairs, image_summary]:
         frame["species"] = frame["species"].map(canonical_species)
 
@@ -261,6 +334,11 @@ def build_linked_genome_trace(
         )
         return {"present": False, "image_trace_path": pd.NA, "source_files": []}
 
+    strict_pairs = _normalize_linked_yolo_trace_paths(
+        strict_pairs,
+        cellprofiler_root=cellprofiler_root,
+        mixed_run_tag=mixed_run_tag,
+    )
     strict_pairs["nuc_area_um2"] = pd.to_numeric(strict_pairs["nuc_area_um2"], errors="coerce")
     strict_pairs["nuc_iod"] = pd.to_numeric(strict_pairs["nuc_iod"], errors="coerce")
     strict_pairs["analysis_ready_image"] = False
@@ -308,6 +386,14 @@ def build_linked_genome_trace(
     trace_out = out_dir / "cellprofiler_linked_genome_image_trace.csv"
     image_trace.to_csv(trace_out, index=False)
 
+    genome_notes = "Linked strict-core YOLO nuclei are the authoritative publication nucleus/IOD trace."
+    roi_unused = int(linkage_summary.get("n_roi_overlap_unique_hits", 0) or 0) == 0
+    if nonempty_pct(strict_pairs["roi_zip_path"]) == 0.0 and roi_unused:
+        genome_notes = (
+            "Linked strict-core YOLO nuclei are the authoritative publication nucleus/IOD trace. ROI ZIP artifacts are "
+            "not required because this linked YOLO run uses saved label masks as the matching artifact."
+        )
+
     summary_rows.append(
         {
             "bundle": "genome_linked_yolo",
@@ -323,7 +409,7 @@ def build_linked_genome_trace(
             "existing_mask_path_pct": round(existing_pct(strict_pairs["nucleus_mask_path"]), 2),
             "nonempty_roi_zip_path_pct": round(nonempty_pct(strict_pairs["roi_zip_path"]), 2),
             "existing_roi_zip_path_pct": round(existing_pct(strict_pairs["roi_zip_path"]), 2),
-            "notes": "Linked strict-core YOLO nuclei are the authoritative publication nucleus/IOD trace.",
+            "notes": genome_notes,
         }
     )
 
@@ -1581,11 +1667,12 @@ def rebuild_imported_artifacts(
     )
 
     summary = pd.DataFrame(summary_rows).sort_values("bundle").reset_index(drop=True)
-    gaps = (
-        pd.DataFrame(gap_rows)
-        .sort_values(["bundle", "gap_type", "species"], na_position="last")
-        .reset_index(drop=True)
-    )
+    gap_columns = ["bundle", "gap_type", "species", "details"]
+    gaps = pd.DataFrame(gap_rows)
+    if gaps.empty:
+        gaps = pd.DataFrame(columns=gap_columns)
+    else:
+        gaps = gaps.sort_values(["bundle", "gap_type", "species"], na_position="last").reset_index(drop=True)
 
     summary_path = out_dir / "cellprofiler_traceability_audit_summary.csv"
     gaps_path = out_dir / "cellprofiler_traceability_audit_gaps.csv"

@@ -538,10 +538,26 @@ def robust_run_yolo_measurements(
             )
             continue
 
+        tmp_prefix = str(chunk_tmp_dir.resolve())
+        chunk_prefix = str(chunk_output_dir.resolve())
+
+        def normalize_chunk_row(row: dict[str, Any]) -> dict[str, Any]:
+            normalized: dict[str, Any] = {}
+            for key, value in row.items():
+                text = str(value)
+                if text.startswith(tmp_prefix):
+                    text = f"{chunk_prefix}{text[len(tmp_prefix):]}"
+                normalized[key] = text
+            if "tile_manifest_path" in normalized:
+                normalized["tile_manifest_path"] = str((output_dir / "tile_manifest.csv").resolve())
+            if "run_manifest_path" in normalized:
+                normalized["run_manifest_path"] = str((output_dir / "summary.json").resolve())
+            return normalized
+
         with chunk_tile_manifest.open(newline="") as handle:
-            tile_manifest_rows.extend(list(csv.DictReader(handle)))
+            tile_manifest_rows.extend(normalize_chunk_row(row) for row in csv.DictReader(handle))
         with chunk_measurements.open(newline="") as handle:
-            all_measurements.extend(list(csv.DictReader(handle)))
+            all_measurements.extend(normalize_chunk_row(row) for row in csv.DictReader(handle))
         summary_rows.append(json.loads(chunk_summary.read_text()))
 
     error_csv = output_dir / "tile_errors.csv"
