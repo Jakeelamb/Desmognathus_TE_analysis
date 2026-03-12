@@ -1083,7 +1083,7 @@ def main() -> None:
             cellprofiler_root=cellprofiler_root,
             manifest_path=mixed_prepare_dir / "tile_manifest.csv",
             model_path=args.nucleus_model.resolve(),
-            yolo_python=args.yolo_python.resolve(),
+            yolo_python=args.yolo_python,
             output_dir=mixed_nucleus_dir,
             background_cache=background_cache_path,
             object_kind="nucleus",
