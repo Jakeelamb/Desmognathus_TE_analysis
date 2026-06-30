@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 #
-# visualize_all_landscapes.R
+# plot_all_te_landscapes.R
 #
 # Description: Generates visualizations of TE order distribution from multiple samples.
 # The combined line plot and heatmap have been removed as requested.
 #
-# Usage: Rscript visualize_all_landscapes.R
+# Usage: Rscript scripts/visualization/plot_all_te_landscapes.R
 #
 
 script_args <- commandArgs(trailingOnly = FALSE)

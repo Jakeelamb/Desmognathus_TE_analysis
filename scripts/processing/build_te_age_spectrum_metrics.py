@@ -26,7 +26,8 @@ LTR_HISTORY_PATH = PROJECT_ROOT / "path_analysis" / "data" / "derived" / "ltr_hi
 OUTPUT_DIR = PROJECT_ROOT / "results" / "data" / "te_age_spectra"
 METRICS_PATH = OUTPUT_DIR / "te_age_spectrum_metrics.csv"
 CORRELATIONS_PATH = OUTPUT_DIR / "te_age_spectrum_correlations.csv"
-NOTE_PATH = PROJECT_ROOT / "TE_AGE_SPECTRUM_AUDIT.md"
+REPORT_DIR = PROJECT_ROOT / "results" / "reports"
+NOTE_PATH = REPORT_DIR / "TE_AGE_SPECTRUM_AUDIT.md"
 
 ORDER_LEVELS = ("ALL", "LTR", "LINE", "TIR")
 RECENT_THRESHOLD = 5.0
@@ -336,6 +337,7 @@ estimation.
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
     metrics = build_metrics()
     correlations = build_correlations(metrics)
     metrics.to_csv(METRICS_PATH, index=False)

@@ -374,7 +374,7 @@ write_note <- function(summary_df, detail_df) {
               loo$same_winner_n[[1]], loo$n_runs[[1]], loo$same_winner_frac[[1]]),
       sprintf("- Clade-jackknife retention: `%d / %d` (%.3f)",
               clade$same_winner_n[[1]], clade$n_runs[[1]], clade$same_winner_frac[[1]]),
-      sprintf("- Alternative winners observed: `%d`", all_runs$unique_winner_models[[1]]),
+      sprintf("- Alternative winners observed: `%d`", max(0, all_runs$unique_winner_models[[1]] - 1)),
       sprintf("- Median winner margin (delta CICc to runner-up): `%.3f`", all_runs$median_winner_margin_cicc[[1]]),
       "",
       "Tracked edge stability:",

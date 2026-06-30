@@ -19,7 +19,7 @@ paired-LTR K2P divergence into absolute age sensitivities.
 
 ## Recommended Use
 
-- Main paper text: report LTR ages as a sensitivity range using `1.00e-09` to `1.53e-09` substitutions/site/year.
+- Main analysis text: report LTR ages as a sensitivity range using `1.00e-09` to `1.53e-09` substitutions/site/year.
 - Supplementary tables/figures: use `frog_cmyc_midpoint` (`1.227e-09`) as the representative central estimate.
 - Do not present a single absolute age as if the substitution rate were directly measured in Desmognathus.
 

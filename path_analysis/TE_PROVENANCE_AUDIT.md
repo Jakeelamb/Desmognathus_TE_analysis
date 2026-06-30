@@ -1,14 +1,14 @@
 # TE Provenance Audit
 
-This document audits the upstream provenance chain for the frozen TE summary
+This document audits the upstream provenance chain for the repo-local TE summary
 tables currently used in `path_analysis/`.
 
 This is not a rerun log. It is a transparency map answering a narrower
 question:
 
 How much of the TE pipeline is still locally inspectable from raw or
-near-raw staged inputs through the summary tables that feed the paper and the
-phylogenetic path-analysis workflow?
+near-raw staged inputs through the summary tables that feed the comparative
+and phylogenetic path-analysis workflows?
 
 ## Bottom Line
 
@@ -86,7 +86,9 @@ Observed local evidence:
   - `SRX19953421_Trinity.align`
   - `SRX19953983_Trinity.align`
   - `SRX19958874_Trinity.align`
-- the script is written to skip SRX ids not found in the lookup table
+- the script explicitly excludes only the four documented out-of-scope SRX ids
+  not found in the lookup table; any new unmapped `.align` file is a hard
+  failure
 
 Observed outputs:
 
@@ -96,9 +98,9 @@ Observed outputs:
 Assessment:
 
 - local provenance is moderately strong
-- the raw staged `.align` inputs and merged output are present, but the extra
-  unmapped `.align` files should be treated as out-of-scope until explicitly
-  reconciled with the lookup table
+- the raw staged `.align` inputs and merged output are present, and the extra
+  unmapped `.align` files are treated as documented out-of-scope inputs until
+  explicitly reconciled with the lookup table
 
 ### 3. Divergence summary layer
 
@@ -210,7 +212,7 @@ Resolved generation path:
 
 Assessment:
 
-- local provenance is now strong enough for manuscript use
+- local provenance is now strong enough for research use
 - the exact construction path is documented and reproducible from local files
   without rerunning upstream HPC work
 - the remaining cleanup question is organizational rather than methodological:
@@ -231,15 +233,15 @@ Assessment:
 - `repeatmasker_detailed_classification_combined.csv`
   because extra unmapped `.align` files are present in the raw input directory
 
-## Implications For Paper Use
+## Implications For Analysis Use
 
-The current TE source tables are usable for the paper and for phylogenetic path
-analysis, but the manuscript methods should reflect the true confidence level of
-each upstream step.
+The current TE source tables are usable for downstream comparative and
+phylogenetic path analysis, but the methods notes should reflect the true
+confidence level of each upstream step.
 
 Practical interpretation:
 
 - the order-breakdown, diversity, divergence, and ectopic filtered files now
   all have a defensible local provenance chain
 - the remaining TE-methods cleanup is optional housekeeping rather than a
-  blocker for paper use
+  blocker for current analysis use

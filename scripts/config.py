@@ -4,8 +4,7 @@ Centralized configuration management for the Desmognathus TE analysis project.
 This module provides consistent path handling across all Python scripts by:
 1. Auto-detecting the project root directory
 2. Loading paths from the canonical root `paths.yaml`
-3. Falling back to `config/paths.yaml` for legacy callers
-4. Providing Path objects for all configured directories
+3. Providing Path objects for all configured directories
 
 Usage:
     from config import paths, PROJECT_ROOT
@@ -27,28 +26,23 @@ def find_project_root() -> Path:
     Find the project root by looking for the canonical path configuration.
 
     Searches upward from this file's location until finding a directory
-    containing `paths.yaml` or `config/paths.yaml`.
+    containing `paths.yaml`.
 
     Returns:
         Path to the project root directory.
 
     Raises:
-        FileNotFoundError: If no compatible path configuration can be found.
+        FileNotFoundError: If no canonical path configuration can be found.
     """
     current = Path(__file__).resolve().parent
 
     while current != current.parent:
-        if (current / "paths.yaml").exists() or (current / "config" / "paths.yaml").exists():
+        if (current / "paths.yaml").exists():
             return current
         current = current.parent
 
-    # Fallback: check if we're in the scripts directory
-    scripts_parent = Path(__file__).resolve().parent.parent
-    if (scripts_parent / "paths.yaml").exists() or (scripts_parent / "config" / "paths.yaml").exists():
-        return scripts_parent
-
     raise FileNotFoundError(
-        "Could not find project root (no paths.yaml or config/paths.yaml found). "
+        "Could not find project root (no paths.yaml found). "
         "Ensure you're running from within the project directory."
     )
 
@@ -134,17 +128,11 @@ def load_config(config_path: Path = None) -> PathConfig:
     if config_path is None:
         root = find_project_root()
         config_path = root / "paths.yaml"
-        if not config_path.exists():
-            config_path = root / "config" / "paths.yaml"
     else:
         config_path = Path(config_path)
+        root = find_project_root()
         if not config_path.is_absolute():
-            root = find_project_root()
             config_path = root / config_path
-        if config_path.parent.name == "config":
-            root = config_path.parent.parent
-        else:
-            root = config_path.parent
 
     with open(config_path, 'r') as f:
         config_dict = yaml.safe_load(f)

@@ -1,5 +1,4 @@
 edge_case_type,species,source_file,detail,audit_implication
-ectopic_missing_ratio,aureatus,results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv,sequence=JAUEJG010675316.1_De,excluded from ectopic_n_elements and mean_ratio summaries because ratio is missing
 ectopic_unknown_complete_flag,anicetus,results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv,sequence=JAVSBX011226549.1_De,excluded from ectopic_complete_fraction denominator because Complete is unknown
 no_ectopic_panel_support,catahoula,results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv,absent from stored ectopic source table,eligible for TE core panel but excluded from ectopic-extended panels
 no_ectopic_panel_support,kanawha,results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv,absent from stored ectopic source table,eligible for TE core panel but excluded from ectopic-extended panels

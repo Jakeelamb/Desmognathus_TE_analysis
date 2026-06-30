@@ -20,9 +20,30 @@ This document maps the conceptual nodes in the path-analysis plan to the current
 | DNA loss proxy | `weighted_te_deletions_p90` | aggregated from `results/data/divergence/divergence_summary_statistics_by_species.csv` | Available | Current species-level deletion summary; better treated as an alternative mechanistic summary rather than automatically combined with turnover in small models. |
 | Ectopic recombination proxy | `ectopic_mean_ratio`, `ectopic_median_ratio` | aggregated from `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv` | Available | Species-level summary of the terminal:internal depth ratio. Keep mechanistic interpretation cautious. |
 | Ectopic support | `ectopic_n_rows_total`, `ectopic_n_elements`, `ectopic_n_complete_known`, `ectopic_complete_fraction` | same as above | Available | `ectopic_n_rows_total` counts all stored rows, `ectopic_n_elements` counts usable non-missing ratio rows, and `ectopic_complete_fraction` is calculated only over known `yes`/`no` completion states. |
-| Body size | `body_size_proxy_mm` | `path_analysis/data/derived/organismal_traits_curated.csv` | Available | Current manuscript-facing size proxy with confidence and provenance tracking. |
+| Body size | `body_size_proxy_mm` | `path_analysis/data/derived/organismal_traits_curated.csv` | Available | Current analysis-facing size proxy with confidence and provenance tracking. |
 | Development mode | `development_mode` | same as above | Available | Currently the cleanest metamorphosis/direct-development axis. |
 | Lifestyle / aquaticity | `aquaticity_index`, `microhabitat_class` | same as above | Available | Curated ecological covariates now staged for organismal-augmented models. |
+
+## Cell And Nucleus Measurement Formulas
+
+The path-analysis layer treats the imported CellProfiler/YOLO tables as the
+authoritative measurement snapshots. When those snapshots are rebuilt by
+`path_analysis/scripts/pull_cellprofiler_estimates.py`, the following formulas
+and units should hold:
+
+| Quantity | Formula / unit | Notes |
+|---|---|---|
+| Cell area | `cell_area_um2`, square micrometers | Median per species in `morph_cell_area_um2`; requires a linked strict cell mask. |
+| Nucleus area | `nuc_area_um2`, square micrometers | Median per species in `morph_nucleus_area_um2`; requires a linked strict nucleus mask. |
+| Cytoplasm area | `cell_area_um2 - nuc_area_um2`, square micrometers | Imported as `morph_cytoplasm_area_um2` when upstream exports it. |
+| N:C ratio | `nuc_area_um2 / cell_area_um2` | Imported as `morph_nc_ratio`; do not model it alongside both numerator and denominator. |
+| Integrated optical density | `iod` / `nuc_iod`, upstream calibrated intensity units | Used only through the imported genome-size reconstruction snapshot. |
+| Mean optical density | `iod / area_px` or upstream `mean_od` when exported | Requires upstream image-calibration metadata and thresholding state. |
+
+Per-image traceability belongs in the imported sidecar tables
+`cellprofiler_linked_genome_image_trace.csv` and morphology image-trace outputs,
+including source image, mask, tile manifest, run manifest, support tier, and
+hash fields where available.
 
 ## Deferred Variables
 

@@ -36,13 +36,18 @@ required_packages <- c(
   "yaml"          # Config loading
 )
 
-# Install/load packages
-invisible(lapply(required_packages, function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg, repos = "https://cloud.r-project.org")
-  }
-  library(pkg, character.only = TRUE)
-}))
+missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing_packages) > 0) {
+  stop(
+    "Missing required R packages: ",
+    paste(missing_packages, collapse = ", "),
+    ". Update the Dusky environment instead of installing packages at runtime."
+  )
+}
+invisible(lapply(required_packages, library, character.only = TRUE))
+
+RNG_SEED <- 20260310
+set.seed(RNG_SEED)
 
 # --- Configuration ---
 project_root <- find_project_root(script_dir)
@@ -492,6 +497,8 @@ permanova_summary <- data.frame(
                "Superfamily_BrayCurtis", "Superfamily_Euclidean_CLR"),
   distance_space = c("bray", "clr_euclidean", "bray", "clr_euclidean"),
   clade_scheme = "curated_manual_with_small_named_collapsed_to_other",
+  rng_seed = RNG_SEED,
+  permutations = 999,
   R2 = c(
     order_permanova_bray$R2[1],
     order_permanova_eucl$R2[1],
@@ -539,11 +546,13 @@ write_csv(species_clades, file.path(output_data_dir, "species_clade_assignments.
 message("Saved clade assignments")
 
 if (exists("order_pairwise") && nrow(order_pairwise) > 0) {
+  order_pairwise <- order_pairwise %>% mutate(rng_seed = RNG_SEED, permutations = 999)
   write_csv(order_pairwise, file.path(output_data_dir, "permanova_order_pairwise.csv"))
   message("Saved order pairwise PERMANOVA results")
 }
 
 if (exists("superfamily_pairwise") && nrow(superfamily_pairwise) > 0) {
+  superfamily_pairwise <- superfamily_pairwise %>% mutate(rng_seed = RNG_SEED, permutations = 999)
   write_csv(superfamily_pairwise, file.path(output_data_dir, "permanova_superfamily_pairwise.csv"))
   message("Saved superfamily pairwise PERMANOVA results")
 }

@@ -24,7 +24,7 @@ are robust to single-species removal and named-clade jackknife exclusion.
 - Winner retained across all runs: `31 / 31` (1.000)
 - Leave-one-species-out retention: `27 / 27` (1.000)
 - Clade-jackknife retention: `4 / 4` (1.000)
-- Alternative winners observed: `1`
+- Alternative winners observed: `0`
 - Median winner margin (delta CICc to runner-up): `28.966`
 
 Tracked edge stability:

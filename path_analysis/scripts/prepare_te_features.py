@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -20,6 +21,32 @@ DIVERGENCE_FILE = RESULTS_DATA / "divergence" / "divergence_summary_statistics_b
 ECTOPIC_FILE = RESULTS_DATA / "ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv"
 
 OUTPUT_FILE = DERIVED_DIR / "te_path_features.csv"
+
+
+def rel(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(PROJECT_ROOT.resolve()))
+    except ValueError:
+        return str(path)
+
+
+def require_input_files(required_files: dict[str, Path]) -> None:
+    missing = [(label, path) for label, path in required_files.items() if not path.exists()]
+    if not missing:
+        return
+
+    lines = [
+        "Missing generated inputs required for TE path features:",
+        *[f"- {label}: {rel(path)}" for label, path in missing],
+        "",
+        "Regenerate the TE feature prerequisites in this order:",
+        "- scripts/processing/dnaPipe.py",
+        "- scripts/processing/diversity_stats.py",
+        "- scripts/processing/repeatmask.py",
+        "- scripts/processing/divergence.py",
+        "- scripts/processing/ec.py",
+    ]
+    raise FileNotFoundError("\n".join(lines))
 
 
 def sha256_for_file(path: Path) -> str:
@@ -194,6 +221,14 @@ def load_ectopic_features() -> pd.DataFrame:
 
 def main() -> None:
     DERIVED_DIR.mkdir(parents=True, exist_ok=True)
+    require_input_files(
+        {
+            "dnaPipeTE order breakdown": ORDER_FILE,
+            "order diversity stats": ORDER_DIVERSITY_FILE,
+            "divergence summary": DIVERGENCE_FILE,
+            "ectopic recombination filtered summary": ECTOPIC_FILE,
+        }
+    )
 
     order = load_order_features()
     diversity = load_order_diversity()
@@ -230,4 +265,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(1)

@@ -162,7 +162,7 @@ def build_run_manifest(args: argparse.Namespace, rows: list[dict[str, str]], git
         "gpu_patch_batch_size": args.gpu_patch_batch_size,
         "cpu_tile_batch_images": args.cpu_tile_batch_images,
         "cpu_patch_batch_size": args.cpu_patch_batch_size,
-        "traceability_note": "Optimized publication runner preserves tile manifests, masks, and measurement CSVs while allowing crop suppression for throughput.",
+        "traceability_note": "Optimized analysis runner preserves tile manifests, masks, and measurement CSVs while allowing crop suppression for throughput.",
         "dry_run": args.dry_run,
     }
 

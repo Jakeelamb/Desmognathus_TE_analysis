@@ -24,7 +24,7 @@ locate_r_script_dir <- function(default = getwd()) {
 find_project_root <- function(start_dir = NULL) {
   current <- normalizePath(start_dir %||% locate_r_script_dir(), mustWork = FALSE)
   for (i in seq_len(12)) {
-    if (file.exists(file.path(current, "paths.yaml")) || file.exists(file.path(current, "config", "paths.yaml"))) {
+    if (file.exists(file.path(current, "paths.yaml"))) {
       return(current)
     }
     parent <- dirname(current)
@@ -34,7 +34,7 @@ find_project_root <- function(start_dir = NULL) {
     current <- parent
   }
 
-  stop("Could not find project root containing paths.yaml or config/paths.yaml", call. = FALSE)
+  stop("Could not find project root containing paths.yaml", call. = FALSE)
 }
 
 
@@ -42,7 +42,7 @@ load_project_config <- function(project_root = NULL) {
   project_root <- project_root %||% find_project_root()
   config_file <- file.path(project_root, "paths.yaml")
   if (!file.exists(config_file)) {
-    config_file <- file.path(project_root, "config", "paths.yaml")
+    stop("Could not find root paths.yaml at ", config_file, call. = FALSE)
   }
   config <- yaml::read_yaml(config_file)
   attr(config, "config_file") <- config_file

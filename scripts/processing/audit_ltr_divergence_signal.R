@@ -34,9 +34,11 @@ path_input_file <- file.path(project_root, "path_analysis", "data", "derived", "
 pairwise_path <- file.path(results_data_dir, "ltr_age", "ltr_age_pairwise_divergence.csv")
 species_path <- file.path(results_data_dir, "ltr_age", "ltr_age_species_summary.csv")
 output_dir <- file.path(results_data_dir, "ltr_age")
-signal_note_path <- file.path(project_root, "LTR_DIVERGENCE_SIGNAL_AUDIT.md")
+report_dir <- file.path(project_root, "results", "reports")
+signal_note_path <- file.path(report_dir, "LTR_DIVERGENCE_SIGNAL_AUDIT.md")
 
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
 
 pairwise <- read_csv(pairwise_path, show_col_types = FALSE)
 species_summary <- read_csv(species_path, show_col_types = FALSE)

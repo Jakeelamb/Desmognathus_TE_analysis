@@ -24,7 +24,8 @@ DNAPIPETE_ORDER_FILE = PROJECT_ROOT / "results" / "data" / "dnaPipeTE_order_brea
 DNAPIPETE_SUPERFAMILY_FILE = PROJECT_ROOT / "results" / "data" / "dnaPipeTE_superfamily_breakdown.csv"
 REPEATMASKER_RAW_FILE = PROJECT_ROOT / "results" / "data" / "merged_repeatmasker_data.csv"
 OUTPUT_DIR = PROJECT_ROOT / "results" / "data" / "cross_method"
-NOTE_FILE = PROJECT_ROOT / "CROSS_METHOD_CONCORDANCE_AUDIT.md"
+REPORT_DIR = PROJECT_ROOT / "results" / "reports"
+NOTE_FILE = REPORT_DIR / "CROSS_METHOD_CONCORDANCE_AUDIT.md"
 
 
 ORDER_COLUMNS = ["DIRS", "Helitron", "LINE", "LTR", "Maverick", "PLE", "SINE", "TIR", "YR"]
@@ -346,6 +347,7 @@ def write_note(order_df: pd.DataFrame, superfamily_df: pd.DataFrame, disagreemen
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
     order_dna = standardize_wide(pd.read_csv(DNAPIPETE_ORDER_FILE))
     superfamily_dna = standardize_wide(pd.read_csv(DNAPIPETE_SUPERFAMILY_FILE))

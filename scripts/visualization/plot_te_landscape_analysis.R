@@ -3,7 +3,7 @@
 # TE_LANDSCAPE_PLOTS.R
 # 
 # Description: Creates visualizations for Transposable Element landscape analysis
-# using the current frozen dnaPipeTE breakdown tables in results/data.
+# using the current repo-local dnaPipeTE breakdown tables in results/data.
 #
 # Input:
 #   - CSV files in results/data/
@@ -41,7 +41,7 @@ plot_dir <- file.path(figures_dir, "te_landscape")
 # Create output directory for plots
 dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
 
-# Check if frozen TE data directory exists
+# Check if the TE data directory exists
 if (!dir.exists(data_dir)) {
   stop(paste("TE data directory", data_dir, "not found."))
 }
@@ -51,12 +51,12 @@ Class <- read.csv(file.path(data_dir, "dnaPipeTE_class_breakdown.csv"))
 Order <- read.csv(file.path(data_dir, "dnaPipeTE_order_breakdown.csv"))
 Superfamily <- read.csv(file.path(data_dir, "dnaPipeTE_superfamily_breakdown.csv"))
 
-# Standardize the leading species column across the frozen tables.
+# Standardize the leading species column across the repo-local tables.
 colnames(Class)[1] <- "Species"
 colnames(Order)[1] <- "Species"
 colnames(Superfamily)[1] <- "Species"
 
-# Derive legacy helper tables on the fly from the current class breakdown.
+# Derive compact helper tables on the fly from the current class breakdown.
 dna_vs_retro <- Class %>%
   transmute(
     Species = Species,
@@ -83,7 +83,7 @@ DNA_superfamilies <- c("Academ", "CACTA", "Chapaev", "Cyrypton", "DIRS", "Dada",
 
 
 ### GGplot template
-theme_publication <- theme_minimal() +
+theme_analysis <- theme_minimal() +
   theme(
     text = element_text(family = "serif", size = 12),
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
@@ -116,7 +116,7 @@ plot <- ggplot(dvr_processed, aes(x = Species, y = Percentage, fill = Category))
     x = "Species",
     y = "Percentage (%)"
   ) +
-  theme_publication +
+  theme_analysis +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
     plot.margin = margin(t = 20, r = 20, b = 50, l = 20, unit = "pt"),
@@ -371,7 +371,7 @@ plot <- ggplot(ku_processed, aes(x = Species, y = Percentage, fill = Category)) 
     x = "Species",
     y = "Percentage (%)"
   ) +
-  theme_publication +
+  theme_analysis +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
     plot.margin = margin(t = 20, r = 20, b = 50, l = 20, unit = "pt"),

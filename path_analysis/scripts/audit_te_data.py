@@ -363,7 +363,7 @@ def main() -> None:
     simpson_ratio = diversity["Simpson_Diversity"] / gini_simpson
     simpson_ratio_min = float(simpson_ratio.min())
     simpson_ratio_max = float(simpson_ratio.max())
-    simpson_ratio_target = 100.0 / 99.0
+    simpson_ratio_target = 1.0
 
     record_check(
         summary_rows,
@@ -379,16 +379,15 @@ def main() -> None:
         f"max_abs_diff={pielou_diff:.3g}",
         pielou_diff,
     )
-    simpson_status = "warn"
+    simpson_status = "pass"
     if abs(simpson_ratio_min - simpson_ratio_target) > 1e-12 or abs(simpson_ratio_max - simpson_ratio_target) > 1e-12:
         simpson_status = "fail"
     record_check(
         summary_rows,
-        "order_simpson_definition_is_corrected_vs_raw_gini_simpson",
+        "order_simpson_matches_raw_gini_simpson",
         simpson_status,
         (
-            "stored Simpson equals raw_gini_simpson * 100/99 across all species; "
-            "document the correction if this metric is reported"
+            "stored Simpson equals raw Gini-Simpson from the current order table across all species"
         ),
         f"{simpson_ratio_min:.12f}..{simpson_ratio_max:.12f}",
     )
@@ -412,7 +411,7 @@ def main() -> None:
     record_check(
         summary_rows,
         "divergence_threshold_p90_order_table_is_complete",
-        "pass" if divergence_species == 34 and divergence_orders == 9 and divergence_dupes == 0 and divergence_missing == 0 else "fail",
+        "pass" if divergence_species == 34 and divergence_orders == 10 and divergence_dupes == 0 and divergence_missing == 0 else "fail",
         (
             f"species={divergence_species}; orders={divergence_orders}; "
             f"duplicates={divergence_dupes}; missing_metric_cells={divergence_missing}"
@@ -658,27 +657,27 @@ def main() -> None:
         len(extended_missing),
     )
 
-    old_vs_panel_checks = [
+    overlap_vs_panel_checks = [
         ("dataset_te_genome.csv", PANELS_DIR / "te_genome_primary_mediumplus.csv"),
         ("dataset_te_genome_ectopic.csv", PANELS_DIR / "te_genome_ectopic_primary_mediumplus.csv"),
         ("dataset_te_genome_morphology.csv", PANELS_DIR / "te_genome_morphology_primary_mediumplus.csv"),
     ]
-    old_vs_panel_failures = []
-    for old_name, panel_path in old_vs_panel_checks:
-        old_species = set(pd.read_csv(DERIVED_DIR / old_name)["species"])
+    overlap_vs_panel_failures = []
+    for overlap_name, panel_path in overlap_vs_panel_checks:
+        overlap_species = set(pd.read_csv(DERIVED_DIR / overlap_name)["species"])
         panel_species = set(pd.read_csv(panel_path)["species"])
-        if old_species != panel_species:
-            old_vs_panel_failures.append(old_name)
+        if overlap_species != panel_species:
+            overlap_vs_panel_failures.append(overlap_name)
     record_check(
         summary_rows,
-        "legacy_overlap_datasets_match_current_mediumplus_species_sets",
-        "pass" if not old_vs_panel_failures else "warn",
+        "overlap_datasets_match_current_mediumplus_species_sets",
+        "pass" if not overlap_vs_panel_failures else "warn",
         (
-            "legacy overlap dataset species sets matched current panel species sets"
-            if not old_vs_panel_failures
-            else f"mismatched datasets={','.join(old_vs_panel_failures)}"
+            "overlap dataset species sets matched current panel species sets"
+            if not overlap_vs_panel_failures
+            else f"mismatched datasets={','.join(overlap_vs_panel_failures)}"
         ),
-        len(old_vs_panel_checks) - len(old_vs_panel_failures),
+        len(overlap_vs_panel_checks) - len(overlap_vs_panel_failures),
     )
 
     summary = pd.DataFrame(summary_rows)

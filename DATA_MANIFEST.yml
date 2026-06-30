@@ -1,0 +1,151 @@
+version: 1
+description: >
+  Share-facing data contract for the Desmognathus TE analysis repository.
+  Large sequencing/genome inputs remain local. Generated outputs are rebuilt
+  under results/ and interim/ and are not source artifacts.
+
+required_local_inputs:
+  - path: input_data/lookup_table.txt
+    kind: table
+    status: local_required
+    description: Species, SRA accession, and genome accession mapping.
+  - path: input_data/phylogeny/desmo900dated_test.tre
+    kind: tree
+    status: local_required
+    description: Dated Desmognathus phylogeny used by comparative scripts.
+  - path: input_data/dnaPipeTE/*_reads_per_component_and_annotation
+    kind: directory_glob
+    status: local_required
+    description: dnaPipeTE per-sample classification outputs.
+  - path: input_data/repeatmasker/*.align
+    kind: directory_glob
+    status: local_required
+    description: RepeatMasker alignment outputs for TE divergence processing.
+  - path: input_data/ectopic_recombination/GCA_*_tabout.csv
+    kind: directory_glob
+    status: local_required
+    description: TEsorter/LTR annotation tables for ectopic-recombination summaries.
+  - path: input_data/ectopic_recombination/*.depth.txt
+    kind: directory_glob
+    status: local_required_for_ectopic_depth
+    description: Per-element depth files consumed by scripts/processing/ec.py.
+
+path_analysis_imports:
+  - path: path_analysis/data/external/derived/cellprofiler_final_species_results.csv
+    kind: imported_snapshot
+    status: required_for_shareable_path_analysis
+    description: Species-level genome-size bundle imported from CellProfiler/YOLO outputs.
+  - path: path_analysis/data/external/derived/cellprofiler_species_morphology_summary.csv
+    kind: imported_snapshot
+    status: required_for_shareable_path_analysis
+    description: Species-level linked cell/nucleus morphology summary.
+  - path: path_analysis/data/external/derived/cellprofiler_linked_genome_image_trace.csv
+    kind: imported_sidecar
+    status: required_for_image_traceability
+    description: Per-image source/mask/tile/run traceability for genome estimates.
+  - path: path_analysis/data/external/derived/cellprofiler_genome_state_summary.csv
+    kind: imported_sidecar
+    status: required_for_genome_reconstruction_audit
+    description: State-level support and reconstruction metadata.
+  - path: path_analysis/data/external/derived/cellprofiler_final_species_results_reconstruction.json
+    kind: imported_sidecar
+    status: required_for_genome_reconstruction_audit
+    description: Machine-readable reconstruction rule and hashes for the species genome-size bundle.
+  - path: path_analysis/data/external/derived/cellprofiler_species_morphology_image_trace.csv
+    kind: imported_sidecar
+    status: required_for_image_traceability
+    description: Per-image source/mask/tile/run traceability for linked morphology measurements.
+  - path: path_analysis/data/external/derived/cellprofiler_traceability_audit_summary.csv
+    kind: imported_sidecar
+    status: required_for_image_traceability
+    description: Compact source-image, tile-manifest, mask, and ROI retention summary.
+  - path: path_analysis/data/external/derived/cellprofiler_traceability_audit_gaps.csv
+    kind: imported_sidecar
+    status: required_for_image_traceability
+    description: Gap table for missing CellProfiler trace artifacts.
+  - path: path_analysis/data/external/derived/cellprofiler_source_discovery.json
+    kind: imported_sidecar
+    status: required_for_image_traceability
+    description: Source files and active CellProfiler run tags used for the imported snapshots.
+
+tracked_small_external_snapshots:
+  - path: path_analysis/data/external/raw/Pyron_Beamer_conanti_fuscus_Appendix_S1.csv
+    kind: external_raw_snapshot
+    status: tracked_requires_license_and_sensitivity_review
+    description: Specimen-level external morphometric/locality snapshot with county and coordinates.
+
+generated_outputs:
+  - path: results/
+    status: ignored_generated
+    description: Tables, figures, reports, and model outputs rebuilt by scripts.
+  - path: interim/
+    status: ignored_generated
+    description: Temporary processing state; scripts should not depend on stale contents.
+  - path: path_analysis/data/derived/
+    status: tracked_small_derived_or_rebuilt
+    description: Small analysis tables, panel definitions, and provenance audits rebuilt by path_analysis scripts.
+  - path: path_analysis/results/
+    status: ignored_generated
+    description: Path-model rankings, edge tables, and model figures rebuilt from panel CSVs when needed.
+
+workflow_steps:
+  - id: setup_check
+    command: scripts/run_in_dusky.sh python verify_setup.py
+    inputs:
+      - DATA_MANIFEST.yml
+      - paths.yaml
+      - input_data/
+      - path_analysis/data/external/derived/
+    outputs: []
+    mutates: false
+  - id: core_te_tables
+    command: scripts/run_in_dusky.sh python scripts/processing/dnaPipe.py && scripts/run_in_dusky.sh python scripts/processing/repeatmask.py && scripts/run_in_dusky.sh python scripts/processing/divergence.py && scripts/run_in_dusky.sh python scripts/processing/diversity_stats.py
+    inputs:
+      - input_data/dnaPipeTE/
+      - input_data/repeatmasker/
+      - input_data/lookup_table.txt
+    outputs:
+      - results/data/dnaPipeTE_order_breakdown.csv
+      - results/data/dnaPipeTE_superfamily_breakdown.csv
+      - results/data/repeatmasker_detailed_classification_combined.csv
+      - results/data/divergence/divergence_summary_statistics_by_species.csv
+      - results/data/diversity_order_stats.csv
+      - results/data/diversity_superfamily_stats.csv
+    mutates: true
+  - id: ectopic_tables
+    command: scripts/run_in_dusky.sh python scripts/processing/ec.py
+    inputs:
+      - input_data/ectopic_recombination/GCA_*_tabout.csv
+      - input_data/ectopic_recombination/*.depth.txt
+      - input_data/ectopic_recombination/combined_sequences.fasta.rexdb-metazoa.cls.tsv
+    outputs:
+      - results/data/ectopic_recombination_master.csv
+      - results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv
+    mutates: true
+  - id: cellprofiler_import
+    command: scripts/run_in_dusky.sh python path_analysis/scripts/pull_cellprofiler_estimates.py
+    inputs:
+      - ../cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/
+    outputs:
+      - path_analysis/data/external/derived/cellprofiler_final_species_results.csv
+      - path_analysis/data/external/derived/cellprofiler_species_morphology_summary.csv
+      - path_analysis/data/external/derived/cellprofiler_linked_genome_image_trace.csv
+      - path_analysis/data/external/derived/cellprofiler_species_morphology_image_trace.csv
+      - path_analysis/data/external/derived/cellprofiler_traceability_audit_summary.csv
+      - path_analysis/data/external/derived/cellprofiler_traceability_audit_gaps.csv
+    mutates: true
+  - id: path_analysis_tables
+    command: scripts/run_in_dusky.sh python path_analysis/scripts/build_master_dataset.py && scripts/run_in_dusky.sh python path_analysis/scripts/prepare_te_features.py && scripts/run_in_dusky.sh python path_analysis/scripts/prepare_curated_organismal_traits.py && scripts/run_in_dusky.sh Rscript path_analysis/scripts/build_phylogenetic_trait_imputation.R && scripts/run_in_dusky.sh python path_analysis/scripts/build_te_model_panel.py && scripts/run_in_dusky.sh python path_analysis/scripts/prepare_ltr_history_features.py && scripts/run_in_dusky.sh python path_analysis/scripts/build_path_input_master.py && scripts/run_in_dusky.sh python path_analysis/scripts/build_analysis_panels.py && scripts/run_in_dusky.sh python path_analysis/scripts/audit_source_traceability.py
+    inputs:
+      - results/data/
+      - input_data/phylogeny/desmo900dated_test.tre
+      - path_analysis/data/templates/
+      - path_analysis/data/external/
+    outputs:
+      - path_analysis/data/derived/master_species_table.csv
+      - path_analysis/data/derived/te_path_features.csv
+      - path_analysis/data/derived/path_input_master.csv
+      - path_analysis/data/derived/analysis_panel_summary.csv
+      - path_analysis/data/derived/analysis_species_readiness.csv
+      - path_analysis/data/derived/source_traceability_gaps.csv
+    mutates: true

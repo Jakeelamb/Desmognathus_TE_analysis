@@ -1,7 +1,7 @@
 # TE Diversity Canonicalization
 
 This document resolves the generation path for the TE diversity summary tables
-used by the paper-facing path-analysis layer and records the promotion of that
+used by the analysis-facing path-analysis layer and records the promotion of that
 path into the upstream processing script.
 
 It is intentionally non-destructive. No files in `results/data/` were replaced
@@ -77,14 +77,13 @@ comparison-threshold files, but not the canonical summary snapshots:
 - `results/data/diversity_order_stats.csv`
 - `results/data/diversity_superfamily_stats.csv`
 
-The legacy helper scripts found elsewhere in the repo are not the right writer
-for the current canonical files because they use the raw `1 - sum(p_i^2)`
-Simpson form rather than the corrected finite-sample-style definition used by
-the stored canonical tables.
+The removed ad hoc helper path is not the right writer for the current
+canonical files because it wrote an untracked `superfamily_proportions.csv`
+side path rather than the audited order/superfamily diversity snapshots.
 
 ## Current Recommendation
 
-Treat the diversity provenance issue as resolved for manuscript and
+Treat the diversity provenance issue as resolved for analysis and
 path-analysis use.
 
 Current safe operating rule:
@@ -93,6 +92,6 @@ Current safe operating rule:
 2. use `scripts/processing/diversity_stats.py` for future canonical diversity
    generation
 3. use `path_analysis/scripts/build_canonical_diversity_tables.py` when you
-   want a non-destructive reconstruction audit against the frozen snapshots
+   want a non-destructive reconstruction audit against the repo-local snapshots
 4. treat the old standalone diversity-helper path as retired; the repo now
    keeps only the canonical writer and the non-destructive audit builder

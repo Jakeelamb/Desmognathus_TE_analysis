@@ -40,10 +40,6 @@ if (!file.exists(tree_file)) {
 }
 
 traits_file <- file.path(results_data_dir, "dnaPipeTE_superfamily_breakdown.csv")
-if (!file.exists(traits_file)) {
-  legacy_traits_dir <- resolve_config_path(project_root, config$data$processed$diversity, "data/processed/diversity")
-  traits_file <- file.path(legacy_traits_dir, "superfamily_proportions.csv")
-}
 
 output_file <- file.path(output_dir, "phylogenetic_signal_results.csv")
 

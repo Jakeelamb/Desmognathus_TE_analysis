@@ -3,7 +3,7 @@
 
 This script is intentionally non-destructive. It reconstructs candidate
 `diversity_order_stats.csv` and `diversity_superfamily_stats.csv` tables from
-the locally frozen TE breakdown tables plus the threshold `0.0` metrics written
+the repo-local TE breakdown tables plus the threshold `0.0` metrics written
 by `scripts/processing/diversity_stats.py`, then audits the candidates against
 the current `results/data/` snapshots.
 """

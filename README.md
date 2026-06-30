@@ -1,25 +1,17 @@
 # Desmognathus TE Analysis
 
-Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, BM/OU modeling), a sequence-based paired-LTR divergence branch for insertion-age inference, ectopic recombination analysis, and diversity metrics — spanning 12 analysis stages with 30+ processing and visualization scripts in Python and R.
+Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, phylogenetic signal summaries), a sequence-based paired-LTR divergence branch for insertion-age inference, ectopic recombination analysis, and diversity metrics.
 
-For the current paper-facing frozen snapshot, start with `PAPER_FREEZE_MANIFEST.md`.
-For the next queued validation and insight analyses, see `TODO.md`.
+Start here for the active TE workflow. Use `path_analysis/README.md` for the phylogenetic path-analysis workspace and `TODO.md` for the current analysis queue.
 
 ## Quick Start
 
 ```bash
-# Activate the conda environment
-source $HOME/miniconda3/etc/profile.d/conda.sh
-conda activate Dusky
-
 # Verify setup
-python verify_setup.py
+scripts/run_in_dusky.sh python verify_setup.py
 
-# Rebuild the tracked paper freeze manifest
-python scripts/processing/build_paper_freeze_manifest.py
-
-# Run a processing script
-python scripts/processing/dnaPipe.py
+# Run a core processing script
+scripts/run_in_dusky.sh python scripts/processing/dnaPipe.py
 ```
 
 ## Project Structure
@@ -35,9 +27,11 @@ python scripts/processing/dnaPipe.py
 │
 ├── results/                       # Analysis outputs (not tracked in git)
 │   ├── data/                      # Processed CSV files
-│   └── figures/                   # Generated visualizations
+│   ├── figures/                   # Generated visualizations
+│   └── reports/                   # Generated prose reports
 │
 ├── interim/                       # Intermediate processing files
+├── path_analysis/                 # Path-analysis workspace and derived tables
 │
 ├── scripts/
 │   ├── config.py                  # Centralized path configuration
@@ -57,7 +51,8 @@ python scripts/processing/dnaPipe.py
 │       ├── hierarchical_donut_TE_diversity.R
 │       └── plot_*.R
 │
-├── config/paths.yaml              # Path configuration
+├── paths.yaml                     # Path configuration
+├── DATA_MANIFEST.yml              # Share-facing local/tracked/generated data contract
 ├── Dusky.yml                      # Conda environment specification
 ├── verify_setup.py                # Setup verification script
 └── README.md
@@ -68,7 +63,8 @@ python scripts/processing/dnaPipe.py
 ### Using Conda (Recommended)
 
 ```bash
-# Install Miniconda if not already installed
+# Install Miniconda if needed. For audited environments, verify the installer
+# checksum from Anaconda's release page before running it.
 curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
 bash miniconda.sh -b -p $HOME/miniconda3
 
@@ -76,12 +72,14 @@ bash miniconda.sh -b -p $HOME/miniconda3
 source $HOME/miniconda3/etc/profile.d/conda.sh
 conda env create -f Dusky.yml
 
-# Activate the environment
-conda activate Dusky
-
 # Verify installation
-python verify_setup.py
+scripts/run_in_dusky.sh python verify_setup.py
 ```
+
+Use `scripts/run_in_dusky.sh <command>` for repo commands even if you normally
+activate Conda interactively. It prepends `$CONDA_PREFIX/bin` before execution,
+which prevents shell PATH leakage from resolving system Python or R instead of
+the `Dusky` environment.
 
 ### Environment Contents
 
@@ -102,6 +100,10 @@ Input data is not tracked in git due to size. Required files:
 | `input_data/ectopic_recombination/` | `GCA_*_tabout.csv`, coverage files | TEsorter output |
 | `input_data/lookup_table.txt` | Species-SRA-Genome mapping | Manual |
 
+See `DATA_MANIFEST.yml` for the share-facing distinction between local
+required inputs, imported CellProfiler snapshots, tracked small external
+snapshots, and generated outputs.
+
 ## Processing Workflows
 
 ### 1. dnaPipeTE Processing
@@ -109,7 +111,7 @@ Input data is not tracked in git due to size. Required files:
 Classifies TEs from dnaPipeTE output into Class/Order/Superfamily.
 
 ```bash
-python scripts/processing/dnaPipe.py
+scripts/run_in_dusky.sh python scripts/processing/dnaPipe.py
 ```
 
 **Outputs:**
@@ -123,7 +125,7 @@ python scripts/processing/dnaPipe.py
 Parses RepeatMasker alignment files and merges with dnaPipeTE classifications.
 
 ```bash
-python scripts/processing/repeatmask.py
+scripts/run_in_dusky.sh python scripts/processing/repeatmask.py
 ```
 
 **Outputs:**
@@ -135,17 +137,17 @@ python scripts/processing/repeatmask.py
 Analyzes LTR depth ratios to identify potential ectopic recombination.
 
 ```bash
-python scripts/processing/ec.py
+scripts/run_in_dusky.sh python scripts/processing/ec.py
 ```
 
 **Outputs:**
 - `results/data/ectopic_recombination_master.csv`
 - `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
 
-The paper-facing visualization step for this branch is:
+The analysis visualization step for this branch is:
 
 ```bash
-Rscript scripts/visualization/plot_ectopic_recombination.R
+scripts/run_in_dusky.sh Rscript scripts/visualization/plot_ectopic_recombination.R
 ```
 
 That script reads the canonical filtered ectopic table directly and writes:
@@ -158,7 +160,7 @@ That script reads the canonical filtered ectopic table directly and writes:
 Calculates sequence divergence metrics grouped by TE classification.
 
 ```bash
-python scripts/processing/divergence.py
+scripts/run_in_dusky.sh python scripts/processing/divergence.py
 ```
 
 **Outputs:**
@@ -171,7 +173,7 @@ python scripts/processing/divergence.py
 Calculates Shannon, Simpson, and Pielou's evenness indices.
 
 ```bash
-python scripts/processing/diversity_stats.py
+scripts/run_in_dusky.sh python scripts/processing/diversity_stats.py
 ```
 
 **Outputs:**
@@ -186,7 +188,7 @@ For non-destructive verification of the existing canonical diversity snapshots,
 use:
 
 ```bash
-python path_analysis/scripts/build_canonical_diversity_tables.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_canonical_diversity_tables.py
 ```
 
 That script writes scratch candidates and an audit report under
@@ -198,7 +200,7 @@ files. See `path_analysis/TE_DIVERSITY_CANONICALIZATION.md`.
 Cleans and prepares phylogenetic tree for analysis.
 
 ```bash
-Rscript scripts/processing/clean_tree_phylo.R
+scripts/run_in_dusky.sh Rscript scripts/processing/clean_tree_phylo.R
 ```
 
 **Outputs:**
@@ -207,13 +209,13 @@ Rscript scripts/processing/clean_tree_phylo.R
 
 ### 7. PCA Analysis
 
-Runs the canonical compositional PCA workflow on the frozen TE breakdown
+Runs the canonical compositional PCA workflow on the current TE breakdown
 tables. This is intended as a supplementary ordination layer, not the primary
 comparative predictor block. See `TE_PCA_METHODS.md` for the exact filtering,
 zero-replacement, and CLR rules.
 
 ```bash
-Rscript scripts/processing/pca.R
+scripts/run_in_dusky.sh Rscript scripts/processing/pca.R
 ```
 
 **Outputs:**
@@ -230,36 +232,20 @@ Runs supplementary phylogenetic PCA from the exact CLR matrices written by the
 standard PCA workflow.
 
 ```bash
-Rscript scripts/processing/phylogenetic_pca_analysis.R
+scripts/run_in_dusky.sh Rscript scripts/processing/phylogenetic_pca_analysis.R
 ```
 
 **Outputs:**
 - `results/tables/pca/te_ppca_analysis_manifest.csv`
 
-## Paper Freeze
+## Generated Outputs
 
-The repo keeps `results/` out of git, so the current paper snapshot is captured
-by the tracked checksum inventories and freeze note rather than by versioning
-all generated outputs directly.
+Large rebuild products stay out of git. Scripts write tables and figures under
+`results/`, intermediate files under `interim/`, and generated prose reports
+under `results/reports/`. The tracked repo should contain source code,
+configuration, curated input templates, and small canonical derived tables, not
+local generated report artifacts.
 
-Rebuild the manifest with:
-
-```bash
-python scripts/processing/build_paper_freeze_manifest.py
-```
-
-Tracked freeze artifacts:
-- `PAPER_FREEZE_MANIFEST.md`
-- `paper_freeze/key_file_manifest.csv`
-- `paper_freeze/results_inventory.csv`
-- `paper_freeze/results_summary.csv`
-
-To build the manuscript-facing summary table and figure plan from the frozen
-primary results:
-
-```bash
-python scripts/processing/build_manuscript_assets.py
-```
 - `results/tables/pca/*_ppca_scores.csv`
 - `results/tables/pca/*_ppca_loadings.csv`
 - `results/figures/pca/*_ppca_scores_pc1_pc2.png`
@@ -267,10 +253,10 @@ python scripts/processing/build_manuscript_assets.py
 
 ### 9. Trait Evolution Modeling
 
-Compares Brownian Motion vs Ornstein-Uhlenbeck models for TE trait evolution using `geiger::fitContinuous()` with AICc model selection and ancestral state reconstruction via `phytools::fastAnc()`.
+Estimates phylogenetic signal for TE traits using Pagel's lambda, Blomberg's K with a fixed RNG seed, PIC dispersion, and root-state summaries.
 
 ```bash
-Rscript scripts/processing/trait_evolution.R
+scripts/run_in_dusky.sh Rscript scripts/processing/trait_evolution.R
 ```
 
 **Outputs:**
@@ -282,19 +268,17 @@ Rscript scripts/processing/trait_evolution.R
 Audits the paired-LTR substrate and, when local genome assemblies are present,
 computes true 5'/3' LTR sequence divergence directly from assembly coordinates.
 The default validated output is divergence rather than absolute age in years,
-because no substitution rate is imposed automatically. See `LTR_AGE_AUDIT.md`
-for workflow status, `LTR_DIVERGENCE_SIGNAL_AUDIT.md` for the current
-biological signal summary, and `LTR_SUBSTITUTION_RATE_CALIBRATION.md` for the
-primary-literature calibration window. The current interpretation note is
-tracked in `LTR_AGE_INSIGHTS.md`.
+because no substitution rate is imposed automatically. When regenerated locally,
+`results/reports/LTR_AGE_AUDIT.md` records workflow status.
+`LTR_SUBSTITUTION_RATE_CALIBRATION.md` records the primary-literature calibration
+window, and `LTR_AGE_INSIGHTS.md` records the current interpretation note.
 
 ```bash
 # Resolve or download the accession-linked genome assemblies when needed
-python scripts/processing/fetch_genome_assemblies.py --download
+scripts/run_in_dusky.sh python scripts/processing/fetch_genome_assemblies.py --download
 
 # Then run the local divergence audit/estimation
-conda activate Dusky
-python scripts/processing/ltr_age_estimation.py
+scripts/run_in_dusky.sh python scripts/processing/ltr_age_estimation.py
 ```
 
 **Outputs:**
@@ -304,13 +288,13 @@ python scripts/processing/ltr_age_estimation.py
 - `results/data/ltr_age/ltr_age_pairwise_divergence.csv`
 - `results/data/ltr_age/ltr_age_species_summary.csv`
 - `results/data/ltr_age/ltr_age_scaffold_extraction_summary.csv`
-- `LTR_AGE_AUDIT.md`
+- `results/reports/LTR_AGE_AUDIT.md`
 
 To convert those divergence outputs into literature-backed age sensitivities
 without changing the canonical divergence table:
 
 ```bash
-python scripts/processing/build_ltr_substitution_rate_calibration.py
+scripts/run_in_dusky.sh python scripts/processing/build_ltr_substitution_rate_calibration.py
 ```
 
 **Calibration outputs:**
@@ -319,6 +303,12 @@ python scripts/processing/build_ltr_substitution_rate_calibration.py
 - `results/data/ltr_age/ltr_age_species_summary_calibrated.csv`
 - `results/data/ltr_age/ltr_age_pairwise_divergence_calibrated.csv`
 - `LTR_SUBSTITUTION_RATE_CALIBRATION.md`
+
+Import the rebuilt LTR-history layer into the path-analysis workspace with:
+
+```bash
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_ltr_history_features.py
+```
 
 ### 11. PGLS Regression
 
@@ -329,7 +319,7 @@ p-values. See `COMPARATIVE_INFERENCE_AUDIT.md` for scope and interpretation
 limits.
 
 ```bash
-Rscript scripts/processing/pgls_analysis.R
+scripts/run_in_dusky.sh Rscript scripts/processing/pgls_analysis.R
 ```
 
 **Outputs:**
@@ -344,7 +334,7 @@ CLR-Euclidean distances, beta dispersion tests, and PCoA ordination. See
 `COMPARATIVE_INFERENCE_AUDIT.md` for the current audited interpretation.
 
 ```bash
-Rscript scripts/processing/permanova_analysis.R
+scripts/run_in_dusky.sh Rscript scripts/processing/permanova_analysis.R
 ```
 
 **Outputs:**
@@ -353,10 +343,9 @@ Rscript scripts/processing/permanova_analysis.R
 
 ## Configuration
 
-Path configuration is centralized in the repository-root `paths.yaml`, with
-`config/paths.yaml` retained as a compatibility mirror for older callers.
-Python scripts use `scripts/config.py`, and the rebuilt R helper layer resolves
-either location relative to the repository root.
+Path configuration is centralized in the repository-root `paths.yaml`. Python
+scripts use `scripts/config.py`, and R scripts use `scripts/R/path_config_utils.R`
+to resolve paths relative to the repository root.
 
 ```python
 # Python usage
@@ -380,7 +369,9 @@ Large data files are excluded from git tracking:
 - `results/` - Generated outputs
 - `interim/` - Intermediate files
 
-Only scripts, configuration, and documentation are tracked.
+Tracked files include scripts, configuration, documentation, source manifests,
+and small canonical derived/audit tables under `path_analysis/`. Large raw
+inputs and local generated rebuild products stay out of git.
 
 ## Troubleshooting
 
@@ -390,14 +381,14 @@ source $HOME/miniconda3/etc/profile.d/conda.sh
 ```
 
 ### Import errors
-Ensure you're in the Dusky environment:
+Run commands through the Dusky wrapper so `$CONDA_PREFIX/bin` is first on PATH:
 ```bash
-conda activate Dusky
+scripts/run_in_dusky.sh python -c "import pandas, matplotlib, scipy"
 ```
 
 ### Verify setup
 ```bash
-python verify_setup.py
+scripts/run_in_dusky.sh python verify_setup.py
 ```
 
 ## License

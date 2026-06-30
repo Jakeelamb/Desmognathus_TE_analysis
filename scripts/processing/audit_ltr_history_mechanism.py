@@ -22,7 +22,8 @@ LTR_HISTORY_PATH = PROJECT_ROOT / "path_analysis" / "data" / "derived" / "ltr_hi
 SPECTRUM_PATH = PROJECT_ROOT / "results" / "data" / "te_age_spectra" / "te_age_spectrum_metrics.csv"
 OUTPUT_DIR = PROJECT_ROOT / "results" / "data" / "ltr_history_mechanism"
 TESTS_PATH = OUTPUT_DIR / "ltr_history_mechanism_tests.csv"
-NOTE_PATH = PROJECT_ROOT / "LTR_HISTORY_MECHANISM_AUDIT.md"
+REPORT_DIR = PROJECT_ROOT / "results" / "reports"
+NOTE_PATH = REPORT_DIR / "LTR_HISTORY_MECHANISM_AUDIT.md"
 
 PREDICTORS = [
     ("ltr_history_median_k2p_distance", "paired_ltr_age"),
@@ -227,6 +228,7 @@ landscape looks.
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
     tests = build_tests()
     tests.to_csv(TESTS_PATH, index=False)
     write_note(tests)

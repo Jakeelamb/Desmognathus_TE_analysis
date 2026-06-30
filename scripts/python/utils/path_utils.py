@@ -25,7 +25,7 @@ def get_project_root():
     """
     current = Path(__file__).resolve().parent
     for candidate in [current, *current.parents]:
-        if (candidate / "paths.yaml").exists() or (candidate / "config" / "paths.yaml").exists():
+        if (candidate / "paths.yaml").exists():
             return candidate
     return Path(__file__).resolve().parent.parent.parent.parent
 
@@ -46,18 +46,11 @@ def load_config(config_path=None):
     """
     if config_path is None:
         project_root = get_project_root()
-        root_config = project_root / "paths.yaml"
-        legacy_config = project_root / "config" / "paths.yaml"
-        config_path = root_config if root_config.exists() else legacy_config
+        config_path = project_root / "paths.yaml"
     else:
         config_path = Path(config_path)
         if not config_path.is_absolute():
             config_path = get_project_root() / config_path
-        if not config_path.exists():
-            root_config = get_project_root() / "paths.yaml"
-            legacy_config = get_project_root() / "config" / "paths.yaml"
-            if config_path == root_config and legacy_config.exists():
-                config_path = legacy_config
     
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
@@ -73,7 +66,7 @@ def resolve_path(path_str, config_path=None):
     Parameters:
     -----------
     path_str : str
-        Path string to resolve (e.g., 'data.raw.fastq')
+        Path string to resolve (e.g., 'input_data.dnaPipeTE')
     config_path : str, optional
         Path to the configuration file
         

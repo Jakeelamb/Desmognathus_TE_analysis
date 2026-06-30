@@ -36,84 +36,58 @@ interim_dirs = {
 for dir_path in interim_dirs.values():
     dir_path.mkdir(parents=True, exist_ok=True)
     logging.info(f"Ensured directory exists: {dir_path}")
+    for stale_file in dir_path.glob("*.csv"):
+        stale_file.unlink()
+    logging.info(f"Cleared stale interim CSV files from: {dir_path}")
 
-# --- Check if interim processing can be skipped ---
-def check_interim_dir_populated(dir_path):
-    """Checks if a directory exists and contains at least one CSV file."""
-    if not os.path.exists(dir_path):
-        return False
-    try:
-        return any(f.endswith('.csv') for f in os.listdir(dir_path))
-    except OSError as e:
-        logging.warning(f"Could not check directory {dir_path}: {e}")
-        return False # Assume not populated if check fails
-
-skip_chunk_processing = all(check_interim_dir_populated(path) for path in interim_dirs.values())
-
-if skip_chunk_processing:
-    logging.info("Interim directories (class, order, superfamily) appear populated. Skipping chunk processing.")
-else:
-    logging.info(f"Starting processing of {input_file} into interim directories...")
-    # Read in the input file in chunks
-    try:
-        for i, chunk in enumerate(pd.read_csv(input_file, chunksize=CHUNK_SIZE, low_memory=False)):
-            logging.info(f"Processing chunk {i+1}")
+logging.info(f"Starting processing of {input_file} into interim directories...")
+try:
+    for i, chunk in enumerate(pd.read_csv(input_file, chunksize=CHUNK_SIZE, low_memory=False)):
+        logging.info(f"Processing chunk {i+1}")
 
             # Group by Class and write/append to CSV
-            logging.info("Processing Class groups...")
-            for name, group in chunk.groupby('Class'):
-                # Sanitize filename
-                if pd.isna(name):
-                    filename = "NaN_Class"
-                else:
-                    filename = str(name).replace('/', '_').replace('\\', '_')
-                class_file = os.path.join(interim_dirs["class"], f"{filename}.csv")
-                # Use mode 'a' for append and include header only if file doesn't exist or is empty
-                header = not os.path.exists(class_file) or os.path.getsize(class_file) == 0
-                group.to_csv(class_file, mode='a', header=header, index=False)
-            logging.info("Finished processing Class groups for this chunk.")
+        logging.info("Processing Class groups...")
+        for name, group in chunk.groupby('Class'):
+            if pd.isna(name):
+                filename = "NaN_Class"
+            else:
+                filename = str(name).replace('/', '_').replace('\\', '_')
+            class_file = os.path.join(interim_dirs["class"], f"{filename}.csv")
+            header = not os.path.exists(class_file) or os.path.getsize(class_file) == 0
+            group.to_csv(class_file, mode='a', header=header, index=False)
+        logging.info("Finished processing Class groups for this chunk.")
 
             # Group by Order and write/append to CSV
-            logging.info("Processing Order groups...")
-            for name, group in chunk.groupby('Order'):
-                # Handle potential NaN or invalid characters in filenames if necessary
-                if pd.isna(name):
-                    filename = "NaN_Order"
-                else:
-                    # Basic sanitization for filename
-                    filename = str(name).replace('/', '_').replace('\\', '_')
-                order_file = os.path.join(interim_dirs["order"], f"{filename}.csv")
-                header = not os.path.exists(order_file) or os.path.getsize(order_file) == 0
-                group.to_csv(order_file, mode='a', header=header, index=False)
-            logging.info("Finished processing Order groups for this chunk.")
+        logging.info("Processing Order groups...")
+        for name, group in chunk.groupby('Order'):
+            if pd.isna(name):
+                filename = "NaN_Order"
+            else:
+                filename = str(name).replace('/', '_').replace('\\', '_')
+            order_file = os.path.join(interim_dirs["order"], f"{filename}.csv")
+            header = not os.path.exists(order_file) or os.path.getsize(order_file) == 0
+            group.to_csv(order_file, mode='a', header=header, index=False)
+        logging.info("Finished processing Order groups for this chunk.")
 
             # Group by Superfamily and write/append to CSV
-            logging.info("Processing Superfamily groups...")
-            for name, group in chunk.groupby('Superfamily'):
-                if pd.isna(name):
-                    filename = "NaN_Superfamily"
-                else:
-                    # Basic sanitization for filename
-                    filename = str(name).replace('/', '_').replace('\\', '_')
-                superfamily_file = os.path.join(interim_dirs["superfamily"], f"{filename}.csv")
-                header = not os.path.exists(superfamily_file) or os.path.getsize(superfamily_file) == 0
-                group.to_csv(superfamily_file, mode='a', header=header, index=False)
-            logging.info("Finished processing Superfamily groups for this chunk.")
+        logging.info("Processing Superfamily groups...")
+        for name, group in chunk.groupby('Superfamily'):
+            if pd.isna(name):
+                filename = "NaN_Superfamily"
+            else:
+                filename = str(name).replace('/', '_').replace('\\', '_')
+            superfamily_file = os.path.join(interim_dirs["superfamily"], f"{filename}.csv")
+            header = not os.path.exists(superfamily_file) or os.path.getsize(superfamily_file) == 0
+            group.to_csv(superfamily_file, mode='a', header=header, index=False)
+        logging.info("Finished processing Superfamily groups for this chunk.")
+except FileNotFoundError:
+    logging.error(f"Error: Input file not found at {input_file}")
+    sys.exit(1)
+except Exception as e:
+    logging.error(f"An error occurred during chunk processing: {e}")
+    sys.exit(1)
 
-            # Optional: Consider if the early exit check logic needs adjustment or removal
-            # # if all(check_interim_dir_populated(path) for path in interim_dirs.values()): 
-            # #      logging.info("All interim directories are now populated based on current check. Exiting chunk processing early.")
-            # #      break 
-
-    # Move except clauses outside the loop, associated with the initial try
-    except FileNotFoundError:
-        logging.error(f"Error: Input file not found at {input_file}")
-        sys.exit(1)
-    except Exception as e:
-        logging.error(f"An error occurred during chunk processing: {e}")
-        sys.exit(1)
-
-    logging.info("Successfully completed processing and writing interim files.")
+logging.info("Successfully completed processing and writing interim files.")
 
 # --- Statistics Calculation --- (This part will always run)
 logging.info("Starting statistics calculation including species comparison...")
@@ -133,6 +107,7 @@ os.makedirs(STATS_OUTPUT_DIR, exist_ok=True)
 logging.info(f"Ensured statistics output directory exists: {STATS_OUTPUT_DIR}")
 
 all_stats = []
+stat_failures = []
 
 # Columns needed from interim files for statistics
 COLS_TO_LOAD = STAT_COLS + [FILTER_COL, SPECIES_COL]
@@ -275,12 +250,15 @@ for group_level, interim_dir in interim_dirs.items():
 
         except FileNotFoundError:
              logging.warning(f"Interim file vanished or unreadable: {file_path}. Skipping.") # Should not happen if listed
+             stat_failures.append(file_path)
         except pd.errors.EmptyDataError: # Catch if Dask reads an empty file successfully but finds no data
             logging.warning(f"Interim file is empty: {file_path}. Skipping.")
+            stat_failures.append(file_path)
         except Exception as e:
             logging.error(f"Error processing file {file_path} with Dask: {e}")
             import traceback
             traceback.print_exc() # Print detailed traceback for Dask errors
+            stat_failures.append(file_path)
 
 # Combine all statistics into a single DataFrame
 if all_stats:
@@ -300,4 +278,9 @@ if all_stats:
     except Exception as e:
         logging.error(f"Error saving statistics file: {e}")
 else:
-    logging.warning("No statistics were calculated. Output file will not be generated.")
+    logging.error("No statistics were calculated. Output file will not be generated.")
+    sys.exit(1)
+
+if stat_failures:
+    logging.error("Statistics failed for %d interim files.", len(stat_failures))
+    sys.exit(1)

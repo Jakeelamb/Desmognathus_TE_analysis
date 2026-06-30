@@ -25,7 +25,8 @@ MANIFEST_FILE = PROJECT_ROOT / "results" / "data" / "ltr_age" / "genome_assembly
 TE_FEATURE_FILE = PROJECT_ROOT / "path_analysis" / "data" / "derived" / "te_path_features.csv"
 LTR_HISTORY_FILE = PROJECT_ROOT / "path_analysis" / "data" / "derived" / "ltr_history_features.csv"
 OUTPUT_DIR = PROJECT_ROOT / "results" / "data" / "assembly_bias"
-NOTE_FILE = PROJECT_ROOT / "ASSEMBLY_BIAS_AUDIT.md"
+REPORT_DIR = PROJECT_ROOT / "results" / "reports"
+NOTE_FILE = REPORT_DIR / "ASSEMBLY_BIAS_AUDIT.md"
 
 
 TARGET_FEATURES = [
@@ -336,6 +337,7 @@ def write_note(metrics_df: pd.DataFrame, corr_df: pd.DataFrame, model_df: pd.Dat
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
     manifest, te, ltr = load_inputs()
     metrics_df = build_metrics_table(manifest)

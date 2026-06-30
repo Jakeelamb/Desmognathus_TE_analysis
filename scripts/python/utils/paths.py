@@ -12,14 +12,13 @@ def find_project_root(start: Optional[Path] = None) -> Path:
     """Find the nearest project root containing ``paths.yaml``."""
     current = (start or Path(__file__).resolve()).parent
     for candidate in [current, *current.parents]:
-      if (candidate / "paths.yaml").exists() or (candidate / "config" / "paths.yaml").exists():
+      if (candidate / "paths.yaml").exists():
         return candidate
-    raise RuntimeError("Could not find project root containing paths.yaml or config/paths.yaml")
+    raise RuntimeError("Could not find project root containing paths.yaml")
 
 
 PROJECT_ROOT = find_project_root()
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "paths.yaml"
-LEGACY_CONFIG_PATH = PROJECT_ROOT / "config" / "paths.yaml"
 
 # Global variable to store the configuration
 _config = None
@@ -38,14 +37,12 @@ def get_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     
     if _config is None:
         if config_path is None:
-            config_path = DEFAULT_CONFIG_PATH if DEFAULT_CONFIG_PATH.exists() else LEGACY_CONFIG_PATH
+            config_path = DEFAULT_CONFIG_PATH
         
         # Ensure the path is absolute
         config_path = Path(config_path)
         if not config_path.is_absolute():
             config_path = PROJECT_ROOT / config_path
-        if not config_path.exists() and config_path == DEFAULT_CONFIG_PATH and LEGACY_CONFIG_PATH.exists():
-            config_path = LEGACY_CONFIG_PATH
         
         # Load the YAML configuration
         try:
@@ -68,8 +65,8 @@ def get_path(path_key: str, default: Optional[str] = None) -> str:
         The requested path as a string.
         
     Example:
-        >>> get_path("data.raw")
-        "data/raw"
+        >>> get_path("input_data.root")
+        "input_data"
     """
     config = get_config()
     

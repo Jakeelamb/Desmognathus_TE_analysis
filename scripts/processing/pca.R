@@ -5,7 +5,7 @@
 # This script is the single supported entrypoint for non-phylogenetic TE PCA.
 # It intentionally replaces the older raw-proportion and clustering-heavy
 # variants with a compositional workflow that:
-# 1. uses frozen repo-local TE breakdown tables
+# 1. uses repo-local TE breakdown tables
 # 2. filters features explicitly
 # 3. applies deterministic zero replacement
 # 4. runs CLR PCA with no post-CLR variance scaling

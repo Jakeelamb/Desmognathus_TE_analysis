@@ -39,6 +39,16 @@ DNAPIPETE_FILE = OUTPUT_DATA_DIR / "dnaPipeTE_merged_classifications.csv"
 INTERMEDIATE_RM_FILE = OUTPUT_DATA_DIR / "merged_repeatmasker_data.csv"  # Output of Stage 1
 FINAL_OUTPUT_FILE = OUTPUT_DATA_DIR / "repeatmasker_detailed_classification_combined.csv"  # Final output
 
+# Known RepeatMasker inputs staged locally but not represented in lookup_table.txt.
+# They are documented in path_analysis/TE_PROVENANCE_AUDIT.md and excluded from
+# species-level analyses until explicitly reconciled with the lookup table.
+ALLOWED_UNMAPPED_ALIGN_FILES = {
+    "SRX19952891_Trinity.align",
+    "SRX19953421_Trinity.align",
+    "SRX19953983_Trinity.align",
+    "SRX19958874_Trinity.align",
+}
+
 # Chunk size for reading the intermediate RepeatMasker file during merge
 MERGE_CHUNK_SIZE = 1_000_000
 
@@ -192,13 +202,22 @@ def main():
         logger.info(f"Initialized intermediate file: {INTERMEDIATE_RM_FILE}")
     except Exception as e:
         logger.error(f"Failed to initialize intermediate file {INTERMEDIATE_RM_FILE}: {e}")
-        return # Cannot proceed if output file can't be created
+        sys.exit(1)
+
+    if FINAL_OUTPUT_FILE.exists():
+        FINAL_OUTPUT_FILE.unlink()
+        logger.info(f"Removed stale final output before rebuild: {FINAL_OUTPUT_FILE}")
 
     align_files = list(INPUT_DIR.glob('*.align'))
     logger.info(f"Found {len(align_files)} .align files in {INPUT_DIR}.")
+    if not align_files:
+        logger.error(f"No RepeatMasker .align files found in {INPUT_DIR}")
+        sys.exit(1)
 
     valid_srx_ids = set(lookup.keys())
     stage1_total_records = 0
+    stage1_failures = []
+    stage1_allowed_skips = []
 
     for filepath in tqdm(align_files, desc="Stage 1: Parsing .align files"):
         file_name = filepath.name
@@ -238,20 +257,45 @@ def main():
                         gc.collect()
                     else:
                         logger.warning(f"No header lines successfully parsed in {file_name}. Check file format and regex pattern.")
+                        stage1_failures.append(file_name)
                         
                 except Exception as e:
                     logger.error(f"Failed to process and append data for file {file_name}: {e}", exc_info=True)
+                    stage1_failures.append(file_name)
             else:
-                logger.warning(f"Skipping file: {file_name}. SRX ID '{srx_id}' not found in lookup table.")
+                if file_name in ALLOWED_UNMAPPED_ALIGN_FILES:
+                    logger.info(
+                        "Skipping documented out-of-scope file: %s. SRX ID '%s' is not in lookup table.",
+                        file_name,
+                        srx_id,
+                    )
+                    stage1_allowed_skips.append(file_name)
+                else:
+                    logger.warning(f"Skipping file: {file_name}. SRX ID '{srx_id}' not found in lookup table.")
+                    stage1_failures.append(file_name)
         else:
             logger.warning(f"Skipping file: {file_name}. Could not extract SRX ID from filename.")
+            stage1_failures.append(file_name)
 
     logger.info(f"--- Stage 1 Complete. Total records written to intermediate file: {stage1_total_records} ---")
+    if stage1_allowed_skips:
+        logger.info(
+            "Stage 1 excluded %d documented out-of-scope .align files: %s",
+            len(stage1_allowed_skips),
+            ", ".join(stage1_allowed_skips),
+        )
     gc.collect() # Collect garbage after stage 1
     
     if stage1_total_records == 0:
-        logger.warning("No records were written in Stage 1. Skipping Stage 2 merge.")
-        return
+        logger.error("No records were written in Stage 1. Aborting before final output creation.")
+        sys.exit(1)
+    if stage1_failures:
+        logger.error(
+            "Stage 1 had %d failed/skipped .align files: %s",
+            len(stage1_failures),
+            ", ".join(stage1_failures[:20]),
+        )
+        sys.exit(1)
 
     # --- Stage 2: Merge Intermediate RM data with dnaPipeTE Classification --- 
     logger.info("--- Stage 2: Merging RepeatMasker data with dnaPipeTE classifications --- ")
@@ -393,6 +437,10 @@ def main():
 
     except Exception as e:
         logger.error(f"Error processing chunk {chunk_num} of {INTERMEDIATE_RM_FILE.name} or writing to output: {e}", exc_info=True)
+        sys.exit(1)
+
+    if stage2_total_records == 0:
+        logger.error("Stage 2 wrote zero final records. Aborting.")
         sys.exit(1)
 
     logger.info(f"--- Stage 2 Merge complete. Total records saved: {stage2_total_records}. Final output file: {FINAL_OUTPUT_FILE} ---")

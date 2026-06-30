@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Path-analysis scaffold for the Desmognathus chapter workspace.
+# Path-analysis scaffold for the Desmognathus path-analysis workspace.
 # This script is intentionally conservative: it prepares transformed inputs,
 # defines a small candidate model set, and only runs phylopath if the package
 # is available locally.
@@ -115,7 +115,7 @@ parse_args <- function(args) {
 find_project_root <- function() {
   current <- normalizePath(getwd(), mustWork = TRUE)
   for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml")) || file.exists(file.path(current, "config", "paths.yaml"))) {
+    if (file.exists(file.path(current, "paths.yaml"))) {
       return(current)
     }
     parent <- dirname(current)
@@ -126,7 +126,7 @@ find_project_root <- function() {
   script_dir <- normalizePath(dirname(sys.frame(1)$ofile %||% "path_analysis/scripts"), mustWork = FALSE)
   current <- script_dir
   for (i in 1:10) {
-    if (file.exists(file.path(current, "paths.yaml")) || file.exists(file.path(current, "config", "paths.yaml"))) {
+    if (file.exists(file.path(current, "paths.yaml"))) {
       return(normalizePath(current))
     }
     parent <- dirname(current)
@@ -134,7 +134,7 @@ find_project_root <- function() {
     current <- parent
   }
 
-  stop("Could not locate project root containing paths.yaml or config/paths.yaml")
+  stop("Could not locate project root containing paths.yaml")
 }
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
@@ -152,6 +152,47 @@ zscore <- function(x) {
     return(rep(0, length(x)))
   }
   as.numeric((x - mean(x, na.rm = TRUE)) / s)
+}
+
+build_transform_audit <- function(analysis_df) {
+  rows <- list()
+  predictor_cols <- setdiff(colnames(analysis_df), "species")
+
+  for (col in predictor_cols) {
+    values <- as.numeric(analysis_df[[col]])
+    bad_idx <- which(!is.finite(values))
+    if (length(bad_idx)) {
+      for (idx in bad_idx) {
+        rows[[length(rows) + 1]] <- tibble::tibble(
+          audit_type = "non_finite_transform",
+          species = analysis_df$species[[idx]],
+          column = col,
+          details = paste0("Value after transformation: ", as.character(analysis_df[[col]][[idx]]))
+        )
+      }
+    }
+
+    finite_values <- values[is.finite(values)]
+    if (length(finite_values) > 1 && stats::sd(finite_values) == 0) {
+      rows[[length(rows) + 1]] <- tibble::tibble(
+        audit_type = "constant_predictor",
+        species = NA_character_,
+        column = col,
+        details = "Predictor has zero variance in the prepared analysis input"
+      )
+    }
+  }
+
+  if (!length(rows)) {
+    return(tibble::tibble(
+      audit_type = character(),
+      species = character(),
+      column = character(),
+      details = character()
+    ))
+  }
+
+  dplyr::bind_rows(rows)
 }
 
 clr_transform <- function(mat) {
@@ -315,11 +356,15 @@ prepare_analysis_input <- function(df, family, panel = NULL) {
       transmute(species, gs, ltr_balance = zscore(ltr_balance), te_evenness, ns, cs)
   )
 
+  transform_audit <- build_transform_audit(analysis_df)
+
   analysis_df <- analysis_df %>%
     filter(if_all(-species, ~ is.finite(.x))) %>%
     distinct(species, .keep_all = TRUE)
 
-  as.data.frame(analysis_df)
+  analysis_df <- as.data.frame(analysis_df)
+  attr(analysis_df, "transform_audit") <- transform_audit
+  analysis_df
 }
 
 model_set_for_family <- function(family, phylopath_ns) {
@@ -398,6 +443,11 @@ run_summary_only <- function(family, analysis_df) {
   cat("Species in prepared input:", nrow(analysis_df), "\n")
   cat("Columns:\n")
   cat(paste0("  - ", colnames(analysis_df)), sep = "\n")
+  transform_audit <- attr(analysis_df, "transform_audit")
+  if (!is.null(transform_audit) && nrow(transform_audit) > 0) {
+    cat("\nTransform audit warnings:\n")
+    print(transform_audit)
+  }
   cat("\nphylopath is not required for --summary-only mode.\n")
 }
 
@@ -472,7 +522,6 @@ main <- function() {
   workspace_root <- file.path(project_root, "path_analysis")
   derived_dir <- opts$derived_dir %||% file.path(workspace_root, "data", "derived")
   results_dir <- file.path(workspace_root, "results")
-  dir.create(results_dir, showWarnings = FALSE, recursive = TRUE)
 
   input_spec <- input_spec_for_run(opts$family, opts$panel, derived_dir)
   if (!file.exists(input_spec$input_file)) {
@@ -481,7 +530,6 @@ main <- function() {
 
   df <- readr::read_csv(input_spec$input_file, show_col_types = FALSE)
   analysis_df <- prepare_analysis_input(df, opts$family, opts$panel)
-  readr::write_csv(analysis_df, file.path(results_dir, paste0(input_spec$output_tag, "_analysis_input.csv")))
 
   if (opts$family %in% c("genome_morphology", "te_genome_morphology")) {
     warning(
@@ -493,6 +541,13 @@ main <- function() {
   if (opts$summary_only) {
     run_summary_only(opts$family, analysis_df)
     return(invisible(NULL))
+  }
+
+  dir.create(results_dir, showWarnings = FALSE, recursive = TRUE)
+  readr::write_csv(analysis_df, file.path(results_dir, paste0(input_spec$output_tag, "_analysis_input.csv")))
+  transform_audit <- attr(analysis_df, "transform_audit")
+  if (!is.null(transform_audit) && nrow(transform_audit) > 0) {
+    readr::write_csv(transform_audit, file.path(results_dir, paste0(input_spec$output_tag, "_transform_audit.csv")))
   }
 
   tree <- load_tree(project_root, analysis_df$species)

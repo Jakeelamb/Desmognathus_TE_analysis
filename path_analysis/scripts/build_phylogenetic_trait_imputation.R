@@ -12,7 +12,7 @@ script_path <- normalizePath(sub("^--file=", "", file_arg[[1]]))
 project_root <- dirname(dirname(dirname(script_path)))
 derived_dir <- file.path(project_root, "path_analysis", "data", "derived")
 
-tree_file <- file.path(project_root, "results", "phylogeny", "processed_phylogeny.nwk")
+tree_file <- file.path(project_root, "input_data", "phylogeny", "desmo900dated_test.tre")
 traits_file <- file.path(derived_dir, "organismal_traits_curated.csv")
 output_long <- file.path(derived_dir, "phylogenetic_trait_imputation_long.csv")
 output_wide <- file.path(derived_dir, "organismal_traits_phylo_inference.csv")
@@ -54,6 +54,12 @@ normalize_missing_strings <- function(df) {
     }
   }
   df
+}
+
+normalize_tree_tip_labels <- function(labels) {
+  labels <- sub("^D\\.\\s*", "", labels)
+  labels <- sub("_.*$", "", labels)
+  trimws(tolower(labels))
 }
 
 predict_from_neighbors <- function(target_species, train_species, train_values, dist_mat, kind,
@@ -378,7 +384,17 @@ build_trait_outputs <- function(df, dist_mat, trait_col, confidence_col, kind,
 
 message("Reading tree and curated trait table...")
 tree <- read.tree(tree_file)
-tree$tip.label <- sub("^D\\.", "", tree$tip.label)
+clean_tip_labels <- normalize_tree_tip_labels(tree$tip.label)
+duplicated_tips <- duplicated(clean_tip_labels)
+if (any(duplicated_tips)) {
+  message(sprintf(
+    "Dropping %d duplicate phylogeny tips after species-label normalization.",
+    sum(duplicated_tips)
+  ))
+  tree <- drop.tip(tree, tree$tip.label[duplicated_tips])
+  clean_tip_labels <- clean_tip_labels[!duplicated_tips]
+}
+tree$tip.label <- clean_tip_labels
 dist_mat <- cophenetic.phylo(tree)
 
 traits <- read.csv(

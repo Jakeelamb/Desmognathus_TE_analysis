@@ -26,10 +26,10 @@ if (length(script_path_arg) > 0) {
   script_path <- normalizePath(sub("^--file=", "", script_path_arg[1]), mustWork = FALSE)
   script_dir <- dirname(script_path)
 } else {
-  script_dir <- "scripts/R/visualization"
+  script_dir <- "scripts/visualization"
 }
 
-source(file.path(dirname(dirname(script_dir)), "R", "path_config_utils.R"))
+source(file.path(dirname(script_dir), "R", "path_config_utils.R"))
 prefer_active_conda_r_library()
 
 project_root <- find_project_root(script_dir)

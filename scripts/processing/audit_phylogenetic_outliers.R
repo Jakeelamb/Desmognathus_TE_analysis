@@ -64,7 +64,8 @@ clade_path <- file.path(project_root, "results", "data", "permanova", "species_c
 output_dir <- file.path(project_root, "results", "data", "phylo_residuals")
 summary_path <- file.path(output_dir, "phylo_residual_summary.csv")
 outlier_path <- file.path(output_dir, "phylo_outlier_species.csv")
-note_path <- file.path(project_root, "PHYLOGENETIC_OUTLIER_AUDIT.md")
+report_dir <- file.path(project_root, "results", "reports")
+note_path <- file.path(report_dir, "PHYLOGENETIC_OUTLIER_AUDIT.md")
 
 trait_spec <- tibble::tribble(
   ~trait, ~label, ~transform_label,
@@ -254,7 +255,7 @@ write_note <- function(summary_df, outlier_df) {
     "",
     "The TE landscape and LTR-history layers are not only clade-level patterns.",
     "They also contain species-level terminal deviations that can anchor concrete",
-    "biological discussion in the paper.",
+    "biological follow-up and interpretation.",
     sep = "\n"
   )
 
@@ -263,6 +264,7 @@ write_note <- function(summary_df, outlier_df) {
 
 main <- function() {
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
 
   tree <- load_tree()
   master <- readr::read_csv(master_path, show_col_types = FALSE) %>%

@@ -1,15 +1,15 @@
 # TE Methods Language
 
-This file is the manuscript-facing wording guide for the TE layer used in the
+This file is the analysis-facing wording guide for the TE layer used in the
 current `path_analysis/` workflow. It translates the audit conclusions in
-`TE_DATA_AUDIT.md` into short methods-ready text so the paper does not
-accidentally overstate what the current TE tables mean.
+`TE_DATA_AUDIT.md` into short methods-ready text that does not accidentally
+overstate what the current TE tables mean.
 
 ## Recommended Short Methods Text
 
 Use this wording if you need a compact paragraph for the main Methods section:
 
-> We used the frozen species-level TE summary tables stored in
+> We used the repo-local species-level TE summary tables stored in
 > `results/data/` as the canonical TE input layer for comparative analyses.
 > Order-level TE composition was summarized with Shannon diversity, corrected
 > Simpson diversity, and Pielou evenness. For the path-analysis families, we
@@ -23,17 +23,17 @@ Use this wording if you need a compact paragraph for the main Methods section:
 
 ## Recommended Detailed Methods Text
 
-Use this if the chapter or supplement needs more explicit semantics:
+Use this if the analysis notes or supplement needs more explicit semantics:
 
 > The TE predictors used in the comparative path-analysis layer were taken from
-> the frozen repo-local TE summary tables rather than regenerated from raw HPC
+> the repo-local TE summary tables rather than regenerated from raw HPC
 > outputs. Order-level TE composition was summarized from the stored
 > `dnaPipeTE_order_breakdown.csv` and diversity summary tables. The current
 > `Simpson_Diversity` values in the stored order-level diversity table are the
 > corrected Simpson values already present in the canonical file, not a newly
 > recomputed raw Gini-Simpson index. Because the stored evenness tables are
 > internally consistent and directly traceable, we treated them as the
-> manuscript TE input layer and used order-level Pielou evenness as the main
+> analysis TE input layer and used order-level Pielou evenness as the main
 > evenness predictor in the path models.
 >
 > Ectopic-recombination support was summarized from the filtered ectopic table
@@ -49,7 +49,7 @@ Use this if the chapter or supplement needs more explicit semantics:
 
 ## Explicit Variable Semantics To Preserve
 
-If these variables are named in the manuscript, describe them this way:
+If these variables are named in the results, describe them this way:
 
 - `order_pielou`
   Order-level Pielou evenness derived from the stored order diversity table.
@@ -70,7 +70,7 @@ If these variables are named in the manuscript, describe them this way:
 
 ## Language To Avoid
 
-Avoid these shortcuts in the manuscript:
+Avoid these shortcuts in the results:
 
 - "Simpson diversity" with no qualifier if you mean the stored corrected value.
 - "All ectopic elements" if the statistic excludes missing-ratio rows.
@@ -90,7 +90,7 @@ The wording above is anchored to these current files:
 
 ## Practical Recommendation
 
-For the paper:
+For analysis writeups:
 
 - use `order_pielou` as the narrative evenness metric
 - mention corrected Simpson only if needed for completeness

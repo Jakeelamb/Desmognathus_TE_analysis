@@ -25,12 +25,21 @@ dependencies:
   - r-vegan
   - r-nlme
   - r-pheatmap
+  - r-rcolorbrewer
   - r-compositions
   - r-factoextra
   - r-ggrepel
   - r-yaml
   - r-cluster
   - r-broom
+  - r-igraph
+  - r-tidygraph
+  - r-graphlayouts
+  - r-ggraph
+  - r-ggm
+  - r-phylolm
+  - r-phylopath
+  - bioconductor-graph
   - tesorter
   - pysam
   - bowtie2

@@ -1,7 +1,7 @@
 trait_name,n_all_species,n_te_genome_overlap,n_te_genome_morph_overlap
-body_size_proxy_mm,37,27,18
-adult_svl_mid_mm,15,10,7
-development_mode,37,27,18
-aquaticity_index,37,27,18
-microhabitat_class,37,27,18
-elevation_mid_m,10,8,7
+body_size_proxy_mm,36,18,18
+adult_svl_mid_mm,15,7,7
+development_mode,36,18,18
+aquaticity_index,36,18,18
+microhabitat_class,36,18,18
+elevation_mid_m,9,7,7

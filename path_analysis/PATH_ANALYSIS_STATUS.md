@@ -6,7 +6,7 @@ if the session continues in a different direction.
 
 ## What This Workspace Is For
 
-The goal is a publication-grade comparative path-analysis framework for genome
+The goal is a reproducible comparative path-analysis framework for genome
 evolution in `Desmognathus`.
 
 The main conceptual chain is:
@@ -22,39 +22,21 @@ There is now also an organismal extension layer for:
 
 ## Current Bottom Line
 
-The data-build phase is in good shape.
-
-The important current result is:
-
-- TE-only models are stable.
-- The combined `TE + body_size` family is also stable.
-- Ectopic-only models are stable when organismal covariates are absent, but
-  once `body_size` and `ectopic_index` compete in the same candidate family,
-  the winning model drops `ectopic_index`.
-- `body_size` matters, but the organismal-only extension is near-tied and not
-  stable enough to overstate on its own.
-- The LTR-history family carries signal, but it stays best treated as a
-  sensitivity-backed historical axis rather than a first-tier primary result.
-- Phylogenetic trait backfilling currently changes no model panel membership.
-- The project now also has species-level phylogenetic outliers worth discussing,
-  not just clade-level summaries.
-
-So the project has shifted from "collect and rescue traits" to
-"interpret what the fitted families are now saying, and which species depart
-from broad phylogenetic expectation."
+The data-build phase is the trustworthy layer right now: source-backed
+organismal traits, CellProfiler traceability snapshots, TE feature tables, panel
+definitions, and species readiness audits. Panel-specific model rankings should
+be regenerated from the current panels before making winner claims.
 
 ## Workspace Structure
 
 The important files are:
 
-- `../PAPER_FREEZE_MANIFEST.md`
-  Repo-level paper freeze manifest, including the checksum inventory for ignored generated outputs.
+- `../README.md`
+  Repo-level workflow overview and cleanup boundary for ignored generated outputs.
 - `README.md`
   General workspace overview and command examples.
 - `PATH_ANALYSIS_STATUS.md`
   This file. Read this first when returning later.
-- `SESSION_HANDOFF.md`
-  Secondary restart notes and chronological context, not the main analysis map.
 - `CANDIDATE_MODELS.md`
   The current family definitions and the logic behind them.
 - `ANALYSIS_DATASETS.md`
@@ -62,9 +44,9 @@ The important files are:
 - `DATA_DICTIONARY.md`
   Variable meanings and caveats.
 - `TE_DATA_AUDIT.md`
-  Current audit status of the frozen TE source tables and derived path-analysis TE products.
+  Current audit status of the repo-local TE source tables and derived path-analysis TE products.
 - `TE_METHODS_LANGUAGE.md`
-  Ready-to-paste manuscript wording for the TE methods and denominator caveats.
+  Methods wording for the TE layer and denominator caveats.
 - `TE_DIVERSITY_CANONICALIZATION.md`
   Documents the now-resolved TE diversity summary generation path and the non-destructive candidate reconstruction.
 - `TE_PROVENANCE_AUDIT.md`
@@ -100,7 +82,9 @@ Important derived data:
 - `data/derived/phylofill_panel_comparison.csv`
   Shows whether phylogenetic backfilling changes current panel membership.
 - `results/*.csv`
-  Model rankings and edge tables for each family/panel combination.
+  Generated model rankings and edge tables for each family/panel combination.
+  These are not tracked source artifacts and should be regenerated from the
+  documented inputs when needed.
 
 ## How The Pipeline Works
 
@@ -117,55 +101,53 @@ The logic is:
 The normal rebuild sequence is:
 
 ```bash
-python3 path_analysis/scripts/build_master_dataset.py
-python3 path_analysis/scripts/prepare_te_features.py
-python3 path_analysis/scripts/prepare_amphibio_traits.py
-python3 path_analysis/scripts/prepare_external_morphometrics.py
-python3 path_analysis/scripts/prepare_nc_biodiversity_traits.py
-python3 path_analysis/scripts/prepare_curated_organismal_traits.py
-Rscript path_analysis/scripts/build_phylogenetic_trait_imputation.R
-python3 path_analysis/scripts/build_te_model_panel.py
-python3 path_analysis/scripts/build_path_input_master.py
-python3 path_analysis/scripts/build_analysis_panels.py
-python3 path_analysis/scripts/audit_source_traceability.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_master_dataset.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_te_features.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_amphibio_traits.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_external_morphometrics.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_nc_biodiversity_traits.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_curated_organismal_traits.py
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/build_phylogenetic_trait_imputation.R
+scripts/run_in_dusky.sh python path_analysis/scripts/build_te_model_panel.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_ltr_history_features.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_path_input_master.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_analysis_panels.py
+scripts/run_in_dusky.sh python path_analysis/scripts/audit_source_traceability.py
 ```
 
 To run models:
 
 ```bash
-source "$HOME/miniconda3/etc/profile.d/conda.sh"
-conda activate Dusky
-
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_mediumplus
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --panel te_genome_ectopic_primary_mediumplus
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_organismal --panel te_genome_organismal_primary_mediumplus
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic_organismal --panel te_genome_ectopic_organismal_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --panel te_genome_ectopic_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_organismal --panel te_genome_organismal_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic_organismal --panel te_genome_ectopic_organismal_primary_mediumplus
 ```
 
 ## Current Data State
 
 Current panel sizes:
 
-- `te_genome_primary_mediumplus = 27`
-- `te_genome_primary_strict_body = 16`
-- `te_genome_organismal_primary_mediumplus = 27`
-- `te_genome_organismal_primary_strict_body = 16`
-- `te_genome_ltr_history_primary_mediumplus = 24`
-- `te_genome_ltr_history_primary_strict_body = 15`
-- `te_genome_ectopic_primary_mediumplus = 24`
-- `te_genome_ectopic_primary_strict_body = 15`
-- `te_genome_ectopic_organismal_primary_mediumplus = 24`
-- `te_genome_ectopic_organismal_primary_strict_body = 15`
+- `te_genome_primary_mediumplus = 18`
+- `te_genome_primary_strict_body = 9`
+- `te_genome_organismal_primary_mediumplus = 18`
+- `te_genome_organismal_primary_strict_body = 9`
+- `te_genome_ltr_history_primary_mediumplus = 15`
+- `te_genome_ltr_history_primary_strict_body = 8`
+- `te_genome_ectopic_primary_mediumplus = 16`
+- `te_genome_ectopic_primary_strict_body = 8`
+- `te_genome_ectopic_organismal_primary_mediumplus = 16`
+- `te_genome_ectopic_organismal_primary_strict_body = 8`
 - `te_genome_morphology_primary_mediumplus = 18`
 - `te_genome_morphology_primary_strict_body = 9`
 
 Current organismal coverage:
 
-- `body_size_proxy_mm`: 37 species
-- `development_mode`: 37 species
-- `aquaticity_index`: 37 species
-- `microhabitat_class`: 37 species
-- `elevation_mid_m`: 10 species
+- `body_size_proxy_mm`: 36 species
+- `development_mode`: 36 species
+- `aquaticity_index`: 36 species
+- `microhabitat_class`: 36 species
+- `elevation_mid_m`: 9 species
 
 ## Truth Hierarchy
 
@@ -203,126 +185,29 @@ identical.
 
 ## Tree Inputs
 
-There are two tree-related entry points in use:
+There is one canonical tree source for path analysis:
 
 - `input_data/phylogeny/desmo900dated_test.tre`
-  Used by the path-model scaffold for the fitted comparative models.
-- `results/phylogeny/processed_phylogeny.nwk`
-  Used by the phylogenetic trait-imputation builder.
 
-That distinction matters because the imputation tree currently excludes some
-species that still exist in the broader modeling tree.
+The path-model scaffold and phylogenetic trait-imputation builder both read this
+tracked input tree. The imputation builder normalizes tip labels internally so it
+does not depend on the generated `results/phylogeny/processed_phylogeny.nwk`
+artifact.
 
-## Current Model Families And Winners
+## Model Result Boundary
 
-### 1. TE only
+The current panel builders and source-traceability audits are the source of
+truth. Model ranking CSVs under `path_analysis/results/` or `results/` are
+generated outputs; regenerate them from the current panels before making winner
+claims.
 
-Files:
+Current support rules:
 
-- `results/te_genome_primary_mediumplus_model_ranking.csv`
-- `results/te_genome_primary_strict_body_model_ranking.csv`
-
-Winner:
-
-- `mediated_evenness`
-
-Interpretation:
-
-- the `ltr_balance -> te_evenness` path is stable
-- the `te_evenness -> gs` edge is weak and changes sign across subsets
-
-### 2. TE + ectopic
-
-Files:
-
-- `results/te_genome_ectopic_primary_mediumplus_model_ranking.csv`
-- `results/te_genome_ectopic_primary_strict_body_model_ranking.csv`
-
-Winner:
-
-- `ectopic_only`
-
-Interpretation:
-
-- `ectopic_index -> gs` is stable and negative
-- this is the strongest ectopic-only story before organismal competition
-
-### 3. TE + organismal
-
-Files:
-
-- `results/te_genome_organismal_primary_mediumplus_model_ranking.csv`
-- `results/te_genome_organismal_primary_strict_body_model_ranking.csv`
-
-Winner:
-
-- `body_size_additive`
-
-Interpretation:
-
-- `body_size -> gs` is positive
-- `aquaticity` does not rank well
-- body size is the only organismal covariate that currently matters enough to
-  compete with the TE-only baseline
-
-### 4. TE + ectopic + organismal
-
-Files:
-
-- `results/te_genome_ectopic_organismal_primary_mediumplus_model_ranking.csv`
-- `results/te_genome_ectopic_organismal_primary_strict_body_model_ranking.csv`
-
-Winner:
-
-- `te_body_size_baseline`
-
-Interpretation:
-
-- once `body_size` is allowed to compete with `ectopic_index`, the winning model
-  drops `ectopic_index`
-- the current best-supported combined story is TE-evenness plus body size, not
-  ectopic plus body size
-
-This is currently the most important substantive modeling result added after the
-trait rescue phase.
-
-### 5. TE + LTR history
-
-Files:
-
-- `results/te_genome_ltr_history_primary_mediumplus_model_ranking.csv`
-- `results/te_genome_ltr_history_primary_strict_body_model_ranking.csv`
-
-Winner:
-
-- medium-plus: `history_additive`
-- strict-body: `te_baseline`, with `history_additive` still competitive
-
-Interpretation:
-
-- the historical paired-LTR divergence axis adds useful signal in the broader
-  `n = 24` panel
-- that signal weakens under the stricter `n = 15` body-size filter, so this
-  family should remain sensitivity-focused rather than promoted into the primary
-  result tier
-- see `LTR_HISTORY_PATH_INTEGRATION.md` for the source-linked interpretation
-
-### 6. TE + genome + morphology
-
-Files:
-
-- `results/te_genome_morphology_primary_mediumplus_model_ranking.csv`
-- `results/te_genome_morphology_primary_strict_body_model_ranking.csv`
-
-Winner:
-
-- medium-plus: `te_evenness_path`
-- strict-body: do not interpret as stable; `n = 9` is too small
-
-Interpretation:
-
-- keep morphology families as planning/sensitivity analyses
-- do not treat the strict-body morphology ranking as robust
+- LTR-history panels require at least one high-confidence paired-LTR element.
+- Morphology panels carry genome support-status counts so the CellProfiler
+  support tier is visible.
+- Phylogenetic trait backfilling remains sensitivity-only and currently changes
+  no panel membership.
 
 ## What To Trust Most Right Now
 
@@ -330,11 +215,12 @@ Most trustworthy:
 
 - panel definitions and species counts
 - source-backed organismal table
-- TE-only and TE+ectopic panel stability
-- body-size signal in the organismal-augmented families
+- source traceability audits
+- CellProfiler image/mask/tile traceability snapshots
 
 More provisional:
 
+- generated model rankings until rerun from current panels
 - morphology-linked causal interpretation
 - phylogenetic imputation as anything beyond sensitivity analysis
 - any interpretation that relies on the strict-body morphology subset
@@ -344,10 +230,10 @@ More provisional:
 Read these in order:
 
 1. `PATH_ANALYSIS_STATUS.md`
-2. `SESSION_HANDOFF.md`
+2. `README.md`
 3. `data/derived/analysis_panel_summary.csv`
 4. `data/derived/phylofill_panel_comparison.csv`
-5. the ranking CSVs for:
+5. regenerated ranking CSVs for:
    - `te_genome`
    - `te_genome_ectopic`
    - `te_genome_organismal`
@@ -360,7 +246,7 @@ If returning to this analysis later, the next step is not more data rescue.
 It is:
 
 - build a compact cross-family summary table
-- write the results-language interpretation
+- write the results interpretation
 - decide how to frame the shift from ectopic-dominant models to body-size-plus-TE
   models once organismal covariates are included
 

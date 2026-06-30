@@ -35,13 +35,15 @@ required_packages <- c(
   "yaml"          # Config loading
 )
 
-# Install/load packages
-invisible(lapply(required_packages, function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg, repos = "https://cloud.r-project.org")
-  }
-  library(pkg, character.only = TRUE)
-}))
+missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing_packages) > 0) {
+  stop(
+    "Missing required R packages: ",
+    paste(missing_packages, collapse = ", "),
+    ". Update the Dusky environment instead of installing packages at runtime."
+  )
+}
+invisible(lapply(required_packages, library, character.only = TRUE))
 
 # --- Configuration ---
 project_root <- find_project_root(script_dir)

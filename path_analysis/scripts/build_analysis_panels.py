@@ -83,6 +83,13 @@ def prepare_flags(df: pd.DataFrame) -> pd.DataFrame:
     )
     out["is_low_confidence_body_proxy"] = out["body_size_proxy_confidence"].eq("low")
     out["is_low_confidence_lifestyle_proxy"] = out["lifestyle_confidence"].eq("low")
+    if "ltr_history_n_pairs_high_confidence" not in out.columns:
+        out["ltr_history_n_pairs_high_confidence"] = 0
+    out["ltr_history_n_pairs_high_confidence"] = pd.to_numeric(
+        out["ltr_history_n_pairs_high_confidence"],
+        errors="coerce",
+    ).fillna(0)
+    out["has_ltr_high_confidence"] = out["ltr_history_n_pairs_high_confidence"].gt(0)
 
     (
         out["body_size_proxy_mm_phylofill"],
@@ -154,6 +161,7 @@ def build_exclusion_reasons(
     require_ectopic: bool = False,
     require_morphology: bool = False,
     require_ltr_history: bool = False,
+    require_ltr_high_confidence: bool = False,
     require_core: bool = False,
     require_mediumplus: bool = False,
     require_phylofill: bool = False,
@@ -173,6 +181,8 @@ def build_exclusion_reasons(
         reasons.append("missing_morphology")
     if require_ltr_history and not bool(row.get("has_ltr_history")):
         reasons.append("missing_ltr_history")
+    if require_ltr_high_confidence and not bool(row.get("has_ltr_high_confidence")):
+        reasons.append("no_high_confidence_ltr_pairs")
 
     if require_core or require_mediumplus or require_strict_body:
         if pd.isna(row.get("body_size_proxy_mm")):
@@ -228,6 +238,7 @@ def main() -> None:
         "has_ectopic",
         "has_morphology",
         "has_ltr_history",
+        "has_ltr_high_confidence",
         "genome_size_pg",
         "genome_size_se_pg",
         "genome_result_status",
@@ -328,6 +339,7 @@ def main() -> None:
             & df["has_genome"]
             & df["has_core_organismal_mediumplus"]
             & df["has_ltr_history"]
+            & df["has_ltr_high_confidence"]
         ),
         "te_genome_ltr_history_primary_strict_body": (
             df["has_tree_tip"]
@@ -335,6 +347,7 @@ def main() -> None:
             & df["has_genome"]
             & df["has_core_organismal_mediumplus"]
             & df["has_ltr_history"]
+            & df["has_ltr_high_confidence"]
             & ~df["uses_total_length_body_proxy"]
             & ~df["uses_mixed_stage_body_proxy"]
         ),
@@ -429,11 +442,13 @@ def main() -> None:
         },
         "te_genome_ltr_history_primary_mediumplus": {
             "require_ltr_history": True,
+            "require_ltr_high_confidence": True,
             "require_core": True,
             "require_mediumplus": True,
         },
         "te_genome_ltr_history_primary_strict_body": {
             "require_ltr_history": True,
+            "require_ltr_high_confidence": True,
             "require_core": True,
             "require_mediumplus": True,
             "require_strict_body": True,
@@ -491,10 +506,20 @@ def main() -> None:
     for name, mask in masks.items():
         panel = build_panel(df, mask, base_cols)
         panel.to_csv(PANEL_DIR / f"{name}.csv", index=False)
+        genome_status_counts = panel["genome_result_status"].fillna("").value_counts()
+        ltr_high_conf = pd.to_numeric(panel["ltr_history_n_pairs_high_confidence"], errors="coerce")
         summary_rows.append(
             {
                 "panel_name": name,
                 "n_species": int(len(panel)),
+                "n_genome_stable": int(genome_status_counts.get("stable", 0)),
+                "n_genome_minor_caution": int(genome_status_counts.get("minor_caution", 0)),
+                "n_genome_caution": int(genome_status_counts.get("caution", 0)),
+                "n_genome_sensitivity_limited": int(genome_status_counts.get("sensitivity_limited", 0)),
+                "n_ltr_high_confidence_species": int(panel["has_ltr_high_confidence"].sum()),
+                "min_ltr_high_confidence_pairs": (
+                    int(ltr_high_conf.min()) if len(panel) and name.startswith("te_genome_ltr_history") else pd.NA
+                ),
                 "n_with_elevation": int(panel["has_elevation"].sum()),
                 "n_low_body_proxy": int(panel["is_low_confidence_body_proxy"].sum()),
                 "n_total_length_body_proxy": int(panel["uses_total_length_body_proxy"].sum()),
@@ -514,6 +539,11 @@ def main() -> None:
         "has_genome",
         "has_ectopic",
         "has_morphology",
+        "has_ltr_history",
+        "has_ltr_high_confidence",
+        "ltr_history_n_pairs_high_confidence",
+        "genome_result_status",
+        "genome_flag_summary",
         "body_size_proxy_measurement",
         "body_size_proxy_confidence",
         "development_confidence",

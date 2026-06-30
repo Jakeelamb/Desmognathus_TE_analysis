@@ -5,7 +5,7 @@ This document is the working plan for preparing path-analysis inputs while the f
 1. trait acquisition from literature and online data sources
 2. reduction of the transposable-element data into interpretable, model-usable variables
 
-The goal is not to assemble the largest possible trait table. The goal is to build a small, sourceable, phylogenetically defensible input set that can support a manuscript-quality path analysis.
+The goal is not to assemble the largest possible trait table. The goal is to build a small, sourceable, phylogenetically defensible input set that can support a reproducible path analysis.
 
 ## Current Position
 
@@ -22,10 +22,10 @@ The current consolidated workspace already has these blocks:
 - Ectopic recombination proxy
   - `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
 - Genome and morphology
-  - `~/Projects/cellprofiler_test/output/qc_report_blockbalanced/final_species_results.csv`
-  - `~/Projects/cellprofiler_test/output/publication_analysis/species_morphology_summary.csv`
+  - imported linked genome snapshot in `path_analysis/data/external/derived/cellprofiler_final_species_results.csv`
+  - imported linked morphology snapshot in `path_analysis/data/external/derived/cellprofiler_species_morphology_summary.csv`
 
-What is still missing for the chapter-level path analysis is the organismal trait layer: body size, external morphology, development, life history, lifestyle, and basic range/ecology covariates.
+What is still missing for path analysis is the organismal trait layer: body size, external morphology, development, life history, lifestyle, and basic range/ecology covariates.
 
 ## Design Rules
 
@@ -49,7 +49,7 @@ Those templates are added alongside this plan.
 
 ## Traceability Rules
 
-This project needs publication-grade provenance.
+This project needs reproducible provenance.
 
 That means:
 
@@ -86,7 +86,7 @@ This avoids the common failure mode where a summary table exists but no one can 
 
 ## Trait Blocks To Build
 
-### Tier 1: highest priority for the main manuscript model
+### Tier 1: highest priority for the main analysis model
 
 These are the organismal blocks most likely to be both biologically useful and realistically fillable across the current overlap set.
 
@@ -215,17 +215,17 @@ These are the first places to mine because they are explicit, citable, and likel
    - especially useful for coarse habitat, breeding strategy, development, and body-size coverage
    - caveat: for caudates, body size is often total length rather than SVL, and missing values mean "not available", not "absent"
 
-2. Recent Desmognathus revision papers and their supplements
+2. Recent Desmognathus revision literature and supplements
    - best source for modern names and for morphometric data on recently split taxa
    - especially important because older databases may still use pre-split names
    - likely sources for SVL, shape measurements, and ecology notes
 
 3. Revision-linked data repositories
    - Zenodo / Dryad appendices for morphometrics and specimen metadata
-   - these may be more usable than the papers themselves for constructing species means
+   - these may be more usable than article PDFs for constructing species means
 
 4. Species-specific life-history literature
-   - Bruce and related Desmognathus natural-history papers are likely the best source for clutch size, age structure, and reproductive timing
+   - Bruce and related Desmognathus natural-history literature is likely the best source for clutch size, age structure, and reproductive timing
 
 ### Secondary source reservoirs
 
@@ -236,7 +236,7 @@ Use these to fill gaps or validate coarse categories:
 - USGS range products
 - GBIF / VertNet occurrence data for elevation, after cleaning
 
-Secondary sources are appropriate for habitat category, elevation range, and taxonomic cross-checks, but not as the only source for a quantitative manuscript variable when a primary source exists.
+Secondary sources are appropriate for habitat category, elevation range, and taxonomic cross-checks, but not as the only source for a quantitative analysis variable when a primary source exists.
 
 ## Taxonomy Problem: handle this first
 
@@ -336,7 +336,7 @@ Sensitivity alternatives:
 - `retro_dna_logratio`
 - filtered CLR PC1 using only major orders such as `LTR`, `LINE`, `TIR`, `DIRS`, `SINE`
 
-Do not use the full nine-order CLR PC1 as the main manuscript predictor.
+Do not use the full nine-order CLR PC1 as the main analysis predictor.
 
 #### Diversity variable
 
@@ -389,7 +389,7 @@ QC filters:
 
 The TE block should have a separate figure strategy from the model-input strategy.
 
-For the manuscript main text:
+For the results summary:
 
 - order-level stacked composition bars or heatmap
 - one simple divergence / age-structure figure
@@ -436,8 +436,8 @@ That is already enough for a serious staged comparative analysis.
 4. Collapse raw extractions into a curated species summary with flags.
 5. Derive TE features in a dedicated script rather than inside the model-fitting script.
 6. Join curated traits to the existing `master_species_table.csv`.
-7. Freeze a versioned `path_analysis_input_master.csv`.
-8. Build path-analysis subsets from that frozen table.
+7. Version a reproducible `path_analysis_input_master.csv`.
+8. Build path-analysis subsets from that repo-local table.
 
 ## Next Scripts To Add
 

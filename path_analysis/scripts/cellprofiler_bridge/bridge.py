@@ -25,6 +25,87 @@ DEFAULT_ACTIVE_MIXED_RUN_TAG = "mixed_cellpose_yolo_full_dataset_v1"
 GENOME_CALIBRATION_IMAGE_TYPE = "brightfield"
 
 
+def portable_trace_value(value: object, *, cellprofiler_root: Path) -> object:
+    if value is None or value is pd.NA:
+        return value
+    if not isinstance(value, str):
+        return value
+    text = value.strip()
+    if not text:
+        return value
+
+    roots = {
+        str(PROJECT_ROOT.resolve()): "",
+        str(cellprofiler_root.resolve()): "cellprofiler_test",
+    }
+    for root, label in roots.items():
+        if text == root:
+            return label or "."
+        prefix = f"{root}/"
+        if text.startswith(prefix):
+            suffix = text[len(prefix) :]
+            return f"{label}/{suffix}" if label else suffix
+    return value
+
+
+def resolve_trace_path(value: object, *, cellprofiler_root: Path) -> Path | None:
+    if value is None or value is pd.NA:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    if text == "cellprofiler_test":
+        return cellprofiler_root
+    if text.startswith("cellprofiler_test/"):
+        return cellprofiler_root / text[len("cellprofiler_test/") :]
+    path = Path(text)
+    if path.is_absolute():
+        return path
+    return PROJECT_ROOT / path
+
+
+def trace_existing_pct(series: pd.Series, *, cellprofiler_root: Path) -> float:
+    values = series.fillna("").astype(str).str.strip()
+    if len(values) == 0:
+        return 0.0
+    exists = values.map(
+        lambda value: bool(
+            (resolved := resolve_trace_path(value, cellprofiler_root=cellprofiler_root)) and resolved.exists()
+        )
+    )
+    return float(exists.mean() * 100.0)
+
+
+def portable_trace_payload(value: object, *, cellprofiler_root: Path) -> object:
+    if isinstance(value, dict):
+        return {
+            key: portable_trace_payload(item, cellprofiler_root=cellprofiler_root)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [portable_trace_payload(item, cellprofiler_root=cellprofiler_root) for item in value]
+    if isinstance(value, tuple):
+        return [portable_trace_payload(item, cellprofiler_root=cellprofiler_root) for item in value]
+    return portable_trace_value(value, cellprofiler_root=cellprofiler_root)
+
+
+def portable_trace_frame(frame: pd.DataFrame, *, cellprofiler_root: Path) -> pd.DataFrame:
+    out = frame.copy()
+    for col in out.columns:
+        col_lower = str(col).lower()
+        if "path" in col_lower or col_lower.endswith("_file"):
+            out[col] = out[col].map(lambda value: portable_trace_value(value, cellprofiler_root=cellprofiler_root))
+    return out
+
+
+def write_portable_csv(frame: pd.DataFrame, path: Path, *, cellprofiler_root: Path) -> None:
+    portable_trace_frame(frame, cellprofiler_root=cellprofiler_root).to_csv(path, index=False)
+
+
+def write_portable_json(path: Path, payload: dict[str, object], *, cellprofiler_root: Path) -> None:
+    write_json(path, portable_trace_payload(payload, cellprofiler_root=cellprofiler_root))
+
+
 def load_metadata(cellprofiler_root: Path) -> pd.DataFrame:
     path = metadata_path(cellprofiler_root)
     df = pd.read_csv(path)
@@ -83,12 +164,12 @@ def _normalize_linked_yolo_trace_paths(
     if "nucleus_tile_manifest_path" in out.columns:
         out["nucleus_tile_manifest_path"] = [
             normalized_chunk_file(filename, "tile_manifest.csv", str(current).strip())
-            for filename, current in zip(out["filename"], out["nucleus_tile_manifest_path"], strict=False)
+            for filename, current in zip(out["filename"], out["nucleus_tile_manifest_path"])
         ]
     if "nucleus_run_manifest_path" in out.columns:
         out["nucleus_run_manifest_path"] = [
             normalized_chunk_file(filename, "summary.json", str(current).strip())
-            for filename, current in zip(out["filename"], out["nucleus_run_manifest_path"], strict=False)
+            for filename, current in zip(out["filename"], out["nucleus_run_manifest_path"])
         ]
     return out
 
@@ -196,7 +277,7 @@ def build_morphology_bundle(
     morphology["source_sha256"] = sha256_for_file(linked_pairs_path)
 
     summary_out = out_dir / "cellprofiler_species_morphology_summary.csv"
-    morphology.to_csv(summary_out, index=False)
+    write_portable_csv(morphology, summary_out, cellprofiler_root=cellprofiler_root)
 
     image_trace = (
         strict_pairs.groupby(["species", "filename"], dropna=True)
@@ -226,7 +307,7 @@ def build_morphology_bundle(
     image_trace["linked_pairs_source_sha256"] = sha256_for_file(linked_pairs_path)
 
     image_trace_out = out_dir / "cellprofiler_species_morphology_image_trace.csv"
-    image_trace.to_csv(image_trace_out, index=False)
+    write_portable_csv(image_trace, image_trace_out, cellprofiler_root=cellprofiler_root)
 
     morphology_notes = "Strict-core linked morphology pairs are traceable to image, tile manifest, and saved cell/nucleus mask paths."
     roi_unused = int(linkage_summary.get("n_roi_overlap_unique_hits", 0) or 0) == 0
@@ -234,7 +315,7 @@ def build_morphology_bundle(
     if nonempty_pct(strict_pairs["roi_zip_path"]) == 0.0 and roi_unused and mask_trace_present:
         morphology_notes = (
             "Strict-core linked morphology pairs are traceable to image, tile manifest, and saved cell/nucleus mask "
-            "paths. ROI ZIP artifacts are legacy ImageJ outputs and were not used in this mask-based linked YOLO run."
+            "paths. ROI ZIP artifacts are older ImageJ outputs and were not used in this mask-based linked YOLO run."
         )
 
     summary_rows.append(
@@ -384,14 +465,14 @@ def build_linked_genome_trace(
     image_trace["linked_pairs_source_sha256"] = sha256_for_file(linked_pairs_path)
 
     trace_out = out_dir / "cellprofiler_linked_genome_image_trace.csv"
-    image_trace.to_csv(trace_out, index=False)
+    write_portable_csv(image_trace, trace_out, cellprofiler_root=cellprofiler_root)
 
-    genome_notes = "Linked strict-core YOLO nuclei are the authoritative publication nucleus/IOD trace."
+    genome_notes = "Linked strict-core YOLO nuclei are the authoritative nucleus/IOD trace for the current analysis snapshot."
     roi_unused = int(linkage_summary.get("n_roi_overlap_unique_hits", 0) or 0) == 0
     if nonempty_pct(strict_pairs["roi_zip_path"]) == 0.0 and roi_unused:
         genome_notes = (
-            "Linked strict-core YOLO nuclei are the authoritative publication nucleus/IOD trace. ROI ZIP artifacts are "
-            "not required because this linked YOLO run uses saved label masks as the matching artifact."
+            "Linked strict-core YOLO nuclei are the authoritative nucleus/IOD trace for the current analysis snapshot. "
+            "ROI ZIP artifacts are not required because this linked YOLO run uses saved label masks as the matching artifact."
         )
 
     summary_rows.append(
@@ -613,7 +694,7 @@ def build_raw_genome_trace(
     if trace_frames:
         combined = pd.concat(trace_frames, ignore_index=True).sort_values(["bundle", "species", "filename"])
         trace_out = out_dir / "cellprofiler_raw_genome_image_trace.csv"
-        combined.to_csv(trace_out, index=False)
+        write_portable_csv(combined, trace_out, cellprofiler_root=cellprofiler_root)
         return {
             "present": True,
             "origin": "upstream_raw_nucleus_iod_runs",
@@ -629,14 +710,6 @@ def _round_or_na(value: object, digits: int = 4) -> float | pd.NA:
     if pd.isna(value):
         return pd.NA
     return round(float(value), digits)
-
-
-def _bool_or_false(value: object) -> bool:
-    if pd.isna(value):
-        return False
-    if isinstance(value, str):
-        return value.strip().lower() in {"true", "1", "yes"}
-    return bool(value)
 
 
 def _sem_from_values(values: pd.Series) -> float | pd.NA:
@@ -656,254 +729,11 @@ def _cv_pct(values: pd.Series) -> float | pd.NA:
     return float(numeric.std(ddof=1) / mean * 100.0)
 
 
-def _load_convergence_summary(path: Path) -> pd.DataFrame:
-    if not path.exists():
-        return pd.DataFrame(columns=["species", "state_converged", "state_capped_not_converged"])
-    df = pd.read_csv(path)
-    df["species"] = df["species"].map(canonical_species)
-    df["state_converged"] = df["converged"].fillna(False).astype(bool)
-    df["state_capped_not_converged"] = df["capped_not_converged"].fillna(False).astype(bool)
-    return df[["species", "state_converged", "state_capped_not_converged"]]
-
-
-def _build_genome_state_summary(
-    *,
-    raw_trace_path: Path,
-    cellprofiler_root: Path,
-    out_dir: Path,
-    gap_rows: list[dict[str, object]],
-    raw_run_tag: str,
-) -> tuple[pd.DataFrame, Path, list[dict[str, object]]]:
-    raw_trace = pd.read_csv(raw_trace_path)
-    if raw_trace.empty:
-        gap_rows.append(
-            {
-                "bundle": "genome_species_bundle",
-                "gap_type": "empty_raw_genome_trace",
-                "species": pd.NA,
-                "details": "The imported raw genome image trace is empty, so a raw-run species bundle cannot be reconstructed.",
-            }
-        )
-        return pd.DataFrame(), out_dir / "cellprofiler_genome_state_summary.csv", []
-
-    raw_trace["species"] = raw_trace["species"].map(canonical_species)
-    raw_trace["n_nuclei"] = pd.to_numeric(raw_trace["n_nuclei"], errors="coerce")
-    raw_trace["median_nucleus_area_um2"] = pd.to_numeric(raw_trace["median_nucleus_area_um2"], errors="coerce")
-    raw_trace["median_nucleus_iod"] = pd.to_numeric(raw_trace["median_nucleus_iod"], errors="coerce")
-    raw_trace["source_image_exists"] = raw_trace["source_image_path"].fillna("").astype(str).map(
-        lambda value: Path(value).exists() if value else False
-    )
-
-    specimen_summary = (
-        raw_trace.groupby(["species", "image_type", "specimen_id"], dropna=False)
-        .agg(
-            n_images=("filename", "nunique"),
-            n_nuclei=("n_nuclei", "sum"),
-            specimen_mean_area_um2=("median_nucleus_area_um2", "mean"),
-            specimen_median_area_um2=("median_nucleus_area_um2", "median"),
-            specimen_mean_iod=("median_nucleus_iod", "mean"),
-            specimen_median_iod=("median_nucleus_iod", "median"),
-        )
-        .reset_index()
-    )
-
-    convergence_frames: list[pd.DataFrame] = []
-    convergence_records: list[dict[str, object]] = []
-    run_root = get_run_paths(cellprofiler_root, raw_run_tag).nucleus_iod
-    for image_type in ["brightfield", "pmount"]:
-        convergence_path = run_root / image_type / "convergence_summary.csv"
-        convergence_records.append(file_record(f"{image_type}_convergence_summary", convergence_path))
-        if convergence_path.exists():
-            df = _load_convergence_summary(convergence_path)
-            if not df.empty:
-                df["image_type"] = image_type
-                convergence_frames.append(df)
-
-    convergence = (
-        pd.concat(convergence_frames, ignore_index=True)
-        if convergence_frames
-        else pd.DataFrame(columns=["species", "image_type", "state_converged", "state_capped_not_converged"])
-    )
-
-    rows: list[dict[str, object]] = []
-    for (species, image_type), image_group in raw_trace.groupby(["species", "image_type"], dropna=False):
-        specimen_group = specimen_summary[
-            specimen_summary["species"].eq(species) & specimen_summary["image_type"].eq(image_type)
-        ].copy()
-        if specimen_group.empty:
-            continue
-
-        specimen_units = specimen_group["specimen_mean_area_um2"].dropna()
-        image_units = image_group["median_nucleus_area_um2"].dropna()
-        if len(specimen_units) >= 2:
-            support_unit = "specimen_mean_image_median_area_um2"
-            se_area_um2 = _sem_from_values(specimen_units)
-            cv_area_pct = _cv_pct(specimen_units)
-        else:
-            support_unit = "image_median_nucleus_area_um2"
-            se_area_um2 = _sem_from_values(image_units)
-            cv_area_pct = _cv_pct(image_units)
-
-        row = {
-            "species": species,
-            "image_type": image_type,
-            "n_images": int(image_group["filename"].nunique()),
-            "n_specimens": int(specimen_group["specimen_id"].nunique()),
-            "n_nuclei": int(pd.to_numeric(image_group["n_nuclei"], errors="coerce").fillna(0).sum()),
-            "state_mean_area_um2": _round_or_na(specimen_group["specimen_mean_area_um2"].mean()),
-            "state_median_area_um2": _round_or_na(specimen_group["specimen_median_area_um2"].median()),
-            "state_mean_iod": _round_or_na(specimen_group["specimen_mean_iod"].mean()),
-            "state_median_iod": _round_or_na(specimen_group["specimen_median_iod"].median()),
-            "state_se_area_um2": _round_or_na(se_area_um2),
-            "state_cv_area_pct": _round_or_na(cv_area_pct),
-            "support_unit": support_unit,
-            "source_image_existing_pct": _round_or_na(image_group["source_image_exists"].mean() * 100.0, 2),
-            "tile_manifest_existing_pct": _round_or_na(existing_pct(image_group["tile_manifest_path"]), 2),
-            "raw_imagej_results_existing_pct": _round_or_na(existing_pct(image_group["raw_imagej_results_path"]), 2),
-        }
-        rows.append(row)
-
-    state_summary = pd.DataFrame(rows)
-    if state_summary.empty:
-        gap_rows.append(
-            {
-                "bundle": "genome_species_bundle",
-                "gap_type": "missing_genome_state_summary",
-                "species": pd.NA,
-                "details": "No species/image-type state summaries could be derived from the raw genome trace.",
-            }
-        )
-        return state_summary, out_dir / "cellprofiler_genome_state_summary.csv", convergence_records
-
-    if not convergence.empty:
-        state_summary = state_summary.merge(
-            convergence,
-            on=["species", "image_type"],
-            how="left",
-            validate="one_to_one",
-        )
-    state_summary["state_converged"] = state_summary["state_converged"].fillna(False).astype(bool)
-    state_summary["state_capped_not_converged"] = state_summary["state_capped_not_converged"].fillna(False).astype(bool)
-
-    ref_lookup = (
-        state_summary.loc[state_summary["species"].eq("fuscus"), ["image_type", "state_mean_area_um2"]]
-        .dropna(subset=["state_mean_area_um2"])
-        .drop_duplicates(subset=["image_type"])
-        .set_index("image_type")["state_mean_area_um2"]
-        .to_dict()
-    )
-
-    missing_ref_states = sorted(set(state_summary["image_type"]) - set(ref_lookup))
-    if missing_ref_states:
-        gap_rows.append(
-            {
-                "bundle": "genome_species_bundle",
-                "gap_type": "missing_reference_state",
-                "species": "fuscus",
-                "details": f"Reference species is missing one or more preparation states needed for raw-run scaling: {missing_ref_states}",
-            }
-        )
-
-    genome_pg = []
-    genome_se_pg = []
-    genome_gb = []
-    state_se_pct = []
-    for _, row in state_summary.iterrows():
-        ref_area = ref_lookup.get(row["image_type"])
-        mean_area = row["state_mean_area_um2"]
-        se_area = row["state_se_area_um2"]
-        if ref_area is None or pd.isna(ref_area) or pd.isna(mean_area) or float(ref_area) <= 0:
-            genome_pg.append(pd.NA)
-            genome_se_pg.append(pd.NA)
-            genome_gb.append(pd.NA)
-            state_se_pct.append(pd.NA)
-            continue
-        estimate_pg = REFERENCE_GENOME_PG * float(mean_area) / float(ref_area)
-        estimate_se_pg = pd.NA
-        estimate_se_pct = pd.NA
-        if pd.notna(se_area):
-            estimate_se_pg = REFERENCE_GENOME_PG * float(se_area) / float(ref_area)
-            if estimate_pg > 0:
-                estimate_se_pct = float(estimate_se_pg) / float(estimate_pg) * 100.0
-        genome_pg.append(_round_or_na(estimate_pg))
-        genome_se_pg.append(_round_or_na(estimate_se_pg))
-        genome_gb.append(_round_or_na(float(estimate_pg) * GENOME_GB_PER_PG))
-        state_se_pct.append(_round_or_na(estimate_se_pct))
-
-    state_summary["reference_species"] = "D. fuscus"
-    state_summary["reference_genome_pg"] = REFERENCE_GENOME_PG
-    state_summary["reference_state_mean_area_um2"] = state_summary["image_type"].map(ref_lookup).map(_round_or_na)
-    state_summary["genome_pg_estimate"] = genome_pg
-    state_summary["genome_se_pg_estimate"] = genome_se_pg
-    state_summary["genome_gb_estimate"] = genome_gb
-    state_summary["state_se_pct"] = state_se_pct
-    state_summary = state_summary.sort_values(["species", "image_type"]).reset_index(drop=True)
-
-    out_path = out_dir / "cellprofiler_genome_state_summary.csv"
-    state_summary.to_csv(out_path, index=False)
-    return state_summary, out_path, convergence_records
-
-
-def _build_brightfield_only_genome_bundle(
-    *,
-    state_summary: pd.DataFrame,
-    raw_trace_path: Path,
-    state_summary_path: Path,
-) -> pd.DataFrame:
-    brightfield = state_summary[state_summary["image_type"].eq(GENOME_CALIBRATION_IMAGE_TYPE)].copy()
-    if brightfield.empty:
-        return brightfield
-
-    bundle = pd.DataFrame(
-        {
-            "species": brightfield["species"].map(lambda value: f"D. {value}"),
-            "primary_genome_pg": brightfield["genome_pg_estimate"],
-            "primary_genome_se_pg": brightfield["genome_se_pg_estimate"],
-            "primary_genome_gb": brightfield["genome_gb_estimate"],
-            "primary_n_images": brightfield["n_images"].astype(int),
-            "primary_n_specimens": brightfield["n_specimens"].astype(int),
-            "primary_n_nuclei": brightfield["n_nuclei"].astype(int),
-            "primary_cv_area_pct": brightfield["state_cv_area_pct"],
-            "primary_state": brightfield["image_type"],
-            "primary_state_converged": brightfield["state_converged"].astype(bool),
-            "primary_state_capped_not_converged": brightfield["state_capped_not_converged"].astype(bool),
-            "primary_support_unit": brightfield["support_unit"],
-            "primary_source_image_existing_pct": brightfield["source_image_existing_pct"],
-            "primary_tile_manifest_existing_pct": brightfield["tile_manifest_existing_pct"],
-            "primary_raw_imagej_results_existing_pct": brightfield["raw_imagej_results_existing_pct"],
-            "alternate_state": pd.NA,
-            "alternate_genome_pg": pd.NA,
-            "alternate_n_images": pd.NA,
-            "alternate_n_specimens": pd.NA,
-            "alternate_source_image_existing_pct": pd.NA,
-            "cross_state_pct_diff": pd.NA,
-            "primary_selection_reason": "brightfield_only_policy",
-            "bundle_origin": "reconstructed_from_upstream_raw_runs",
-            "reconstruction_method": "brightfield_only_specimen_mean_of_image_median_nucleus_area_scaled_to_fuscus",
-            "reconstruction_source_path": str(raw_trace_path.resolve()),
-            "reconstruction_source_sha256": sha256_for_file(raw_trace_path),
-            "raw_image_trace_path": str(raw_trace_path.resolve()),
-            "raw_image_trace_sha256": sha256_for_file(raw_trace_path),
-            "genome_state_summary_path": str(state_summary_path.resolve()),
-            "genome_state_summary_sha256": sha256_for_file(state_summary_path),
-        }
-    )
-
-    statuses: list[str] = []
-    flags: list[str] = []
-    for _, row in bundle.iterrows():
-        status, flag_summary = _flag_summary_for_primary_state(row)
-        statuses.append(status)
-        flags.append(flag_summary)
-    bundle["result_status"] = statuses
-    bundle["flag_summary"] = flags
-    return bundle.sort_values("species").reset_index(drop=True)
-
-
 def _build_linked_genome_state_summary(
     *,
     linked_trace_path: Path,
     out_dir: Path,
+    cellprofiler_root: Path,
     gap_rows: list[dict[str, object]],
 ) -> tuple[pd.DataFrame, Path]:
     linked_trace = pd.read_csv(linked_trace_path)
@@ -978,9 +808,18 @@ def _build_linked_genome_state_summary(
             "support_unit": support_unit,
             "support_tier": support_tier,
             "source_image_existing_pct": _round_or_na(selected["source_image_exists"].mean() * 100.0, 2),
-            "tile_manifest_existing_pct": _round_or_na(existing_pct(selected["nucleus_tile_manifest_path"]), 2),
-            "mask_existing_pct": _round_or_na(existing_pct(selected["nucleus_mask_path"]), 2),
-            "roi_zip_existing_pct": _round_or_na(existing_pct(selected["roi_zip_path"]), 2),
+            "tile_manifest_existing_pct": _round_or_na(
+                trace_existing_pct(selected["nucleus_tile_manifest_path"], cellprofiler_root=cellprofiler_root),
+                2,
+            ),
+            "mask_existing_pct": _round_or_na(
+                trace_existing_pct(selected["nucleus_mask_path"], cellprofiler_root=cellprofiler_root),
+                2,
+            ),
+            "roi_zip_existing_pct": _round_or_na(
+                trace_existing_pct(selected["roi_zip_path"], cellprofiler_root=cellprofiler_root),
+                2,
+            ),
         }
         rows.append(row)
 
@@ -1054,7 +893,7 @@ def _build_linked_genome_state_summary(
     state_summary = state_summary.sort_values(["species", "image_type"]).reset_index(drop=True)
 
     out_path = out_dir / "cellprofiler_genome_state_summary.csv"
-    state_summary.to_csv(out_path, index=False)
+    write_portable_csv(state_summary, out_path, cellprofiler_root=cellprofiler_root)
     return state_summary, out_path
 
 
@@ -1100,7 +939,7 @@ def _build_brightfield_only_linked_genome_bundle(
             "primary_selection_reason": brightfield["support_tier"].map(
                 lambda value: "analysis_ready_images_preferred"
                 if value == "analysis_ready_strict_core"
-                else "fallback_all_strict_core_images"
+                else "all_strict_core_images_used"
             ),
             "bundle_origin": "reconstructed_from_upstream_linked_runs",
             "reconstruction_method": "brightfield_only_analysis_ready_preferred_specimen_mean_of_image_median_linked_nucleus_iod_scaled_to_fuscus",
@@ -1175,123 +1014,6 @@ def _flag_summary_for_primary_state(row: pd.Series) -> tuple[str, str]:
     return status, "; ".join(flags)
 
 
-def _selection_reason(primary: pd.Series, alternate: pd.Series | None) -> str:
-    if alternate is None:
-        return "only_available_state"
-    if primary["n_specimens"] > alternate["n_specimens"]:
-        return "more_specimens"
-    if primary["n_images"] > alternate["n_images"]:
-        return "more_images"
-    if _bool_or_false(primary["state_converged"]) and not _bool_or_false(alternate["state_converged"]):
-        return "converged_state"
-    primary_source_pct = primary.get("source_image_existing_pct")
-    alternate_source_pct = alternate.get("source_image_existing_pct")
-    if (
-        pd.notna(primary_source_pct)
-        and pd.notna(alternate_source_pct)
-        and float(primary_source_pct) > float(alternate_source_pct)
-    ):
-        return "better_source_image_retention"
-    return "lower_standard_error"
-
-
-def _reconstruct_genome_species_bundle_from_raw_runs(
-    cellprofiler_root: Path,
-    out_dir: Path,
-    raw_genome_info: dict[str, object],
-    summary_rows: list[dict[str, object]],
-    gap_rows: list[dict[str, object]],
-    raw_run_tag: str,
-) -> dict[str, object]:
-    raw_trace_path = Path(str(raw_genome_info.get("image_trace_path", "")))
-    if not raw_trace_path.exists():
-        gap_rows.append(
-            {
-                "bundle": "genome_species_bundle",
-                "gap_type": "missing_raw_genome_trace",
-                "species": pd.NA,
-                "details": "The raw genome image trace is missing, so the genome species bundle cannot be rebuilt from upstream raw runs.",
-            }
-        )
-        return {"present": False, "summary_path": pd.NA}
-
-    state_summary, state_summary_path, convergence_records = _build_genome_state_summary(
-        raw_trace_path=raw_trace_path,
-        cellprofiler_root=cellprofiler_root,
-        out_dir=out_dir,
-        gap_rows=gap_rows,
-        raw_run_tag=raw_run_tag,
-    )
-    if state_summary.empty:
-        return {"present": False, "summary_path": pd.NA}
-
-    bundle = _build_brightfield_only_genome_bundle(
-        state_summary=state_summary,
-        raw_trace_path=raw_trace_path,
-        state_summary_path=state_summary_path,
-    )
-    if bundle.empty:
-        gap_rows.append(
-            {
-                "bundle": "genome_species_bundle",
-                "gap_type": "missing_brightfield_genome_states",
-                "species": pd.NA,
-                "details": "No brightfield genome states were available for the imported genome bundle reconstruction.",
-            }
-        )
-        return {"present": False, "summary_path": pd.NA}
-
-    out_path = out_dir / "cellprofiler_final_species_results.csv"
-    bundle.to_csv(out_path, index=False)
-
-    summary_rows.append(
-        _genome_bundle_summary_row(
-            bundle,
-            "Reconstructed from the active brightfield raw nucleus-IOD runs using specimen-level image-median nucleus area scaled to D. fuscus.",
-        )
-    )
-    gap_rows.append(
-        {
-            "bundle": "genome_species_bundle",
-            "gap_type": "upstream_bundle_missing_reconstructed_from_raw_runs",
-            "species": pd.NA,
-            "details": "The legacy CellProfiler species bundle is missing, so the imported genome snapshot was rebuilt directly from the current brightfield raw nucleus-IOD runs.",
-        }
-    )
-
-    audit_payload = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "bundle_path": str(out_path.resolve()),
-        "bundle_sha256": sha256_for_file(out_path),
-        "raw_image_trace_path": str(raw_trace_path.resolve()),
-        "raw_image_trace_sha256": sha256_for_file(raw_trace_path),
-        "genome_state_summary_path": str(state_summary_path.resolve()),
-        "genome_state_summary_sha256": sha256_for_file(state_summary_path),
-        "reference_genome_pg": REFERENCE_GENOME_PG,
-        "reference_gb_per_pg": GENOME_GB_PER_PG,
-        "selection_rule": "restrict to brightfield states only",
-        "estimation_rule": "Scale specimen-level means of image-median brightfield nucleus area to D. fuscus; fall back to image-level SEM when only one specimen is available.",
-        "calibration_image_type": GENOME_CALIBRATION_IMAGE_TYPE,
-        "n_species": int(len(bundle)),
-    }
-    audit_path = out_dir / "cellprofiler_final_species_results_reconstruction.json"
-    write_json(audit_path, audit_payload)
-
-    source_files = list(raw_genome_info.get("source_files", [])) + convergence_records + [file_record("genome_state_summary", state_summary_path)]
-    return {
-        "present": True,
-        "origin": "reconstructed_from_upstream_raw_runs",
-        "summary_path": str(out_path.resolve()),
-        "summary_sha256": sha256_for_file(out_path),
-        "state_summary_path": str(state_summary_path.resolve()),
-        "state_summary_sha256": sha256_for_file(state_summary_path),
-        "reconstruction_audit_path": str(audit_path.resolve()),
-        "reconstruction_audit_sha256": sha256_for_file(audit_path),
-        "source_files": source_files,
-        "recovered_from_downstream": False,
-    }
-
-
 def _reconstruct_genome_species_bundle_from_linked_runs(
     cellprofiler_root: Path,
     out_dir: Path,
@@ -1321,6 +1043,7 @@ def _reconstruct_genome_species_bundle_from_linked_runs(
     state_summary, state_summary_path = _build_linked_genome_state_summary(
         linked_trace_path=linked_trace_path,
         out_dir=out_dir,
+        cellprofiler_root=cellprofiler_root,
         gap_rows=gap_rows,
     )
     if state_summary.empty:
@@ -1343,7 +1066,7 @@ def _reconstruct_genome_species_bundle_from_linked_runs(
         return {"present": False, "summary_path": pd.NA, "source_files": linked_genome_info.get("source_files", [])}
 
     out_path = out_dir / "cellprofiler_final_species_results.csv"
-    bundle.to_csv(out_path, index=False)
+    write_portable_csv(bundle, out_path, cellprofiler_root=cellprofiler_root)
 
     summary_rows.append(
         _genome_bundle_summary_row(
@@ -1370,7 +1093,7 @@ def _reconstruct_genome_species_bundle_from_linked_runs(
         "n_species": int(len(bundle)),
     }
     audit_path = out_dir / "cellprofiler_final_species_results_reconstruction.json"
-    write_json(audit_path, audit_payload)
+    write_portable_json(audit_path, audit_payload, cellprofiler_root=cellprofiler_root)
 
     source_files = list(linked_genome_info.get("source_files", [])) + [
         file_record("genome_state_summary", state_summary_path)
@@ -1385,7 +1108,6 @@ def _reconstruct_genome_species_bundle_from_linked_runs(
         "reconstruction_audit_path": str(audit_path.resolve()),
         "reconstruction_audit_sha256": sha256_for_file(audit_path),
         "source_files": source_files,
-        "recovered_from_downstream": False,
     }
 
 
@@ -1406,166 +1128,6 @@ def _genome_bundle_summary_row(bundle: pd.DataFrame, notes: str) -> dict[str, ob
         "nonempty_roi_zip_path_pct": pd.NA,
         "existing_roi_zip_path_pct": pd.NA,
         "notes": notes,
-    }
-
-
-def _import_upstream_genome_species_bundle(
-    upstream_path: Path,
-    out_dir: Path,
-    raw_genome_info: dict[str, object],
-    summary_rows: list[dict[str, object]],
-) -> dict[str, object]:
-    bundle = pd.read_csv(upstream_path)
-    bundle["bundle_origin"] = "upstream_cellprofiler_qc_report_blockbalanced"
-    bundle["upstream_source_path"] = str(upstream_path.resolve())
-    bundle["upstream_source_sha256"] = sha256_for_file(upstream_path)
-    bundle["raw_image_trace_path"] = raw_genome_info.get("image_trace_path", pd.NA)
-    bundle["raw_image_trace_sha256"] = raw_genome_info.get("image_trace_sha256", pd.NA)
-
-    out_path = out_dir / "cellprofiler_final_species_results.csv"
-    bundle.to_csv(out_path, index=False)
-
-    summary_rows.append(
-        _genome_bundle_summary_row(
-            bundle,
-            "Imported directly from the upstream CellProfiler species bundle.",
-        )
-    )
-
-    return {
-        "present": True,
-        "origin": "upstream_cellprofiler_qc_report_blockbalanced",
-        "summary_path": str(out_path.resolve()),
-        "summary_sha256": sha256_for_file(out_path),
-        "source_files": [file_record("upstream_genome_species_bundle", upstream_path)],
-        "recovered_from_downstream": False,
-    }
-
-
-def _recover_genome_species_bundle(
-    out_dir: Path,
-    raw_genome_info: dict[str, object],
-    summary_rows: list[dict[str, object]],
-    gap_rows: list[dict[str, object]],
-) -> dict[str, object]:
-    master_path = PROJECT_ROOT / "path_analysis" / "data" / "derived" / "master_species_table.csv"
-    path_input_path = PROJECT_ROOT / "path_analysis" / "data" / "derived" / "path_input_master.csv"
-
-    if not master_path.exists():
-        gap_rows.append(
-            {
-                "bundle": "genome_species_bundle",
-                "gap_type": "missing_recovery_source_table",
-                "species": pd.NA,
-                "details": "master_species_table.csv is missing, so the genome species bundle cannot be recovered locally.",
-            }
-        )
-        return {"present": False, "summary_path": pd.NA}
-
-    master = pd.read_csv(master_path)
-    genome = (
-        master[
-            [
-                "species",
-                "genome_size_pg",
-                "genome_size_se_pg",
-                "genome_size_gb",
-                "genome_n_images",
-                "genome_n_specimens",
-                "genome_n_nuclei",
-                "genome_cv_area_pct",
-                "genome_result_status",
-                "genome_flag_summary",
-            ]
-        ]
-        .dropna(subset=["genome_size_pg"])
-        .drop_duplicates(subset=["species"])
-        .sort_values("species")
-        .reset_index(drop=True)
-    )
-
-    verified_against_path_input = False
-    if path_input_path.exists():
-        path_input = pd.read_csv(path_input_path)
-        compare_cols = [
-            "species",
-            "genome_size_pg",
-            "genome_size_se_pg",
-            "genome_size_gb",
-            "genome_result_status",
-            "genome_flag_summary",
-        ]
-        overlap = (
-            path_input[compare_cols]
-            .dropna(subset=["genome_size_pg"])
-            .drop_duplicates(subset=["species"])
-            .sort_values("species")
-            .reset_index(drop=True)
-        )
-        verified_against_path_input = genome[compare_cols].equals(overlap[compare_cols])
-
-    bundle = pd.DataFrame(
-        {
-            "species": genome["species"].map(lambda value: f"D. {value}"),
-            "primary_genome_pg": genome["genome_size_pg"],
-            "primary_genome_se_pg": genome["genome_size_se_pg"],
-            "primary_genome_gb": genome["genome_size_gb"],
-            "primary_n_images": genome["genome_n_images"],
-            "primary_n_specimens": genome["genome_n_specimens"],
-            "primary_n_nuclei": genome["genome_n_nuclei"],
-            "primary_cv_area_pct": genome["genome_cv_area_pct"],
-            "result_status": genome["genome_result_status"],
-            "flag_summary": genome["genome_flag_summary"],
-            "bundle_origin": "recovered_from_path_analysis_tables",
-            "reconstruction_source_path": str(master_path.resolve()),
-            "reconstruction_source_sha256": sha256_for_file(master_path),
-            "reconstruction_verified_against_path_input_master": verified_against_path_input,
-            "raw_image_trace_path": raw_genome_info.get("image_trace_path", pd.NA),
-            "raw_image_trace_sha256": raw_genome_info.get("image_trace_sha256", pd.NA),
-        }
-    )
-
-    out_path = out_dir / "cellprofiler_final_species_results.csv"
-    bundle.to_csv(out_path, index=False)
-
-    summary_rows.append(
-        _genome_bundle_summary_row(
-            bundle,
-            "Recovered locally from existing path-analysis tables because the upstream CellProfiler species bundle is missing.",
-        )
-    )
-    gap_rows.append(
-        {
-            "bundle": "genome_species_bundle",
-            "gap_type": "upstream_bundle_missing_recovered_locally",
-            "species": pd.NA,
-            "details": "The upstream cellprofiler_test species bundle is missing, so this local snapshot was reconstructed from current path-analysis tables.",
-        }
-    )
-
-    audit_payload = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "bundle_path": str(out_path.resolve()),
-        "bundle_sha256": sha256_for_file(out_path),
-        "reconstruction_source_path": str(master_path.resolve()),
-        "reconstruction_source_sha256": sha256_for_file(master_path),
-        "verified_against_path_input_master": verified_against_path_input,
-        "raw_image_trace_path": raw_genome_info.get("image_trace_path"),
-        "raw_image_trace_sha256": raw_genome_info.get("image_trace_sha256"),
-        "n_species": int(len(bundle)),
-    }
-    audit_path = out_dir / "cellprofiler_final_species_results_reconstruction.json"
-    write_json(audit_path, audit_payload)
-
-    return {
-        "present": True,
-        "origin": "recovered_from_path_analysis_tables",
-        "summary_path": str(out_path.resolve()),
-        "summary_sha256": sha256_for_file(out_path),
-        "reconstruction_audit_path": str(audit_path.resolve()),
-        "reconstruction_audit_sha256": sha256_for_file(audit_path),
-        "source_files": [file_record("reconstruction_source_table", master_path)],
-        "recovered_from_downstream": True,
     }
 
 
@@ -1594,7 +1156,6 @@ def write_discovery_file(
     raw_run_tag: str,
     mixed_run_tag: str,
 ) -> Path:
-    expected_genome_bundle_path = cellprofiler_root / "output" / "qc_report_blockbalanced" / "final_species_results.csv"
     active_inventory_path = cellprofiler_root / "docs" / "ACTIVE_WORKFLOW_INVENTORY.md"
 
     payload = {
@@ -1606,7 +1167,6 @@ def write_discovery_file(
             "raw_auxiliary_run": raw_run_tag,
             "mixed_linkage_run": mixed_run_tag,
         },
-        "expected_genome_species_bundle": file_record("expected_genome_species_bundle", expected_genome_bundle_path),
         "genome_species_bundle": genome_info,
         "morphology_bundle": morphology_info,
         "raw_genome_trace": raw_genome_info,
@@ -1617,7 +1177,7 @@ def write_discovery_file(
         ],
     }
     out_path = out_dir / "cellprofiler_source_discovery.json"
-    write_json(out_path, payload)
+    write_portable_json(out_path, payload, cellprofiler_root=cellprofiler_root)
     return out_path
 
 
@@ -1637,8 +1197,8 @@ def rebuild_imported_artifacts(
 
     raw_genome_info = {
         "present": False,
-        "origin": "not_used_in_linked_yolo_publication_default",
-        "details": "The publication default derives the genome bundle from linked YOLO nuclei rather than the standalone raw nucleus-IOD run.",
+        "origin": "not_used_in_linked_yolo_default",
+        "details": "The current default derives the genome bundle from linked YOLO nuclei rather than the standalone raw nucleus-IOD run.",
         "source_files": [],
     }
     genome_info = build_genome_species_bundle(
@@ -1676,8 +1236,8 @@ def rebuild_imported_artifacts(
 
     summary_path = out_dir / "cellprofiler_traceability_audit_summary.csv"
     gaps_path = out_dir / "cellprofiler_traceability_audit_gaps.csv"
-    summary.to_csv(summary_path, index=False)
-    gaps.to_csv(gaps_path, index=False)
+    write_portable_csv(summary, summary_path, cellprofiler_root=cellprofiler_root)
+    write_portable_csv(gaps, gaps_path, cellprofiler_root=cellprofiler_root)
 
     return {
         "discovery_path": str(discovery_path.resolve()),

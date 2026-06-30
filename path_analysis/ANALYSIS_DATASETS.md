@@ -9,7 +9,7 @@ This note defines the intended panel files for the comparative path-analysis sta
 - `primary_mediumplus` panels additionally require medium-or-better confidence for body size, development, and lifestyle.
 - `primary_strict_body` panels additionally remove total-length and mixed-stage body-size proxies.
 
-These panels are intended to support a manuscript workflow where:
+These panels are intended to support a reproducible workflow where:
 
 - the `all` set is the broad sensitivity analysis
 - the `primary_mediumplus` set is the most defensible organismal extension set
@@ -97,7 +97,7 @@ These flags are meant to drive prespecified sensitivity analyses rather than pos
 
 ## Readiness audit
 
-`analysis_species_readiness.csv` stores the panel logic in a publication-auditable form. For each species, it records:
+`analysis_species_readiness.csv` stores the panel logic in a reproducibility-auditable form. For each species, it records:
 
 - whether the species is eligible for each panel
 - the exclusion reasons when it is not eligible

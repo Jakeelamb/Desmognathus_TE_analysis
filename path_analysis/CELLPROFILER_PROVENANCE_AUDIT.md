@@ -3,7 +3,7 @@
 This document records the current provenance status of the imported
 CellProfiler layer used by `path_analysis/`.
 
-It answers a narrower question than the broader manuscript methods:
+It answers a narrower question than the broader methods notes:
 
 Can the merged `cellprofiler_test -> path_analysis` bridge now be audited from
 the preserved upstream run outputs without falling back to circular downstream
@@ -17,12 +17,11 @@ As of March 10, 2026:
 
 - the imported genome bundle is no longer reconstructed from
   `path_analysis/data/derived/master_species_table.csv`
-- when the legacy upstream species bundle is absent, the bridge now rebuilds
-  `cellprofiler_final_species_results.csv` directly from the preserved raw
-  nucleus-IOD run outputs
+- the bridge rebuilds `cellprofiler_final_species_results.csv` directly from
+  the preserved linked YOLO nucleus-IOD run outputs
 - the bridge also writes `cellprofiler_genome_state_summary.csv`, which makes
   the per-species brightfield/pmount support and state-selection rule explicit
-- the publication-readiness audit currently returns overall status `warn`, not
+- the share-readiness audit currently returns overall status `warn`, not
   `fail`, because the remaining gaps are retained traceability warnings rather
   than circular provenance failures
 
@@ -34,14 +33,13 @@ the following active run tags:
 - raw genome and raw cell source run: `full_dataset_v1`
 - fresh mixed linkage run: `mixed_cellpose_yolo_pubrebuild_20260310T063533Z`
 
-What was rerun for this freeze:
+What was rerun for this refresh:
 
 - brightfield-only mixed-linkage tile preparation
 - YOLO nucleus measurement on the rebuilt tile manifest
 - cell-to-nucleus linkage and morphology summary generation
 - `path_analysis` import, master-table rebuild, panel rebuild, path-model
-  reruns, source-traceability audit, publication-readiness audit, and paper
-  freeze manifest refresh
+  reruns, and source-traceability audit
 
 What was intentionally reused:
 
@@ -54,7 +52,7 @@ Why the raw cell stage was reused:
   first image (`Process_337_raw_green.ome`) reached about `700.5 s` for the
   first `2` of `183` scored tiles, which is not overnight-feasible for a full
   60-image rerun on the current hardware
-- the current publication freeze therefore represents a clean rebuild from the
+- the current shareable snapshot therefore represents a clean rebuild from the
   preserved raw cell/genome runs plus a fresh mixed-linkage and downstream
   analysis rerun, not a de novo raw cell rerun from microscope images
 
@@ -74,14 +72,12 @@ The imported CellProfiler layer now has an auditable local chain from:
    `path_analysis/data/derived/master_species_table.csv` and
    `path_analysis/data/derived/path_input_master.csv`
 
-That is the correct direction of dependency for an auditable manuscript-facing
+That is the correct direction of dependency for an auditable analysis-facing
 workflow.
 
 ## Reconstruction Rule
 
-When the legacy upstream file
-`cellprofiler_test/output/qc_report_blockbalanced/final_species_results.csv`
-is missing, the bridge now:
+The bridge:
 
 - groups strict-core linked YOLO nuclei into image-level linked nucleus-IOD summaries
 - prefers `analysis_ready_image = TRUE` images when a species has them, otherwise
@@ -102,14 +98,10 @@ The canonical audit files are:
 - `path_analysis/data/external/derived/cellprofiler_traceability_audit_summary.csv`
 - `path_analysis/data/external/derived/cellprofiler_traceability_audit_gaps.csv`
 - `path_analysis/data/external/derived/cellprofiler_final_species_results_reconstruction.json`
-- `path_analysis/data/derived/publication_readiness_checks.csv`
-- `path_analysis/data/derived/publication_readiness_summary.json`
-
 Refresh them with:
 
 ```bash
-python3 path_analysis/scripts/pull_cellprofiler_estimates.py
-python3 path_analysis/scripts/audit_publication_readiness.py
+scripts/run_in_dusky.sh python path_analysis/scripts/pull_cellprofiler_estimates.py
 ```
 
 ## Remaining Warnings
@@ -122,13 +114,13 @@ merge logic itself:
 These warnings are tracked automatically in
 `cellprofiler_traceability_audit_gaps.csv`.
 
-## Publication Use Guidance
+## Analysis Use Guidance
 
 What is defensible now:
 
 - TE-to-genome comparative models using the imported genome layer, with the
   linked-IOD-derived and warning-laden status made explicit
-- manuscript supplements that cite the machine-readable audit outputs and the
+- analysis supplements that cite the machine-readable audit outputs and the
   linked-run reconstruction rule
 
 What should still remain sensitivity-only:

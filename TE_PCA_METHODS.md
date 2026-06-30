@@ -3,7 +3,7 @@
 This document defines the canonical TE PCA workflow for the repository.
 
 The main rule is simple: TE PCA is an exploratory or supplementary ordination
-layer, not the primary manuscript predictor block. Primary comparative models
+layer, not the primary predictor block. Primary comparative models
 should continue to use interpretable TE variables such as `ltr_line_logratio`,
 `order_pielou`, divergence, deletion, and ectopic summaries.
 
@@ -18,7 +18,7 @@ should continue to use interpretable TE variables such as `ltr_line_logratio`,
 
 ## Input Data
 
-The PCA workflow uses the frozen repo-local TE breakdown tables:
+The PCA workflow uses the repo-local TE breakdown tables:
 
 1. `results/data/dnaPipeTE_order_breakdown.csv`
 2. `results/data/dnaPipeTE_superfamily_breakdown.csv`
@@ -101,6 +101,6 @@ The canonical interpretation is:
 - use standard compositional PCA as a supplementary ordination summary
 - use phylogenetic PCA as a supplementary phylogeny-aware ordination only
 
-If a principal component is discussed in the manuscript, it should be justified
+If a principal component is discussed in the results, it should be justified
 with the saved loading tables, stability summaries, and correlations to direct
 TE summary variables.

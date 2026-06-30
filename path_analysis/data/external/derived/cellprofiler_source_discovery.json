@@ -1,0 +1,123 @@
+{
+  "active_run_tags": {
+    "mixed_linkage_run": "mixed_cellpose_yolo_full_dataset_v1",
+    "raw_auxiliary_run": "full_dataset_v1"
+  },
+  "active_workflow_inventory": {
+    "exists": true,
+    "label": "active_workflow_inventory",
+    "path": "cellprofiler_test/docs/ACTIVE_WORKFLOW_INVENTORY.md",
+    "sha256": "a570880bfd417d10eb3f1c13b6be82915f475bffaef1731bd45d7413fba6c831"
+  },
+  "cellprofiler_root": "cellprofiler_test",
+  "generated_at": "2026-06-30T21:03:20.113067+00:00",
+  "genome_species_bundle": {
+    "origin": "reconstructed_from_upstream_linked_runs",
+    "present": true,
+    "reconstruction_audit_path": "path_analysis/data/external/derived/cellprofiler_final_species_results_reconstruction.json",
+    "reconstruction_audit_sha256": "d25837ea17f6eb84c22103d1e79da9bd7b6382d0369373d4f66b3e067ceb2a02",
+    "source_files": [
+      {
+        "exists": true,
+        "label": "linked_nucleus_pairs",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/linked_nucleus_pairs.csv.gz",
+        "sha256": "f751740f4bd7fe710f2926609fa02229b264cacca1a83566a17a22e0571e6d07"
+      },
+      {
+        "exists": true,
+        "label": "image_summary",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/image_summary.csv",
+        "sha256": "fd94f3a2dd43f48aed81e2b5d45fbc529b1be5a427686c4504a78274257759b9"
+      },
+      {
+        "exists": true,
+        "label": "species_summary",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/species_summary.csv",
+        "sha256": "acf7c4a701ad2f9901ff444e4d646b34963aa5757982122fd6d2ceec46534777"
+      },
+      {
+        "exists": true,
+        "label": "summary_json",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/summary.json",
+        "sha256": "388b496d9a76add8611058490bc54015a6becf685a20a541dd41bfb11c203f82"
+      },
+      {
+        "exists": true,
+        "label": "genome_state_summary",
+        "path": "path_analysis/data/external/derived/cellprofiler_genome_state_summary.csv",
+        "sha256": "4a5c77e6715e40655b4b7bba46ff4c94885d02255c5bf0c3267f740ba145ced5"
+      }
+    ],
+    "state_summary_path": "path_analysis/data/external/derived/cellprofiler_genome_state_summary.csv",
+    "state_summary_sha256": "4a5c77e6715e40655b4b7bba46ff4c94885d02255c5bf0c3267f740ba145ced5",
+    "summary_path": "path_analysis/data/external/derived/cellprofiler_final_species_results.csv",
+    "summary_sha256": "5b7bbf8e462354b0cb2c4231dc647808f9424dc4bd5aecd982695edb71fe041f"
+  },
+  "morphology_bundle": {
+    "image_trace_path": "path_analysis/data/external/derived/cellprofiler_species_morphology_image_trace.csv",
+    "image_trace_sha256": "fa8bbebc12d0737ce419ce6053468d8a02b88ce58915621a172809400b4d22be",
+    "origin": "upstream_mixed_linkage_run",
+    "present": true,
+    "source_files": [
+      {
+        "exists": true,
+        "label": "species_summary",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/species_summary.csv",
+        "sha256": "acf7c4a701ad2f9901ff444e4d646b34963aa5757982122fd6d2ceec46534777"
+      },
+      {
+        "exists": true,
+        "label": "size_summary",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/species_size_correlation_summary.csv",
+        "sha256": "77c27f282f465a499827b13a735e9840d867f872c02c336af973c227684b6bf6"
+      },
+      {
+        "exists": true,
+        "label": "species_nucleus_iod_summary",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/species_nucleus_iod_summary.csv",
+        "sha256": "8b1552a5c83db5bfc41ecfd6bc05f56b5bb2df3eae9fd0690820d7c5f96897c5"
+      },
+      {
+        "exists": true,
+        "label": "linked_nucleus_pairs",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/linked_nucleus_pairs.csv.gz",
+        "sha256": "f751740f4bd7fe710f2926609fa02229b264cacca1a83566a17a22e0571e6d07"
+      },
+      {
+        "exists": true,
+        "label": "summary_json",
+        "path": "cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/summary.json",
+        "sha256": "388b496d9a76add8611058490bc54015a6becf685a20a541dd41bfb11c203f82"
+      }
+    ],
+    "summary_path": "path_analysis/data/external/derived/cellprofiler_species_morphology_summary.csv",
+    "summary_sha256": "56269b1a8cf6d679514795a8b218827b2a608e117394f371580f86f6ed637f23"
+  },
+  "native_bridge_modules": [
+    {
+      "exists": true,
+      "label": "bridge",
+      "path": "path_analysis/scripts/cellprofiler_bridge/bridge.py",
+      "sha256": "f01a4ec9755a0fabdab865988ce92f8e13303ee3c70d3707349163df72e0696c"
+    },
+    {
+      "exists": true,
+      "label": "pipeline_runs",
+      "path": "path_analysis/scripts/cellprofiler_bridge/pipeline_runs.py",
+      "sha256": "d72e645ad222a782675ea4de5631af7a66e2b8b36f2cb17ec711a9f02610a9d4"
+    },
+    {
+      "exists": true,
+      "label": "convergence",
+      "path": "path_analysis/scripts/cellprofiler_bridge/convergence.py",
+      "sha256": "d372fea3bdca4ab291cf16432032525dc2c04929d52e3404b24f552e23db314d"
+    }
+  ],
+  "raw_genome_trace": {
+    "details": "The current default derives the genome bundle from linked YOLO nuclei rather than the standalone raw nucleus-IOD run.",
+    "origin": "not_used_in_linked_yolo_default",
+    "present": false,
+    "source_files": []
+  },
+  "reference_genome_pg": 16.36
+}

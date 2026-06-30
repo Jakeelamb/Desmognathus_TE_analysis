@@ -39,7 +39,6 @@ logger = logging.getLogger('landscape_parser')
 
 # Define constants and paths from centralized config
 ALIGN_DIR = paths.input_data.repeatmasker
-CLASS_DIR = PROJECT_ROOT / "interim"
 MERGED_CLASSIFICATION_FILE = paths.results.data / "dnaPipeTE_merged_classifications.csv"
 OUTPUT_DIR = paths.results.landscapes
 KIMURA_PATTERN = r"Kimura \(with divCpGMod\) = (\d+\.\d+)"
@@ -183,17 +182,14 @@ def load_classification_file(filepath):
         return df
         
     except Exception as e:
-        logger.error(f"Error loading classification file: {str(e)}")
-        logger.warning("Creating empty DataFrame with required columns")
-        return pd.DataFrame(columns=['dnaPipeTE_contig_name', 'Species', 'Class', 'Order', 'Superfamily'])
+        raise RuntimeError(f"Error loading classification file {filepath}: {e}") from e
 
 
 def load_classification_for_sample(srx_id):
     """
     Load classification data for a single sample.
 
-    Prefer the canonical merged classification table in results/data and
-    fall back to the older per-sample interim file only if necessary.
+    Load the canonical merged classification table in results/data.
     """
     global _MERGED_CLASSIFICATION_CACHE
 
@@ -208,20 +204,12 @@ def load_classification_for_sample(srx_id):
             if not sample_df.empty:
                 logger.info(f"Loaded {len(sample_df)} canonical classification rows for {srx_id}")
                 return sample_df
-            logger.warning(f"No rows for {srx_id} found in canonical merged classifications")
+            raise ValueError(f"No rows for {srx_id} found in canonical merged classifications")
 
-    legacy_file = CLASS_DIR / f"{srx_id}_reads_per_component_and_annotation_processed"
-    if legacy_file.exists():
-        logger.info(f"Falling back to legacy interim classification file: {legacy_file}")
-        return load_classification_file(legacy_file)
-
-    logger.error(
-        "No classification source found for %s. Checked %s and %s",
-        srx_id,
-        MERGED_CLASSIFICATION_FILE,
-        legacy_file,
+    raise FileNotFoundError(
+        f"No classification source found for {srx_id}. "
+        f"Checked {MERGED_CLASSIFICATION_FILE}; legacy interim classification files are no longer accepted."
     )
-    return pd.DataFrame(columns=['dnaPipeTE_contig_name', 'Species', 'Class', 'Order', 'Superfamily'])
 
 
 def merge_align_classification(align_data, class_df):
@@ -386,16 +374,7 @@ def process_single_sample(srx_id):
     # Load classification data
     class_df = load_classification_for_sample(srx_id)
     if class_df.empty:
-        logger.warning(f"No classification data loaded for {srx_id}, using defaults")
-        
-        # Create a default classification dataframe with the sample species
-        data = {
-            'dnaPipeTE_contig_name': ['default'],
-            'Species': [f"Desmognathus_{srx_id}"],
-            'Order': ['Unknown'],
-            'Superfamily': ['Unknown']
-        }
-        class_df = pd.DataFrame(data)
+        raise ValueError(f"No classification data loaded for {srx_id}; refusing to write landscape output")
     
     # Merge and aggregate data
     merged_df = merge_align_classification(align_data, class_df)

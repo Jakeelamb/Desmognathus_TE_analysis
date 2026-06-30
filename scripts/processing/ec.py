@@ -89,8 +89,10 @@ def calculate_depth_metrics(row, input_dir):
     count_bp_rLTR_nonzero = 0
     count_bp_internal_nonzero = 0
     mean_count_bp_LTR_nonzero = np.nan
+    depth_file_found = False
 
     if os.path.exists(depth_file_path) and os.path.getsize(depth_file_path) > 0:
+        depth_file_found = True
         try:
             depth_df = pd.read_csv(depth_file_path, sep='\t', header=None,
                                    names=['sequence_id_element', 'position', 'depth'])
@@ -164,7 +166,8 @@ def calculate_depth_metrics(row, input_dir):
         'count_bp_lLTR_nonzero': count_bp_lLTR_nonzero,
         'count_bp_rLTR_nonzero': count_bp_rLTR_nonzero,
         'mean_count_bp_LTR_nonzero': mean_count_bp_LTR_nonzero,
-        'count_bp_internal_nonzero': count_bp_internal_nonzero
+        'count_bp_internal_nonzero': count_bp_internal_nonzero,
+        'depth_file_found': depth_file_found,
     })
 
 
@@ -172,6 +175,7 @@ def calculate_depth_metrics(row, input_dir):
 
 # 1. Process GCA CSV files and calculate depth metrics
 all_processed_data = []
+file_failures = []
 gca_csv_files = glob.glob(os.path.join(input_dir, "GCA_*_tabout.csv"))
 
 if not gca_csv_files:
@@ -205,10 +209,11 @@ for file_path in gca_csv_files:
             )
 
             # Add depth metrics and non-zero counts columns to the filtered DataFrame
-            gca_df_filtered[['mean_depth_terminal', 'mean_depth_internal', 'ratio_terminal_internal', 
+            gca_df_filtered[['mean_depth_terminal', 'mean_depth_internal', 'ratio_terminal_internal',
                              'count_bp_lLTR_nonzero', 'count_bp_rLTR_nonzero',
                              'mean_count_bp_LTR_nonzero',
-                             'count_bp_internal_nonzero']] = depth_metrics
+                             'count_bp_internal_nonzero',
+                             'depth_file_found']] = depth_metrics
             print(f"  Depth metrics calculation complete.")
 
             all_processed_data.append(gca_df_filtered)
@@ -217,10 +222,17 @@ for file_path in gca_csv_files:
 
     except FileNotFoundError:
         print(f"Error: File not found {file_path}")
+        file_failures.append(file_name)
     except pd.errors.EmptyDataError:
         print(f"Warning: File is empty {file_path}")
+        file_failures.append(file_name)
     except Exception as e:
         print(f"Error processing file {file_path}: {e}")
+        file_failures.append(file_name)
+
+if file_failures:
+    print(f"Error: failed to process {len(file_failures)} GCA input files: {file_failures[:20]}")
+    exit(1)
 
 # Combine data from all GCA files
 if not all_processed_data:
@@ -229,6 +241,12 @@ if not all_processed_data:
 
 combined_gca_depth_df = pd.concat(all_processed_data, ignore_index=True)
 print(f"Combined data from all GCA files: {len(combined_gca_depth_df)} total rows.")
+if 'depth_file_found' in combined_gca_depth_df.columns and not combined_gca_depth_df['depth_file_found'].any():
+    print("Error: no depth files were found for any retained LTR element.")
+    exit(1)
+if combined_gca_depth_df['ratio_terminal_internal'].isna().all():
+    print("Error: all terminal:internal depth ratios are NaN before TEsorter merge.")
+    exit(1)
 
 # 2. Load and prepare TEsorter data
 print("Loading TEsorter data...")
@@ -295,6 +313,14 @@ try:
         print(combined_gca_depth_df['sequence'].head())
         print("Sample 'sequence' values in tesorter_df:")
         print(tesorter_df['sequence'].head())
+        exit(1)
+    if master_df['ratio_terminal_internal'].isna().all():
+        print("Error: all terminal:internal depth ratios are NaN after TEsorter merge.")
+        exit(1)
+    if 'depth_file_found' in master_df.columns and not master_df['depth_file_found'].all():
+        missing_count = int((~master_df['depth_file_found']).sum())
+        print(f"Error: {missing_count} merged LTR analysis rows are missing per-element depth files.")
+        exit(1)
 
 except KeyError as e:
     print(f"Error during merge: Missing column {e}. Ensure 'sequence' column exists in both dataframes.")
@@ -320,6 +346,16 @@ try:
     # keep only rows where domains are 5 or 6 
     filtered_df = filtered_df[filtered_df['domain_count'].isin([5,6])]
     print(f"Filtered out rows with unknown species. Remaining rows: {len(filtered_df)}")
+    if filtered_df.empty:
+        print("Error: filtered ectopic recombination output is empty.")
+        exit(1)
+    if filtered_df['ratio_terminal_internal'].isna().all():
+        print("Error: filtered ectopic recombination output has only NaN terminal:internal ratios.")
+        exit(1)
+    if 'depth_file_found' in filtered_df.columns and not filtered_df['depth_file_found'].all():
+        missing_count = int((~filtered_df['depth_file_found']).sum())
+        print(f"Error: {missing_count} filtered ectopic analysis rows are missing per-element depth files.")
+        exit(1)
     
     # Select and reorder columns
     columns_to_keep = [
@@ -331,6 +367,7 @@ try:
         'Strand', 
         'Domains', 
         'domain_count', 
+        'depth_file_found',
         'mean_depth_terminal', 
         'count_bp_lLTR_nonzero',
         'count_bp_rLTR_nonzero',

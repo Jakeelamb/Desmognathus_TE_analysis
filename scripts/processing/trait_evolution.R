@@ -35,13 +35,18 @@ required_packages <- c(
   "yaml"          # Config loading
 )
 
-# Load packages
-for (pkg in required_packages) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg, repos = "https://cloud.r-project.org", quiet = TRUE)
-  }
-  library(pkg, character.only = TRUE)
+missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing_packages) > 0) {
+  stop(
+    "Missing required R packages: ",
+    paste(missing_packages, collapse = ", "),
+    ". Update the Dusky environment instead of installing packages at runtime."
+  )
 }
+invisible(lapply(required_packages, library, character.only = TRUE))
+
+RNG_SEED <- 20260310
+set.seed(RNG_SEED)
 
 # --- Configuration ---
 project_root <- find_project_root(script_dir)
@@ -215,6 +220,8 @@ all_results <- bind_rows(superfamily_results_df, order_results_df, class_results
 # Classify evolutionary pattern
 all_results <- all_results %>%
   mutate(
+    rng_seed = RNG_SEED,
+    k_nsim = 999,
     phylo_signal = case_when(
       is.na(lambda) ~ "unknown",
       lambda > 0.8 & lambda_p < 0.05 ~ "strong (BM-like)",

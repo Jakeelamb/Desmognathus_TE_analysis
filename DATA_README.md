@@ -4,7 +4,7 @@ This document describes how to obtain the input data required to run the Desmogn
 
 ## Overview
 
-The analysis requires data from 35 Desmognathus salamander species. Raw data is not included in this repository due to size constraints (~40GB total).
+The current TE analysis scope is 34 Desmognathus salamander species. Large sequencing and genome-analysis inputs are not included in this repository due to size constraints (~40GB total). `path_analysis/data/external/raw/` may include small source-backed literature or external-data snapshots when their license and sensitivity boundary are documented.
 
 ## Required Data Files
 
@@ -73,7 +73,7 @@ Example genome accessions:
 
 **Location:** `input_data/lookup_table.txt`
 
-**This file IS included in the repository.** It maps species names to SRA and genome accessions.
+This file is a local required input and is not tracked in the cleaned repository. It maps species names to SRA and genome accessions.
 
 Format (tab-separated):
 ```
@@ -91,11 +91,11 @@ input_data/
 ├── dnaPipeTE/
 │   ├── SRX19952657_reads_per_component_and_annotation
 │   ├── SRX19952691_reads_per_component_and_annotation
-│   └── ... (35 files total)
+│   └── ... (34 files total)
 ├── repeatmasker/
 │   ├── SRX19952657_Trinity.align
 │   ├── SRX19952691_Trinity.align
-│   └── ... (35 files total)
+│   └── ... (34 files total)
 ├── phylogeny/
 │   └── desmo900dated_test.tre
 ├── ectopic_recombination/
@@ -150,15 +150,14 @@ input_data/
 After setting up your data, run the verification script:
 
 ```bash
-conda activate Dusky
-python verify_setup.py
+scripts/run_in_dusky.sh python verify_setup.py
 ```
 
 This will check that all required files are in place.
 
 ## Data Availability
 
-Raw sequencing data is available from NCBI SRA under BioProject [ADD_BIOPROJECT_ID].
+Raw sequencing data should be fetched from NCBI SRA using the accessions above. This repository does not currently assert one canonical BioProject ID.
 
 Genome assemblies are available from NCBI GenBank under the accessions listed above.
 

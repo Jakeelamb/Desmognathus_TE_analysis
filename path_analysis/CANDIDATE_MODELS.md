@@ -100,7 +100,7 @@ Caveat:
 
 ## Family 4: `te_genome_morphology`
 
-Purpose: stage the full mechanistic chain suggested by the chapter framing.
+Purpose: stage the full mechanistic chain suggested by the analysis framing.
 
 Nodes:
 
@@ -132,7 +132,7 @@ Candidate models:
 
 Interpretation goal:
 
-- This is the eventual integrated chapter analysis, but not the first result to prioritize.
+- This is the eventual integrated path analysis, but not the first result to prioritize.
 
 ## Family 5: `te_genome_organismal`
 

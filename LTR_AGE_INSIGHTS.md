@@ -9,7 +9,7 @@ sequence-divergence outputs and the primary-literature substitution-rate set.
   - Herrick and Sclavi 2014: https://doi.org/10.1016/j.crpv.2014.06.002
   - Crawford 2003: https://doi.org/10.1007/s00239-003-2513-7
 - Canonical divergence workflow:
-  - `LTR_AGE_AUDIT.md`
+  - `results/reports/LTR_AGE_AUDIT.md`
   - `results/data/ltr_age/ltr_age_pairwise_divergence.csv`
   - `results/data/ltr_age/ltr_age_species_summary.csv`
 - Calibration layer:
@@ -17,7 +17,7 @@ sequence-divergence outputs and the primary-literature substitution-rate set.
   - `results/data/ltr_age/ltr_age_calibration_summary.csv`
   - `results/data/ltr_age/ltr_age_species_summary_calibrated.csv`
 - Signal/context checks:
-  - `LTR_DIVERGENCE_SIGNAL_AUDIT.md`
+  - `results/reports/LTR_DIVERGENCE_SIGNAL_AUDIT.md`
   - `results/data/ltr_age/ltr_divergence_phylogenetic_signal.csv`
   - `results/data/ltr_age/ltr_divergence_feature_correlations.csv`
 
@@ -73,7 +73,7 @@ sequence-divergence outputs and the primary-literature substitution-rate set.
   with ectopic ratio (`rho = 0.291`, `p = 0.119`), while the remaining tested
   correlations were weaker.
 
-## Working Interpretation For The Paper
+## Working Interpretation
 
 - The safest interpretation is that much of the detectable paired-LTR signal in
   Desmognathus reflects relatively old, lineage-specific LTR history rather than
@@ -81,6 +81,6 @@ sequence-divergence outputs and the primary-literature substitution-rate set.
 - The age scale is best reported as a sensitivity range rather than a point
   estimate, with the central `1.227e-9` value used only as a representative
   summary in tables or figures.
-- Any manuscript text should explicitly say that the calibrated ages are derived
+- Any results text should explicitly say that the calibrated ages are derived
   from sequence-based 5'/3' LTR divergence combined with externally sourced
   nuclear substitution rates.

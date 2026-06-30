@@ -1,41 +1,40 @@
 #!/bin/bash
 # Run unit tests for the Desmognathus_TE project
 
-set -e  # Exit on error
+set -euo pipefail
 
-echo "Running Desmognathus_TE Unit Tests"
-echo "=================================="
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Ensure we're in the project root
-if [ ! -d "scripts" ] || [ ! -d "config" ]; then
-    echo "Error: This script must be run from the project root directory."
-    echo "Current directory: $(pwd)"
-    exit 1
+cd "$PROJECT_ROOT"
+
+if [ "${DUSKY_ENV_WRAPPED:-}" != "1" ]; then
+    exec "$PROJECT_ROOT/scripts/run_in_dusky.sh" bash "$PROJECT_ROOT/scripts/run_tests.sh"
 fi
+
+echo "Running Desmognathus_TE Unit Tests" >&2
+echo "==================================" >&2
 
 # Check for Python
 if ! command -v python &> /dev/null; then
-    echo "Error: Python is required but not found."
+    echo "Error: Python is required but not found." >&2
     exit 1
 fi
 
-# Create test output directory if it doesn't exist
-mkdir -p results/test_reports
-
 # Run Python tests
-echo "Running Python tests..."
+echo "Running Python tests..." >&2
 PYTHONPATH="$PWD" python -m unittest discover -s scripts/python/tests
 
 # Run R tests if available and if R is installed
 if command -v Rscript &> /dev/null; then
     if [ -d "scripts/R/tests" ]; then
-        echo "Running R tests..."
+        echo "Running R tests..." >&2
         Rscript -e "testthat::test_dir('scripts/R/tests')"
     else
-        echo "No R tests found in scripts/R/tests."
+        echo "No R tests found in scripts/R/tests." >&2
     fi
 else
-    echo "Skipping R tests: R is not installed or not in PATH."
+    echo "Skipping R tests: R is not installed or not in PATH." >&2
 fi
 
-echo "All tests completed!" 
+echo "All tests completed!" >&2

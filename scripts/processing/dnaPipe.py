@@ -257,6 +257,16 @@ CLASSIFICATION_MAP = {
     'Unspecified': ('Unknown', np.nan, np.nan)
 }
 
+
+def _is_real_category(value):
+    return isinstance(value, str) and bool(value.strip())
+
+
+ALL_CLASSES = ALL_CLASSES | {row[0] for row in CLASSIFICATION_MAP.values() if _is_real_category(row[0])}
+ALL_ORDERS = ALL_ORDERS | {row[1] for row in CLASSIFICATION_MAP.values() if _is_real_category(row[1])}
+ALL_SUPERFAMILIES = ALL_SUPERFAMILIES | {row[2] for row in CLASSIFICATION_MAP.values() if _is_real_category(row[2])}
+
+
 class DataProcessor:
     """Class for processing dnaPipeTE data files."""
     
@@ -300,6 +310,8 @@ class DataProcessor:
             # Extract SRX value and map to species
             srx = filename.replace("_reads_per_component_and_annotation", "")
             species = self.species_dict.get(srx[:11], "Unknown")
+            if species == "Unknown":
+                raise ValueError(f"No species mapping found for {srx[:11]} from {filename}")
             
             # Read the file
             df = pd.read_csv(file_path, sep=" ", header=None, names=[
@@ -313,33 +325,56 @@ class DataProcessor:
             # Save with same format as input, but with additional columns
             df.to_csv(output_path, sep=" ", index=False, header=False)
             
-            logger.info(f"Processed {filename}: {len(df)} rows, Species: {species}")
+            row_count = len(df)
+            logger.info(f"Processed {filename}: {row_count} rows, Species: {species}")
             
             # Clean up memory
             del df
             gc.collect()
+            return {"filename": filename, "ok": True, "rows": row_count}
             
         except Exception as e:
             logger.error(f"Error processing file {filename}: {str(e)}")
             import traceback
             logger.error(traceback.format_exc())
+            return {"filename": filename, "ok": False, "error": str(e)}
             
     def process_all_files(self):
         """Process all files in parallel."""
-        # Get list of files
-        files = [f for f in os.listdir(INPUT_DIR) 
-                if f.endswith("_reads_per_component_and_annotation")]
+        if not INPUT_DIR.exists():
+            raise FileNotFoundError(f"dnaPipeTE input directory not found: {INPUT_DIR}")
+
+        for old_file in INTERIM_DIR.glob("*_reads_per_component_and_annotation"):
+            old_file.unlink()
+
+        files = sorted(
+            f for f in os.listdir(INPUT_DIR)
+            if f.endswith("_reads_per_component_and_annotation")
+        )
+        if not files:
+            raise RuntimeError(f"No dnaPipeTE input files found in {INPUT_DIR}")
         
         logger.info(f"Processing {len(files)} files...")
         
         # Use maximum number of cores while leaving some resources for the system
-        num_processes = max(1, os.cpu_count() - 1)
+        num_processes = min(len(files), max(1, os.cpu_count() - 1))
         
         # Process files in parallel with progress bar
         with Pool(processes=num_processes) as pool:
-            list(tqdm(pool.imap(self.process_file, files), total=len(files)))
+            results = list(tqdm(pool.imap(self.process_file, files), total=len(files)))
 
-def merge_files(input_dir, output_file):
+        failed = [result for result in results if not result.get("ok")]
+        if failed:
+            failed_names = ", ".join(result["filename"] for result in failed)
+            raise RuntimeError(f"Failed to process {len(failed)} dnaPipeTE files: {failed_names}")
+
+        processed_files = [INTERIM_DIR / filename for filename in files]
+        missing_outputs = [path.name for path in processed_files if not path.exists()]
+        if missing_outputs:
+            raise RuntimeError(f"Missing processed interim files after dnaPipeTE run: {missing_outputs}")
+        return files
+
+def merge_files(input_dir, output_file, expected_files=None):
     """
     Merge all processed files into a single consolidated file incrementally.
     
@@ -350,8 +385,15 @@ def merge_files(input_dir, output_file):
     logger.info("Starting incremental file merge process...")
     
     # Get list of all processed files
-    files = [f for f in os.listdir(input_dir) 
-             if f.endswith("_reads_per_component_and_annotation")]
+    if expected_files is None:
+        files = sorted(
+            f for f in os.listdir(input_dir)
+            if f.endswith("_reads_per_component_and_annotation")
+        )
+    else:
+        files = list(expected_files)
+    if not files:
+        raise RuntimeError(f"No processed dnaPipeTE files found in {input_dir}")
     
     logger.info(f"Found {len(files)} files to merge")
     
@@ -367,9 +409,12 @@ def merge_files(input_dir, output_file):
     output_column_names = column_names + ['Source']
 
     # Process each file
+    failures = []
     for filename in tqdm(files, desc="Merging files incrementally"):
         try:
             file_path = Path(input_dir) / filename
+            if not file_path.exists():
+                raise FileNotFoundError(file_path)
             
             # Read the file - assume interim files have no header
             df = pd.read_csv(file_path, sep=" ", header=None, names=column_names)
@@ -401,8 +446,12 @@ def merge_files(input_dir, output_file):
             logger.error(f"Error processing {filename} during merge: {str(e)}")
             import traceback
             logger.error(traceback.format_exc())
-            # Optionally: continue with the next file or raise the exception
-            # continue 
+            failures.append(filename)
+
+    if failures:
+        raise RuntimeError(f"Failed to merge {len(failures)} processed dnaPipeTE files: {failures}")
+    if total_rows == 0:
+        raise RuntimeError("dnaPipeTE merge wrote zero rows")
     
     logger.info(f"Finished merging. Total rows in merged file: {total_rows:,}")
     logger.info(f"Merged file saved to: {output_file}")
@@ -463,8 +512,7 @@ def create_visualization_datasets(merged_data_path, output_data_dir):
 
             # Convert the aggregated dictionary to a DataFrame for pivoting/saving
             if not category_aggregator:
-                logger.warning(f"No data aggregated for category {category}. Skipping file creation.")
-                continue
+                raise RuntimeError(f"No data aggregated for category {category}")
 
             # Create DataFrame from the dictionary
             final_df = pd.DataFrame.from_dict(category_aggregator, orient='index').fillna(0)
@@ -523,20 +571,18 @@ def create_visualization_datasets(merged_data_path, output_data_dir):
 
         except FileNotFoundError:
              logger.error(f"Error: Merged data file not found at {merged_data_path}")
-             # Stop processing further categories if merged file is missing
-             break 
+             raise
         except pd.errors.EmptyDataError:
             logger.error(f"Error: Merged data file {merged_data_path} is empty.")
-            # Stop processing further categories if merged file is empty
-            break
+            raise
         except KeyError as e:
              logger.error(f"Error processing {category} breakdown: Missing column {e}. Ensure '{category}', 'Species', and 'aligned_bases' columns exist in {merged_data_path}.")
-             # Continue to the next category despite the error
+             raise
         except Exception as e:
             logger.error(f"Error processing {category} breakdown: {str(e)}")
             import traceback
             logger.error(traceback.format_exc())
-            # Continue to the next category despite the error
+            raise
 
     logger.info("Finished creating breakdown datasets.")
     # No return value needed as the function now only writes files
@@ -561,10 +607,12 @@ def main():
     """Main function to run the entire processing pipeline."""
     # Step 1: Load species dictionary
     species_dict = load_species_dict(LOOKUP_PATH)
+    if not species_dict:
+        raise RuntimeError(f"No species mappings loaded from {LOOKUP_PATH}")
     
     # Step 2: Process individual files
     processor = DataProcessor(species_dict)
-    processor.process_all_files()
+    processed_files = processor.process_all_files()
     
     # Step 3: Merge processed files
     # Use the new output directory and filename format
@@ -575,7 +623,7 @@ def main():
         merged_data_path.unlink()
         logger.info(f"Removed existing merged file: {merged_data_path}")
         
-    final_merged_path = merge_files(INTERIM_DIR, merged_data_path)
+    final_merged_path = merge_files(INTERIM_DIR, merged_data_path, expected_files=processed_files)
     
     # Step 4: Create visualization datasets using the path and new output dir
     create_visualization_datasets(final_merged_path, OUTPUT_DATA_DIR)
@@ -584,4 +632,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

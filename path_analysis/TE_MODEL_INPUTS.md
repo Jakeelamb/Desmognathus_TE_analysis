@@ -1,6 +1,6 @@
 # TE Model Inputs
 
-This note freezes the recommended TE predictors for the comparative path-analysis stage.
+This note records the recommended TE predictors for the comparative path-analysis stage.
 
 ## Recommended TE blocks
 
@@ -26,7 +26,7 @@ This note freezes the recommended TE predictors for the comparative path-analysi
 - `data/derived/te_path_features.csv`
   Full reusable TE feature table with provenance columns.
 - `data/derived/te_model_feature_panel.csv`
-  Compact manuscript-facing TE panel for model assembly and overlap checks.
+  Compact analysis-facing TE panel for model assembly and overlap checks.
 
 ## Presentation guidance
 

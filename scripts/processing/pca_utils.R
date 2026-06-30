@@ -2,7 +2,7 @@
 #'
 #' These helpers intentionally avoid the older raw-proportion PCA assumptions.
 #' The canonical workflow is:
-#' 1. load frozen TE breakdown tables
+#' 1. load repo-local TE breakdown tables
 #' 2. apply explicit feature filtering
 #' 3. replace zeros deterministically
 #' 4. close compositions and apply CLR
@@ -53,10 +53,7 @@ find_project_root <- function() {
 
   current <- normalizePath(start_dir, mustWork = FALSE)
   for (i in seq_len(10)) {
-    if (
-      file.exists(file.path(current, "config", "paths.yaml")) ||
-      dir.exists(file.path(current, ".git"))
-    ) {
+    if (file.exists(file.path(current, "paths.yaml"))) {
       return(current)
     }
     parent <- dirname(current)

@@ -1,33 +1,31 @@
 # Path Analysis Workspace
 
-This folder is a temporary, consolidated workspace for the phylogenetic path analysis section of the Desmognathus chapter and manuscript. It keeps the current planning documents, dataset assembly code, and model scaffold in one place so the work does not drift across the legacy analysis directories.
+This folder is the active workspace for the phylogenetic path-analysis layer. It keeps the current dataset assembly code, model scaffold, source manifests, and small derived audit tables in one place.
 
 If returning after a context switch or changing focus within the project, start with `PATH_ANALYSIS_STATUS.md`.
 
 ## What Is Here
 
 - `PATH_ANALYSIS_STATUS.md`
-  The current high-level map of the workspace, pipeline, panel definitions, and best-supported model results. This should be the first file to read when restarting or shifting to a different task within the same analysis.
+  The current high-level map of the workspace, pipeline, panel definitions, generated outputs, and claim boundaries. This should be the first file to read when restarting or shifting to a different task within the same analysis.
 - `README.md`
   This overview and the current staged plan.
-- `SESSION_HANDOFF.md`
-  Secondary restart document with chronological context.
 - `DATA_DICTIONARY.md`
   Variable definitions, preferred observed proxies, and current caveats.
 - `TE_DATA_AUDIT.md`
-  Current audit status of the frozen TE source tables and derived path-analysis TE products, including validated checks and remaining warnings.
+  Current audit status of the canonical TE source tables and derived path-analysis TE products, including validated checks and remaining warnings.
 - `TE_METHODS_LANGUAGE.md`
-  Manuscript-ready wording for the TE methods section, including Simpson and ectopic denominator semantics.
+  Methods wording for the TE layer, including Simpson and ectopic denominator semantics.
 - `TE_DIVERSITY_CANONICALIZATION.md`
   Non-destructive reconstruction note for the TE diversity summary tables, including the audited path from threshold-grid outputs to the current canonical diversity snapshots.
 - `TE_PROVENANCE_AUDIT.md`
-  Upstream provenance map for the frozen TE summary tables, including the now-resolved diversity-summary reconstruction path.
+  Upstream provenance map for the canonical TE summary tables, including the now-resolved diversity-summary reconstruction path.
 - `CELLPROFILER_PROVENANCE_AUDIT.md`
-  Human-readable audit note for the imported CellProfiler genome and morphology layer, including the raw-run reconstruction rule used when the legacy upstream species bundle is absent.
+  Human-readable audit note for the imported CellProfiler genome and morphology layer, including the linked-run reconstruction rule used by the refresh bridge.
 - `INPUT_PREPARATION_PLAN.md`
   Detailed plan for literature trait mining, taxonomy crosswalks, and TE feature engineering.
 - `SOURCE_TRACKING.md`
-  Provenance rules and source-manifest workflow for publication-grade traceability.
+  Provenance rules and source-manifest workflow for reproducible traceability.
 - `CANDIDATE_MODELS.md`
   The initial DAG families to compare with `phylopath`.
 - `scripts/build_master_dataset.py`
@@ -37,15 +35,15 @@ If returning after a context switch or changing focus within the project, start 
 - `scripts/path_model_scaffold.R`
   Prepares transformed analysis inputs and defines the current candidate model sets.
 - `scripts/prepare_te_features.py`
-  Freezes TE composition, diversity, turnover, and ectopic proxies into a reusable feature table.
+  Builds TE composition, diversity, turnover, and ectopic proxies into a reusable feature table.
 - `scripts/build_canonical_diversity_tables.py`
-  Rebuilds scratch candidates for the canonical TE diversity summary tables and audits them against the frozen `results/data/` snapshots without overwriting those files.
+  Rebuilds scratch candidates for the canonical TE diversity summary tables and audits them against the current `results/data/` snapshots without overwriting those files.
 - `scripts/prepare_external_morphometrics.py`
   Summarizes raw external morphometric appendices into source-linked species tables.
 - `scripts/prepare_nc_biodiversity_traits.py`
   Parses local NC Biodiversity Project HTML snapshots into a source-linked species trait table.
 - `scripts/prepare_curated_organismal_traits.py`
-  Collapses external trait sources into a manuscript-facing organismal trait table with retained provenance.
+  Collapses external trait sources into an analysis-facing organismal trait table with retained provenance.
 - `scripts/build_phylogenetic_trait_imputation.R`
   Builds a sensitivity-only phylogenetic nearest-neighbor imputation layer for missing or low-confidence organismal traits without overwriting the curated observed table.
 - `scripts/build_te_model_panel.py`
@@ -74,16 +72,16 @@ If returning after a context switch or changing focus within the project, start 
 These counts reflect the current files already present in the workspace:
 
 - TE species in this repo: `34`
-- Genome-estimate species in `cellprofiler_test`: `31`
-- TE + genome overlap: `27`
-- TE + genome + ectopic overlap: `24`
+- Linked genome estimates imported from CellProfiler: `21`
+- TE + genome overlap: `18`
+- TE + genome + ectopic overlap: `16`
 - Genome + linked morphology overlap: `21`
 - TE + genome + linked morphology overlap: `18`
 - TE + genome + ectopic + linked morphology overlap: `16`
 
 ## Important Caveat
 
-The current `genome_size_pg` values imported from `cellprofiler_test` are still provisional for path-analysis purposes. The active imported snapshot is now derived from strict-core linked YOLO nucleus IOD, prefers analysis-ready linked images when available, and records that reconstruction in a machine-readable audit. Any model that simultaneously treats current genome size and nucleus size as separate causal variables should therefore be interpreted as planning and sensitivity work, not the final manuscript result.
+The current `genome_size_pg` values imported from `cellprofiler_test` are still provisional for path-analysis purposes. The active imported snapshot is derived from strict-core linked YOLO nucleus IOD, prefers analysis-ready linked images when available, and records that reconstruction in a machine-readable audit. Any model that simultaneously treats current genome size and nucleus size as separate causal variables should therefore be interpreted as planning and sensitivity work, not a final causal result.
 
 For now:
 
@@ -100,43 +98,47 @@ For now:
 
 ## How To Use
 
-Activate the project R environment first:
+Run project commands through the Dusky wrapper:
 
 ```bash
-source "$HOME/miniconda3/etc/profile.d/conda.sh"
-conda activate Dusky
+scripts/run_in_dusky.sh python verify_setup.py --skip-data
 ```
 
-Install the path-analysis packages into that environment:
+The path-analysis dependencies are listed in `Dusky.yml`. Refresh the
+environment from that file rather than installing packages inside analysis
+scripts:
 
 ```bash
-conda install -n Dusky -c conda-forge -c bioconda -y r-igraph r-tidygraph r-graphlayouts r-ggraph r-ggm bioconductor-graph r-phylolm
-Rscript -e 'envlib <- file.path(Sys.getenv("CONDA_PREFIX"), "lib/R/library"); .libPaths(envlib); options(repos = c(CRAN = "https://cloud.r-project.org")); install.packages("phylopath", lib = envlib)'
+conda env update -f Dusky.yml
 ```
 
-The scaffold script prefers the active conda R library when `CONDA_PREFIX` is set, so it does not accidentally load incompatible user-level packages.
+The wrapper prepends `$CONDA_PREFIX/bin` before execution, so Python and R
+resolve from the active `Dusky` Conda environment rather than from the host
+PATH. The scaffold script also prefers the active Conda R library when
+`CONDA_PREFIX` is set, so it does not accidentally load incompatible user-level
+packages.
 
 Refresh the imported CellProfiler layer first:
 
 ```bash
-python3 path_analysis/scripts/pull_cellprofiler_estimates.py
+scripts/run_in_dusky.sh python path_analysis/scripts/pull_cellprofiler_estimates.py
 ```
 
 Then build the merged datasets:
 
 ```bash
-python3 path_analysis/scripts/build_master_dataset.py
-python3 path_analysis/scripts/prepare_te_features.py
-python3 path_analysis/scripts/prepare_amphibio_traits.py
-python3 path_analysis/scripts/prepare_external_morphometrics.py
-python3 path_analysis/scripts/prepare_nc_biodiversity_traits.py
-python3 path_analysis/scripts/prepare_curated_organismal_traits.py
-Rscript path_analysis/scripts/build_phylogenetic_trait_imputation.R
-python3 path_analysis/scripts/build_te_model_panel.py
-python3 path_analysis/scripts/build_path_input_master.py
-python3 path_analysis/scripts/build_analysis_panels.py
-python3 path_analysis/scripts/audit_source_traceability.py
-python3 path_analysis/scripts/audit_publication_readiness.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_master_dataset.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_te_features.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_amphibio_traits.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_external_morphometrics.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_nc_biodiversity_traits.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_curated_organismal_traits.py
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/build_phylogenetic_trait_imputation.R
+scripts/run_in_dusky.sh python path_analysis/scripts/build_te_model_panel.py
+scripts/run_in_dusky.sh python path_analysis/scripts/prepare_ltr_history_features.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_path_input_master.py
+scripts/run_in_dusky.sh python path_analysis/scripts/build_analysis_panels.py
+scripts/run_in_dusky.sh python path_analysis/scripts/audit_source_traceability.py
 ```
 
 The main analysis-panel products are:
@@ -146,7 +148,7 @@ The main analysis-panel products are:
 - `path_analysis/data/derived/analysis_species_readiness.csv`
   Species-level eligibility and exclusion reasons for every panel.
 - `path_analysis/data/derived/source_traceability_gaps.csv`
-  Traceability audit report; this should stay empty for publication use.
+  Traceability audit report; this should stay empty for reproducible analysis use.
 
 The phylogenetic-imputation products are:
 
@@ -165,13 +167,6 @@ Important rule:
 - `phylo_` columns are sensitivity-only and should never be silently substituted for source-backed values
 - the current `phylofill` panel comparison is a no-op for the TE/genome model families: no species are added to the present overlap sets
 
-For a publication-facing audit summary after the rebuild, inspect:
-
-```bash
-python3 path_analysis/scripts/audit_publication_readiness.py
-sed -n '1,120p' path_analysis/data/derived/publication_readiness_checks.csv
-```
-
 Inspect the overlap summary:
 
 ```bash
@@ -181,35 +176,36 @@ sed -n '1,120p' path_analysis/data/derived/dataset_overlap_summary.csv
 Preview the model families without requiring `phylopath`:
 
 ```bash
-Rscript path_analysis/scripts/path_model_scaffold.R --summary-only
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --summary-only
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_strict_body --summary-only
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --summary-only
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --summary-only
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_strict_body --summary-only
 ```
 
-Once `phylopath` is installed, run a family:
+Once the Dusky environment includes `phylopath`, run a family:
 
 ```bash
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome
 ```
 
-To run the same family on a panel-defined sensitivity subset without overwriting the legacy outputs:
+To run the same family on a panel-defined sensitivity subset without overwriting existing outputs:
 
 ```bash
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_mediumplus
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_organismal --panel te_genome_organismal_primary_strict_body
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ltr_history --panel te_genome_ltr_history_primary_mediumplus
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic_organismal --panel te_genome_ectopic_organismal_primary_mediumplus
-Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --panel te_genome_ectopic_primary_strict_body
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome --panel te_genome_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_organismal --panel te_genome_organismal_primary_strict_body
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ltr_history --panel te_genome_ltr_history_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic_organismal --panel te_genome_ectopic_organismal_primary_mediumplus
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/path_model_scaffold.R --family te_genome_ectopic --panel te_genome_ectopic_primary_strict_body
 ```
 
 When `--panel` is supplied, the scaffold reads `data/derived/panels/<panel>.csv` and writes results with the panel name as the filename prefix.
 
-Current organismal-family result:
+Current model-result boundary:
 
-- `te_genome_organismal_primary_mediumplus` currently prefers `body_size_additive` over the TE-only baseline, while `aquaticity`-heavy models rank poorly.
-- `te_genome_ltr_history_primary_mediumplus` currently prefers `history_additive`, but that support weakens in the stricter body-filtered subset, so the LTR-history family should remain sensitivity-only.
-- `te_genome_ectopic_organismal_primary_mediumplus` and `..._strict_body` currently prefer `te_body_size_baseline`, which means the combined family does not retain `ectopic_index` as a winning predictor once body size is allowed to compete.
-- The source-linked note for this historical-axis integration is `LTR_HISTORY_PATH_INTEGRATION.md`.
+- Panel builders and source-traceability audits are current.
+- Re-run panel-specific model rankings before making winner claims from the
+  refreshed panels.
+- The source-linked note for the paired-LTR historical-axis integration is
+  `LTR_HISTORY_PATH_INTEGRATION.md`.
 
 ## External Inputs
 
@@ -226,5 +222,9 @@ The dataset builder now consumes imported snapshots under `path_analysis/data/ex
 Those snapshots are rebuilt from the active `cellprofiler_test` outputs:
 
 - `output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/`
+
+`build_master_dataset.py` requires these imported snapshots. Refresh the
+snapshots with `pull_cellprofiler_estimates.py` before rebuilding merged
+path-analysis tables.
 
 The pull step now reconstructs the imported genome bundle directly from the active linked YOLO nucleus measurements, writes a species-by-state summary sidecar, and records that reconstruction explicitly in the audit outputs rather than silently reusing downstream path-analysis tables.

@@ -22,6 +22,20 @@ OUTPUT_USAGE = DERIVED_DIR / "source_usage_summary.csv"
 OUTPUT_GAPS = DERIVED_DIR / "source_traceability_gaps.csv"
 OUTPUT_FILE_REGISTRY = DERIVED_DIR / "source_file_registry.csv"
 
+LOCAL_FILE_SOURCE_TYPES = {
+    "website",
+    "dataset",
+    "local_repo_table",
+    "local_generated_table",
+}
+LOCAL_FILE_NOTE_MARKERS = (
+    "stored locally",
+    "locally stored",
+    "local pdf",
+    "local html",
+    "local file",
+)
+
 TABLES_TO_SCAN = [
     TEMPLATES_DIR / "literature_trait_extraction.csv",
     EXTERNAL_DERIVED_DIR / "amphibio_desmognathus_traits.csv",
@@ -47,16 +61,43 @@ TRACKED_FILES = [
         "repo_ectopic_recombination_filtered_3000bp_5plusdomains",
         PROJECT_ROOT / "results" / "data" / "ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv",
     ),
+    (
+        "repo_ltr_age_species_summary",
+        PROJECT_ROOT / "results" / "data" / "ltr_age" / "ltr_age_species_summary.csv",
+    ),
+    (
+        "repo_ltr_age_species_summary_calibrated",
+        PROJECT_ROOT / "results" / "data" / "ltr_age" / "ltr_age_species_summary_calibrated.csv",
+    ),
+    (
+        "repo_ltr_substitution_rate_candidates",
+        PROJECT_ROOT / "results" / "data" / "ltr_age" / "ltr_substitution_rate_candidates.csv",
+    ),
     ("repo_desmognathus_phylogeny_tree", PROJECT_ROOT / "input_data" / "phylogeny" / "desmo900dated_test.tre"),
     (
         "cellprofiler_final_species_results",
-        CELLPROFILER_ROOT / "output" / "qc_report_blockbalanced" / "final_species_results.csv",
+        EXTERNAL_DERIVED_DIR / "cellprofiler_final_species_results.csv",
     ),
     (
         "cellprofiler_species_morphology_summary",
-        CELLPROFILER_ROOT / "output" / "publication_analysis" / "species_morphology_summary.csv",
+        EXTERNAL_DERIVED_DIR / "cellprofiler_species_morphology_summary.csv",
     ),
 ]
+
+
+def expects_local_file(manifest_row: pd.Series) -> bool:
+    source_type = str(manifest_row.get("source_type", "")).strip().lower()
+    if source_type in LOCAL_FILE_SOURCE_TYPES:
+        return True
+    notes = str(manifest_row.get("notes", "")).strip().lower()
+    return any(marker in notes for marker in LOCAL_FILE_NOTE_MARKERS)
+
+
+def portable_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(PROJECT_ROOT.resolve()))
+    except ValueError:
+        return path.name
 
 
 def sha256_for_file(path: Path) -> str:
@@ -78,7 +119,7 @@ def load_file_registry() -> pd.DataFrame:
             rows.append(
                 {
                     "source_id": row.get("source_id"),
-                    "local_path": str(local_path) if pd.notna(local_path) else pd.NA,
+                    "local_path": portable_path(Path(local_path)) if pd.notna(local_path) else pd.NA,
                     "sha256": row.get("sha256"),
                     "exists": pd.notna(local_path) and Path(local_path).exists(),
                     "origin": "external_raw_inventory",
@@ -89,7 +130,7 @@ def load_file_registry() -> pd.DataFrame:
         rows.append(
             {
                 "source_id": source_id,
-                "local_path": str(path.resolve()),
+                "local_path": portable_path(path),
                 "sha256": sha256_for_file(path) if path.exists() else pd.NA,
                 "exists": path.exists(),
                 "origin": "tracked_input",
@@ -149,6 +190,8 @@ def build_usage_summary(manifest: pd.DataFrame, registry: pd.DataFrame) -> pd.Da
     )
     summary["in_manifest"] = summary["source_id"].isin(set(manifest["source_id"]))
     summary["has_local_file_record"] = summary["source_id"].isin(set(registry["source_id"]))
+    existing_sources = set(registry.loc[registry["exists"].fillna(False).astype(bool), "source_id"])
+    summary["local_file_exists"] = summary["source_id"].isin(existing_sources)
     summary = summary.merge(
         manifest[["source_id", "short_citation", "full_reference", "url"]],
         on="source_id",
@@ -176,12 +219,8 @@ def build_gap_report(
                     "details": "Source id is used in derived tables but absent from source_manifest.csv",
                 }
             )
-        source_type = (
-            manifest_by_id.loc[row["source_id"], "source_type"]
-            if row["source_id"] in manifest_by_id.index
-            else pd.NA
-        )
-        local_file_expected = source_type in {"website", "dataset", "local_repo_table", "local_generated_table"}
+        manifest_row = manifest_by_id.loc[row["source_id"]] if row["source_id"] in manifest_by_id.index else None
+        local_file_expected = expects_local_file(manifest_row) if manifest_row is not None else False
         if local_file_expected and not bool(row["has_local_file_record"]):
             gaps.append(
                 {
@@ -190,6 +229,16 @@ def build_gap_report(
                     "table_name": row["tables"],
                     "species": pd.NA,
                     "details": "Source id is used in derived tables but has no tracked local file or registry entry",
+                }
+            )
+        if local_file_expected and bool(row["has_local_file_record"]) and not bool(row["local_file_exists"]):
+            gaps.append(
+                {
+                    "gap_type": "registered_local_file_missing",
+                    "source_id": row["source_id"],
+                    "table_name": row["tables"],
+                    "species": pd.NA,
+                    "details": "Source id is used in derived tables and has a registry row, but the registered local file is absent",
                 }
             )
 

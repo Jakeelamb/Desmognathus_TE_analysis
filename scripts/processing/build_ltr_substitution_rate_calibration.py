@@ -314,7 +314,7 @@ def write_note(candidates: pd.DataFrame, summary: pd.DataFrame, species: pd.Data
         "## Recommended Use",
         "",
         (
-            f"- Main paper text: report LTR ages as a sensitivity range using "
+            f"- Main analysis text: report LTR ages as a sensitivity range using "
             f"`{low['rate_value']:.2e}` to `{high['rate_value']:.2e}` substitutions/site/year."
         ),
         (

@@ -1,0 +1,17 @@
+{
+  "bundle_path": "path_analysis/data/external/derived/cellprofiler_final_species_results.csv",
+  "bundle_sha256": "5b7bbf8e462354b0cb2c4231dc647808f9424dc4bd5aecd982695edb71fe041f",
+  "calibration_image_type": "brightfield",
+  "calibration_signal": "linked_nucleus_iod",
+  "estimation_rule": "Scale specimen-level means of image-median linked nucleus IOD to D. fuscus.",
+  "generated_at": "2026-06-30T21:03:19.485914+00:00",
+  "genome_state_summary_path": "path_analysis/data/external/derived/cellprofiler_genome_state_summary.csv",
+  "genome_state_summary_sha256": "4a5c77e6715e40655b4b7bba46ff4c94885d02255c5bf0c3267f740ba145ced5",
+  "linked_image_trace_path": "path_analysis/data/external/derived/cellprofiler_linked_genome_image_trace.csv",
+  "linked_image_trace_sha256": "2ab33add2ac4eaddc61df49dc443193a05790ef9b70dc4a79299f6086047ec45",
+  "mixed_linkage_run_tag": "mixed_cellpose_yolo_full_dataset_v1",
+  "n_species": 21,
+  "reference_gb_per_pg": 0.978,
+  "reference_genome_pg": 16.36,
+  "selection_rule": "restrict to brightfield strict-core linked nuclei and prefer analysis-ready images when available"
+}

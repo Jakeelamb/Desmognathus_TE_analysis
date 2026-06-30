@@ -4,7 +4,7 @@ This workspace treats traceability as part of the dataset, not as an afterthough
 
 ## Principle
 
-Every trait value used in the chapter should be reconstructable back to:
+Every trait value used in the analysis should be reconstructable back to:
 
 - the exact source
 - the exact name concept used in that source
@@ -58,4 +58,5 @@ A usable extraction row should have:
 - If multiple sources disagree, keep all raw rows and resolve the conflict in a separate curated summary step.
 - If a source is only used to validate a coding decision, it still belongs in `source_manifest.csv`.
 - If a raw external file is stored locally, record its filename and sha256 hash.
-- Rebuild the audit outputs after major source or table changes with `python3 path_analysis/scripts/audit_source_traceability.py`.
+- Rebuild the audit outputs after major source or table changes with
+  `scripts/run_in_dusky.sh python path_analysis/scripts/audit_source_traceability.py`.

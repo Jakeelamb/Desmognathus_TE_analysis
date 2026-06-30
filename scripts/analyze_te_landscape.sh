@@ -47,7 +47,7 @@ echo "Analyzing TE landscape for sample: $SRX_ID"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 PARSER_SCRIPT="${SCRIPT_DIR}/processing/parse_repeatmasker_landscape.py"
-PLOT_SCRIPT="${SCRIPT_DIR}/R/visualization/plot_te_landscape.R"
+PLOT_SCRIPT="${SCRIPT_DIR}/visualization/plot_te_landscape.R"
 
 # Create necessary directories
 mkdir -p "${PROJECT_ROOT}/results/landscapes"

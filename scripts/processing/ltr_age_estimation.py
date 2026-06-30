@@ -30,7 +30,8 @@ from config import PROJECT_ROOT, load_lookup_table, paths  # noqa: E402
 
 MASTER_TABLE = paths.results.data / "ectopic_recombination_master.csv"
 OUTPUT_DIR = paths.results.data / "ltr_age"
-AUDIT_PATH = PROJECT_ROOT / "LTR_AGE_AUDIT.md"
+REPORT_DIR = paths.results.reports
+AUDIT_PATH = REPORT_DIR / "LTR_AGE_AUDIT.md"
 TRANSITIONS = {
     ("A", "G"),
     ("G", "A"),
@@ -666,7 +667,7 @@ def render_audit_markdown(
     lines.append("## Bottom Line")
     lines.append("")
     lines.append(
-        "- The previous local approach was not suitable for paper use because it tried to infer insertion age from RepeatMasker divergence-to-consensus hits rather than divergence between true paired 5' and 3' LTR sequences."
+        "- The previous local approach was not suitable for primary analysis use because it tried to infer insertion age from RepeatMasker divergence-to-consensus hits rather than divergence between true paired 5' and 3' LTR sequences."
     )
     lines.append(
         "- The canonical local paired-element source is the ectopic master table produced by `scripts/processing/ec.py`, not the RepeatMasker adjacency heuristic."
@@ -772,6 +773,7 @@ def render_audit_markdown(
 def main() -> int:
     args = parse_args()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
     lookup = load_lookup_table()
     master = load_master_table()
