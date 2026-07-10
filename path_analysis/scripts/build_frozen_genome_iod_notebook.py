@@ -49,6 +49,9 @@ MATCH_FEATURES = [
     "match_log_edge_sharpness",
     "match_log_relative_ring_noise",
 ]
+REFERENCE_SPECIES = "D. fuscus"
+REFERENCE_GENOME_SIZE_PG = 16.36
+CALIBRATION_KIND = "D. fuscus-anchored nuclear-IOD ratio"
 
 
 def sha256_file(path: Path) -> str:
@@ -59,22 +62,22 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def hierarchical_bootstrap_equal_image_estimate(
+def hierarchical_bootstrap_equal_image_draws(
     frame: pd.DataFrame,
     *,
     n_bootstrap: int = 2_000,
     seed: int = 20260710,
-) -> tuple[float, float]:
-    """Bootstrap the mean of image medians, resampling images then nuclei."""
+) -> np.ndarray:
+    """Draw equal-image IOD estimates by resampling images then nuclei."""
     if frame.empty:
-        return np.nan, np.nan
+        return np.full(n_bootstrap, np.nan, dtype=float)
     image_values = {
         str(filename): group["nuc_iod"].dropna().to_numpy(dtype=float)
         for filename, group in frame.groupby("filename", sort=True)
     }
     image_values = {key: values for key, values in image_values.items() if len(values)}
     if not image_values:
-        return np.nan, np.nan
+        return np.full(n_bootstrap, np.nan, dtype=float)
     names = np.array(sorted(image_values), dtype=object)
     rng = np.random.default_rng(seed)
     estimates = np.empty(n_bootstrap, dtype=float)
@@ -86,6 +89,23 @@ def hierarchical_bootstrap_equal_image_estimate(
             sampled_values = rng.choice(values, size=len(values), replace=True)
             medians.append(float(np.median(sampled_values)))
         estimates[replicate] = float(np.mean(medians))
+    return estimates
+
+
+def hierarchical_bootstrap_equal_image_estimate(
+    frame: pd.DataFrame,
+    *,
+    n_bootstrap: int = 2_000,
+    seed: int = 20260710,
+) -> tuple[float, float]:
+    """Return a 95% interval for the equal-image IOD estimator."""
+    estimates = hierarchical_bootstrap_equal_image_draws(
+        frame,
+        n_bootstrap=n_bootstrap,
+        seed=seed,
+    )
+    if not np.isfinite(estimates).any():
+        return np.nan, np.nan
     low, high = np.quantile(estimates, [0.025, 0.975])
     return float(low), float(high)
 
@@ -127,15 +147,18 @@ def summarize_species(
     )
 
     rows: list[dict[str, Any]] = []
+    bootstrap_draws: dict[str, np.ndarray] = {}
     for species_index, (species, group) in enumerate(frame.groupby("species", sort=True)):
         images = image_summary.loc[image_summary["species"].eq(species)]
         image_medians = images["image_median_iod"].to_numpy(dtype=float)
         estimate = float(np.mean(image_medians))
-        ci_low, ci_high = hierarchical_bootstrap_equal_image_estimate(
+        species_draws = hierarchical_bootstrap_equal_image_draws(
             group,
             n_bootstrap=n_bootstrap,
             seed=seed + species_index * 1009,
         )
+        bootstrap_draws[str(species)] = species_draws
+        ci_low, ci_high = np.quantile(species_draws, [0.025, 0.975])
         iod = group["nuc_iod"].dropna().to_numpy(dtype=float)
         row: dict[str, Any] = {
             "species": species,
@@ -188,8 +211,47 @@ def summarize_species(
         .rank(method="min", ascending=False)
         .astype(int)
     )
+
+    reference_rows = species_summary.loc[
+        species_summary["species"].eq(REFERENCE_SPECIES)
+    ]
+    if len(reference_rows) != 1:
+        raise ValueError(
+            f"Genome-size calibration requires exactly one {REFERENCE_SPECIES} estimate."
+        )
+    reference_iod = float(reference_rows["iod_equal_image_estimate"].iloc[0])
+    reference_draws = bootstrap_draws[REFERENCE_SPECIES]
+    if reference_iod <= 0 or not np.all(reference_draws > 0):
+        raise ValueError("Reference-species IOD estimates must be positive.")
+    calibration_factor = REFERENCE_GENOME_SIZE_PG / reference_iod
+    species_summary["iod_ratio_to_fuscus"] = (
+        species_summary["iod_equal_image_estimate"] / reference_iod
+    )
+    species_summary["genome_size_pg_fuscus_anchored"] = (
+        species_summary["iod_equal_image_estimate"] * calibration_factor
+    )
+    species_summary["genome_size_pg_ci_low"] = np.nan
+    species_summary["genome_size_pg_ci_high"] = np.nan
+    for row_index, row in species_summary.iterrows():
+        species = str(row["species"])
+        calibrated_draws = (
+            bootstrap_draws[species]
+            / reference_draws
+            * REFERENCE_GENOME_SIZE_PG
+        )
+        low, high = np.quantile(calibrated_draws, [0.025, 0.975])
+        species_summary.loc[row_index, "genome_size_pg_ci_low"] = float(low)
+        species_summary.loc[row_index, "genome_size_pg_ci_high"] = float(high)
+    species_summary["genome_size_reference_species"] = REFERENCE_SPECIES
+    species_summary["genome_size_reference_pg"] = REFERENCE_GENOME_SIZE_PG
+    species_summary["genome_size_calibration_pg_per_iod"] = calibration_factor
+    species_summary["genome_size_rank"] = (
+        species_summary["genome_size_pg_fuscus_anchored"]
+        .rank(method="min", ascending=False)
+        .astype(int)
+    )
     species_summary = species_summary.sort_values(
-        ["relative_iod_rank", "species"], kind="mergesort"
+        ["genome_size_rank", "species"], kind="mergesort"
     ).reset_index(drop=True)
     return species_summary, image_summary
 
@@ -312,7 +374,7 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
         .max()
     )
     manifest: dict[str, Any] = {
-        "analysis": "Frozen image-quality-matched relative nuclear-IOD analysis",
+        "analysis": "Frozen image-quality-matched fuscus-anchored genome-size analysis",
         "frozen_source_csv": str(FROZEN_PATH.resolve()),
         "frozen_source_sha256": sha256_file(FROZEN_PATH),
         "source_match_manifest": str(MATCH_MANIFEST_PATH.resolve()),
@@ -336,6 +398,29 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
             "interval": "2.5th and 97.5th percentiles",
             "scope": "conditional on the observed images/specimens",
         },
+        "genome_calibration": {
+            "kind": CALIBRATION_KIND,
+            "formula": "species equal-image IOD / D. fuscus equal-image IOD * 16.36 pg",
+            "reference_species": REFERENCE_SPECIES,
+            "reference_genome_size_pg": REFERENCE_GENOME_SIZE_PG,
+            "reference_iod": float(
+                species_summary.loc[
+                    species_summary["species"].eq(REFERENCE_SPECIES),
+                    "iod_equal_image_estimate",
+                ].iloc[0]
+            ),
+            "pg_per_iod": float(
+                species_summary["genome_size_calibration_pg_per_iod"].iloc[0]
+            ),
+            "interval_method": (
+                "ratio bootstrap using each species draw divided by the paired "
+                "D. fuscus bootstrap draw"
+            ),
+            "reference_value_status": (
+                "existing project convention; exact literature provenance unresolved"
+            ),
+            "anchor_uncertainty_included": False,
+        },
         "relative_index_anchor": "median of the 20 species equal-image IOD estimates",
         "relative_index_anchor_iod": float(
             species_summary["relative_iod_anchor"].iloc[0]
@@ -344,6 +429,14 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
         "highest_relative_iod_index": float(top["relative_iod_index"]),
         "lowest_relative_iod_species": str(bottom["species"]),
         "lowest_relative_iod_index": float(bottom["relative_iod_index"]),
+        "highest_genome_size_species": str(top["species"]),
+        "highest_genome_size_pg_fuscus_anchored": float(
+            top["genome_size_pg_fuscus_anchored"]
+        ),
+        "lowest_genome_size_species": str(bottom["species"]),
+        "lowest_genome_size_pg_fuscus_anchored": float(
+            bottom["genome_size_pg_fuscus_anchored"]
+        ),
         "highest_to_lowest_fold_difference": float(
             top["iod_equal_image_estimate"] / bottom["iod_equal_image_estimate"]
         ),
@@ -363,9 +456,11 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
             quality_balance["passes_prespecified_balance_thresholds"].all()
         ),
         "absolute_genome_size_claimed": False,
+        "conditional_genome_size_estimates_reported": True,
         "interpretation": (
-            "Relative nuclear-IOD is an image-derived DNA-content proxy. "
-            "It is not an absolute genome-size estimate, C-value, or picogram measurement."
+            "Genome-size estimates are reported in pg after conditional calibration "
+            "to D. fuscus = 16.36 pg. They are image-IOD-derived estimates, not "
+            "independent direct C-value measurements."
         ),
         "limited_overlap_species_excluded_from_primary": match_manifest.get(
             "limited_overlap_species", []
@@ -416,17 +511,20 @@ def build_notebook() -> Any:
     nb.cells = [
         md(
             """
-            # Frozen Quality-Matched Nuclear-IOD Genome-Size Analysis
+            # Frozen Quality-Matched Genome-Size Analysis
 
             This notebook analyzes every nucleus in the final reviewed panel:
             721 manually accepted nuclei from 20 species. The primary estimator
             is the mean of the image-specific median IOD values, giving every
             observed image/specimen equal weight.
 
-            **Interpretation boundary:** this is a relative nuclear-IOD
-            genome-size proxy. It is not an absolute genome-size estimate,
-            C-value, or picogram measurement because no independent
-            DNA-content standard was imaged and calibrated with these samples.
+            The primary results are **genome-size estimates in picograms**,
+            calibrated as species IOD / *D. fuscus* IOD × 16.36 pg.
+
+            **Interpretation boundary:** this is a conditional, reference-anchored
+            calibration of the image measurements. It is not an independent
+            direct C-value assay because no co-stained DNA-content standard was
+            imaged with these samples.
             """
         ),
         md("## Exact frozen inputs and analysis setup"),
@@ -468,6 +566,14 @@ species_summary, image_summary = analysis.summarize_species(
 )
 quality_balance, quality_residual = analysis.frozen_quality_diagnostics(frozen)
 anchor = float(species_summary["relative_iod_anchor"].iloc[0])
+reference_iod = float(
+    species_summary.loc[
+        species_summary["species"].eq(analysis.REFERENCE_SPECIES),
+        "iod_equal_image_estimate",
+    ].iloc[0]
+)
+reference_pg = analysis.REFERENCE_GENOME_SIZE_PG
+calibration_factor = reference_pg / reference_iod
 
 plt.rcParams.update({
     "figure.dpi": 115,
@@ -494,7 +600,12 @@ def save_figure(fig, filename):
 print("Frozen source:", FROZEN_PATH)
 print("Frozen SHA-256:", analysis.sha256_file(FROZEN_PATH))
 print("Rows:", len(frozen), "| Species:", frozen["species"].nunique())
-print("Relative-index anchor IOD:", round(anchor, 3))
+print(
+    "Genome-size calibration:",
+    f"species IOD / {analysis.REFERENCE_SPECIES} IOD × {reference_pg:.2f} pg",
+)
+print("Reference IOD:", round(reference_iod, 3))
+print("Calibration factor (pg per IOD unit):", round(calibration_factor, 7))
 '''
         ),
         md(
@@ -555,7 +666,7 @@ assert counts.min() >= 30
         code(
             r'''
 summary_columns = [
-    "relative_iod_rank",
+    "genome_size_rank",
     "species",
     "n_nuclei",
     "n_images",
@@ -563,6 +674,10 @@ summary_columns = [
     "iod_equal_image_estimate",
     "iod_equal_image_ci_low",
     "iod_equal_image_ci_high",
+    "genome_size_pg_fuscus_anchored",
+    "genome_size_pg_ci_low",
+    "genome_size_pg_ci_high",
+    "iod_ratio_to_fuscus",
     "relative_iod_index",
     "relative_iod_ci_low",
     "relative_iod_ci_high",
@@ -582,6 +697,10 @@ display(
         "iod_equal_image_estimate": "{:.2f}",
         "iod_equal_image_ci_low": "{:.2f}",
         "iod_equal_image_ci_high": "{:.2f}",
+        "genome_size_pg_fuscus_anchored": "{:.2f}",
+        "genome_size_pg_ci_low": "{:.2f}",
+        "genome_size_pg_ci_high": "{:.2f}",
+        "iod_ratio_to_fuscus": "{:.3f}",
         "relative_iod_index": "{:.3f}",
         "relative_iod_ci_low": "{:.3f}",
         "relative_iod_ci_high": "{:.3f}",
@@ -664,37 +783,46 @@ plt.show()
         ),
         md(
             """
-            ## Primary relative IOD estimates and conditional uncertainty
+            ## Primary genome-size estimates and conditional uncertainty
 
-            The species index is normalized so the median species estimate is
-            1.0. Confidence intervals use hierarchical resampling of images and
-            then nuclei within images. They are conditional on the images and
-            specimens observed here; the three single-image species cannot
-            express between-image uncertainty. The index intervals divide the
-            raw-IOD intervals by the observed anchor and therefore treat that
-            anchor as fixed.
+            Each estimate is calibrated as species equal-image IOD divided by
+            the *D. fuscus* equal-image IOD, multiplied by **16.36 pg**.
+            Confidence intervals resample images and nuclei for both the focal
+            species and *D. fuscus*. They remain conditional on the observed
+            images/specimens, and uncertainty in the assumed 16.36-pg reference
+            value itself is not included.
+
+            The 16.36-pg value is the existing project convention. Its exact
+            original literature derivation has not been recovered; published
+            *D. fuscus* values span roughly 15–18 pg in the
+            [Animal Genome Size Database](https://genomesize.com/result_species.php?id=553),
+            and the recent approximately 16-Gb assembly also cautions that its
+            span may be slightly inflated
+            ([Myers et al.](https://doi.org/10.1093/g3journal/jkaf157)).
+            Therefore these are calibrated genome-size estimates, not new
+            independent direct C-value measurements.
             """
         ),
         code(
             r'''
-plot_data = species_summary.sort_values("relative_iod_index")
+plot_data = species_summary.sort_values("genome_size_pg_fuscus_anchored")
 y = np.arange(len(plot_data))
-x = plot_data["relative_iod_index"].to_numpy()
-low = plot_data["relative_iod_ci_low"].to_numpy()
-high = plot_data["relative_iod_ci_high"].to_numpy()
+x = plot_data["genome_size_pg_fuscus_anchored"].to_numpy()
+low = plot_data["genome_size_pg_ci_low"].to_numpy()
+high = plot_data["genome_size_pg_ci_high"].to_numpy()
 colors = np.where(plot_data["n_images"].eq(1), "#D17B29", "#2E6F95")
 fig, ax = plt.subplots(figsize=(11, 11))
 ax.hlines(y, low, high, color=colors, linewidth=2)
 ax.scatter(x, y, color=colors, s=55, zorder=3)
-ax.axvline(1.0, color="#555555", linestyle="--", linewidth=1)
+ax.axvline(reference_pg, color="#555555", linestyle="--", linewidth=1)
 ax.set_yticks(y, [short_species(value) for value in plot_data["species"]])
-ax.set_xlabel("Relative nuclear-IOD index (median species = 1.0)")
-ax.set_title("Equal-image species estimates with 95% hierarchical bootstrap intervals")
+ax.set_xlabel("Genome-size estimate (pg; D. fuscus anchor = 16.36 pg)")
+ax.set_title("Calibrated genome-size estimates with 95% ratio-bootstrap intervals")
 ax.grid(axis="x", alpha=0.18)
 ax.text(
     0.01,
     0.01,
-    "Orange = one observed image/specimen",
+    "Orange = one observed image/specimen; dashed line = D. fuscus anchor",
     transform=ax.transAxes,
     color="#9A541C",
 )
@@ -708,13 +836,12 @@ plt.show()
 
             This panel includes all 21 species in the frozen literal-largest
             cell panel. Every species has observed cell and corresponding
-            nucleus distributions. Relative nuclear IOD is shown for the 20
-            common-support genome species; *D. ochrophaeus* is retained on the
-            tree with its observed size data and an explicitly empty genome
-            slot because its image-quality overlap was limited. Every violin
-            is a bootstrap distribution of the plotted estimator, genome is
-            never expressed in picograms, and no species is filled by
-            phylogenetic imputation.
+            nucleus distributions. Fuscus-anchored genome-size estimates in pg
+            are shown for the 20 common-support species; *D. ochrophaeus* is
+            retained with its observed size data and an explicitly empty genome
+            slot because its image-quality overlap was limited. Every violin is
+            a bootstrap distribution of the plotted estimator, and no species
+            is filled by phylogenetic imputation.
             """
         ),
         code(
@@ -732,15 +859,16 @@ display(pd.read_csv(phylogeny_correlation_path))
         ),
         md(
             """
-            ## Pairwise genome-proxy, nucleus, and cell relationships
+            ## Pairwise genome-size, nucleus, and cell relationships
 
             These three panels show every unique pair of traits. Points are
             species estimates and bars are their bootstrap intervals. Positive
             relationships are biologically consistent with the classical
             nucleotypic expectation, but they are descriptive rather than
-            causal: IOD contains nuclear area algebraically, the size panel is
-            an upper-tail top-50 estimand, and shared ancestry is not corrected
-            in these correlations.
+            causal: the calibrated genome estimate is derived from IOD, which
+            contains nuclear area algebraically; the size panel is an upper-tail
+            top-50 estimand; and shared ancestry is not corrected in these
+            correlations.
             """
         ),
         code(
@@ -791,11 +919,11 @@ display(image_summary.sort_values(["species", "filename"]))
 component_data = species_summary.copy()
 rho_area, p_area = spearmanr(
     component_data["median_nucleus_area_um2"],
-    component_data["iod_equal_image_estimate"],
+    component_data["genome_size_pg_fuscus_anchored"],
 )
 rho_od, p_od = spearmanr(
     component_data["median_nucleus_mean_od"],
-    component_data["iod_equal_image_estimate"],
+    component_data["genome_size_pg_fuscus_anchored"],
 )
 fig, axes = plt.subplots(1, 2, figsize=(15, 7))
 specs = [
@@ -817,7 +945,7 @@ specs = [
 for ax, (column, xlabel, rho, p_value, color) in zip(axes, specs):
     ax.scatter(
         component_data[column],
-        component_data["relative_iod_index"],
+        component_data["genome_size_pg_fuscus_anchored"],
         s=48,
         color=color,
         alpha=0.85,
@@ -825,16 +953,16 @@ for ax, (column, xlabel, rho, p_value, color) in zip(axes, specs):
     for row in component_data.itertuples():
         ax.annotate(
             short_species(row.species),
-            (getattr(row, column), row.relative_iod_index),
+            (getattr(row, column), row.genome_size_pg_fuscus_anchored),
             xytext=(3, 3),
             textcoords="offset points",
             fontsize=7,
         )
     ax.set_xlabel(xlabel)
-    ax.set_ylabel("Relative nuclear-IOD index")
+    ax.set_ylabel("Genome-size estimate (pg; D. fuscus = 16.36)")
     ax.set_title(f"Spearman ρ = {rho:.2f}; descriptive p = {p_value:.3g}")
     ax.grid(alpha=0.16)
-fig.suptitle("Species IOD estimates against their two measurement components", y=1.02)
+fig.suptitle("Calibrated genome-size estimates against their IOD components", y=1.02)
 save_figure(fig, "04_iod_components.png")
 plt.show()
 print(f"IOD vs median nucleus area: rho={rho_area:.3f}, p={p_area:.4g}")
@@ -857,24 +985,27 @@ method_columns = [
 ]
 method_labels = ["Equal-image", "Pooled median", "10% trimmed mean"]
 for column in method_columns:
-    sensitivity[column + "_index"] = (
-        sensitivity[column] / sensitivity[column].median()
+    method_reference_iod = sensitivity.loc[
+        sensitivity["species"].eq(analysis.REFERENCE_SPECIES), column
+    ].iloc[0]
+    sensitivity[column + "_pg"] = (
+        sensitivity[column] / method_reference_iod * reference_pg
     )
-order = species_summary.sort_values("relative_iod_index")["species"].tolist()
+order = species_summary.sort_values("genome_size_pg_fuscus_anchored")["species"].tolist()
 fig, ax = plt.subplots(figsize=(12, 11))
 offsets = [-0.18, 0.0, 0.18]
 markers = ["D", "o", "s"]
 colors = ["#B33A3A", "#365F78", "#6A994E"]
 for y, species in enumerate(order):
     row = sensitivity.loc[sensitivity["species"].eq(species)].iloc[0]
-    values = [row[column + "_index"] for column in method_columns]
+    values = [row[column + "_pg"] for column in method_columns]
     ax.plot(values, [y] * 3, color="#B8C0C8", linewidth=1, zorder=1)
     for offset, value, marker, color in zip(offsets, values, markers, colors):
         ax.scatter(value, y + offset, marker=marker, s=42, color=color, zorder=2)
-ax.axvline(1.0, color="#555555", linestyle="--", linewidth=1)
+ax.axvline(reference_pg, color="#555555", linestyle="--", linewidth=1)
 ax.set_yticks(range(len(order)), [short_species(value) for value in order])
-ax.set_xlabel("Within-method relative index (method median = 1.0)")
-ax.set_title("Species estimates are shown under three transparent aggregation choices")
+ax.set_xlabel("Genome-size estimate (pg; each method anchors D. fuscus at 16.36 pg)")
+ax.set_title("Genome-size estimates under three transparent aggregation choices")
 handles = [
     plt.Line2D([], [], marker=marker, linestyle="", color=color, label=label)
     for marker, color, label in zip(markers, colors, method_labels)
@@ -963,9 +1094,10 @@ fold = top["iod_equal_image_estimate"] / bottom["iod_equal_image_estimate"]
 single_image = species_summary.loc[
     species_summary["n_images"].eq(1), "species"
 ].tolist()
-intervals_crossing_anchor = int((
-    species_summary["relative_iod_ci_low"].le(1.0)
-    & species_summary["relative_iod_ci_high"].ge(1.0)
+median_genome_estimate = species_summary["genome_size_pg_fuscus_anchored"].median()
+intervals_crossing_median = int((
+    species_summary["genome_size_pg_ci_low"].le(median_genome_estimate)
+    & species_summary["genome_size_pg_ci_high"].ge(median_genome_estimate)
 ).sum())
 method_shift = species_summary.assign(
     max_shift=lambda x: x[[
@@ -974,26 +1106,32 @@ method_shift = species_summary.assign(
 ).sort_values("max_shift", ascending=False).iloc[0]
 rho_area, p_area = spearmanr(
     species_summary["median_nucleus_area_um2"],
-    species_summary["iod_equal_image_estimate"],
+    species_summary["genome_size_pg_fuscus_anchored"],
 )
 rho_od, p_od = spearmanr(
     species_summary["median_nucleus_mean_od"],
-    species_summary["iod_equal_image_estimate"],
+    species_summary["genome_size_pg_fuscus_anchored"],
 )
 
 display(HTML(f"""
 <div style="border-left:5px solid #365F78;background:#f4f7f9;padding:14px 18px">
-<p><b>Largest relative IOD:</b> {top['species']} ({top['relative_iod_index']:.3f}× the species-median anchor).</p>
-<p><b>Smallest relative IOD:</b> {bottom['species']} ({bottom['relative_iod_index']:.3f}×).</p>
+<p><b>Largest genome-size estimate:</b> {top['species']}
+({top['genome_size_pg_fuscus_anchored']:.2f} pg;
+95% interval {top['genome_size_pg_ci_low']:.2f}–{top['genome_size_pg_ci_high']:.2f}).</p>
+<p><b>Smallest genome-size estimate:</b> {bottom['species']}
+({bottom['genome_size_pg_fuscus_anchored']:.2f} pg;
+95% interval {bottom['genome_size_pg_ci_low']:.2f}–{bottom['genome_size_pg_ci_high']:.2f}).</p>
 <p><b>Observed range:</b> {fold:.2f}-fold from highest to lowest.</p>
-<p><b>Rank resolution:</b> {intervals_crossing_anchor} of {len(species_summary)}
-intervals cross the 1.0 anchor, so most exact middle ranks should not be treated as
+<p><b>Rank resolution:</b> {intervals_crossing_median} of {len(species_summary)}
+intervals cross the across-species median ({median_genome_estimate:.2f} pg), so exact middle ranks should not be treated as
 sharply separated.</p>
 <p><b>Aggregation sensitivity:</b> the largest shift from equal-image weighting is
 {method_shift['max_shift']:.1f}% for {method_shift['species']}.</p>
-<p><b>IOD components:</b> species IOD correlates with median nucleus area
+<p><b>Measurement components:</b> calibrated genome size correlates with median nucleus area
 (ρ={rho_area:.2f}) and median mean optical density (ρ={rho_od:.2f}). This is expected
 because both are algebraic components of IOD.</p>
+<p><b>Calibration boundary:</b> all pg estimates are conditional on the project convention
+{analysis.REFERENCE_SPECIES} = {analysis.REFERENCE_GENOME_SIZE_PG:.2f} pg; a revised anchor would rescale every estimate proportionally.</p>
 <p><b>Single-image limitation:</b> {', '.join(single_image)} have only one observed
 image/specimen, so their interval cannot measure between-image variation.</p>
 </div>
@@ -1004,8 +1142,8 @@ image/specimen, so their interval cannot measure between-image variation.</p>
             """
             ## Conclusions and next validation step
 
-            1. The frozen panel supports a stable **relative ranking** of
-               nuclear IOD across the 20 image-quality-compatible species.
+            1. The frozen panel provides **fuscus-anchored genome-size estimates
+               in pg** across the 20 image-quality-compatible species.
             2. Equal-image weighting is the primary estimate because it avoids
                letting images with more accepted nuclei dominate.
             3. The raw values, image-specific medians, bootstrap intervals,
@@ -1015,9 +1153,11 @@ image/specimen, so their interval cannot measure between-image variation.</p>
             4. Most middle-ranked species have overlapping intervals. The point
                ranking is descriptive, not evidence that every adjacent pair
                differs biologically.
-            5. This analysis cannot convert IOD to absolute genome size. That
-               requires an independently measured DNA-content standard
-               processed under the same staining and imaging protocol.
+            5. The pg scale is conditional on *D. fuscus* = 16.36 pg. Treating
+               these estimates as independent direct C-values would require a
+               DNA-content standard processed with the same staining and
+               imaging protocol; changing the assumed reference value rescales
+               every species proportionally.
             6. *D. ochrophaeus* remains excluded from the primary comparison
                because its technical image-quality distribution had limited
                overlap; it belongs only in a labeled sensitivity analysis.
@@ -1067,6 +1207,8 @@ print(
 '''
         ),
     ]
+    for cell_index, cell in enumerate(nb.cells, start=1):
+        cell["id"] = f"frozen-genome-{cell_index:02d}"
     return nb
 
 

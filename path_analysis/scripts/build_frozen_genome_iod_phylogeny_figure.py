@@ -49,16 +49,16 @@ CORRELATION_PATH = OUTPUT_DIR / "phylogeny_genome_nucleus_cell_correlations.csv"
 MANIFEST_PATH = OUTPUT_DIR / "phylogeny_genome_nucleus_cell_manifest.json"
 EXECUTED_NOTEBOOK_PATH = genome_analysis.EXECUTED_NOTEBOOK_PATH
 METRIC_ORDER = (
-    "relative_iod_index",
+    "genome_size_pg_fuscus_anchored",
     "nucleus_area_um2",
     "cell_area_um2",
 )
 METRIC_STYLE = {
-    "relative_iod_index": {
-        "title": "Relative nuclear-IOD",
-        "xlabel": "Relative IOD index\n(species median = 1.0)",
+    "genome_size_pg_fuscus_anchored": {
+        "title": "Genome size",
+        "xlabel": "Genome-size estimate (pg)\nD. fuscus anchor = 16.36 pg",
         "color": "#78A6C0",
-        "format": ".2f",
+        "format": ".1f",
     },
     "nucleus_area_um2": {
         "title": "Nucleus area",
@@ -172,10 +172,22 @@ def build_figure_data(
         raise ValueError("Genome panel contains a row that is not reviewed keep.")
 
     genome_points = genome_summary.set_index("species")
-    anchor_values = genome_points["relative_iod_anchor"].dropna().unique()
-    if len(anchor_values) != 1:
-        raise ValueError("Genome summary does not contain one fixed relative-IOD anchor.")
-    anchor = float(anchor_values[0])
+    reference_species = genome_analysis.REFERENCE_SPECIES
+    if reference_species not in genome_species:
+        raise ValueError(f"Genome panel is missing reference species {reference_species}.")
+    genome_seed_index = {
+        species: index for index, species in enumerate(sorted(genome_species))
+    }
+    reference_iod = float(
+        genome_points.loc[reference_species, "iod_equal_image_estimate"]
+    )
+    if reference_iod <= 0:
+        raise ValueError("Reference-species IOD estimate must be positive.")
+    reference_draws = bootstrap_equal_image_iod(
+        genome.loc[genome["species"].eq(reference_species)],
+        n_bootstrap=n_bootstrap,
+        seed=seed + genome_seed_index[reference_species] * 1009,
+    )
 
     summary_rows: list[dict[str, Any]] = []
     draw_frames: list[pd.DataFrame] = []
@@ -192,18 +204,27 @@ def build_figure_data(
             "cell_area_um2": size_draws["cell_area_um2"].to_numpy(),
         }
         if species in genome_species:
-            metric_draws["relative_iod_index"] = bootstrap_equal_image_iod(
+            species_iod_draws = bootstrap_equal_image_iod(
                 genome_group,
                 n_bootstrap=n_bootstrap,
-                seed=seed + species_index * 2017,
-            ) / anchor
-            genome_point = float(genome_points.loc[species, "relative_iod_index"])
+                seed=seed + genome_seed_index[species] * 1009,
+            )
+            metric_draws["genome_size_pg_fuscus_anchored"] = (
+                species_iod_draws
+                / reference_draws
+                * genome_analysis.REFERENCE_GENOME_SIZE_PG
+            )
+            genome_point = float(
+                genome_points.loc[species, "iod_equal_image_estimate"]
+                / reference_iod
+                * genome_analysis.REFERENCE_GENOME_SIZE_PG
+            )
             genome_status = "frozen_primary_common_support"
         else:
             genome_point = np.nan
             genome_status = "limited_overlap_no_frozen_primary_iod"
         points = {
-            "relative_iod_index": genome_point,
+            "genome_size_pg_fuscus_anchored": genome_point,
             "nucleus_area_um2": float(cell_group["nuc_area_um2"].median()),
             "cell_area_um2": float(cell_group["cell_area_um2"].median()),
         }
@@ -240,11 +261,15 @@ def build_figure_data(
     draws = pd.concat(draw_frames, ignore_index=True)
     comparison_specs = [
         (
-            "relative_iod_vs_nucleus_area",
-            "relative_iod_index",
+            "genome_size_vs_nucleus_area",
+            "genome_size_pg_fuscus_anchored",
             "nucleus_area_um2",
         ),
-        ("relative_iod_vs_cell_area", "relative_iod_index", "cell_area_um2"),
+        (
+            "genome_size_vs_cell_area",
+            "genome_size_pg_fuscus_anchored",
+            "cell_area_um2",
+        ),
         ("nucleus_area_vs_cell_area", "nucleus_area_um2", "cell_area_um2"),
     ]
     correlation_rows = []
@@ -421,7 +446,7 @@ def draw_trait_axis(
             ax.text(
                 0.02,
                 y,
-                "limited overlap; no frozen primary IOD",
+                "limited overlap; no calibrated genome estimate",
                 transform=ax.get_yaxis_transform(),
                 va="center",
                 ha="left",
@@ -491,8 +516,8 @@ def render_figure(
         0.946,
         (
             "Size panel: all 21 species, with 50 manually vetted largest cells and corresponding nuclei each. "
-            "Genome panel: 20 common-support species (relative IOD, not pg); D. ochrophaeus is shown without "
-            "an IOD violin because it has limited image-quality overlap. No phylogenetic fills."
+            "Genome panel: 20 image-quality-matched species calibrated as species/fuscus IOD × 16.36 pg; "
+            "D. ochrophaeus has no genome estimate because image-quality overlap was limited. No phylogenetic fills."
         ),
         ha="center",
         va="center",
@@ -504,8 +529,8 @@ def render_figure(
         0.925,
         (
             "Descriptive species-level Spearman ρ: "
-            f"IOD–nucleus {correlation_lookup['relative_iod_vs_nucleus_area']:.2f}; "
-            f"IOD–cell {correlation_lookup['relative_iod_vs_cell_area']:.2f}; "
+            f"genome–nucleus {correlation_lookup['genome_size_vs_nucleus_area']:.2f}; "
+            f"genome–cell {correlation_lookup['genome_size_vs_cell_area']:.2f}; "
             f"nucleus–cell {correlation_lookup['nucleus_area_vs_cell_area']:.2f}. "
             "These correlations are not phylogenetically corrected."
         ),
@@ -564,18 +589,18 @@ def render_pairwise_figure(
     """Plot the three unique pairwise trait relationships with bootstrap intervals."""
     specs = [
         (
-            "relative_iod_vs_nucleus_area",
-            "relative_iod_index",
+            "genome_size_vs_nucleus_area",
+            "genome_size_pg_fuscus_anchored",
             "nucleus_area_um2",
-            "Relative nuclear-IOD index",
+            "Genome-size estimate (pg; D. fuscus = 16.36)",
             "Nucleus area (µm²)",
             "#4C78A8",
         ),
         (
-            "relative_iod_vs_cell_area",
-            "relative_iod_index",
+            "genome_size_vs_cell_area",
+            "genome_size_pg_fuscus_anchored",
             "cell_area_um2",
-            "Relative nuclear-IOD index",
+            "Genome-size estimate (pg; D. fuscus = 16.36)",
             "Cell area (µm²)",
             "#D56A4A",
         ),
@@ -687,7 +712,7 @@ def render_pairwise_figure(
             ax.spines[spine].set_visible(False)
 
     fig.suptitle(
-        "Pairwise relationships among relative IOD, nucleus area, and cell area",
+        "Pairwise relationships among genome size, nucleus area, and cell area",
         fontsize=15,
         fontweight="bold",
         y=0.985,
@@ -697,7 +722,7 @@ def render_pairwise_figure(
         0.94,
         (
             "Points are species estimates; bars are 95% bootstrap intervals conditional on "
-            "the frozen image and selected-cell panels. Lines are descriptive least-squares fits."
+            "the frozen image and selected-cell panels. Genome size is calibrated to D. fuscus = 16.36 pg."
         ),
         ha="center",
         va="center",
@@ -708,8 +733,8 @@ def render_pairwise_figure(
         0.5,
         0.015,
         (
-            "IOD includes nuclear area algebraically, the size traits are upper-tail top-50 "
-            "estimands, and these correlations are not phylogenetically corrected."
+            "Genome estimates are scaled from nuclear IOD, which includes nuclear area algebraically; "
+            "size traits are top-50 estimands and correlations are not phylogenetically corrected."
         ),
         ha="center",
         va="bottom",
@@ -743,9 +768,13 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
     manifest = {
         "analysis": "Measured-only time-tree alignment of audited microscopy traits",
         "n_measured_species": int(len(summary)),
-        "n_primary_genome_species": int(summary["relative_iod_index"].notna().sum()),
+        "n_primary_genome_species": int(
+            summary["genome_size_pg_fuscus_anchored"].notna().sum()
+        ),
         "missing_primary_genome_species": sorted(
-            summary.loc[summary["relative_iod_index"].isna(), "species"].tolist()
+            summary.loc[
+                summary["genome_size_pg_fuscus_anchored"].isna(), "species"
+            ].tolist()
         ),
         "species": species_order,
         "tree_source": str(TREE_PATH.resolve()),
@@ -758,9 +787,16 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
         "bootstrap_replicates": int(n_bootstrap),
         "random_seed": int(seed),
         "genome_estimator": (
-            "mean of image-specific median nuclear IOD, divided by the fixed "
-            "median-species IOD anchor"
+            "mean of image-specific median nuclear IOD divided by the D. fuscus "
+            "equal-image IOD estimate and multiplied by 16.36 pg"
         ),
+        "genome_calibration_kind": genome_analysis.CALIBRATION_KIND,
+        "genome_reference_species": genome_analysis.REFERENCE_SPECIES,
+        "genome_reference_pg": genome_analysis.REFERENCE_GENOME_SIZE_PG,
+        "genome_reference_value_status": (
+            "existing project convention; exact literature provenance unresolved"
+        ),
+        "genome_intervals_propagate_reference_image_uncertainty": True,
         "size_estimators": (
             "pooled medians of the 50 manually vetted literal-largest cells "
             "and their corresponding nuclei"
@@ -771,6 +807,7 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
         ),
         "phylogenetic_fills_used": False,
         "absolute_genome_size_claimed": False,
+        "conditional_genome_size_estimates_reported": True,
         "correlations_are_phylogenetically_corrected": False,
         "summary_csv": str(SUMMARY_PATH.resolve()),
         "summary_sha256": sha256_file(SUMMARY_PATH),

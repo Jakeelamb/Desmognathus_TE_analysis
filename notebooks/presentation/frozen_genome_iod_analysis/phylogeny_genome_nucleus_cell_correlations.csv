@@ -1,4 +1,4 @@
 comparison,left_metric,right_metric,spearman_rho,p_value_descriptive_only,pearson_r,pearson_p_value_descriptive_only,n_species,phylogenetically_corrected
-relative_iod_vs_nucleus_area,relative_iod_index,nucleus_area_um2,0.44511278,0.04922530,0.48228017,0.03127615,20,False
-relative_iod_vs_cell_area,relative_iod_index,cell_area_um2,0.54736842,0.01249019,0.45603167,0.04329008,20,False
+genome_size_vs_nucleus_area,genome_size_pg_fuscus_anchored,nucleus_area_um2,0.44511278,0.04922530,0.48228016,0.03127616,20,False
+genome_size_vs_cell_area,genome_size_pg_fuscus_anchored,cell_area_um2,0.54736842,0.01249019,0.45603166,0.04329008,20,False
 nucleus_area_vs_cell_area,nucleus_area_um2,cell_area_um2,0.55974026,0.00832582,0.48072846,0.02738561,21,False

@@ -37,18 +37,32 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         self.assertEqual(len(summary), 21)
         self.assertIn("D. ochrophaeus", set(summary["species"]))
         ochrophaeus = summary.loc[summary["species"].eq("D. ochrophaeus")].iloc[0]
-        self.assertTrue(pd.isna(ochrophaeus["relative_iod_index"]))
+        self.assertTrue(pd.isna(ochrophaeus["genome_size_pg_fuscus_anchored"]))
         self.assertEqual(ochrophaeus["genome_panel_status"], "limited_overlap_no_frozen_primary_iod")
         self.assertEqual(set(draws["metric"]), set(figure.METRIC_ORDER))
         draw_counts = draws.groupby("metric").size()
-        self.assertEqual(draw_counts["relative_iod_index"], 20 * 100)
+        self.assertEqual(draw_counts["genome_size_pg_fuscus_anchored"], 20 * 100)
         self.assertEqual(draw_counts["nucleus_area_um2"], 21 * 100)
         self.assertEqual(draw_counts["cell_area_um2"], 21 * 100)
         self.assertEqual(set(correlations["comparison"]), {
-            "relative_iod_vs_nucleus_area",
-            "relative_iod_vs_cell_area",
+            "genome_size_vs_nucleus_area",
+            "genome_size_vs_cell_area",
             "nucleus_area_vs_cell_area",
         })
+        fuscus = summary.loc[summary["species"].eq("D. fuscus")].iloc[0]
+        self.assertAlmostEqual(
+            fuscus["genome_size_pg_fuscus_anchored"],
+            figure.genome_analysis.REFERENCE_GENOME_SIZE_PG,
+        )
+        fuscus_draws = draws.loc[
+            draws["species"].eq("D. fuscus")
+            & draws["metric"].eq("genome_size_pg_fuscus_anchored"),
+            "value",
+        ]
+        np.testing.assert_allclose(
+            fuscus_draws,
+            figure.genome_analysis.REFERENCE_GENOME_SIZE_PG,
+        )
 
     def test_cell_and_nucleus_points_are_medians_of_frozen_top50(self) -> None:
         summary, _draws, _correlations = figure.build_figure_data(
@@ -89,13 +103,25 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         self.assertEqual(manifest["missing_primary_genome_species"], ["D. ochrophaeus"])
         self.assertEqual(manifest["phylogenetic_fills_used"], False)
         self.assertEqual(manifest["absolute_genome_size_claimed"], False)
+        self.assertEqual(manifest["conditional_genome_size_estimates_reported"], True)
+        self.assertEqual(manifest["genome_reference_species"], "D. fuscus")
+        self.assertEqual(manifest["genome_reference_pg"], 16.36)
         self.assertIn("Measured-only time-calibrated phylogeny", source)
+        self.assertIn("Fuscus-anchored genome-size estimates", source)
         self.assertIn(figure.PNG_PATH.name, source)
         self.assertIn(figure.PAIRWISE_PNG_PATH.name, source)
 
         correlations = pd.read_csv(figure.CORRELATION_PATH)
         self.assertTrue(
             {"spearman_rho", "pearson_r", "n_species"}.issubset(correlations.columns)
+        )
+        self.assertEqual(
+            set(correlations["comparison"]),
+            {
+                "genome_size_vs_nucleus_area",
+                "genome_size_vs_cell_area",
+                "nucleus_area_vs_cell_area",
+            },
         )
 
 
