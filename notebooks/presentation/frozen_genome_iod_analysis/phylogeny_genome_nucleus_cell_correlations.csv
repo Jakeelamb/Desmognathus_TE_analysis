@@ -1,0 +1,4 @@
+comparison,left_metric,right_metric,spearman_rho,p_value_descriptive_only,n_species,phylogenetically_corrected
+relative_iod_vs_nucleus_area,relative_iod_index,nucleus_area_um2,0.44511278,0.04922530,20,False
+relative_iod_vs_cell_area,relative_iod_index,cell_area_um2,0.54736842,0.01249019,20,False
+nucleus_area_vs_cell_area,nucleus_area_um2,cell_area_um2,0.65864662,0.00158933,20,False

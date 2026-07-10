@@ -440,7 +440,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import spearmanr
-from IPython.display import display, HTML
+from IPython.display import display, HTML, Image
 
 
 def find_project_root(start=None) -> Path:
@@ -700,6 +700,32 @@ ax.text(
 )
 save_figure(fig, "02_relative_iod_estimates.png")
 plt.show()
+'''
+        ),
+        md(
+            """
+            ## Measured-only time-calibrated phylogeny
+
+            This panel aligns the exact 20-species overlap across the frozen
+            genome-IOD and literal-largest size panels. Every violin is a
+            bootstrap distribution of the plotted estimator. Genome is shown
+            as relative nuclear IOD, never picograms; nucleus and cell areas
+            are medians of the 50 manually vetted largest cells and their
+            corresponding nuclei. No species is filled by phylogenetic
+            imputation.
+            """
+        ),
+        code(
+            r'''
+phylogeny_figure = FIGURE_DIR / "07_measured_phylogeny_genome_nucleus_cell.png"
+phylogeny_summary_path = REPORT_DIR / "phylogeny_genome_nucleus_cell_summary.csv"
+phylogeny_correlation_path = REPORT_DIR / "phylogeny_genome_nucleus_cell_correlations.csv"
+assert phylogeny_figure.exists(), "Run the measured phylogeny figure builder first"
+assert phylogeny_summary_path.exists()
+assert phylogeny_correlation_path.exists()
+display(Image(filename=str(phylogeny_figure)))
+display(pd.read_csv(phylogeny_summary_path))
+display(pd.read_csv(phylogeny_correlation_path))
 '''
         ),
         md("## Image-to-image variation within species"),
@@ -983,6 +1009,9 @@ exports = pd.DataFrame([
     {"artifact": "Image result table", "path": str(analysis.IMAGE_SUMMARY_PATH)},
     {"artifact": "Frozen quality balance", "path": str(analysis.QUALITY_BALANCE_PATH)},
     {"artifact": "Residual quality diagnostics", "path": str(analysis.QUALITY_RESIDUAL_PATH)},
+    {"artifact": "Measured phylogeny figure", "path": str(analysis.FIGURE_DIR / "07_measured_phylogeny_genome_nucleus_cell.png")},
+    {"artifact": "Measured phylogeny source table", "path": str(analysis.REPORT_DIR / "phylogeny_genome_nucleus_cell_summary.csv")},
+    {"artifact": "Measured phylogeny correlation table", "path": str(analysis.REPORT_DIR / "phylogeny_genome_nucleus_cell_correlations.csv")},
     {"artifact": "Analysis manifest", "path": str(analysis.ANALYSIS_MANIFEST_PATH)},
     {"artifact": "Executed notebook", "path": str(analysis.EXECUTED_NOTEBOOK_PATH)},
     {"artifact": "Rendered HTML", "path": str(analysis.HTML_PATH)},
@@ -990,6 +1019,11 @@ exports = pd.DataFrame([
 display(exports)
 print("Build source notebook:")
 print("  uv run python path_analysis/scripts/build_frozen_genome_iod_notebook.py")
+print("Build measured phylogeny figure:")
+print(
+    "  uv run --with biopython python "
+    "path_analysis/scripts/build_frozen_genome_iod_phylogeny_figure.py"
+)
 print("Execute notebook:")
 print(
     "  uv run jupyter nbconvert --to notebook --execute "
