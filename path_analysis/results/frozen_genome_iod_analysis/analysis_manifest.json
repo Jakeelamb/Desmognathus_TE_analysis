@@ -1,0 +1,67 @@
+{
+  "analysis": "Frozen image-quality-matched relative nuclear-IOD analysis",
+  "frozen_source_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/image_quality_matched_genome_iod/image_quality_matched_nuclei_frozen_reviewed.csv.gz",
+  "frozen_source_sha256": "f22d014f9f395c5aadec8fe2538f6f651d1328884ef618e0baf0a97a1e00dcbe",
+  "source_match_manifest": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/image_quality_matched_genome_iod/manifest.json",
+  "source_match_manifest_sha256": "0c95236626ed08e40a3d9310f1c123a5828f58f332a319ffb4538d569fe57199",
+  "decision_files": [
+    "/home/jake/Projects/Desmognathus_TE/image_quality_matched_all_species_decisions.csv",
+    "/home/jake/Projects/Desmognathus_TE/image_quality_matched_replacement_review_decisions.csv"
+  ],
+  "decision_file_sha256": {
+    "/home/jake/Projects/Desmognathus_TE/image_quality_matched_all_species_decisions.csv": "9f79b25be26df38bb74c5f28b6a643754d853c2ddbc9bdef04c9b49d6b4eb3bb",
+    "/home/jake/Projects/Desmognathus_TE/image_quality_matched_replacement_review_decisions.csv": "5ad3dae5a848e93c11f1a9534ece30e18c6587f3c7dde35d7f68724f5d6b51f5"
+  },
+  "n_frozen_nuclei": 721,
+  "n_primary_species": 20,
+  "n_images": 41,
+  "n_specimens": 41,
+  "minimum_nuclei_per_species": 33,
+  "maximum_nuclei_per_species": 39,
+  "n_rejected_nuclei_leaked": 0,
+  "primary_estimator": "mean across image-specific median nuclear IOD values",
+  "bootstrap": {
+    "method": "hierarchical resampling of images then nuclei within images",
+    "replicates": 2000,
+    "seed": 20260710,
+    "interval": "2.5th and 97.5th percentiles",
+    "scope": "conditional on the observed images/specimens"
+  },
+  "relative_index_anchor": "median of the 20 species equal-image IOD estimates",
+  "relative_index_anchor_iod": 966.0004943333333,
+  "highest_relative_iod_species": "D. valtos",
+  "highest_relative_iod_index": 1.3475185604313233,
+  "lowest_relative_iod_species": "D. perlapsus",
+  "lowest_relative_iod_index": 0.8574226399041494,
+  "highest_to_lowest_fold_difference": 1.5715919987626656,
+  "maximum_aggregation_sensitivity_pct": 8.620749739018052,
+  "single_image_species": [
+    "D. anicetus",
+    "D. bairdi",
+    "D. gvnigeusgwotli"
+  ],
+  "worst_abs_standardized_quality_mean_difference": 0.049932306786693414,
+  "worst_quality_ks_distance": 0.17867867867867868,
+  "all_species_pass_quality_balance_thresholds": true,
+  "absolute_genome_size_claimed": false,
+  "interpretation": "Relative nuclear-IOD is an image-derived DNA-content proxy. It is not an absolute genome-size estimate, C-value, or picogram measurement.",
+  "limited_overlap_species_excluded_from_primary": [
+    "D. ochrophaeus"
+  ],
+  "outputs": {
+    "species_summary_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/results/frozen_genome_iod_analysis/species_relative_genome_iod_summary.csv",
+    "image_summary_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/results/frozen_genome_iod_analysis/image_relative_genome_iod_summary.csv",
+    "quality_balance_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/results/frozen_genome_iod_analysis/frozen_quality_balance.csv",
+    "quality_residual_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/results/frozen_genome_iod_analysis/iod_quality_residual_diagnostics.csv",
+    "source_notebook": "/home/jake/Projects/Desmognathus_TE/path_analysis/notebooks/frozen_genome_iod_analysis.ipynb",
+    "executed_notebook": "/home/jake/Projects/Desmognathus_TE/path_analysis/notebooks/frozen_genome_iod_analysis.executed.ipynb",
+    "html": "/home/jake/Projects/Desmognathus_TE/path_analysis/results/frozen_genome_iod_analysis/index.html",
+    "source_notebook_sha256": "ce8e145248e4b148ae31a64b8a3a0a8f47eae81ff22fe355cfce0125396c08ef",
+    "executed_notebook_sha256": "ba3e2f7ac3fec0332b03ed1d314a30284a012249c94b19072d2dc921f1bcef05",
+    "html_sha256": "99e0f07ebc8b1fe0511e32ef948fcd1f52a905c2fd77ac2c8e90a414460e8fb0",
+    "species_summary_csv_sha256": "fab0a3fa0ad6219274fb1ad92c803841f13dcd2bff48e78531a5e077b4a13633",
+    "image_summary_csv_sha256": "9f00164ec54d07f80e8bd096ab02a4b48fafe2b5dccb8780bf72af62a4ee16f8",
+    "quality_balance_csv_sha256": "cf9758082504fa09aa1e5f39eb46a2990b88914bc192c87a939a2960afd3ce6b",
+    "quality_residual_csv_sha256": "2e432b78c39502473921181497b20a0bc9b56afaf256132547eb29d3b6f94ae4"
+  }
+}
