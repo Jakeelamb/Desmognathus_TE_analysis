@@ -29,11 +29,14 @@ DECISION_PATHS = [
     PROJECT_ROOT / "image_quality_matched_all_species_decisions.csv",
     PROJECT_ROOT / "image_quality_matched_replacement_review_decisions.csv",
 ]
-NOTEBOOK_PATH = PROJECT_ROOT / "path_analysis" / "notebooks" / "frozen_genome_iod_analysis.ipynb"
-EXECUTED_NOTEBOOK_PATH = (
-    PROJECT_ROOT / "path_analysis" / "notebooks" / "frozen_genome_iod_analysis.executed.ipynb"
+REPORT_DIR = (
+    PROJECT_ROOT
+    / "notebooks"
+    / "presentation"
+    / "frozen_genome_iod_analysis"
 )
-REPORT_DIR = PROJECT_ROOT / "path_analysis" / "results" / "frozen_genome_iod_analysis"
+NOTEBOOK_PATH = REPORT_DIR / "frozen_genome_iod_analysis.ipynb"
+EXECUTED_NOTEBOOK_PATH = REPORT_DIR / "frozen_genome_iod_analysis.executed.ipynb"
 FIGURE_DIR = REPORT_DIR / "figures"
 HTML_PATH = REPORT_DIR / "index.html"
 SPECIES_SUMMARY_PATH = REPORT_DIR / "species_relative_genome_iod_summary.csv"
@@ -624,7 +627,7 @@ raw_display = frozen[raw_columns].sort_values(
     ["species", "filename", "nuc_iod"], kind="mergesort"
 )
 relative_source_link = (
-    "../../data/external/derived/image_quality_matched_genome_iod/"
+    "../../../path_analysis/data/external/derived/image_quality_matched_genome_iod/"
     "image_quality_matched_nuclei_frozen_reviewed.csv.gz"
 )
 display(HTML(
@@ -990,16 +993,18 @@ print("  uv run python path_analysis/scripts/build_frozen_genome_iod_notebook.py
 print("Execute notebook:")
 print(
     "  uv run jupyter nbconvert --to notebook --execute "
-    "path_analysis/notebooks/frozen_genome_iod_analysis.ipynb "
+    "notebooks/presentation/frozen_genome_iod_analysis/frozen_genome_iod_analysis.ipynb "
     "--output frozen_genome_iod_analysis.executed.ipynb "
-    "--output-dir path_analysis/notebooks --ExecutePreprocessor.timeout=300"
+    "--output-dir notebooks/presentation/frozen_genome_iod_analysis "
+    "--ExecutePreprocessor.timeout=300"
 )
 print("Render HTML:")
 print(
     "  uv run jupyter nbconvert --to html "
-    "path_analysis/notebooks/frozen_genome_iod_analysis.executed.ipynb "
+    "notebooks/presentation/frozen_genome_iod_analysis/"
+    "frozen_genome_iod_analysis.executed.ipynb "
     "--output index.html "
-    "--output-dir path_analysis/results/frozen_genome_iod_analysis"
+    "--output-dir notebooks/presentation/frozen_genome_iod_analysis"
 )
 '''
         ),
