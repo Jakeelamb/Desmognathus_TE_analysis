@@ -706,13 +706,15 @@ plt.show()
             """
             ## Measured-only time-calibrated phylogeny
 
-            This panel aligns the exact 20-species overlap across the frozen
-            genome-IOD and literal-largest size panels. Every violin is a
-            bootstrap distribution of the plotted estimator. Genome is shown
-            as relative nuclear IOD, never picograms; nucleus and cell areas
-            are medians of the 50 manually vetted largest cells and their
-            corresponding nuclei. No species is filled by phylogenetic
-            imputation.
+            This panel includes all 21 species in the frozen literal-largest
+            cell panel. Every species has observed cell and corresponding
+            nucleus distributions. Relative nuclear IOD is shown for the 20
+            common-support genome species; *D. ochrophaeus* is retained on the
+            tree with its observed size data and an explicitly empty genome
+            slot because its image-quality overlap was limited. Every violin
+            is a bootstrap distribution of the plotted estimator, genome is
+            never expressed in picograms, and no species is filled by
+            phylogenetic imputation.
             """
         ),
         code(

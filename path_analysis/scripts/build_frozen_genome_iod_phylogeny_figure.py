@@ -152,15 +152,13 @@ def build_figure_data(
 
     genome_species = set(genome["species"])
     cell_species = set(cells["species"])
-    measured_species = sorted(genome_species & cell_species)
-    if measured_species != sorted(genome_species):
+    figure_species = sorted(cell_species)
+    if not genome_species.issubset(cell_species):
         raise ValueError(
             "Every frozen genome-panel species must have a frozen size panel."
         )
-    if len(measured_species) != 20:
-        raise ValueError(f"Expected 20 measured overlapping species, found {len(measured_species)}.")
-    genome = genome.loc[genome["species"].isin(measured_species)].copy()
-    cells = cells.loc[cells["species"].isin(measured_species)].copy()
+    if len(figure_species) != 21:
+        raise ValueError(f"Expected 21 frozen cell-panel species, found {len(figure_species)}.")
     if not cells.groupby("species").size().eq(50).all():
         raise ValueError("Size panel must contain exactly 50 vetted cells per species.")
     if not genome["review_status"].eq("reviewed_keep").all():
@@ -174,41 +172,49 @@ def build_figure_data(
 
     summary_rows: list[dict[str, Any]] = []
     draw_frames: list[pd.DataFrame] = []
-    for species_index, species in enumerate(measured_species):
+    for species_index, species in enumerate(figure_species):
         genome_group = genome.loc[genome["species"].eq(species)]
         cell_group = cells.loc[cells["species"].eq(species)]
-        genome_draws = bootstrap_equal_image_iod(
-            genome_group,
-            n_bootstrap=n_bootstrap,
-            seed=seed + species_index * 2017,
-        ) / anchor
         size_draws = bootstrap_paired_size_medians(
             cell_group,
             n_bootstrap=n_bootstrap,
             seed=seed + species_index * 2017 + 1,
         )
         metric_draws = {
-            "relative_iod_index": genome_draws,
             "nucleus_area_um2": size_draws["nuc_area_um2"].to_numpy(),
             "cell_area_um2": size_draws["cell_area_um2"].to_numpy(),
         }
+        if species in genome_species:
+            metric_draws["relative_iod_index"] = bootstrap_equal_image_iod(
+                genome_group,
+                n_bootstrap=n_bootstrap,
+                seed=seed + species_index * 2017,
+            ) / anchor
+            genome_point = float(genome_points.loc[species, "relative_iod_index"])
+            genome_status = "frozen_primary_common_support"
+        else:
+            genome_point = np.nan
+            genome_status = "limited_overlap_no_frozen_primary_iod"
         points = {
-            "relative_iod_index": float(
-                genome_points.loc[species, "relative_iod_index"]
-            ),
+            "relative_iod_index": genome_point,
             "nucleus_area_um2": float(cell_group["nuc_area_um2"].median()),
             "cell_area_um2": float(cell_group["cell_area_um2"].median()),
         }
         row: dict[str, Any] = {
             "species": species,
+            "genome_panel_status": genome_status,
             "n_genome_nuclei": int(len(genome_group)),
             "n_genome_images": int(genome_group["filename"].nunique()),
             "n_size_cells": int(len(cell_group)),
             "n_size_images": int(cell_group["filename"].nunique()),
         }
         for metric in METRIC_ORDER:
-            low, high = np.quantile(metric_draws[metric], [0.025, 0.975])
             row[metric] = points[metric]
+            if metric not in metric_draws:
+                row[f"{metric}_ci_low"] = np.nan
+                row[f"{metric}_ci_high"] = np.nan
+                continue
+            low, high = np.quantile(metric_draws[metric], [0.025, 0.975])
             row[f"{metric}_ci_low"] = float(low)
             row[f"{metric}_ci_high"] = float(high)
             draw_frames.append(
@@ -236,7 +242,8 @@ def build_figure_data(
     ]
     correlation_rows = []
     for label, left, right in comparison_specs:
-        rho, p_value = spearmanr(summary[left], summary[right])
+        complete = summary[[left, right]].dropna()
+        rho, p_value = spearmanr(complete[left], complete[right])
         correlation_rows.append(
             {
                 "comparison": label,
@@ -244,7 +251,7 @@ def build_figure_data(
                 "right_metric": right,
                 "spearman_rho": float(rho),
                 "p_value_descriptive_only": float(p_value),
-                "n_species": int(len(summary)),
+                "n_species": int(len(complete)),
                 "phylogenetically_corrected": False,
             }
         )
@@ -365,13 +372,16 @@ def draw_trait_axis(
     y_by_species: dict[str, float],
 ) -> None:
     style = METRIC_STYLE[metric]
-    distributions = [
-        draws.loc[
+    available_species = []
+    distributions = []
+    for species in species_order:
+        values = draws.loc[
             draws["species"].eq(species) & draws["metric"].eq(metric), "value"
         ].to_numpy()
-        for species in species_order
-    ]
-    positions = [y_by_species[species] for species in species_order]
+        if len(values):
+            available_species.append(species)
+            distributions.append(values)
+    positions = [y_by_species[species] for species in available_species]
     violins = ax.violinplot(
         distributions,
         positions=positions,
@@ -397,6 +407,19 @@ def draw_trait_axis(
     for species in species_order:
         value = float(points.loc[species])
         y = y_by_species[species]
+        if not np.isfinite(value):
+            ax.text(
+                0.02,
+                y,
+                "limited overlap; no frozen primary IOD",
+                transform=ax.get_yaxis_transform(),
+                va="center",
+                ha="left",
+                fontsize=6.6,
+                color="#7A7F84",
+                fontstyle="italic",
+            )
+            continue
         ax.scatter(value, y, s=24, color="#24282D", zorder=4)
         ax.text(
             value + label_offset,
@@ -448,7 +471,7 @@ def render_figure(
 
     correlation_lookup = correlations.set_index("comparison")["spearman_rho"]
     fig.suptitle(
-        "Measured-only time-calibrated Desmognathus phylogeny with audited trait uncertainty",
+        "Time-calibrated Desmognathus phylogeny with audited bootstrap trait distributions",
         fontsize=16,
         fontweight="bold",
         y=0.978,
@@ -457,9 +480,9 @@ def render_figure(
         0.5,
         0.946,
         (
-            "Genome panel: 721 reviewed, image-quality-matched nuclei (relative IOD, not pg). "
-            "Size panel: 50 manually vetted largest cells and their corresponding nuclei per species. "
-            "No phylogenetic fills."
+            "Size panel: all 21 species, with 50 manually vetted largest cells and corresponding nuclei each. "
+            "Genome panel: 20 common-support species (relative IOD, not pg); D. ochrophaeus is shown without "
+            "an IOD violin because it has limited image-quality overlap. No phylogenetic fills."
         ),
         ha="center",
         va="center",
@@ -534,6 +557,10 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
     manifest = {
         "analysis": "Measured-only time-tree alignment of audited microscopy traits",
         "n_measured_species": int(len(summary)),
+        "n_primary_genome_species": int(summary["relative_iod_index"].notna().sum()),
+        "missing_primary_genome_species": sorted(
+            summary.loc[summary["relative_iod_index"].isna(), "species"].tolist()
+        ),
         "species": species_order,
         "tree_source": str(TREE_PATH.resolve()),
         "tree_source_sha256": sha256_file(TREE_PATH),

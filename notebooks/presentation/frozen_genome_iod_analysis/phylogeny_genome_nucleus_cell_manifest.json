@@ -1,6 +1,10 @@
 {
   "analysis": "Measured-only time-tree alignment of audited microscopy traits",
-  "n_measured_species": 20,
+  "n_measured_species": 21,
+  "n_primary_genome_species": 20,
+  "missing_primary_genome_species": [
+    "D. ochrophaeus"
+  ],
   "species": [
     "D. anicetus",
     "D. tilleyi",
@@ -15,6 +19,7 @@
     "D. auriculatus",
     "D. fuscus",
     "D. welteri",
+    "D. ochrophaeus",
     "D. intermedius",
     "D. marmoratus",
     "D. mavrokoilius",
@@ -39,11 +44,11 @@
   "absolute_genome_size_claimed": false,
   "correlations_are_phylogenetically_corrected": false,
   "summary_csv": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/phylogeny_genome_nucleus_cell_summary.csv",
-  "summary_sha256": "17e87b4379a4e07db33d0208defe30b59a0c0bbc2b34c280ebf9c2220ef4f20d",
+  "summary_sha256": "8bec33fc541627e0913ea74349fab1622079fc48d9911c630f02b19a8c89d360",
   "correlation_csv": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/phylogeny_genome_nucleus_cell_correlations.csv",
-  "correlation_sha256": "3c541d2e09445a5dc2e11005bc0ef4ac4bec4dfd4bccd2e54bb1e571c6d57278",
+  "correlation_sha256": "e62754f91d2e9fd3a533d86e75d3de95cca082f5f27fe249303769c2d1f7d2b0",
   "png": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/figures/07_measured_phylogeny_genome_nucleus_cell.png",
-  "png_sha256": "df80c2a71de078f7efcf7f5edec89ad81c6ead211714c3899000587929bb2c8b",
+  "png_sha256": "7a8d48af1036e0ef6798644cbaf139aad7cb147e6becfa96392719779e43d03b",
   "pdf": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/figures/07_measured_phylogeny_genome_nucleus_cell.pdf",
-  "pdf_sha256": "b91c617a2fc00bb0975095d70b53a0933d62f38fbd0f4c421359ea3351bc9322"
+  "pdf_sha256": "bb17173fce60c7e2507c67752f644a12850288d2299883d28cb561bd0bf4be9e"
 }

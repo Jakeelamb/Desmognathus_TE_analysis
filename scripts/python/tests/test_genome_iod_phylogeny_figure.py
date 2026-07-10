@@ -28,18 +28,22 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         np.testing.assert_array_equal(first["nuc_area_um2"], second["nuc_area_um2"])
         self.assertEqual(len(first), 100)
 
-    def test_figure_data_uses_exact_measured_twenty_species_overlap(self) -> None:
+    def test_figure_data_uses_all_twenty_one_frozen_cell_species(self) -> None:
         summary, draws, correlations = figure.build_figure_data(
             n_bootstrap=100, seed=20260710
         )
-        genome_species = set(
-            pd.read_csv(figure.GENOME_PATH, low_memory=False)["species"]
-        )
-        self.assertEqual(set(summary["species"]), genome_species)
-        self.assertEqual(len(summary), 20)
-        self.assertNotIn("D. ochrophaeus", set(summary["species"]))
+        cell_species = set(pd.read_csv(figure.CELL_PATH, low_memory=False)["species"])
+        self.assertEqual(set(summary["species"]), cell_species)
+        self.assertEqual(len(summary), 21)
+        self.assertIn("D. ochrophaeus", set(summary["species"]))
+        ochrophaeus = summary.loc[summary["species"].eq("D. ochrophaeus")].iloc[0]
+        self.assertTrue(pd.isna(ochrophaeus["relative_iod_index"]))
+        self.assertEqual(ochrophaeus["genome_panel_status"], "limited_overlap_no_frozen_primary_iod")
         self.assertEqual(set(draws["metric"]), set(figure.METRIC_ORDER))
-        self.assertTrue(draws.groupby("metric").size().eq(20 * 100).all())
+        draw_counts = draws.groupby("metric").size()
+        self.assertEqual(draw_counts["relative_iod_index"], 20 * 100)
+        self.assertEqual(draw_counts["nucleus_area_um2"], 21 * 100)
+        self.assertEqual(draw_counts["cell_area_um2"], 21 * 100)
         self.assertEqual(set(correlations["comparison"]), {
             "relative_iod_vs_nucleus_area",
             "relative_iod_vs_cell_area",
@@ -56,7 +60,6 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
             expected_nucleus=("nuc_area_um2", "median"),
         )
         observed = summary.set_index("species")
-        expected = expected.loc[observed.index]
         pd.testing.assert_series_equal(
             observed.loc[expected.index, "cell_area_um2"],
             expected["expected_cell"],
@@ -77,7 +80,9 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         self.assertGreater(figure.PNG_PATH.stat().st_size, 200_000)
         self.assertTrue(figure.PDF_PATH.exists())
         self.assertGreater(figure.PDF_PATH.stat().st_size, 20_000)
-        self.assertEqual(manifest["n_measured_species"], 20)
+        self.assertEqual(manifest["n_measured_species"], 21)
+        self.assertEqual(manifest["n_primary_genome_species"], 20)
+        self.assertEqual(manifest["missing_primary_genome_species"], ["D. ochrophaeus"])
         self.assertEqual(manifest["phylogenetic_fills_used"], False)
         self.assertEqual(manifest["absolute_genome_size_claimed"], False)
         self.assertIn("Measured-only time-calibrated phylogeny", source)
