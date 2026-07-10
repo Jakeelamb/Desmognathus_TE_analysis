@@ -46,9 +46,13 @@
   "summary_csv": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/phylogeny_genome_nucleus_cell_summary.csv",
   "summary_sha256": "8bec33fc541627e0913ea74349fab1622079fc48d9911c630f02b19a8c89d360",
   "correlation_csv": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/phylogeny_genome_nucleus_cell_correlations.csv",
-  "correlation_sha256": "e62754f91d2e9fd3a533d86e75d3de95cca082f5f27fe249303769c2d1f7d2b0",
+  "correlation_sha256": "23fcac0454a5649d4b1f3bd631bdf10e7f3bb59ec168deec107766fa58298731",
   "png": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/figures/07_measured_phylogeny_genome_nucleus_cell.png",
   "png_sha256": "7a8d48af1036e0ef6798644cbaf139aad7cb147e6becfa96392719779e43d03b",
   "pdf": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/figures/07_measured_phylogeny_genome_nucleus_cell.pdf",
-  "pdf_sha256": "bb17173fce60c7e2507c67752f644a12850288d2299883d28cb561bd0bf4be9e"
+  "pdf_sha256": "d3f703830c184fea3f509d01dc0a0b87e3fdc841dbf259a5d0facd6f7519a801",
+  "pairwise_png": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/figures/08_pairwise_genome_nucleus_cell_relationships.png",
+  "pairwise_png_sha256": "d9effdad2e6644e40ee2ba0e09161e81e6efa58b209b4efb819334721da7f184",
+  "pairwise_pdf": "/home/jake/Projects/Desmognathus_TE/notebooks/presentation/frozen_genome_iod_analysis/figures/08_pairwise_genome_nucleus_cell_relationships.pdf",
+  "pairwise_pdf_sha256": "bae04ce89309963e5009a4151d8f5866cbc25f76ed23e942a2f3a41be8f694b9"
 }

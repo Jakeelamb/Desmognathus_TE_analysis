@@ -18,7 +18,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
+from scipy.stats import pearsonr, spearmanr
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -42,6 +42,8 @@ OUTPUT_DIR = genome_analysis.REPORT_DIR
 FIGURE_DIR = genome_analysis.FIGURE_DIR
 PNG_PATH = FIGURE_DIR / "07_measured_phylogeny_genome_nucleus_cell.png"
 PDF_PATH = FIGURE_DIR / "07_measured_phylogeny_genome_nucleus_cell.pdf"
+PAIRWISE_PNG_PATH = FIGURE_DIR / "08_pairwise_genome_nucleus_cell_relationships.png"
+PAIRWISE_PDF_PATH = FIGURE_DIR / "08_pairwise_genome_nucleus_cell_relationships.pdf"
 SUMMARY_PATH = OUTPUT_DIR / "phylogeny_genome_nucleus_cell_summary.csv"
 CORRELATION_PATH = OUTPUT_DIR / "phylogeny_genome_nucleus_cell_correlations.csv"
 MANIFEST_PATH = OUTPUT_DIR / "phylogeny_genome_nucleus_cell_manifest.json"
@@ -70,6 +72,11 @@ METRIC_STYLE = {
         "color": "#D39768",
         "format": ".1f",
     },
+}
+PDF_METADATA = {
+    "Creator": "Desmognathus_TE frozen microscopy analysis",
+    "CreationDate": None,
+    "ModDate": None,
 }
 
 
@@ -244,6 +251,7 @@ def build_figure_data(
     for label, left, right in comparison_specs:
         complete = summary[[left, right]].dropna()
         rho, p_value = spearmanr(complete[left], complete[right])
+        pearson_r, pearson_p = pearsonr(complete[left], complete[right])
         correlation_rows.append(
             {
                 "comparison": label,
@@ -251,6 +259,8 @@ def build_figure_data(
                 "right_metric": right,
                 "spearman_rho": float(rho),
                 "p_value_descriptive_only": float(p_value),
+                "pearson_r": float(pearson_r),
+                "pearson_p_value_descriptive_only": float(pearson_p),
                 "n_species": int(len(complete)),
                 "phylogenetically_corrected": False,
             }
@@ -537,9 +547,184 @@ def render_figure(
     )
     fig.subplots_adjust(top=0.875, bottom=0.07, left=0.035, right=0.99)
     fig.savefig(PNG_PATH, dpi=220, bbox_inches="tight", facecolor="white")
-    fig.savefig(PDF_PATH, bbox_inches="tight", facecolor="white")
+    fig.savefig(
+        PDF_PATH,
+        bbox_inches="tight",
+        facecolor="white",
+        metadata=PDF_METADATA,
+    )
     plt.close(fig)
     return species_order, max_age
+
+
+def render_pairwise_figure(
+    summary: pd.DataFrame,
+    correlations: pd.DataFrame,
+) -> None:
+    """Plot the three unique pairwise trait relationships with bootstrap intervals."""
+    specs = [
+        (
+            "relative_iod_vs_nucleus_area",
+            "relative_iod_index",
+            "nucleus_area_um2",
+            "Relative nuclear-IOD index",
+            "Nucleus area (µm²)",
+            "#4C78A8",
+        ),
+        (
+            "relative_iod_vs_cell_area",
+            "relative_iod_index",
+            "cell_area_um2",
+            "Relative nuclear-IOD index",
+            "Cell area (µm²)",
+            "#D56A4A",
+        ),
+        (
+            "nucleus_area_vs_cell_area",
+            "nucleus_area_um2",
+            "cell_area_um2",
+            "Nucleus area (µm²)",
+            "Cell area (µm²)",
+            "#765A9A",
+        ),
+    ]
+    correlation_lookup = correlations.set_index("comparison")
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6.7))
+    for panel_index, (
+        comparison,
+        x_column,
+        y_column,
+        x_label,
+        y_label,
+        color,
+    ) in enumerate(specs):
+        ax = axes[panel_index]
+        columns = [
+            "species",
+            x_column,
+            f"{x_column}_ci_low",
+            f"{x_column}_ci_high",
+            y_column,
+            f"{y_column}_ci_low",
+            f"{y_column}_ci_high",
+        ]
+        data = summary[columns].dropna().copy()
+        x = data[x_column].to_numpy(dtype=float)
+        y = data[y_column].to_numpy(dtype=float)
+        x_error = np.vstack(
+            [
+                x - data[f"{x_column}_ci_low"].to_numpy(dtype=float),
+                data[f"{x_column}_ci_high"].to_numpy(dtype=float) - x,
+            ]
+        )
+        y_error = np.vstack(
+            [
+                y - data[f"{y_column}_ci_low"].to_numpy(dtype=float),
+                data[f"{y_column}_ci_high"].to_numpy(dtype=float) - y,
+            ]
+        )
+        ax.errorbar(
+            x,
+            y,
+            xerr=x_error,
+            yerr=y_error,
+            fmt="none",
+            ecolor=color,
+            elinewidth=1.0,
+            alpha=0.28,
+            capsize=0,
+            zorder=1,
+        )
+        ax.scatter(
+            x,
+            y,
+            s=48,
+            color=color,
+            edgecolor="white",
+            linewidth=0.7,
+            alpha=0.92,
+            zorder=3,
+        )
+        x_line = np.linspace(float(x.min()), float(x.max()), 100)
+        slope, intercept = np.polyfit(x, y, 1)
+        ax.plot(
+            x_line,
+            intercept + slope * x_line,
+            color=color,
+            linewidth=1.6,
+            alpha=0.72,
+            zorder=2,
+        )
+        for label_index, row in enumerate(data.itertuples(index=False)):
+            x_offset = 4 if label_index % 2 == 0 else -4
+            horizontal_alignment = "left" if x_offset > 0 else "right"
+            y_offset = 4 + ((label_index % 3) - 1) * 4
+            ax.annotate(
+                str(row.species).replace("D. ", ""),
+                (getattr(row, x_column), getattr(row, y_column)),
+                xytext=(x_offset, y_offset),
+                textcoords="offset points",
+                ha=horizontal_alignment,
+                va="center",
+                fontsize=7,
+                color="#353A40",
+                fontstyle="italic",
+            )
+        stats_row = correlation_lookup.loc[comparison]
+        ax.set_title(
+            (
+                f"Spearman ρ = {stats_row['spearman_rho']:.2f}; "
+                f"descriptive p = {stats_row['p_value_descriptive_only']:.3f}; "
+                f"n = {int(stats_row['n_species'])}"
+            ),
+            fontsize=10.5,
+            fontweight="bold",
+        )
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.grid(alpha=0.16)
+        for spine in ["top", "right"]:
+            ax.spines[spine].set_visible(False)
+
+    fig.suptitle(
+        "Pairwise relationships among relative IOD, nucleus area, and cell area",
+        fontsize=15,
+        fontweight="bold",
+        y=0.985,
+    )
+    fig.text(
+        0.5,
+        0.94,
+        (
+            "Points are species estimates; bars are 95% bootstrap intervals conditional on "
+            "the frozen image and selected-cell panels. Lines are descriptive least-squares fits."
+        ),
+        ha="center",
+        va="center",
+        fontsize=9.2,
+        color="#4A4F55",
+    )
+    fig.text(
+        0.5,
+        0.015,
+        (
+            "IOD includes nuclear area algebraically, the size traits are upper-tail top-50 "
+            "estimands, and these correlations are not phylogenetically corrected."
+        ),
+        ha="center",
+        va="bottom",
+        fontsize=9.0,
+        color="#4A4F55",
+    )
+    fig.subplots_adjust(top=0.87, bottom=0.14, left=0.06, right=0.99, wspace=0.23)
+    fig.savefig(PAIRWISE_PNG_PATH, dpi=220, bbox_inches="tight", facecolor="white")
+    fig.savefig(
+        PAIRWISE_PDF_PATH,
+        bbox_inches="tight",
+        facecolor="white",
+        metadata=PDF_METADATA,
+    )
+    plt.close(fig)
 
 
 def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
@@ -548,6 +733,7 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
         seed=seed,
     )
     species_order, tree_height = render_figure(summary, draws, correlations)
+    render_pairwise_figure(summary, correlations)
     summary["tree_display_order"] = summary["species"].map(
         {species: index + 1 for index, species in enumerate(species_order)}
     )
@@ -594,6 +780,10 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
         "png_sha256": sha256_file(PNG_PATH),
         "pdf": str(PDF_PATH.resolve()),
         "pdf_sha256": sha256_file(PDF_PATH),
+        "pairwise_png": str(PAIRWISE_PNG_PATH.resolve()),
+        "pairwise_png_sha256": sha256_file(PAIRWISE_PNG_PATH),
+        "pairwise_pdf": str(PAIRWISE_PDF_PATH.resolve()),
+        "pairwise_pdf_sha256": sha256_file(PAIRWISE_PDF_PATH),
     }
     MANIFEST_PATH.write_text(
         json.dumps(manifest, indent=2) + "\n",

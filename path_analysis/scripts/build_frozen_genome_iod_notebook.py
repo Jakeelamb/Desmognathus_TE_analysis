@@ -730,6 +730,27 @@ display(pd.read_csv(phylogeny_summary_path))
 display(pd.read_csv(phylogeny_correlation_path))
 '''
         ),
+        md(
+            """
+            ## Pairwise genome-proxy, nucleus, and cell relationships
+
+            These three panels show every unique pair of traits. Points are
+            species estimates and bars are their bootstrap intervals. Positive
+            relationships are biologically consistent with the classical
+            nucleotypic expectation, but they are descriptive rather than
+            causal: IOD contains nuclear area algebraically, the size panel is
+            an upper-tail top-50 estimand, and shared ancestry is not corrected
+            in these correlations.
+            """
+        ),
+        code(
+            r'''
+pairwise_figure = FIGURE_DIR / "08_pairwise_genome_nucleus_cell_relationships.png"
+assert pairwise_figure.exists(), "Run the measured phylogeny figure builder first"
+display(Image(filename=str(pairwise_figure)))
+display(pd.read_csv(phylogeny_correlation_path))
+'''
+        ),
         md("## Image-to-image variation within species"),
         code(
             r'''
@@ -1012,6 +1033,7 @@ exports = pd.DataFrame([
     {"artifact": "Frozen quality balance", "path": str(analysis.QUALITY_BALANCE_PATH)},
     {"artifact": "Residual quality diagnostics", "path": str(analysis.QUALITY_RESIDUAL_PATH)},
     {"artifact": "Measured phylogeny figure", "path": str(analysis.FIGURE_DIR / "07_measured_phylogeny_genome_nucleus_cell.png")},
+    {"artifact": "Pairwise trait figure", "path": str(analysis.FIGURE_DIR / "08_pairwise_genome_nucleus_cell_relationships.png")},
     {"artifact": "Measured phylogeny source table", "path": str(analysis.REPORT_DIR / "phylogeny_genome_nucleus_cell_summary.csv")},
     {"artifact": "Measured phylogeny correlation table", "path": str(analysis.REPORT_DIR / "phylogeny_genome_nucleus_cell_correlations.csv")},
     {"artifact": "Analysis manifest", "path": str(analysis.ANALYSIS_MANIFEST_PATH)},

@@ -80,6 +80,10 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         self.assertGreater(figure.PNG_PATH.stat().st_size, 200_000)
         self.assertTrue(figure.PDF_PATH.exists())
         self.assertGreater(figure.PDF_PATH.stat().st_size, 20_000)
+        self.assertTrue(figure.PAIRWISE_PNG_PATH.exists())
+        self.assertGreater(figure.PAIRWISE_PNG_PATH.stat().st_size, 150_000)
+        self.assertTrue(figure.PAIRWISE_PDF_PATH.exists())
+        self.assertGreater(figure.PAIRWISE_PDF_PATH.stat().st_size, 20_000)
         self.assertEqual(manifest["n_measured_species"], 21)
         self.assertEqual(manifest["n_primary_genome_species"], 20)
         self.assertEqual(manifest["missing_primary_genome_species"], ["D. ochrophaeus"])
@@ -87,6 +91,12 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         self.assertEqual(manifest["absolute_genome_size_claimed"], False)
         self.assertIn("Measured-only time-calibrated phylogeny", source)
         self.assertIn(figure.PNG_PATH.name, source)
+        self.assertIn(figure.PAIRWISE_PNG_PATH.name, source)
+
+        correlations = pd.read_csv(figure.CORRELATION_PATH)
+        self.assertTrue(
+            {"spearman_rho", "pearson_r", "n_species"}.issubset(correlations.columns)
+        )
 
 
 if __name__ == "__main__":
