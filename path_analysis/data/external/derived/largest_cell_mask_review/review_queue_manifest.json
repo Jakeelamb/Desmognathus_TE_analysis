@@ -1,0 +1,32 @@
+{
+  "purpose": "Literal-largest cell-mask review queue; cell area is the only ranking metric after fixed hard eligibility.",
+  "candidates_csv": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/pair_review_postrepair_strict/triage/all_scored_masks.csv",
+  "candidates_sha256": "dc3eb40d556999a34637c7d19dc0f94985af74532594fb04ca4681aafca62cf8",
+  "queue_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/largest_cell_mask_review/largest_cell_mask_review_queue.csv.gz",
+  "queue_sha256": "399cc9860649118a770aee061937ca4969ca5f1c7f0b316d1c6849f44f2a2a95",
+  "target_per_species": 50,
+  "review_depth": 100,
+  "species_counts": {
+    "D. amphileucus": 100,
+    "D. anicetus": 100,
+    "D. apalachicolae": 100,
+    "D. auriculatus": 100,
+    "D. bairdi": 100,
+    "D. brimleyorum": 100,
+    "D. campi": 100,
+    "D. folkertsi": 100,
+    "D. fuscus": 100,
+    "D. gvnigeusgwotli": 100,
+    "D. intermedius": 100,
+    "D. kanawha": 100,
+    "D. marmoratus": 100,
+    "D. mavrokoilius": 100,
+    "D. monticola": 100,
+    "D. ochrophaeus": 65,
+    "D. ocoee": 100,
+    "D. perlapsus": 100,
+    "D. tilleyi": 100,
+    "D. valtos": 100,
+    "D. welteri": 100
+  }
+}

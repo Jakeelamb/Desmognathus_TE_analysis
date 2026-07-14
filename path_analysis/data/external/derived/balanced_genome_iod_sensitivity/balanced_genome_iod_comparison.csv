@@ -1,0 +1,22 @@
+species,estimated_genome_pg_current_top50_primary,estimated_genome_pg_balanced_qc_only,balanced_minus_current_pg,balanced_vs_current_pct,iod_ratio_to_reference_current_top50_primary,iod_ratio_to_reference_balanced_qc_only,balanced_iod_ratio_minus_current,n_selected_pairs_current_top50_primary,n_selected_pairs_balanced_qc_only,n_selected_images_current_top50_primary,n_selected_images_balanced_qc_only,n_selected_specimens_current_top50_primary,n_selected_specimens_balanced_qc_only,support_label_current_top50_primary,support_label_balanced_qc_only,support_warnings_current_top50_primary,support_warnings_balanced_qc_only
+D. fuscus,16.360000,16.360000,0.000000,0.000000,1.000000,1.000000,0.000000,23,50,1,8,1,4,low,medium,low_pair_count; low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. marmoratus,15.918278,19.073482,3.155204,19.821264,0.973000,1.165861,0.192861,20,50,1,4,1,2,low,medium,low_pair_count; low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. monticola,14.102600,18.701906,4.599306,32.613175,0.862017,1.143148,0.281131,40,50,1,4,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. mavrokoilius,12.848645,17.047910,4.199264,32.682546,0.785370,1.042048,0.256679,50,50,2,3,2,2,medium,medium,size_darkness_selected_top50,
+D. auriculatus,14.527962,19.628853,5.100891,35.110847,0.888017,1.199808,0.311790,48,50,1,4,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. ocoee,15.289705,21.654861,6.365156,41.630343,0.934579,1.323647,0.389068,12,50,1,3,1,3,low,medium,low_pair_count; low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. intermedius,16.285297,23.336758,7.051461,43.299551,0.995434,1.426452,0.431018,50,50,2,2,2,2,medium,medium,size_darkness_selected_top50,
+D. welteri,11.741516,17.066358,5.324842,45.350545,0.717697,1.043176,0.325479,33,50,1,4,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. valtos,19.770085,28.899468,9.129382,46.177759,1.208440,1.766471,0.558031,25,50,1,2,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. gvnigeusgwotli,13.709404,20.425734,6.716330,48.990677,0.837983,1.248517,0.410534,50,50,1,1,1,1,low,low,low_image_count; low_specimen_count; size_darkness_selected_top50,low_image_count; low_specimen_count
+D. campi,12.794174,19.132985,6.338811,49.544513,0.782040,1.169498,0.387458,50,50,2,2,2,2,medium,medium,size_darkness_selected_top50,
+D. bairdi,16.285622,24.418940,8.133317,49.941704,0.995454,1.492600,0.497147,50,50,1,1,1,1,low,low,low_image_count; low_specimen_count; size_darkness_selected_top50,low_image_count; low_specimen_count
+D. amphileucus,14.275116,21.513422,7.238306,50.705759,0.872562,1.315001,0.442439,38,50,1,3,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. anicetus,13.069896,19.866164,6.796268,51.999406,0.798893,1.214313,0.415420,50,50,1,1,1,1,low,low,low_image_count; low_specimen_count; size_darkness_selected_top50,low_image_count; low_specimen_count
+D. tilleyi,14.033456,21.626794,7.593337,54.108818,0.857791,1.321931,0.464140,50,50,2,2,2,2,medium,medium,size_darkness_selected_top50,
+D. folkertsi,13.794178,21.602707,7.808529,56.607429,0.843165,1.320459,0.477294,50,50,2,2,2,2,medium,medium,size_darkness_selected_top50,
+D. brimleyorum,15.080389,23.656833,8.576444,56.871501,0.921784,1.446017,0.524232,35,50,1,2,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. apalachicolae,12.687106,20.119741,7.432635,58.584163,0.775495,1.229813,0.454318,19,50,1,2,1,2,low,medium,low_pair_count; low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. kanawha,13.250501,21.488225,8.237724,62.169154,0.809933,1.313461,0.503528,45,50,1,2,1,2,low,medium,low_image_count; low_specimen_count; size_darkness_selected_top50,
+D. ochrophaeus,11.057864,17.959458,6.901595,62.413453,0.675909,1.097766,0.421858,50,50,2,2,2,2,limited,limited,size_darkness_selected_top50,
+D. perlapsus,10.725843,18.663094,7.937252,74.001197,0.655614,1.140776,0.485162,21,50,1,3,1,3,low,medium,low_pair_count; low_image_count; low_specimen_count; size_darkness_selected_top50,

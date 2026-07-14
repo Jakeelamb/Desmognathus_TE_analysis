@@ -11,6 +11,7 @@ dependencies:
   - biopython
   - jupyterlab
   - seaborn
+  - scikit-image
   - r-base>=4.0
   - r-tidyverse
   - r-ggplot2

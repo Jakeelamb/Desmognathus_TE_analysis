@@ -1,0 +1,22 @@
+species,te_descriptive_analysis21_v1,microscopy_path_analysis18_v1,decision_basis,te_sra_accession,te_assembly_accession,has_tree_tip,has_te,has_genome,has_ectopic,has_morphology,has_ltr_history,has_ltr_high_confidence,ltr_history_n_pairs_high_confidence,analysis_role
+aeneus,True,False,user_scope_correction_2026_07_10; current linked microscopy absent,SRX19953415,GCA_030264635.1,True,True,False,True,False,True,True,9.0,te_tree_ltr_descriptive
+amphileucus,True,True,existing analysis18 integrated panel,SRX20502537,GCA_032360725.1,True,True,True,True,True,True,True,10.0,te_tree_ltr_descriptive
+anicetus,True,True,existing analysis18 integrated panel,SRX21425396,GCA_033119125.1,True,True,True,True,True,True,True,4.0,te_tree_ltr_descriptive
+apalachicolae,True,True,existing analysis18 integrated panel,SRX19952657,GCA_030264955.1,True,True,True,True,True,True,False,0.0,te_tree_ltr_descriptive
+auriculatus,True,True,existing analysis18 integrated panel,SRX19953419,GCA_030264895.1,True,True,True,True,True,True,True,3.0,te_tree_ltr_descriptive
+bairdi,True,True,existing analysis18 integrated panel,SRX21425397,GCA_034783875.1,True,True,True,True,True,True,True,6.0,te_tree_ltr_descriptive
+campi,True,True,existing analysis18 integrated panel,SRX21425398,GCA_033118305.1,True,True,True,True,True,True,True,11.0,te_tree_ltr_descriptive
+fuscus,True,True,existing analysis18 integrated panel; accession-specific expert reidentification,SRX20497025,GCA_032353935.1,True,True,True,True,True,True,True,9.0,te_tree_ltr_descriptive
+gvnigeusgwotli,True,True,existing analysis18 integrated panel,SRX20502827,GCA_032353775.1,True,True,True,True,True,True,True,5.0,te_tree_ltr_descriptive
+intermedius,True,True,existing analysis18 integrated panel,SRX20502776,GCA_032275315.1,True,True,True,True,True,True,True,7.0,te_tree_ltr_descriptive
+kanawha,True,True,existing analysis18 integrated panel; terminal-internal proxy absent,SRX20502939,GCA_032353855.1,True,True,True,False,True,False,False,0.0,te_tree_ltr_descriptive
+marmoratus,True,True,existing analysis18 integrated panel,SRX19954879,GCA_031753695.1,True,True,True,True,True,True,True,3.0,te_tree_ltr_descriptive
+mavrokoilius,True,True,existing analysis18 integrated panel,SRX20503049,GCA_032354855.1,True,True,True,True,True,True,True,5.0,te_tree_ltr_descriptive
+monticola,True,True,existing analysis18 integrated panel,SRX19955091,GCA_031753675.1,True,True,True,True,True,True,True,8.0,te_tree_ltr_descriptive
+ocoee,True,True,existing analysis18 integrated panel,SRX19952863,GCA_030264995.1,True,True,True,True,True,True,True,5.0,te_tree_ltr_descriptive
+organi,True,False,user_scope_correction_2026_07_10; current linked microscopy absent,SRX19952929,GCA_030180145.1,True,True,False,True,False,True,True,7.0,te_tree_ltr_descriptive
+perlapsus,True,True,existing analysis18 integrated panel,SRX20503048,GCA_032275285.1,True,True,True,True,True,True,True,7.0,te_tree_ltr_descriptive
+tilleyi,True,True,existing analysis18 integrated panel,SRX21394251,GCA_034782015.1,True,True,True,True,True,True,True,36.0,te_tree_ltr_descriptive
+valtos,True,True,existing analysis18 integrated panel; terminal-internal proxy absent,SRX20503015,GCA_032357565.1,True,True,True,False,True,False,False,0.0,te_tree_ltr_descriptive
+welteri,True,True,existing analysis18 integrated panel,SRX19958882,GCA_030264495.1,True,True,True,True,True,True,True,14.0,te_tree_ltr_descriptive
+wrighti,True,False,user_scope_correction_2026_07_10; current linked microscopy absent,SRX19958881,GCA_030265035.1,True,True,False,True,False,True,True,11.0,te_tree_ltr_descriptive

@@ -1,0 +1,20 @@
+{
+  "purpose": "Quality-neutral genome-IOD source cohort for later visual spot-check and relative-IOD sensitivity analysis.",
+  "selection_rule": "Same strict hard QC for every species, then seeded random sampling balanced across specimens and images.",
+  "selection_excludes": [
+    "nuc_iod",
+    "nuc_area_um2",
+    "cell_area_um2",
+    "nucleus_darkness",
+    "quality_rank"
+  ],
+  "candidates_csv": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/pair_review_postrepair_strict/triage/all_scored_masks.csv",
+  "candidates_sha256": "dc3eb40d556999a34637c7d19dc0f94985af74532594fb04ca4681aafca62cf8",
+  "selected_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/quality_neutral_genome_iod_sample/quality_neutral_genome_iod_source_cohort.csv.gz",
+  "selected_sha256": "c6212b5f5a9ee7870cbe917c5670d94aa21b9c3ad5b0a01053d7bf2591faa80d",
+  "support_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/quality_neutral_genome_iod_sample/quality_neutral_genome_iod_support.csv",
+  "target_per_species": 100,
+  "seed": "desmognathus-genome-iod-v1",
+  "n_selected": 2065,
+  "n_species": 21
+}

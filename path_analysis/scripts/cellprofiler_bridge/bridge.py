@@ -22,6 +22,8 @@ from .pipeline_runs import get_run_paths, metadata_path
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_ACTIVE_RAW_RUN_TAG = "full_dataset_v1"
 DEFAULT_ACTIVE_MIXED_RUN_TAG = "mixed_cellpose_yolo_full_dataset_v1"
+DEFAULT_ACTIVE_VERIFIED_RUN_TAG = "mixed_cellpose_yolo_full_dataset_v1_bgclean"
+DEFAULT_VERIFIED_SPECIES_DIR_NAME = "verified_species_dataset_latest"
 GENOME_CALIBRATION_IMAGE_TYPE = "brightfield"
 
 
@@ -125,6 +127,24 @@ def _read_json(path: Path) -> dict[str, object]:
         return {}
 
 
+def _species_with_prefix(value: object) -> object:
+    species = canonical_species(value)
+    if species is pd.NA:
+        return pd.NA
+    return f"D. {species}"
+
+
+def _verified_species_dataset_dir(cellprofiler_root: Path, verified_run_tag: str) -> Path:
+    return get_run_paths(cellprofiler_root, verified_run_tag).root / DEFAULT_VERIFIED_SPECIES_DIR_NAME
+
+
+def _source_file_columns(path: Path) -> dict[str, object]:
+    return {
+        "source_file": str(path.resolve()),
+        "source_sha256": sha256_for_file(path),
+    }
+
+
 def _normalize_linked_yolo_trace_paths(
     frame: pd.DataFrame,
     *,
@@ -172,6 +192,526 @@ def _normalize_linked_yolo_trace_paths(
             for filename, current in zip(out["filename"], out["nucleus_run_manifest_path"])
         ]
     return out
+
+
+def _existing_pct_for_group(group: pd.DataFrame, column: str, *, cellprofiler_root: Path) -> float:
+    if column not in group.columns:
+        return 0.0
+    return round(trace_existing_pct(group[column], cellprofiler_root=cellprofiler_root), 2)
+
+
+def _metric_col(source: pd.DataFrame, name: str) -> pd.Series:
+    if name in source.columns:
+        return source[name]
+    return pd.Series(pd.NA, index=source.index)
+
+
+def _verified_support_status(row: pd.Series) -> tuple[str, str]:
+    support_label = str(row.get("primary_support_tier", "")).strip().lower()
+    warnings = [
+        item.strip()
+        for item in str(row.get("primary_support_warnings", "")).split(";")
+        if item.strip()
+    ]
+    if row.get("genome_primary_missing", False):
+        warnings.append("all_selected_genome_fallback")
+
+    non_auto_warnings = [warning for warning in warnings if warning != "auto_dominant"]
+    if support_label == "high":
+        status = "minor_caution" if warnings and not non_auto_warnings else "stable"
+    elif support_label == "medium":
+        status = "minor_caution"
+    elif support_label in {"limited", "low"}:
+        status = "sensitivity_limited"
+    else:
+        status = "caution"
+    return status, "; ".join(dict.fromkeys(warnings))
+
+
+def _build_verified_image_trace(
+    *,
+    selected_pairs: pd.DataFrame,
+    out_dir: Path,
+    selected_pairs_path: Path,
+    cellprofiler_root: Path,
+) -> tuple[pd.DataFrame, Path]:
+    selected = selected_pairs.copy()
+    selected["species"] = selected["species"].map(canonical_species)
+    for col in [
+        "cell_area_um2",
+        "nuc_area_um2",
+        "nuc_iod",
+        "nc_area_ratio",
+        "cytoplasm_area_um2",
+        "quality_score",
+        "keep_probability",
+        "iod_final_quality_score",
+    ]:
+        if col in selected.columns:
+            selected[col] = pd.to_numeric(selected[col], errors="coerce")
+    if "image_iod_qc_pass" in selected.columns:
+        selected["image_iod_qc_pass"] = (
+            selected["image_iod_qc_pass"]
+            .fillna(False)
+            .astype(str)
+            .str.lower()
+            .isin(["true", "1", "yes"])
+        )
+
+    agg_spec: dict[str, tuple[str, str]] = {
+        "specimen_id": ("specimen_id", "first"),
+        "n_pairs_selected": ("filename", "size"),
+        "median_cell_area_um2_selected": ("cell_area_um2", "median"),
+        "median_nuc_area_um2_selected": ("nuc_area_um2", "median"),
+        "median_nuc_iod_selected": ("nuc_iod", "median"),
+        "median_nc_ratio_selected": ("nc_area_ratio", "median"),
+        "median_cytoplasm_area_um2_selected": ("cytoplasm_area_um2", "median"),
+        "mean_quality_score_selected": ("quality_score", "mean"),
+        "median_keep_probability_selected": ("keep_probability", "median"),
+        "median_iod_final_quality_score_selected": ("iod_final_quality_score", "median"),
+        "cell_mask_path": ("cell_mask_path", "first"),
+        "nucleus_mask_path": ("nucleus_mask_path", "first"),
+        "roi_zip_path": ("roi_zip_path", "first"),
+        "cell_tile_manifest_path": ("cell_tile_manifest_path", "first"),
+        "nucleus_tile_manifest_path": ("nucleus_tile_manifest_path", "first"),
+        "cell_source_image_path": ("cell_source_image_path", "first"),
+        "nucleus_source_image_path": ("nucleus_source_image_path", "first"),
+        "cell_run_manifest_path": ("cell_run_manifest_path", "first"),
+        "nucleus_run_manifest_path": ("nucleus_run_manifest_path", "first"),
+        "raw_imagej_results_path": ("raw_imagej_results_path", "first"),
+        "image_iod_qc_status": ("image_iod_qc_status", "first"),
+    }
+    if "image_iod_qc_pass" in selected.columns:
+        agg_spec["image_iod_qc_pass"] = ("image_iod_qc_pass", "first")
+
+    image_trace = (
+        selected.groupby(["species", "filename"], dropna=True)
+        .agg(**agg_spec)
+        .reset_index()
+        .sort_values(["species", "filename"])
+        .reset_index(drop=True)
+    )
+    image_trace["selected_pairs_source_path"] = str(selected_pairs_path.resolve())
+    image_trace["selected_pairs_source_sha256"] = sha256_for_file(selected_pairs_path)
+
+    image_trace_out = out_dir / "cellprofiler_species_morphology_image_trace.csv"
+    write_portable_csv(image_trace, image_trace_out, cellprofiler_root=cellprofiler_root)
+
+    linked_trace_out = out_dir / "cellprofiler_linked_genome_image_trace.csv"
+    write_portable_csv(image_trace, linked_trace_out, cellprofiler_root=cellprofiler_root)
+    return image_trace, image_trace_out
+
+
+def _build_verified_morphology_summary(
+    *,
+    verified: pd.DataFrame,
+    selected_pairs: pd.DataFrame,
+    out_dir: Path,
+    verified_path: Path,
+    cellprofiler_root: Path,
+) -> tuple[pd.DataFrame, Path]:
+    df = verified.copy()
+    df["species"] = df["species"].map(_species_with_prefix)
+
+    selected = selected_pairs.copy()
+    selected["species"] = selected["species"].map(_species_with_prefix)
+    for col in ["nc_area_ratio", "cytoplasm_area_um2"]:
+        if col in selected.columns:
+            selected[col] = pd.to_numeric(selected[col], errors="coerce")
+    selected_medians = (
+        selected.groupby("species", dropna=True)
+        .agg(
+            species_median_nc_ratio=("nc_area_ratio", "median"),
+            species_median_cytoplasm_area_um2=("cytoplasm_area_um2", "median"),
+        )
+        .reset_index()
+    )
+
+    morphology = pd.DataFrame(
+        {
+            "species": df["species"],
+            "n_specimens_strict": _metric_col(df, "linked_n_selected_specimens"),
+            "n_images_strict": _metric_col(df, "linked_n_selected_images"),
+            "n_analysis_ready_images": _metric_col(df, "iod_qc_pass_images"),
+            "n_pairs_strict": _metric_col(df, "linked_n_selected_pairs"),
+            "species_median_cell_area_um2": _metric_col(df, "cell_area_um2_estimate"),
+            "species_median_nuc_area_um2": _metric_col(df, "nucleus_area_um2_estimate"),
+            "cell_area_um2_q1": _metric_col(df, "cell_area_um2_q1"),
+            "cell_area_um2_q3": _metric_col(df, "cell_area_um2_q3"),
+            "cell_area_um2_ci_low": _metric_col(df, "cell_area_um2_ci_low"),
+            "cell_area_um2_ci_high": _metric_col(df, "cell_area_um2_ci_high"),
+            "cell_area_um2_bootstrap_sd": _metric_col(df, "cell_area_um2_bootstrap_sd"),
+            "nucleus_area_um2_q1": _metric_col(df, "nucleus_area_um2_q1"),
+            "nucleus_area_um2_q3": _metric_col(df, "nucleus_area_um2_q3"),
+            "nucleus_area_um2_ci_low": _metric_col(df, "nucleus_area_um2_ci_low"),
+            "nucleus_area_um2_ci_high": _metric_col(df, "nucleus_area_um2_ci_high"),
+            "nucleus_area_um2_bootstrap_sd": _metric_col(df, "nucleus_area_um2_bootstrap_sd"),
+            "linked_effective_n": _metric_col(df, "linked_effective_n"),
+            "linked_support_label": _metric_col(df, "linked_support_label"),
+            "linked_support_warnings": _metric_col(df, "linked_support_warnings"),
+            "linked_n_selected_manual_total": _metric_col(df, "linked_n_selected_manual_total"),
+            "linked_n_selected_auto": _metric_col(df, "linked_n_selected_auto"),
+        }
+    ).merge(selected_medians, on="species", how="left", validate="one_to_one")
+
+    missing_cytoplasm = morphology["species_median_cytoplasm_area_um2"].isna()
+    morphology.loc[missing_cytoplasm, "species_median_cytoplasm_area_um2"] = (
+        pd.to_numeric(morphology.loc[missing_cytoplasm, "species_median_cell_area_um2"], errors="coerce")
+        - pd.to_numeric(morphology.loc[missing_cytoplasm, "species_median_nuc_area_um2"], errors="coerce")
+    )
+    missing_nc = morphology["species_median_nc_ratio"].isna()
+    cell_area = pd.to_numeric(morphology.loc[missing_nc, "species_median_cell_area_um2"], errors="coerce")
+    nuc_area = pd.to_numeric(morphology.loc[missing_nc, "species_median_nuc_area_um2"], errors="coerce")
+    morphology.loc[missing_nc, "species_median_nc_ratio"] = nuc_area / cell_area.replace(0, pd.NA)
+
+    support_label = morphology["linked_support_label"].fillna("").astype(str).str.lower()
+    morphology["low_support_for_species_median"] = support_label.isin({"low", "limited"})
+    for key, value in _source_file_columns(verified_path).items():
+        morphology[key] = value
+    morphology["bundle_origin"] = "verified_species_dataset"
+    morphology["estimation_method"] = "weighted_median_selected_reviewed_linked_pairs"
+    morphology = morphology.sort_values("species").reset_index(drop=True)
+
+    out_path = out_dir / "cellprofiler_species_morphology_summary.csv"
+    write_portable_csv(morphology, out_path, cellprofiler_root=cellprofiler_root)
+    return morphology, out_path
+
+
+def _build_verified_genome_outputs(
+    *,
+    verified: pd.DataFrame,
+    image_trace: pd.DataFrame,
+    out_dir: Path,
+    verified_path: Path,
+    summary_json_path: Path,
+    cellprofiler_root: Path,
+) -> tuple[pd.DataFrame, pd.DataFrame, Path, Path]:
+    df = verified.copy()
+    df["species"] = df["species"].map(_species_with_prefix)
+    image_trace = image_trace.copy()
+    image_trace["species"] = image_trace["species"].map(_species_with_prefix)
+
+    for col in df.columns:
+        if col != "species":
+            df[col] = pd.to_numeric(df[col], errors="ignore")
+
+    by_species = {
+        species: group
+        for species, group in image_trace.groupby("species", dropna=True)
+    }
+
+    source = df.get("estimated_genome_pg_source", pd.Series("", index=df.index)).fillna("").astype(str)
+    use_primary = source.eq("image_qc_pass") | (
+        source.eq("") & pd.to_numeric(df.get("genome_primary_estimated_genome_pg_estimate"), errors="coerce").notna()
+    )
+    count_prefix = use_primary.map(lambda value: "genome_primary_" if value else "genome_all_selected_")
+
+    def pick(row: pd.Series, suffix: str) -> object:
+        prefix = "genome_primary_" if row["_use_primary"] else "genome_all_selected_"
+        return row.get(f"{prefix}{suffix}", pd.NA)
+
+    df["_use_primary"] = use_primary
+    source_paths = []
+    source_sha = sha256_for_file(verified_path)
+    state_rows: list[dict[str, object]] = []
+    bundle_rows: list[dict[str, object]] = []
+    summary_payload = _read_json(summary_json_path)
+    reference_genome_pg = summary_payload.get("reference_genome_pg", REFERENCE_GENOME_PG)
+    primary_scale = summary_payload.get("calibration_genome_primary", {}).get("reference_scale_pg_per_iod", pd.NA)
+    try:
+        reference_state_iod = float(reference_genome_pg) / float(primary_scale)
+    except (TypeError, ValueError, ZeroDivisionError):
+        reference_state_iod = pd.NA
+
+    for idx, row in df.iterrows():
+        species = row["species"]
+        group = by_species.get(species, pd.DataFrame())
+        primary_n_images = pick(row, "n_selected_images")
+        primary_n_specimens = pick(row, "n_selected_specimens")
+        primary_n_pairs = pick(row, "n_selected_pairs")
+        support_label = pick(row, "support_label")
+        support_warnings = pick(row, "support_warnings")
+        estimate = row.get("estimated_genome_pg_estimate", pd.NA)
+        bootstrap_sd = row.get("estimated_genome_pg_bootstrap_sd", pd.NA)
+        ci_low = row.get("estimated_genome_pg_ci_low", pd.NA)
+        ci_high = row.get("estimated_genome_pg_ci_high", pd.NA)
+        q1 = row.get("estimated_genome_pg_q1", pd.NA)
+        q3 = row.get("estimated_genome_pg_q3", pd.NA)
+        genome_gb = float(estimate) * GENOME_GB_PER_PG if pd.notna(estimate) else pd.NA
+        state_se_pct = (
+            float(bootstrap_sd) / float(estimate) * 100.0
+            if pd.notna(bootstrap_sd) and pd.notna(estimate) and float(estimate) > 0
+            else pd.NA
+        )
+
+        source_image_existing_pct = _existing_pct_for_group(group, "cell_source_image_path", cellprofiler_root=cellprofiler_root)
+        tile_manifest_existing_pct = _existing_pct_for_group(group, "nucleus_tile_manifest_path", cellprofiler_root=cellprofiler_root)
+        mask_existing_pct = _existing_pct_for_group(group, "nucleus_mask_path", cellprofiler_root=cellprofiler_root)
+        roi_zip_existing_pct = _existing_pct_for_group(group, "roi_zip_path", cellprofiler_root=cellprofiler_root)
+
+        state_rows.append(
+            {
+                "species": canonical_species(species),
+                "image_type": GENOME_CALIBRATION_IMAGE_TYPE,
+                "n_images": primary_n_images,
+                "n_total_strict_images": row.get("linked_n_selected_images", pd.NA),
+                "n_analysis_ready_images": row.get("iod_qc_pass_images", pd.NA),
+                "n_specimens": primary_n_specimens,
+                "n_nuclei": primary_n_pairs,
+                "state_mean_area_um2": row.get("nucleus_area_um2_weighted_mean", pd.NA),
+                "state_median_area_um2": row.get("nucleus_area_um2_estimate", pd.NA),
+                "state_mean_iod": group["median_nuc_iod_selected"].mean() if not group.empty else pd.NA,
+                "state_median_iod": group["median_nuc_iod_selected"].median() if not group.empty else pd.NA,
+                "state_se_measurement": bootstrap_sd,
+                "state_cv_measurement_pct": pd.NA,
+                "support_unit": "weighted_median_linked_nucleus_iod",
+                "support_tier": support_label,
+                "support_warnings": support_warnings,
+                "source_image_existing_pct": source_image_existing_pct,
+                "tile_manifest_existing_pct": tile_manifest_existing_pct,
+                "mask_existing_pct": mask_existing_pct,
+                "roi_zip_existing_pct": roi_zip_existing_pct,
+                "reference_species": summary_payload.get("reference_species", "D. fuscus"),
+                "reference_genome_pg": reference_genome_pg,
+                "reference_state_mean_iod": reference_state_iod,
+                "genome_pg_estimate": estimate,
+                "genome_se_pg_estimate": bootstrap_sd,
+                "genome_gb_estimate": genome_gb,
+                "state_se_pct": state_se_pct,
+                "genome_source": row.get("estimated_genome_pg_source", pd.NA),
+                "genome_q1_pg": q1,
+                "genome_q3_pg": q3,
+                "genome_ci_low_pg": ci_low,
+                "genome_ci_high_pg": ci_high,
+            }
+        )
+
+        bundle_row = {
+            "species": species,
+            "primary_genome_pg": estimate,
+            "primary_genome_se_pg": bootstrap_sd,
+            "primary_genome_gb": genome_gb,
+            "primary_genome_q1_pg": q1,
+            "primary_genome_q3_pg": q3,
+            "primary_genome_ci_low_pg": ci_low,
+            "primary_genome_ci_high_pg": ci_high,
+            "primary_genome_bootstrap_sd_pg": bootstrap_sd,
+            "primary_n_images": primary_n_images,
+            "primary_n_specimens": primary_n_specimens,
+            "primary_n_nuclei": primary_n_pairs,
+            "primary_n_analysis_ready_images": row.get("iod_qc_pass_images", pd.NA),
+            "primary_total_strict_images": row.get("linked_n_selected_images", pd.NA),
+            "primary_cv_measurement_pct": pd.NA,
+            "primary_cv_area_pct": pd.NA,
+            "primary_measurement_kind": "verified_linked_nucleus_iod",
+            "primary_state": GENOME_CALIBRATION_IMAGE_TYPE,
+            "primary_state_converged": False,
+            "primary_state_capped_not_converged": False,
+            "primary_support_unit": "weighted_median_linked_nucleus_iod",
+            "primary_support_tier": support_label,
+            "primary_support_warnings": support_warnings,
+            "primary_source_image_existing_pct": source_image_existing_pct,
+            "primary_tile_manifest_existing_pct": tile_manifest_existing_pct,
+            "primary_mask_existing_pct": mask_existing_pct,
+            "primary_roi_zip_existing_pct": roi_zip_existing_pct,
+            "alternate_state": "all_selected" if row.get("estimated_genome_pg_source") == "image_qc_pass" else pd.NA,
+            "alternate_genome_pg": row.get("genome_all_selected_estimated_genome_pg_estimate", pd.NA),
+            "alternate_n_images": row.get("genome_all_selected_n_selected_images", pd.NA),
+            "alternate_n_specimens": row.get("genome_all_selected_n_selected_specimens", pd.NA),
+            "alternate_source_image_existing_pct": source_image_existing_pct,
+            "cross_state_pct_diff": pd.NA,
+            "primary_selection_reason": row.get("estimated_genome_pg_source", "image_qc_pass"),
+            "bundle_origin": "verified_species_dataset",
+            "reconstruction_method": "verified_reviewed_balanced_linked_pairs_with_od_qc_primary_genome",
+            "reconstruction_source_path": str(verified_path.resolve()),
+            "reconstruction_source_sha256": source_sha,
+            "raw_image_trace_path": str((out_dir / "cellprofiler_linked_genome_image_trace.csv").resolve()),
+            "raw_image_trace_sha256": pd.NA,
+            "genome_state_summary_path": str((out_dir / "cellprofiler_genome_state_summary.csv").resolve()),
+            "genome_state_summary_sha256": pd.NA,
+            "genome_primary_missing": row.get("genome_primary_missing", pd.NA),
+        }
+        status, flag_summary = _verified_support_status(pd.Series(bundle_row))
+        bundle_row["result_status"] = status
+        bundle_row["flag_summary"] = flag_summary
+        bundle_rows.append(bundle_row)
+        source_paths.append(str(verified_path.resolve()))
+
+    state_summary = pd.DataFrame(state_rows).sort_values(["species", "image_type"]).reset_index(drop=True)
+    state_path = out_dir / "cellprofiler_genome_state_summary.csv"
+    write_portable_csv(state_summary, state_path, cellprofiler_root=cellprofiler_root)
+
+    bundle = pd.DataFrame(bundle_rows).sort_values("species").reset_index(drop=True)
+    bundle["raw_image_trace_sha256"] = sha256_for_file(out_dir / "cellprofiler_linked_genome_image_trace.csv")
+    bundle["genome_state_summary_sha256"] = sha256_for_file(state_path)
+    out_path = out_dir / "cellprofiler_final_species_results.csv"
+    write_portable_csv(bundle, out_path, cellprofiler_root=cellprofiler_root)
+    return bundle, state_summary, out_path, state_path
+
+
+def build_verified_species_dataset_bundle(
+    cellprofiler_root: Path,
+    out_dir: Path,
+    summary_rows: list[dict[str, object]],
+    gap_rows: list[dict[str, object]],
+    verified_run_tag: str,
+    verified_species_dir: Path | None = None,
+) -> dict[str, object]:
+    dataset_dir = verified_species_dir or _verified_species_dataset_dir(cellprofiler_root, verified_run_tag)
+    required = {
+        "species_estimates_verified": dataset_dir / "species_estimates_verified.csv",
+        "selected_pairs": dataset_dir / "selected_high_quality_linked_pairs_with_iod_qc.csv.gz",
+        "genome_sensitivity": dataset_dir / "species_genome_sensitivity.csv",
+        "image_iod_quality_summary": dataset_dir / "image_iod_quality_summary.csv",
+        "summary_json": dataset_dir / "summary.json",
+    }
+    missing = _required_paths_missing(list(required.values()))
+    if missing:
+        if dataset_dir.exists():
+            gap_rows.append(
+                {
+                    "bundle": "verified_species_dataset",
+                    "gap_type": "missing_verified_species_dataset_file",
+                    "species": pd.NA,
+                    "details": f"One or more verified species dataset files are missing: {missing}",
+                }
+            )
+        return {"present": False, "origin": "verified_species_dataset_missing", "source_files": []}
+
+    verified = pd.read_csv(required["species_estimates_verified"])
+    selected_pairs = pd.read_csv(required["selected_pairs"], low_memory=False)
+    verified["species"] = verified["species"].map(_species_with_prefix)
+    selected_pairs["species"] = selected_pairs["species"].map(_species_with_prefix)
+
+    image_trace, image_trace_path = _build_verified_image_trace(
+        selected_pairs=selected_pairs,
+        out_dir=out_dir,
+        selected_pairs_path=required["selected_pairs"],
+        cellprofiler_root=cellprofiler_root,
+    )
+    morphology, morphology_path = _build_verified_morphology_summary(
+        verified=verified,
+        selected_pairs=selected_pairs,
+        out_dir=out_dir,
+        verified_path=required["species_estimates_verified"],
+        cellprofiler_root=cellprofiler_root,
+    )
+    bundle, state_summary, bundle_path, state_summary_path = _build_verified_genome_outputs(
+        verified=verified,
+        image_trace=image_trace,
+        out_dir=out_dir,
+        verified_path=required["species_estimates_verified"],
+        summary_json_path=required["summary_json"],
+        cellprofiler_root=cellprofiler_root,
+    )
+
+    sensitivity = pd.read_csv(required["genome_sensitivity"])
+    sensitivity["species"] = sensitivity["species"].map(_species_with_prefix)
+    sensitivity_path = out_dir / "cellprofiler_genome_sensitivity.csv"
+    write_portable_csv(sensitivity, sensitivity_path, cellprofiler_root=cellprofiler_root)
+
+    image_qc = pd.read_csv(required["image_iod_quality_summary"])
+    image_qc["species"] = image_qc["species"].map(_species_with_prefix)
+    image_qc_path = out_dir / "cellprofiler_image_iod_quality_summary.csv"
+    write_portable_csv(image_qc, image_qc_path, cellprofiler_root=cellprofiler_root)
+
+    audit_payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "bundle_path": str(bundle_path.resolve()),
+        "bundle_sha256": sha256_for_file(bundle_path),
+        "morphology_summary_path": str(morphology_path.resolve()),
+        "morphology_summary_sha256": sha256_for_file(morphology_path),
+        "linked_image_trace_path": str((out_dir / "cellprofiler_linked_genome_image_trace.csv").resolve()),
+        "linked_image_trace_sha256": sha256_for_file(out_dir / "cellprofiler_linked_genome_image_trace.csv"),
+        "genome_state_summary_path": str(state_summary_path.resolve()),
+        "genome_state_summary_sha256": sha256_for_file(state_summary_path),
+        "genome_sensitivity_path": str(sensitivity_path.resolve()),
+        "genome_sensitivity_sha256": sha256_for_file(sensitivity_path),
+        "reference_genome_pg": _read_json(required["summary_json"]).get("reference_genome_pg", REFERENCE_GENOME_PG),
+        "reference_gb_per_pg": GENOME_GB_PER_PG,
+        "selection_rule": "use verified reviewed linked cell+nucleus pairs; morphology uses all selected pairs; genome primary uses image-IOD-QC-pass pairs with explicit fallback",
+        "estimation_rule": "species weighted medians with specimen/image-balanced bootstrap intervals from the verified species dataset",
+        "calibration_image_type": GENOME_CALIBRATION_IMAGE_TYPE,
+        "calibration_signal": "verified_linked_nucleus_iod",
+        "verified_run_tag": verified_run_tag,
+        "verified_species_dir": str(dataset_dir.resolve()),
+        "n_species": int(bundle["species"].nunique()),
+    }
+    audit_path = out_dir / "cellprofiler_final_species_results_reconstruction.json"
+    write_portable_json(audit_path, audit_payload, cellprofiler_root=cellprofiler_root)
+
+    selected_source_pct = round(nonempty_pct(selected_pairs.get("cell_source_image_path", pd.Series(dtype=str))), 2)
+    selected_source_exists = round(existing_pct(selected_pairs.get("cell_source_image_path", pd.Series(dtype=str))), 2)
+    selected_mask_exists = round(existing_pct(selected_pairs.get("nucleus_mask_path", pd.Series(dtype=str))), 2)
+    selected_tile_exists = round(existing_pct(selected_pairs.get("nucleus_tile_manifest_path", pd.Series(dtype=str))), 2)
+    roi_unused = nonempty_pct(selected_pairs.get("roi_zip_path", pd.Series(dtype=str))) == 0.0 and selected_mask_exists > 0.0
+
+    summary_rows.extend(
+        [
+            {
+                "bundle": "verified_species_dataset",
+                "present": True,
+                "n_species": int(bundle["species"].nunique()),
+                "n_images": int(image_trace["filename"].nunique()),
+                "n_rows": int(len(selected_pairs)),
+                "nonempty_source_image_path_pct": selected_source_pct,
+                "existing_source_image_path_pct": selected_source_exists,
+                "nonempty_tile_manifest_path_pct": round(nonempty_pct(selected_pairs.get("nucleus_tile_manifest_path", pd.Series(dtype=str))), 2),
+                "existing_tile_manifest_path_pct": selected_tile_exists,
+                "nonempty_mask_path_pct": round(nonempty_pct(selected_pairs.get("nucleus_mask_path", pd.Series(dtype=str))), 2),
+                "existing_mask_path_pct": selected_mask_exists,
+                "nonempty_roi_zip_path_pct": round(nonempty_pct(selected_pairs.get("roi_zip_path", pd.Series(dtype=str))), 2),
+                "existing_roi_zip_path_pct": round(existing_pct(selected_pairs.get("roi_zip_path", pd.Series(dtype=str))), 2),
+                "notes": "Verified species dataset is the authoritative per-species cell, nucleus, and genome estimate surface for the current path-analysis import.",
+            },
+            _genome_bundle_summary_row(
+                bundle,
+                "Imported from verified reviewed linked pairs; genome primary uses OD-QC-pass images with sensitivity sidecar.",
+            ),
+            {
+                "bundle": "morphology",
+                "present": True,
+                "n_species": int(morphology["species"].nunique()),
+                "n_images": int(image_trace["filename"].nunique()),
+                "n_rows": int(len(selected_pairs)),
+                "nonempty_source_image_path_pct": selected_source_pct,
+                "existing_source_image_path_pct": selected_source_exists,
+                "nonempty_tile_manifest_path_pct": round(nonempty_pct(selected_pairs.get("cell_tile_manifest_path", pd.Series(dtype=str))), 2),
+                "existing_tile_manifest_path_pct": round(existing_pct(selected_pairs.get("cell_tile_manifest_path", pd.Series(dtype=str))), 2),
+                "nonempty_mask_path_pct": round(nonempty_pct(selected_pairs.get("cell_mask_path", pd.Series(dtype=str))), 2),
+                "existing_mask_path_pct": round(existing_pct(selected_pairs.get("cell_mask_path", pd.Series(dtype=str))), 2),
+                "nonempty_roi_zip_path_pct": round(nonempty_pct(selected_pairs.get("roi_zip_path", pd.Series(dtype=str))), 2),
+                "existing_roi_zip_path_pct": round(existing_pct(selected_pairs.get("roi_zip_path", pd.Series(dtype=str))), 2),
+                "notes": "Cell and nucleus morphology estimates come from weighted medians of verified selected linked pairs. ROI ZIP artifacts are not required for this mask-based workflow." if roi_unused else "Cell and nucleus morphology estimates come from weighted medians of verified selected linked pairs.",
+            },
+        ]
+    )
+
+    source_files = [
+        file_record(label, path)
+        for label, path in required.items()
+    ] + [
+        file_record("morphology_summary", morphology_path),
+        file_record("genome_state_summary", state_summary_path),
+        file_record("genome_sensitivity", sensitivity_path),
+        file_record("image_iod_quality_summary_import", image_qc_path),
+        file_record("reconstruction_audit", audit_path),
+    ]
+    return {
+        "present": True,
+        "origin": "verified_species_dataset",
+        "summary_path": str(bundle_path.resolve()),
+        "summary_sha256": sha256_for_file(bundle_path),
+        "state_summary_path": str(state_summary_path.resolve()),
+        "state_summary_sha256": sha256_for_file(state_summary_path),
+        "morphology_summary_path": str(morphology_path.resolve()),
+        "morphology_summary_sha256": sha256_for_file(morphology_path),
+        "image_trace_path": str(image_trace_path.resolve()),
+        "image_trace_sha256": sha256_for_file(image_trace_path),
+        "reconstruction_audit_path": str(audit_path.resolve()),
+        "reconstruction_audit_sha256": sha256_for_file(audit_path),
+        "source_files": source_files,
+    }
 
 
 def build_morphology_bundle(
@@ -1155,6 +1695,8 @@ def write_discovery_file(
     raw_genome_info: dict[str, object],
     raw_run_tag: str,
     mixed_run_tag: str,
+    verified_run_tag: str,
+    verified_info: dict[str, object] | None = None,
 ) -> Path:
     active_inventory_path = cellprofiler_root / "docs" / "ACTIVE_WORKFLOW_INVENTORY.md"
 
@@ -1166,9 +1708,11 @@ def write_discovery_file(
         "active_run_tags": {
             "raw_auxiliary_run": raw_run_tag,
             "mixed_linkage_run": mixed_run_tag,
+            "verified_species_run": verified_run_tag,
         },
         "genome_species_bundle": genome_info,
         "morphology_bundle": morphology_info,
+        "verified_species_dataset": verified_info or {"present": False},
         "raw_genome_trace": raw_genome_info,
         "native_bridge_modules": [
             file_record("bridge", Path(__file__)),
@@ -1187,6 +1731,8 @@ def rebuild_imported_artifacts(
     out_dir: Path,
     raw_run_tag: str = DEFAULT_ACTIVE_RAW_RUN_TAG,
     mixed_run_tag: str = DEFAULT_ACTIVE_MIXED_RUN_TAG,
+    verified_run_tag: str = DEFAULT_ACTIVE_VERIFIED_RUN_TAG,
+    verified_species_dir: Path | None = None,
 ) -> dict[str, object]:
     cellprofiler_root = cellprofiler_root.resolve()
     out_dir = out_dir.resolve()
@@ -1201,20 +1747,50 @@ def rebuild_imported_artifacts(
         "details": "The current default derives the genome bundle from linked YOLO nuclei rather than the standalone raw nucleus-IOD run.",
         "source_files": [],
     }
-    genome_info = build_genome_species_bundle(
+    verified_info = build_verified_species_dataset_bundle(
         cellprofiler_root,
         out_dir,
         summary_rows,
         gap_rows,
-        mixed_run_tag,
+        verified_run_tag,
+        verified_species_dir,
     )
-    morphology_info = build_morphology_bundle(
-        cellprofiler_root,
-        out_dir,
-        summary_rows,
-        gap_rows,
-        mixed_run_tag,
-    )
+    if verified_info.get("present"):
+        genome_info = {
+            "present": True,
+            "origin": verified_info.get("origin"),
+            "summary_path": verified_info.get("summary_path"),
+            "summary_sha256": verified_info.get("summary_sha256"),
+            "state_summary_path": verified_info.get("state_summary_path"),
+            "state_summary_sha256": verified_info.get("state_summary_sha256"),
+            "reconstruction_audit_path": verified_info.get("reconstruction_audit_path"),
+            "reconstruction_audit_sha256": verified_info.get("reconstruction_audit_sha256"),
+            "source_files": verified_info.get("source_files", []),
+        }
+        morphology_info = {
+            "present": True,
+            "origin": verified_info.get("origin"),
+            "summary_path": verified_info.get("morphology_summary_path"),
+            "summary_sha256": verified_info.get("morphology_summary_sha256"),
+            "image_trace_path": verified_info.get("image_trace_path"),
+            "image_trace_sha256": verified_info.get("image_trace_sha256"),
+            "source_files": verified_info.get("source_files", []),
+        }
+    else:
+        genome_info = build_genome_species_bundle(
+            cellprofiler_root,
+            out_dir,
+            summary_rows,
+            gap_rows,
+            mixed_run_tag,
+        )
+        morphology_info = build_morphology_bundle(
+            cellprofiler_root,
+            out_dir,
+            summary_rows,
+            gap_rows,
+            mixed_run_tag,
+        )
 
     discovery_path = write_discovery_file(
         cellprofiler_root,
@@ -1224,6 +1800,8 @@ def rebuild_imported_artifacts(
         raw_genome_info,
         raw_run_tag,
         mixed_run_tag,
+        verified_run_tag,
+        verified_info,
     )
 
     summary = pd.DataFrame(summary_rows).sort_values("bundle").reset_index(drop=True)
@@ -1246,4 +1824,5 @@ def rebuild_imported_artifacts(
         "morphology_present": bool(morphology_info.get("present")),
         "raw_genome_trace_present": bool(raw_genome_info.get("present")),
         "genome_species_bundle_present": bool(genome_info.get("present")),
+        "verified_species_dataset_present": bool(verified_info.get("present")),
     }

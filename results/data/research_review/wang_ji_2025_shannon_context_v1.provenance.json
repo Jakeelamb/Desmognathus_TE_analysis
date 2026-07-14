@@ -1,0 +1,12 @@
+{
+  "artifact_id": "wang_ji_2025_shannon_context_v1",
+  "local_source_path": "/home/jake/Projects/Desmognathus_Results/wang_ji_shannondiversity.csv",
+  "local_source_sha256": "4ec3237a6ecd361c7e040b11dccfc9e2ac635cf10b739a4e95920015edccbb0e",
+  "local_source_rows": 87,
+  "cleaning": "Whitespace-only header/value cleanup and explicit typed column names; published values unchanged.",
+  "context_reference": "Wang et al. 2025, Communications Biology, DOI 10.1038/s42003-025-08127-3",
+  "published_data_repository": "Dryad DOI 10.5061/dryad.zpc866tkv",
+  "published_metric_contract": "Natural-log Shannon entropy over the top 10 most abundant TE superfamilies; TE-superfamily sequence proportions are abundances.",
+  "source_scope_disclosure": "This 87-row local historical composite is not an exact export of the paper's 84-species comparative analysis; it includes 4 caecilians and 10 salamanders and is retained only as descriptive cross-study context.",
+  "article_url": "https://doi.org/10.1038/s42003-025-08127-3"
+}

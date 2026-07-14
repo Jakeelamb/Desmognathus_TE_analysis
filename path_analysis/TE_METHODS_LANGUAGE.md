@@ -11,15 +11,17 @@ Use this wording if you need a compact paragraph for the main Methods section:
 
 > We used the repo-local species-level TE summary tables stored in
 > `results/data/` as the canonical TE input layer for comparative analyses.
-> Order-level TE composition was summarized with Shannon diversity, corrected
-> Simpson diversity, and Pielou evenness. For the path-analysis families, we
+> Order-level TE composition was summarized with Shannon entropy,
+> Gini-Simpson diversity (`1 - sum(p_i^2)`), and Pielou evenness. For the
+> path-analysis families, we
 > used order-level Pielou evenness as the primary evenness variable because it
 > is the cleanest interpretable evenness metric in the current stored tables.
-> Ectopic-recombination summaries were derived from the filtered species table
-> already present in the repository; rows with missing
-> `ratio_terminal_internal` were excluded from ratio-based summaries, and
-> `ectopic_complete_fraction` was calculated only from rows with known
-> `Complete = yes` or `no`.
+> Terminal:internal LTR depth was retained only as an exploratory mapping and
+> structure proxy. Corrected element summaries used exact-coordinate TEsorter
+> joins and included zero-depth positions. Species-level robustness was
+> evaluated with medians, geometric means, bootstrap intervals, coverage
+> thresholds, and leave-one-element-out influence. The ratio was not
+> interpreted as a measured ectopic-recombination rate.
 
 ## Recommended Detailed Methods Text
 
@@ -29,23 +31,21 @@ Use this if the analysis notes or supplement needs more explicit semantics:
 > the repo-local TE summary tables rather than regenerated from raw HPC
 > outputs. Order-level TE composition was summarized from the stored
 > `dnaPipeTE_order_breakdown.csv` and diversity summary tables. The current
-> `Simpson_Diversity` values in the stored order-level diversity table are the
-> corrected Simpson values already present in the canonical file, not a newly
-> recomputed raw Gini-Simpson index. Because the stored evenness tables are
+> `Simpson_Diversity` values in the stored order-level diversity table are
+> standard Gini-Simpson values, `1 - sum(p_i^2)`, calculated after normalizing
+> positive relative abundances. They are not finite-count-corrected estimates.
+> Because the stored evenness tables are
 > internally consistent and directly traceable, we treated them as the
 > analysis TE input layer and used order-level Pielou evenness as the main
 > evenness predictor in the path models.
 >
-> Ectopic-recombination support was summarized from the filtered ectopic table
-> already present in `results/data/`. Species-level ectopic support metrics were
-> defined explicitly as follows: `ectopic_n_rows_total` counts all staged
-> filtered rows for a species, `ectopic_n_elements` counts only rows with usable
-> non-missing `ratio_terminal_internal` values, `ectopic_mean_ratio` is
-> calculated only from those usable ratio-bearing rows, and
-> `ectopic_complete_fraction` is calculated only from rows with known
-> `Complete = yes` or `Complete = no`. Rows with `Complete = unknown` are
-> excluded from the denominator, and `ectopic_n_complete_known` records that
-> denominator explicitly.
+> The historical ectopic table used nonzero-only regional means and an
+> arithmetic species mean. The corrected sensitivity branch joins each LTR to
+> TEsorter by full `sequence_start_end`, includes explicit zero-depth positions,
+> reports left-LTR/right-LTR/internal positive-position coverage, and provides
+> all-element, >=80% coverage, TEsorter-complete, and combined branches. The
+> historical arithmetic mean remains available for provenance but is not the
+> recommended estimator.
 
 ## Explicit Variable Semantics To Preserve
 
@@ -54,14 +54,16 @@ If these variables are named in the results, describe them this way:
 - `order_pielou`
   Order-level Pielou evenness derived from the stored order diversity table.
 - `order_simpson`
-  Corrected Simpson diversity from the stored order diversity table; do not
-  call this the raw Gini-Simpson value without clarification.
+  Gini-Simpson diversity, `1 - sum(p_i^2)`, from the stored order diversity
+  table. State the convention because other Simpson indices reverse or
+  rescale the interpretation.
 - `ectopic_n_rows_total`
   Total filtered ectopic rows staged for a species.
 - `ectopic_n_elements`
   Count of ectopic rows with usable non-missing ratio support.
 - `ectopic_mean_ratio`
-  Mean terminal:internal ratio across usable ratio-bearing ectopic rows only.
+  Historical arithmetic mean terminal:internal ratio; pre-audit and
+  outlier-sensitive, not recommended for confirmatory inference.
 - `ectopic_complete_fraction`
   Fraction of known `Complete` calls that are `yes`, excluding `unknown`
   records from the denominator.
@@ -72,11 +74,14 @@ If these variables are named in the results, describe them this way:
 
 Avoid these shortcuts in the results:
 
-- "Simpson diversity" with no qualifier if you mean the stored corrected value.
+- "Simpson diversity" without stating that the stored value is Gini-Simpson
+  `1 - sum(p_i^2)`.
 - "All ectopic elements" if the statistic excludes missing-ratio rows.
 - "Complete fraction across all rows" if `Complete = unknown` rows are excluded.
 - Any wording that implies the original upstream HPC TE analyses were rerun for
   this audit pass.
+- "Ectopic-recombination rate", "solo-LTR formation rate", or "deletion rate"
+  for terminal:internal depth without independent structural validation.
 
 ## Canonical Files Behind This Language
 
@@ -85,14 +90,17 @@ The wording above is anchored to these current files:
 1. `results/data/dnaPipeTE_order_breakdown.csv`
 2. `results/data/diversity_order_stats.csv`
 3. `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
-4. `path_analysis/data/derived/te_path_features.csv`
-5. `path_analysis/data/derived/te_model_feature_panel.csv`
+4. `results/data/corrected/ectopic/ectopic_element_metrics_analysis18_v1.csv`
+5. `results/data/corrected/ectopic/ectopic_species_robustness_analysis18_v1.csv`
+6. `path_analysis/data/derived/te_path_features.csv`
+7. `path_analysis/data/derived/te_model_feature_panel.csv`
 
 ## Practical Recommendation
 
 For analysis writeups:
 
 - use `order_pielou` as the narrative evenness metric
-- mention corrected Simpson only if needed for completeness
-- report ectopic denominator semantics whenever `ectopic_n_elements` or
-  `ectopic_complete_fraction` appear in text, tables, or supplements
+- report Gini-Simpson alongside Shannon, richness, and dominance/evenness when
+  making a diversity claim
+- report ectopic denominator, coverage, estimator, bootstrap, and influence
+  semantics whenever this exploratory layer appears

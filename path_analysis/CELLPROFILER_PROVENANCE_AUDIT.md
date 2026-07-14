@@ -11,23 +11,25 @@ tables?
 
 ## Bottom Line
 
-Yes, with explicit warnings.
+Yes for computational traceability. No for publication validation of the
+segmentation models or absolute genome-size interpretation.
 
-As of March 10, 2026:
+As of July 8, 2026:
 
-- the imported genome bundle is no longer reconstructed from
-  `path_analysis/data/derived/master_species_table.csv`
-- the bridge rebuilds `cellprofiler_final_species_results.csv` directly from
-  the preserved linked YOLO nucleus-IOD run outputs
-- the bridge also writes `cellprofiler_genome_state_summary.csv`, which makes
-  the per-species brightfield/pmount support and state-selection rule explicit
-- the share-readiness audit currently returns overall status `warn`, not
-  `fail`, because the remaining gaps are retained traceability warnings rather
-  than circular provenance failures
+- the imported genome bundle is no longer reconstructed from downstream
+  `path_analysis` tables
+- the current imported bridge snapshot uses the exact curated top-50 verified
+  species dataset under
+  `cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/verified_species_dataset_top50_latest/`
+- `cellprofiler_final_species_results.csv` now carries the verified
+  OD-QC-primary genome estimate plus bootstrap intervals and support labels
+- `cellprofiler_species_morphology_summary.csv` now carries the verified
+  per-species cell and nucleus area estimates plus bootstrap intervals
+- the traceability audits are currently header-only for gaps
 
-## Latest Overnight Rebuild
+## Historical March Rebuild
 
-The current imported CellProfiler state was refreshed on March 10, 2026 with
+The earlier imported CellProfiler state was refreshed on March 10, 2026 with
 the following active run tags:
 
 - raw genome and raw cell source run: `full_dataset_v1`
@@ -52,7 +54,7 @@ Why the raw cell stage was reused:
   first image (`Process_337_raw_green.ome`) reached about `700.5 s` for the
   first `2` of `183` scored tiles, which is not overnight-feasible for a full
   60-image rerun on the current hardware
-- the current shareable snapshot therefore represents a clean rebuild from the
+- that earlier shareable snapshot represented a clean rebuild from the
   preserved raw cell/genome runs plus a fresh mixed-linkage and downstream
   analysis rerun, not a de novo raw cell rerun from microscope images
 
@@ -60,10 +62,12 @@ Why the raw cell stage was reused:
 
 The imported CellProfiler layer now has an auditable local chain from:
 
-1. mixed Cellpose+YOLO linkage outputs under
-   `cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/linkage/`
-2. image-level trace table
+1. verified reviewed linked-pair outputs under
+   `cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/verified_species_dataset_top50_latest/`
+2. selected-pair and image-level trace tables
    `path_analysis/data/external/derived/cellprofiler_linked_genome_image_trace.csv`
+   and
+   `path_analysis/data/external/derived/cellprofiler_species_morphology_image_trace.csv`
 3. species-by-state summary
    `path_analysis/data/external/derived/cellprofiler_genome_state_summary.csv`
 4. imported species bundle
@@ -75,20 +79,42 @@ The imported CellProfiler layer now has an auditable local chain from:
 That is the correct direction of dependency for an auditable analysis-facing
 workflow.
 
-## Reconstruction Rule
+## Historical Import Rule
 
 The bridge:
 
-- groups strict-core linked YOLO nuclei into image-level linked nucleus-IOD summaries
-- prefers `analysis_ready_image = TRUE` images when a species has them, otherwise
-  falls back to all strict-core linked images
-- aggregates those image medians to specimen-level summaries
-- scales specimen-level mean image-median linked nucleus IOD to
-  `D. fuscus = 16.36 pg`
+- imports verified selected linked cell+nucleus pairs
+- uses weighted species medians for cell and nucleus area
+- uses OD-QC-pass linked nucleus-IOD rows for the primary genome estimate when
+  available
+- retains all-selected and high-OD-QC genome sensitivity rows in
+  `cellprofiler_genome_sensitivity.csv`
+- scales verified linked nucleus IOD to `D. fuscus = 16.36 pg`
 - records support counts and support tier in the imported bundle
 
-This reconstruction is explicitly linked-IOD-derived and remains provisional for any
-formal `genome -> nucleus -> cell` interpretation.
+This import is explicitly linked-IOD-derived. It is a frozen historical bridge
+snapshot, not a validated absolute genome-size assay. The corrected release
+does not promote its picogram column.
+
+## July 9 Publication-Release Audit
+
+The final-18 audit is
+`plans/publication-readiness-deep-audit/microscopy_release_audit_analysis18_v1.md`.
+Its machine-readable products are under
+`results/data/corrected/microscopy/` and its validation figures are under
+`results/figures/corrected/microscopy/`.
+
+The audit scores the exact archived production cell masks and the current YOLO
+nucleus model on the only two manually labeled test tiles. Cell instance F1 is
+0.624 at IoU 0.50 and nucleus instance F1 is 0.687. Neither test set contains a
+focal analysis species, and the nucleus train/test tiles come from the same two
+source images. These are diagnostic results, not cross-species validation.
+
+For the final 18 species, 324/900 frozen rows are explicit manual keeps, two are
+maybes, and 574 are model-ranked/unlabeled. The corrected morphology tables
+therefore label the trait as a quality-screened upper-tail sensitivity estimand.
+The corrected IOD table reports only a relative nuclear-IOD index with fuscus =
+1 within each QC subset; it does not report picograms.
 
 ## Machine-Readable Audit Outputs
 
@@ -98,33 +124,40 @@ The canonical audit files are:
 - `path_analysis/data/external/derived/cellprofiler_traceability_audit_summary.csv`
 - `path_analysis/data/external/derived/cellprofiler_traceability_audit_gaps.csv`
 - `path_analysis/data/external/derived/cellprofiler_final_species_results_reconstruction.json`
+- `path_analysis/data/external/derived/cellprofiler_genome_sensitivity.csv`
+- `path_analysis/data/external/derived/cellprofiler_image_iod_quality_summary.csv`
 Refresh them with:
 
 ```bash
-scripts/run_in_dusky.sh python path_analysis/scripts/pull_cellprofiler_estimates.py
+scripts/run_in_dusky.sh python path_analysis/scripts/pull_cellprofiler_estimates.py \
+  --verified-species-dir /home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/verified_species_dataset_top50_latest
 ```
 
 ## Remaining Warnings
 
-The current warnings are concentrated in upstream trace retention, not in the
-merge logic itself:
-
-- the morphology linkage layer still lacks ROI-ZIP trace paths
-
-These warnings are tracked automatically in
-`cellprofiler_traceability_audit_gaps.csv`.
+The current traceability gap file is header-only. ROI ZIP paths are absent, but
+this is not a gap for the verified mask-based workflow because saved cell and
+nucleus masks are the matching artifacts.
 
 ## Analysis Use Guidance
 
 What is defensible now:
 
-- TE-to-genome comparative models using the imported genome layer, with the
-  linked-IOD-derived and warning-laden status made explicit
+- exact cell/nucleus object traceability and one-to-one linkage provenance
+- per-species cell and nucleus upper-tail sensitivity estimates, with the
+  estimator and specimen-support boundaries stated
+- relative nuclear-IOD sensitivity indices, not absolute genome sizes
+- exact top-50 size/spread summaries in
+  `path_analysis/results/top50_size_analysis_summary.md`
+- exploratory TE-to-relative-IOD comparative models, with the measurement
+  proxy and QC subset named explicitly
 - analysis supplements that cite the machine-readable audit outputs and the
-  linked-run reconstruction rule
+  verified import rule
 
 What should still remain sensitivity-only:
 
 - any strong causal interpretation of `genome size -> nucleus size -> cell size`
-- any claim that the current imported genome bundle is the final independent
-  genome-size estimate rather than an audited interim reconstruction
+- any claim that the current imported genome bundle is an independent
+  non-IOD genome-size assay
+- any claim that the current two-tile segmentation benchmark validates error
+  rates across the focal species

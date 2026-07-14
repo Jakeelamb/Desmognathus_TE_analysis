@@ -18,6 +18,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import PROJECT_ROOT  # noqa: E402
+from processing.te_classification import classify_repeatmasker_hits  # noqa: E402
 
 
 DNAPIPETE_ORDER_FILE = PROJECT_ROOT / "results" / "data" / "dnaPipeTE_order_breakdown.csv"
@@ -81,67 +82,6 @@ def standardize_wide(df: pd.DataFrame) -> pd.DataFrame:
     return df.dropna(subset=["species"]).drop_duplicates(subset=["species"]).reset_index(drop=True)
 
 
-def map_repeatmasker_order(repeat_class: object) -> str | None:
-    if repeat_class is None or pd.isna(repeat_class):
-        return None
-    text = str(repeat_class).strip()
-    if not text:
-        return None
-    parts = text.split("/", 1)
-    prefix = parts[0]
-    prefix_upper = prefix.upper()
-    if prefix_upper == "DNA":
-        return "TIR"
-    mapping = {
-        "LTR": "LTR",
-        "LINE": "LINE",
-        "SINE": "SINE",
-        "RC": "Helitron",
-        "HELITRON": "Helitron",
-        "DIRS": "DIRS",
-        "PLE": "PLE",
-        "PENELOPE": "PLE",
-        "MAVERICK": "Maverick",
-        "YR": "YR",
-    }
-    return mapping.get(prefix_upper)
-
-
-def map_repeatmasker_superfamily(repeat_class: object) -> str | None:
-    if repeat_class is None or pd.isna(repeat_class):
-        return None
-    text = str(repeat_class).strip()
-    if not text or "/" not in text:
-        return None
-    suffix = text.split("/", 1)[1].strip()
-    mapping = {
-        "ACADEM": "Academ",
-        "CACTA": "CACTA",
-        "CHAPAEV": "Chapaev",
-        "DIRS": "DIRS",
-        "DADA": "Dada",
-        "ENSPM": "EnSpm",
-        "GINGER": "Ginger",
-        "GYPSY": "Gypsy",
-        "HELITRON": "Helitron",
-        "JOCKEY": "Jockey",
-        "L1": "L1",
-        "MULE": "MULE",
-        "MAVERICK": "Maverick",
-        "MUTATOR": "Mutator",
-        "P": "P",
-        "PIGGYBAC": "PiggyBac",
-        "PIF-HARBINGER": "PIF-Harbinger",
-        "HARBINGER": "PIF-Harbinger",
-        "PENELOPE": "Penelope",
-        "TC1-MARINER": "Tc1-mariner",
-        "TCMAR-TC1": "Tc1-mariner",
-        "MARINER": "Tc1-mariner",
-        "HAT": "hAT",
-    }
-    return mapping.get(suffix.upper())
-
-
 def build_repeatmasker_summaries() -> tuple[pd.DataFrame, pd.DataFrame]:
     order_totals: dict[tuple[str, str], float] = defaultdict(float)
     superfamily_totals: dict[tuple[str, str], float] = defaultdict(float)
@@ -156,8 +96,11 @@ def build_repeatmasker_summaries() -> tuple[pd.DataFrame, pd.DataFrame]:
         )
         chunk = chunk.dropna(subset=["species", "bp"])
         chunk = chunk[chunk["bp"] > 0]
-        chunk["order"] = chunk["repeat_class"].map(map_repeatmasker_order)
-        chunk["superfamily"] = chunk["repeat_class"].map(map_repeatmasker_superfamily)
+        chunk = classify_repeatmasker_hits(chunk)
+        chunk["order"] = chunk["repeatmasker_order"].replace("Unclassified", pd.NA)
+        chunk["superfamily"] = chunk["repeatmasker_superfamily"].replace(
+            "Unclassified", pd.NA
+        )
 
         order_grouped = (
             chunk.dropna(subset=["order"])

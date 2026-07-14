@@ -110,6 +110,31 @@ def load_prefixed_table(path: Path, prefix: str) -> pd.DataFrame:
     )
 
 
+def load_te_resource_mapping(path: Path) -> pd.DataFrame:
+    """Load the active genomic resource mapping under TE-specific names."""
+
+    df = pd.read_csv(path, sep="\t", dtype=str)
+    required = {"Species", "SRA_Accension", "Genome_Accension"}
+    missing = sorted(required.difference(df.columns))
+    if missing:
+        raise ValueError(f"TE resource lookup is missing columns: {missing}")
+
+    out = df[["Species", "SRA_Accension", "Genome_Accension"]].rename(
+        columns={
+            "Species": "species",
+            "SRA_Accension": "te_sra_accession",
+            "Genome_Accension": "te_assembly_accession",
+        }
+    )
+    out["species"] = out["species"].map(canonical_species)
+    if out[["species", "te_sra_accession", "te_assembly_accession"]].isna().any().any():
+        raise ValueError("TE resource lookup contains missing species or accession values")
+    if out["species"].duplicated().any():
+        duplicates = sorted(out.loc[out["species"].duplicated(False), "species"].unique())
+        raise ValueError(f"TE resource lookup has duplicate species: {duplicates}")
+    return out.sort_values("species").reset_index(drop=True)
+
+
 def require_input_files(required_files: dict[str, Path], project_root: Path | None = None) -> None:
     missing = [(label, path) for label, path in required_files.items() if not path.exists()]
     if not missing:
@@ -197,10 +222,25 @@ def load_genome_results(path: Path) -> pd.DataFrame:
         "primary_genome_pg": "genome_size_pg",
         "primary_genome_se_pg": "genome_size_se_pg",
         "primary_genome_gb": "genome_size_gb",
+        "primary_genome_q1_pg": "genome_size_q1_pg",
+        "primary_genome_q3_pg": "genome_size_q3_pg",
+        "primary_genome_ci_low_pg": "genome_size_ci_low_pg",
+        "primary_genome_ci_high_pg": "genome_size_ci_high_pg",
+        "primary_genome_bootstrap_sd_pg": "genome_size_bootstrap_sd_pg",
         "primary_n_images": "genome_n_images",
         "primary_n_specimens": "genome_n_specimens",
         "primary_n_nuclei": "genome_n_nuclei",
+        "primary_n_analysis_ready_images": "genome_n_analysis_ready_images",
+        "primary_total_strict_images": "genome_n_total_strict_images",
         "primary_cv_area_pct": "genome_cv_area_pct",
+        "primary_support_tier": "genome_support_tier",
+        "primary_support_warnings": "genome_support_warnings",
+        "primary_selection_reason": "genome_selection_reason",
+        "primary_measurement_kind": "genome_measurement_kind",
+        "primary_source_image_existing_pct": "genome_source_image_existing_pct",
+        "primary_tile_manifest_existing_pct": "genome_tile_manifest_existing_pct",
+        "primary_mask_existing_pct": "genome_mask_existing_pct",
+        "genome_primary_missing": "genome_primary_missing",
         "result_status": "genome_result_status",
         "flag_summary": "genome_flag_summary",
     }
@@ -223,9 +263,24 @@ def load_morphology_results(path: Path) -> pd.DataFrame:
         "n_pairs_strict": "morph_n_pairs",
         "species_median_cell_area_um2": "morph_cell_area_um2",
         "species_median_nuc_area_um2": "morph_nucleus_area_um2",
+        "cell_area_um2_q1": "morph_cell_area_q1_um2",
+        "cell_area_um2_q3": "morph_cell_area_q3_um2",
+        "cell_area_um2_ci_low": "morph_cell_area_ci_low_um2",
+        "cell_area_um2_ci_high": "morph_cell_area_ci_high_um2",
+        "cell_area_um2_bootstrap_sd": "morph_cell_area_bootstrap_sd_um2",
+        "nucleus_area_um2_q1": "morph_nucleus_area_q1_um2",
+        "nucleus_area_um2_q3": "morph_nucleus_area_q3_um2",
+        "nucleus_area_um2_ci_low": "morph_nucleus_area_ci_low_um2",
+        "nucleus_area_um2_ci_high": "morph_nucleus_area_ci_high_um2",
+        "nucleus_area_um2_bootstrap_sd": "morph_nucleus_area_bootstrap_sd_um2",
         "species_median_nc_ratio": "morph_nc_ratio",
         "species_median_cytoplasm_area_um2": "morph_cytoplasm_area_um2",
         "low_support_for_species_median": "morph_low_support",
+        "linked_effective_n": "morph_effective_n",
+        "linked_support_label": "morph_support_label",
+        "linked_support_warnings": "morph_support_warnings",
+        "linked_n_selected_manual_total": "morph_n_selected_manual_total",
+        "linked_n_selected_auto": "morph_n_selected_auto",
     }
     present = [col for col in keep if col in df.columns]
     out = df[["species"] + present].rename(columns={col: keep[col] for col in present})
@@ -239,6 +294,7 @@ def load_morphology_results(path: Path) -> pd.DataFrame:
 def build_master_table(
     project_root: Path,
 ) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
+    te_resource_path = project_root / "input_data" / "lookup_table.txt"
     te_order_path = project_root / "results" / "data" / "dnaPipeTE_order_breakdown.csv"
     te_superfamily_path = project_root / "results" / "data" / "dnaPipeTE_superfamily_breakdown.csv"
     order_diversity_path = project_root / "results" / "data" / "diversity_order_stats.csv"
@@ -256,6 +312,7 @@ def build_master_table(
     )
     require_input_files(
         {
+            "active TE resource lookup": te_resource_path,
             "dnaPipeTE order breakdown": te_order_path,
             "dnaPipeTE superfamily breakdown": te_superfamily_path,
             "order diversity stats": order_diversity_path,
@@ -267,6 +324,12 @@ def build_master_table(
         },
         project_root=project_root,
     )
+
+    te_resource = load_te_resource_mapping(te_resource_path)
+    te_resource["te_resource_lookup_path"] = portable_source_path(
+        te_resource_path, project_root
+    )
+    te_resource["te_resource_lookup_sha256"] = sha256_for_file(te_resource_path)
 
     te_order = load_prefixed_table(te_order_path, "order")
     te_order["te_order_source_id"] = "repo_dnapipete_order_breakdown"
@@ -315,6 +378,7 @@ def build_master_table(
     tree_tips = parse_tree_tips(project_root / "input_data" / "phylogeny" / "desmo900dated_test.tre")
 
     sources = {
+        "te_resource": te_resource,
         "te_order": te_order,
         "te_superfamily": te_superfamily,
         "order_diversity": div_order,
@@ -337,7 +401,11 @@ def build_master_table(
         master[f"has_{name}"] = master["species"].isin(set(frame["species"]))
 
     master["has_tree_tip"] = master["species"].isin(tree_tips)
-    master["has_te"] = master["has_te_order"] & master["has_te_superfamily"]
+    master["has_te"] = (
+        master["has_te_resource"]
+        & master["has_te_order"]
+        & master["has_te_superfamily"]
+    )
     master["has_genome"] = master["genome_size_pg"].notna()
     master["has_ectopic"] = master["ectopic_mean_ratio"].notna()
     master["has_morphology"] = (

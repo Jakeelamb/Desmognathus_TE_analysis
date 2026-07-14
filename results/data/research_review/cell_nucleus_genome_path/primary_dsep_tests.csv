@@ -1,0 +1,16 @@
+analysis_type,replicate_id,tree_id,evolutionary_model,candidate_model,independence_claim,component_p,fitted_phylogenetic_parameter
+primary,point_estimate,focal_primary,lambda,independent,n ~ g,0.041543787767136464,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,independent,c ~ n,0.0030127749981267993,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,independent,c ~ g,8.156831918074695e-5,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,genome_nucleus_only,c ~ g,8.156831918074695e-5,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,genome_nucleus_only,c ~ g + n,0.03535835107447219,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,nucleus_cell_only,n ~ g,0.041543787767136464,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,nucleus_cell_only,c ~ n + g,9.971099340485867e-4,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,genome_cell_only,n ~ g,0.041543787767136464,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,genome_cell_only,c ~ g + n,0.03535835107447219,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,nucleus_bridge,c ~ n + g,9.971099340485867e-4,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,nucleus_collider,c ~ g,8.156831918074695e-5,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,cell_bridge,n ~ c + g,0.9755097068879339,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,cell_collider,n ~ g,0.041543787767136464,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,genome_bridge,c ~ g + n,0.03535835107447219,9.999999999999994e-8
+primary,point_estimate,focal_primary,lambda,genome_collider,c ~ n,0.0030127749981267993,9.999999999999994e-8

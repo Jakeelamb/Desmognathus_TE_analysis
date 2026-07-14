@@ -19,6 +19,10 @@ import sys
 # Import centralized configuration
 sys.path.insert(0, str(Path(__file__).parent.parent))  # Add scripts/ to path
 from config import paths, PROJECT_ROOT, load_lookup_table
+from processing.te_classification import (
+    annotate_repeatmasker_hits,
+    prepare_dnapipete_context,
+)
 
 # Configure logging
 logging.basicConfig(
@@ -65,9 +69,6 @@ DNAPIPETE_COLS_SELECT = [
     'RM_annotation',
     'hitlength_contiglength'
 ]
-DNAPIPETE_RENAME_MAP = {
-    'Source': 'SRX_ID'
-}
 # --- End Configuration --- 
 
 # Load lookup table
@@ -327,24 +328,8 @@ def main():
         logger.info(f"Loaded {len(dnapipete_df)} rows from dnaPipeTE data.")
 
         logger.info("Preparing dnaPipeTE data for merge...")
-        dnapipete_df = dnapipete_df.rename(columns=DNAPIPETE_RENAME_MAP)
         initial_rows = len(dnapipete_df)
-        
-        # --- Modified Duplicate Handling ---
-        # Ensure the columns for sorting and keying exist
-        required_cols_dupe = ['dnaPipeTE_contig_name', 'SRX_ID', 'hitlength_contiglength']
-        missing_dupe_cols = [col for col in required_cols_dupe if col not in dnapipete_df.columns]
-        if missing_dupe_cols:
-            logger.error(f"Critical Error: Missing columns {missing_dupe_cols} in {DNAPIPETE_FILE} required for duplicate handling.")
-            sys.exit(1)
-
-        # Sort by the key columns (using original contig name) and the value column (descending)
-        logger.info("Sorting dnaPipeTE data to handle duplicates based on highest 'hitlength_contiglength'...")
-        dnapipete_df = dnapipete_df.sort_values(by=['dnaPipeTE_contig_name', 'SRX_ID', 'hitlength_contiglength'], ascending=[True, True, False])
-
-        # Drop duplicates, keeping the first occurrence (highest 'hitlength_contiglength')
-        dnapipete_df = dnapipete_df.drop_duplicates(subset=['dnaPipeTE_contig_name', 'SRX_ID'], keep='first')
-        # --- End Modified Duplicate Handling ---
+        dnapipete_df = prepare_dnapipete_context(dnapipete_df)
         
         rows_dropped = initial_rows - len(dnapipete_df)
         if rows_dropped > 0:
@@ -372,9 +357,17 @@ def main():
         # Let's explicitly define the final header structure based on expectation
         final_header = intermediate_header + [
             'dnaPipeTE_contig_name', # Explicitly add original name
-            'Class', 
-            'Order', 
-            'Superfamily', 
+            'dnapipete_repeat_class',
+            'dnapipete_te_class',
+            'dnapipete_order',
+            'dnapipete_superfamily',
+            'repeatmasker_te_class',
+            'repeatmasker_order',
+            'repeatmasker_superfamily',
+            'repeatmasker_classification_status',
+            'Class',
+            'Order',
+            'Superfamily',
             '#reads', 
             'aligned_bases', 
             'RM_hit_length_bp', 
@@ -401,15 +394,9 @@ def main():
         for chunk_num, intermediate_chunk in enumerate(reader, 1):
             logger.info(f"Merging chunk {chunk_num} ({len(intermediate_chunk)} rows)...")
             
-            # Perform the left merge
-            merged_chunk = pd.merge(
+            merged_chunk = annotate_repeatmasker_hits(
                 intermediate_chunk,
-                dnapipete_df, # Prepared dnaPipeTE dataframe
-                # Use left_on and right_on for different key names
-                left_on=['query_name', 'SRX_ID'],
-                right_on=['dnaPipeTE_contig_name', 'SRX_ID'],
-                how='left',
-                suffixes=('', '_dnapipete') # Suffixes for any unexpected overlaps
+                dnapipete_df,
             )
 
             # REMOVED the complex reconstruction logic for dnaPipeTE_contig_name as it should be correct now

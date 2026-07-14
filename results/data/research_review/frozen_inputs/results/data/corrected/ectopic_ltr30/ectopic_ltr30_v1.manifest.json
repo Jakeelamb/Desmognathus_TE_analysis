@@ -1,0 +1,247 @@
+{
+  "analysis_id": "ectopic_ltr30_v1",
+  "analysis_scope": "audited_te_resource_panel34_ltr30",
+  "analysis_status": "sensitivity_only_not_validated_ectopic_rate",
+  "eligible_for_confirmatory_path_analysis": false,
+  "n_panel_species": 34,
+  "n_tabout_resources": 31,
+  "n_species_with_selected_elements": 30,
+  "n_species_with_usable_elements": 30,
+  "n_selected_elements": 1088,
+  "n_source_corrupt_exclusions": 2,
+  "n_usable_elements": 1086,
+  "n_elements_coverage_ge_80pct": 1083,
+  "exact_tesorter_join": true,
+  "zero_depth_positions_retained": true,
+  "expensive_upstream_tools_executed": false,
+  "historical_ltr30_source_unchanged": true,
+  "historical_ltr30_source": "results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv",
+  "historical_ltr30_source_sha256": "f297da71a75736dc79c346c1a063b6bfce08840530ec9146f49741f04bf9f5cb",
+  "source_corrupt_exclusion_policy": "exclude only depth files proven truncated by a partial final line; fail on any unapproved exclusion",
+  "source_corrupt_exclusions": [
+    {
+      "species": "santeetlah",
+      "element_id": "JASANM010280042.1_De_179_6669",
+      "depth_file": "input_data/ectopic_recombination/JASANM010280042.1_De_179_6669.fa.depth.txt",
+      "depth_file_sha256": "61f925e91eef555f9e3eaf1b711c8524e67062db36f649d2ca613dc563b0cb5b",
+      "depth_file_size_bytes": 245760,
+      "expected_terminal_position": 6491,
+      "reported_terminal_position": 6396,
+      "missing_terminal_suffix_positions": 95,
+      "exclusion_reason": "truncated_depth_file_partial_final_line"
+    },
+    {
+      "species": "aureatus",
+      "element_id": "JAUEJG010675316.1_De_4598_10648",
+      "depth_file": "input_data/ectopic_recombination/JAUEJG010675316.1_De_4598_10648.fa.depth.txt",
+      "depth_file_sha256": "a7caa6c839cca080c5aaa55293df2b299780888b9a1925942ef60741d131fe0a",
+      "depth_file_size_bytes": 245760,
+      "expected_terminal_position": 6051,
+      "reported_terminal_position": 5945,
+      "missing_terminal_suffix_positions": 106,
+      "exclusion_reason": "truncated_depth_file_partial_final_line"
+    }
+  ],
+  "missing_tabout_resources": [
+    {
+      "species": "catahoula",
+      "te_sra_accession": "SRX21425399",
+      "te_assembly_accession": "GCA_034783935.1",
+      "tabout_path": "input_data/ectopic_recombination/GCA_034783935.1_tabout.csv"
+    },
+    {
+      "species": "kanawha",
+      "te_sra_accession": "SRX20502939",
+      "te_assembly_accession": "GCA_032353855.1",
+      "tabout_path": "input_data/ectopic_recombination/GCA_032353855.1_tabout.csv"
+    },
+    {
+      "species": "valtos",
+      "te_sra_accession": "SRX20503015",
+      "te_assembly_accession": "GCA_032357565.1",
+      "tabout_path": "input_data/ectopic_recombination/GCA_032357565.1_tabout.csv"
+    }
+  ],
+  "resources_without_selected_elements": [
+    "lycos"
+  ],
+  "panel": "path_analysis/data/derived/panels/study_te_resource_panel34_v1.csv",
+  "panel_sha256": "ca684212f8c1171296e49f1ed10a410dfb894d1dfe7f5cff22fd89a8590a73f8",
+  "lookup": "input_data/lookup_table.txt",
+  "lookup_sha256": "f55c5c0561d374dc1dedb53c85e286a9f5a159c6b15bf29d0c617dde230a8485",
+  "tesorter": "input_data/ectopic_recombination/combined_sequences.fasta.rexdb-metazoa.cls.tsv",
+  "tesorter_sha256": "fdc0c20f074d02cf684edfb258b664c006596bbb98260f3ff28e565c04ac6331",
+  "historical_master": "results/data/ectopic_recombination_master.csv",
+  "historical_master_sha256": "a116102cb6064d60a0e2a5df0113019eef4730626aad6efd79dbc8b0ac6bec1c",
+  "tabout_inputs": [
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264455.1_tabout.csv",
+      "sha256": "3b13ae1be2a934cd14e0f6b7a297ce383cffd333771a468281143fe8b38b4717"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032275005.1_tabout.csv",
+      "sha256": "5a3d94011c46a060af4c542f209e6c392d376e2edc614f7bf6ee05e1c1d399e8"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264635.1_tabout.csv",
+      "sha256": "0f533478b232f4857d9e76ba8fa92e596916d8d724fd8c5ef84604e0cf1ad5cc"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032360725.1_tabout.csv",
+      "sha256": "c897546df6891c8f644fbdca7628dc4d0d141033e97c28dddc9843f06173019d"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_033119125.1_tabout.csv",
+      "sha256": "c0a551b653f4ea6cdc0de735137eb9090065cf47fffe1606cda43794eb77643c"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264955.1_tabout.csv",
+      "sha256": "7f03b790559ec9de34c46bd01cb78971a8adbfd55919e8073396df61e368c8c3"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032274985.1_tabout.csv",
+      "sha256": "3237d5f195a15792fe905b22c697b1c995e385c55fcf4436a4621094259ff2e6"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264895.1_tabout.csv",
+      "sha256": "bdbeb88f67412bbc88af971fbc049d43867b9739d3b291bfaef69b80e0a2b12e"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_034783875.1_tabout.csv",
+      "sha256": "8b31f7af6e4f575acbce171935824eb04d1245acfe42ec5266f02348ca6a208f"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032353675.1_tabout.csv",
+      "sha256": "5b39a19c7addc6a5117074181aa53afae3880eaa439e708d7847b119ba9a1ced"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_033118305.1_tabout.csv",
+      "sha256": "b29e9c22525a296ab56a9ce09e00e27bfa8ea5d1815f9fa41f006c5033be9204"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_031753635.1_tabout.csv",
+      "sha256": "73f86ac7c45977c5fbbe6af768e62e43742448b2fac40d968c02f518aaa90439"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032353815.1_tabout.csv",
+      "sha256": "7eb96f6bd45223f6cecf4771a4d631e5b5282a3ce559961522503494b247dc4b"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264475.1_tabout.csv",
+      "sha256": "4369cb442c631a2c31218b2e38c445ee8e44f69594864593e873af49ca9c82f6"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032353935.1_tabout.csv",
+      "sha256": "ee4fde19a9ded8b2b7cd2cd4dd2f2afa42b236319a8e04a4f2a7244864570b04"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032353775.1_tabout.csv",
+      "sha256": "063854328e07a18071d676a384aed9fead4c83314e20af206938f6fb97673c00"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032275315.1_tabout.csv",
+      "sha256": "a48d30b126f6cfe67f15fc376ba466f97b727e48ef159a4a21790382c7181c27"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_035049765.1_tabout.csv",
+      "sha256": "e1f10820aedf8915eb00104053774af58f7e6996c7425aa226eb29dd372fef33"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_031753695.1_tabout.csv",
+      "sha256": "e036d2436b552a81c2f8ab4999d534e8df1d2d5a7b0e155633bbc351ff9a670f"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032354855.1_tabout.csv",
+      "sha256": "ddb023b8191b7d5113b456548b0210fc5d85fbbc7538a268ce7d189e37030579"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_031753675.1_tabout.csv",
+      "sha256": "bbc58bb3b884f2f1a97876a177b2dbe305eb89fc92368d749eec21970d527b84"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264995.1_tabout.csv",
+      "sha256": "134bc6e8a872a08e4fb9e298545f421c2050dcb1d0039fd02e37397538d86805"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264915.1_tabout.csv",
+      "sha256": "38142a5963e4d528a346d2f103b50c271a8440ed44bf4d24fbe973593d698009"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030180145.1_tabout.csv",
+      "sha256": "0f6fb102d31ac20a484bf6b7d3915cabe6e66d5f324ea0081ff3e970cfeca0a8"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264975.1_tabout.csv",
+      "sha256": "e6fb60c294a2eeab8070bb0eb835b8cc3c4e2626ee20a735282d3b30978c985e"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_032275285.1_tabout.csv",
+      "sha256": "25ee6b8ec99f5e7a46b11664c8f3240109123d4fc848f1e1a4c18fe77de60c0b"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_031753655.1_tabout.csv",
+      "sha256": "5fca98cc31a8e28d36ef8e62cce160308548a86298de29fd69e0fd8405c410b0"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_034782015.1_tabout.csv",
+      "sha256": "53a562bce2093371141c9f6c87a3f2cbebaf293a33e6cfc552b6989106d4577e"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264875.1_tabout.csv",
+      "sha256": "158c8dccedf1981e9956e8c9f8756e0ef70090e08e89b23bdb3e7984bdec73bc"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030264495.1_tabout.csv",
+      "sha256": "ca8dc4e7776b915719481fe8c13f6e67230a5b74739cd287f1cd693531372a40"
+    },
+    {
+      "path": "input_data/ectopic_recombination/GCA_030265035.1_tabout.csv",
+      "sha256": "79f47922938f73d3d2e0f8af9f0b5ece65189efe7eabdd650cbff8a74d3f4cd6"
+    }
+  ],
+  "selected_depth_file_count": 1088,
+  "usable_depth_file_hashes_embedded_in_element_output": true,
+  "excluded_depth_file_hashes_embedded_in_exclusion_output": true,
+  "data_outputs": {
+    "element_metrics": {
+      "path": "results/data/corrected/ectopic_ltr30/ectopic_element_metrics_ltr30_v1.csv",
+      "sha256": "fa0e1aebef50b4811042086e64a38edba362814ef772c6060424d0bb609e2afa",
+      "rows": 1086
+    },
+    "species_robustness": {
+      "path": "results/data/corrected/ectopic_ltr30/ectopic_species_robustness_ltr30_v1.csv",
+      "sha256": "84979391804651612fecde1e297168423cd85bf3a9ceaa4b6249c2ca82992eb8",
+      "rows": 118
+    },
+    "excluded_elements": {
+      "path": "results/data/corrected/ectopic_ltr30/ectopic_excluded_elements_ltr30_v1.csv",
+      "sha256": "dbf78614d297a8aba8c845e823de04a3c6e78a001e7017835337bde29a7580a0",
+      "rows": 2
+    },
+    "resource_coverage": {
+      "path": "results/data/corrected/ectopic_ltr30/ectopic_resource_coverage_ltr30_v1.csv",
+      "sha256": "39e0fc866f84c02df76538bf7c7e18e70fe555b3943d089ebd0f938bb16e67aa",
+      "rows": 34
+    }
+  },
+  "figures": [
+    {
+      "path": "results/figures/corrected/ectopic_ltr30/ectopic_ltr30_coverage_qc_v1.png",
+      "sha256": "825c6ed959d96d3b3ad3df22720a1025dd88557f2366075719adc26d40d52d9b"
+    },
+    {
+      "path": "results/figures/corrected/ectopic_ltr30/ectopic_ltr30_coverage_qc_v1.pdf",
+      "sha256": "a1a8b6f594ecd249f67c35d95c564bad8356a0f7bdcb46a0f87045bf9aa57b7f"
+    }
+  ],
+  "bootstrap_replicates": 2000,
+  "coverage_sensitivity_threshold": 0.8,
+  "blocking_provenance": [
+    "read_mapping_command_and_reference",
+    "multimapper_policy",
+    "mapq_threshold",
+    "secondary_and_supplementary_alignment_policy",
+    "duplicate_policy",
+    "structural_solo_ltr_validation"
+  ]
+}

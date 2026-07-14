@@ -12,14 +12,16 @@ and phylogenetic path-analysis workflows?
 
 ## Bottom Line
 
-The upstream TE provenance chain is mostly transparent locally.
+The upstream TE provenance chain is mostly transparent locally, but the
+current RepeatMasker-derived divergence layer is a preserved pre-audit branch,
+not a publication-ready result.
 
-Strong local provenance exists for:
+Strong local file provenance exists for:
 
 - `results/data/dnaPipeTE_order_breakdown.csv`
 - `results/data/dnaPipeTE_superfamily_breakdown.csv`
-- `results/data/repeatmasker_detailed_classification_combined.csv`
-- `results/data/divergence/divergence_summary_statistics_by_species.csv`
+- `results/data/repeatmasker_detailed_classification_combined.csv` (pre-audit classification state)
+- `results/data/divergence/divergence_summary_statistics_by_species.csv` (derived from that pre-audit state)
 - `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
 
 The main historical provenance weakness was the exact writer for:
@@ -49,8 +51,11 @@ Observed local evidence:
 - `input_data/dnaPipeTE/` exists with `35` staged entries
 - `input_data/lookup_table.txt` exists with `34` lookup rows
 - all lookup SRA accessions are represented in the staged dnaPipeTE inputs
-- the extra count is explained by duplicate accession-prefix material rather
-  than missing lookup coverage
+- the extra count is `SRX19952890R2`, a computational retry label for the same
+  *D. orestes* accession rather than a second specimen, SRA run, or missing
+  lookup row
+- both *D. orestes* outputs are full, similarly sized dnaPipeTE realizations;
+  they must not be summed as independent evidence
 
 Observed outputs:
 
@@ -64,6 +69,38 @@ Assessment:
 - local provenance is strong
 - the raw staged inputs, the processing script, and the canonical breakdown
   outputs are all present
+- the historical breakdown percentages are closed relative compositions, not
+  absolute genome-wide TE fractions
+- a corrected, analysis-scoped mass ledger now exists at
+  `results/data/corrected/dnapipete/dnapipete_mass_accounting_analysis18_v2.csv`
+  with an adjacent manifest and mass-augmented order table
+- v2 independently matches every observed SRX to the active lookup and records
+  both `te_sra_accession` and `te_assembly_accession`; the earlier v1 audit
+  snapshot is preserved but superseded for analysis
+- that ledger contains exactly the declared 18-species TE/genome panel, retains
+  total aligned-repeat bases plus unresolved mass at class, order, and
+  superfamily levels, and explicitly excludes *D. orestes*
+- order-level unresolved mass ranges from 3.548% to 6.179% (median 5.171%);
+  superfamily-level unresolved mass ranges from 17.507% to 21.586% (median
+  19.995%)
+- recomputed retained-order percentages reproduce the historical table within
+  7.105e-15 percentage points, showing that the new ledger changes denominator
+  transparency rather than silently changing the retained composition
+- Git history recovers the upstream run parameters from `dnaPipeTE.sh` at
+  commit `cc64ffb134968250671ff0e3456255063a1aba97`: 15-Gb configured genome,
+  0.1× coverage, two samples, `RM_t=0.15`, nuclear-filtered R1 input, and a
+  custom `dedupe_telib.fasta`
+- the configured quantification denominator is therefore 1.5 Gb, allowing a
+  sensitivity-only repeat-aligned fraction at
+  `results/data/corrected/dnapipete/dnapipete_absolute_load_sensitivity_analysis18_v1.csv`
+- final-panel repeat-aligned fractions range from 60.619% to 68.196% (median
+  65.744%); *D. fuscus* is 66.010% repeat-aligned and 62.536% assigned to a DNA-
+  or retrotransposon class
+- this branch is not confirmatory because runtime logs, container version or
+  digest, custom-library checksum, replicate quantification samples, and
+  sampling uncertainty are absent
+- the corrected writer refuses more than one computational output per SRX in
+  the final panel, preventing retry suffixes from being silently double-counted
 
 ### 2. RepeatMasker merge layer
 
@@ -94,13 +131,28 @@ Observed outputs:
 
 - `results/data/merged_repeatmasker_data.csv`
 - `results/data/repeatmasker_detailed_classification_combined.csv`
+- `results/data/corrected/repeatmasker_detailed_classification_hit_level_analysis18_v1.csv`
+  for the declared 18-species final TE/genome panel
 
 Assessment:
 
-- local provenance is moderately strong
-- the raw staged `.align` inputs and merged output are present, and the extra
-  unmapped `.align` files are treated as documented out-of-scope inputs until
-  explicitly reconciled with the lookup table
+- local file provenance is strong, but the stored canonical combined table is
+  scientifically pre-audit
+- its generic `Class`, `Order`, and `Superfamily` fields inherited one
+  dnaPipeTE annotation per contig rather than each hit's native
+  `repeat_class`
+- the corrected code retains dnaPipeTE fields under `dnapipete_*`, classifies
+  each hit under `repeatmasker_*`, and keeps generic names only as
+  backward-compatible aliases of the hit-level result
+- the four extra `.align` files are documented out-of-scope inputs and are not
+  analyzed merely because they are staged locally
+- the corrected analysis-eligible table contains exactly 18 SRX IDs and 18
+  species; its manifest records 5,132,397 hits, 1,155,346,511 inclusive aligned
+  bp, readback alias equality, and SHA-256
+- an all-34-resource rebuild exists only as an audit/conservation proof and is
+  explicitly marked `eligible_for_path_analysis: false`
+- full mismatch counts and unmapped labels are preserved under
+  `plans/publication-readiness-deep-audit/`
 
 ### 3. Divergence summary layer
 
@@ -126,9 +178,23 @@ Observed outputs:
 
 Assessment:
 
-- local provenance is strong
-- both the merged RepeatMasker source table and the divergence interims are
-  still on disk, so the summary table is locally inspectable without HPC reruns
+- local provenance is strong enough to reconstruct the historical output
+- the current divergence interims and species summary inherit the contig-level
+  classification error and must remain labeled pre-audit
+- regeneration must use the corrected hit-level table and a separate output
+  location before any corrected result replaces the historical branch
+- the corrected 18-species summary now exists at
+  `results/data/corrected/divergence/divergence_summary_statistics_by_species_analysis18_v1.csv`
+- its all-hit branch conserves 5,132,397 hits at each classification level; its
+  legacy-comparable threshold branch conserves 4,715,646 hits with dnaPipeTE
+  contig-threshold context
+- 416,751 hits (8.12%; 7.86% of aligned bp) lack that context and are retained
+  in the all-hit branch plus a per-species coverage sidecar rather than being
+  silently dropped
+- the corrected weighted species predictors are rank-stable relative to the
+  historical values, but RepeatMasker percent deletions/insertions remain
+  alignment-gap statistics relative to repeat consensus, not direct DNA-loss
+  or ectopic-recombination rates
 
 ### 4. Ectopic recombination layer
 
@@ -171,12 +237,29 @@ Observed outputs:
 
 - `results/data/ectopic_recombination_master.csv`
 - `results/data/ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
+- `results/data/corrected/ectopic/ectopic_element_metrics_analysis18_v1.csv`
+- `results/data/corrected/ectopic/ectopic_species_robustness_analysis18_v1.csv`
 
 Assessment:
 
-- local provenance is moderately strong
-- the raw staged inputs and the canonical filtered output are present
-- the main provenance caveat is accession reconciliation, not missing code
+- file provenance is moderately strong, but mapping-method provenance is not
+  sufficient for a mechanistic ectopic-recombination claim
+- the corrected branch processes only the final panel, joins TEsorter by exact
+  `sequence_start_end`, and retains zero-depth positions in regional means
+- 567 exact 5/6-domain elements are available across 16 panel species;
+  *D. kanawha* and *D. valtos* lack the required assembly `tabout` resources
+- 565/567 elements pass 80% positive-position coverage in both LTRs and the
+  internal region; low regional coverage is therefore not the dominant issue
+- 97 element ratios change when 2,872 explicit zero-depth positions are
+  retained; the maximum absolute ratio change is 1.706581
+- the historical nonzero-only statistic is reproduced within 4.441e-16
+- species arithmetic means are not robust: for *D. intermedius*, one element
+  accounts for 75.0% of the ratio sum; the zero-aware arithmetic mean is 3.114,
+  median 0.646, and geometric mean 0.800
+- mapping command/reference, multimapper handling, MAPQ, secondary and
+  supplementary alignments, duplicates, and direct solo:intact-LTR validation
+  remain unavailable; this layer is not approved as an ectopic-recombination
+  rate or confirmatory path predictor
 
 ### 5. Diversity summary layer
 
@@ -206,9 +289,48 @@ Resolved generation path:
 - `path_analysis/scripts/build_canonical_diversity_tables.py` now reconstructs
   scratch candidates for both canonical files and audits them against the
   current `results/data/` snapshots
-- older standalone diversity helpers were removed after canonicalization
-  cleanup because they implemented raw `1 - sum(p_i^2)` Simpson rather than the
-  corrected definition used by the stored diversity summaries
+- both production and audit writers now implement the scale-invariant
+  Gini-Simpson definition `1 - sum(p_i^2)`; the stored values are not a
+  finite-count-corrected Simpson estimator
+
+Corrected final-panel audit products:
+
+- `results/data/corrected/diversity_pca/te_diversity_mass_sensitivity_analysis18_v1.csv`
+- `results/data/corrected/diversity_pca/te_composition_matrices_analysis18_v1.csv`
+- `results/data/corrected/diversity_pca/te_pca_clr_matrices_analysis18_v1.csv`
+- `results/data/corrected/diversity_pca/te_pca_scores_analysis18_v1.csv`
+- `results/data/corrected/diversity_pca/te_pca_loadings_analysis18_v1.csv`
+- `results/data/corrected/diversity_pca/te_pca_variance_analysis18_v1.csv`
+- `results/data/corrected/diversity_pca/te_pca_stability_analysis18_v1.csv`
+- `plans/publication-readiness-deep-audit/te_diversity_pca_corrected_analysis18_v1.md`
+
+Assessment:
+
+- the historical order and superfamily diversity values reproduce within
+  `3.331e-16` and `4.441e-16`, respectively
+- the corrected table names each estimand explicitly: Shannon entropy (natural
+  log), Gini-Simpson, Simpson dominance, Hill q1/q2, Pielou evenness, and
+  observed richness
+- classified-conditional versus unresolved-bin ranks remain high (Spearman
+  rho 0.965-0.975 at order level and 0.930-0.986 at superfamily level), but the
+  two denominators remain separate because unresolved mass is a technical bin
+- order-level CLR PCA is approved as a descriptive ordination: it has 18
+  species, 10 nonzero features, PC1/PC2 explain 56.7%/28.9%, and the minimum
+  leave-one-species-out score correlations are 0.990/0.953
+- superfamily CLR PCA remains supplementary because 27 features and 32 zeros
+  make the geometry materially dependent on zero replacement; PC2 minimum
+  leave-one-out score correlation falls to 0.498 under feature-specific
+  replacement
+- the historical unrestricted clade PERMANOVA is not approved for inference;
+  related species are not freely exchangeable permutation units
+- fixed-tree phylogenetic PCA uses a full-rank 9-coordinate ILR projection of
+  the order CLR matrix; pPC1/pPC2 explain 53.5%/23.6%, and ordinary-versus-pPCA
+  species-score correlations are 0.983/0.913
+- across all 200 Stewart-Wiens time-calibrated bootstrap trees, no axis swap is
+  required; minimum ordinary-versus-pPCA score correlations are 0.988/0.910
+  and loading correlations are 0.955/0.723
+- order PCA is therefore approved as a descriptive ordination across published
+  tree-time uncertainty, but not as a causal path variable
 
 Assessment:
 
@@ -225,23 +347,27 @@ Assessment:
 
 - `dnaPipeTE_order_breakdown.csv`
 - `dnaPipeTE_superfamily_breakdown.csv`
-- `divergence_summary_statistics_by_species.csv`
 - `ectopic_recombination_filtered_3000bp_5+domains_no_unknown_species.csv`
 
-### Moderate confidence local provenance
+### Preserved pre-audit provenance
 
 - `repeatmasker_detailed_classification_combined.csv`
-  because extra unmapped `.align` files are present in the raw input directory
+- `divergence_summary_statistics_by_species.csv`
+
+The issue is not the presence of out-of-scope raw files; it is the confirmed
+contig-versus-hit classification error in the historical merge.
 
 ## Implications For Analysis Use
 
-The current TE source tables are usable for downstream comparative and
-phylogenetic path analysis, but the methods notes should reflect the true
-confidence level of each upstream step.
+The dnaPipeTE composition and ectopic source tables remain available for
+downstream audit. RepeatMasker-derived divergence and alignment-gap summaries
+must not enter a corrected comparative or phylogenetic analysis until rebuilt
+from the hit-level table.
 
 Practical interpretation:
 
-- the order-breakdown, diversity, divergence, and ectopic filtered files now
-  all have a defensible local provenance chain
-- the remaining TE-methods cleanup is optional housekeeping rather than a
-  blocker for current analysis use
+- the dnaPipeTE order-breakdown, diversity, and ectopic filtered files retain
+  locally inspectable provenance
+- RepeatMasker divergence is a correctness blocker, not optional housekeeping
+- current divergence-dependent path outputs should be retained as historical
+  sensitivity artifacts and regenerated non-destructively

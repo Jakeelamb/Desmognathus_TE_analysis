@@ -1,14 +1,56 @@
 # Desmognathus TE Analysis
 
-Comprehensive analysis of transposable element evolution across 34 Desmognathus salamander species. Includes genome-wide TE classification, divergence quantification, phylogenetic comparative methods (PGLS, PERMANOVA, phylogenetic signal summaries), a sequence-based paired-LTR divergence branch for insertion-age inference, ectopic recombination analysis, and diversity metrics.
+Comprehensive analysis of transposable element evolution across *Desmognathus*
+salamanders. The current panel contract is **TE34** for vetted genomic-resource
+descriptions, **Cell21** for linked-cell descriptions, and **path18** only for
+their exact tree-aligned intersection. It includes TE classification, divergence,
+phylogenetic comparative methods, paired-LTR divergence, a terminal:internal
+LTR deletion-footprint proxy, and diversity/ordination metrics.
 
 Start here for the active TE workflow. Use `path_analysis/README.md` for the phylogenetic path-analysis workspace and `TODO.md` for the current analysis queue.
+
+## Publication-Audit Release Boundary
+
+There is no single denominator for every analysis. Corrected, non-destructive
+audits are under `results/data/corrected/`, `results/figures/corrected/`, and
+`plans/publication-readiness-deep-audit/`. The primary collaborator-review
+surface is the eight executed notebooks documented in
+[`notebooks/research_review/README.md`](notebooks/research_review/README.md).
+Its TE and LTR figures are regenerated from audited current data with the
+historical R/ggplot grammar. Its hashed frozen-input registry makes the static
+review bundle re-executable without the ignored upstream result tree; only the
+large interactive microscopy galleries remain optional and machine-local.
+The review directory contains one canonical notebook per analysis domain,
+including a dedicated genome-size/IOD notebook. The combined analysis18
+workbench remains a secondary cross-domain provenance artifact, not the meeting
+entry point.
+
+Current permitted interpretation:
+
+- TE diversity and order-level CLR/phylogenetic PCA are approved for
+  descriptive use with the recorded mass and tree sensitivities.
+- LTR terminal:internal depth is a deletion-footprint/mapping proxy, not a
+  measured ectopic-recombination rate.
+- linked cell/nucleus morphology is an upper-tail sensitivity analysis; the
+  segmentation models are not validated on held-out final-panel species.
+- quality-matched nuclear IOD is a relative image-intensity proxy, not an
+  absolute C-value. The separate *D. fuscus*-anchored rescaling is retained only
+  as a conditional genome-size estimate for the descriptive Shannon scatter; it
+  is not promoted as a direct C-value or causal path-analysis input.
+- corrected phylogenetic path models are exploratory association-model
+  sensitivity only; they are not approved causal genome-size results.
+
+See `results/data/corrected/path_analysis/publication_release_gate_matrix_analysis18_v1.csv`
+for the machine-readable claim boundary.
 
 ## Quick Start
 
 ```bash
 # Verify setup
 scripts/run_in_dusky.sh python verify_setup.py
+
+# Open the prepared, executed collaborator-review bundle
+scripts/run_in_dusky.sh jupyter lab notebooks/research_review
 
 # Run a core processing script
 scripts/run_in_dusky.sh python scripts/processing/dnaPipe.py
@@ -25,9 +67,11 @@ scripts/run_in_dusky.sh python scripts/processing/dnaPipe.py
 │   ├── ectopic_recombination/     # LTR domain data
 │   └── lookup_table.txt           # Species ID mapping
 │
-├── results/                       # Analysis outputs (not tracked in git)
+├── results/                       # Analysis outputs (upstream products ignored)
 │   ├── data/                      # Processed CSV files
 │   ├── figures/                   # Generated visualizations
+│   ├── data/research_review/      # Tracked compact review tables/manifest
+│   ├── figures/research_review/   # Tracked current-data PNG/PDF figure bundle
 │   └── reports/                   # Generated prose reports
 │
 ├── interim/                       # Intermediate processing files
@@ -132,9 +176,11 @@ scripts/run_in_dusky.sh python scripts/processing/repeatmask.py
 - `results/data/merged_repeatmasker_data.csv`
 - `results/data/repeatmasker_detailed_classification_combined.csv`
 
-### 3. Ectopic Recombination Analysis
+### 3. Historical Terminal:Internal Proxy Workflow
 
-Analyzes LTR depth ratios to identify potential ectopic recombination.
+The historical script calculates LTR terminal:internal depth ratios. These
+ratios are not a validated ectopic-recombination rate and must not be described
+as direct solo-LTR formation. They are retained for provenance.
 
 ```bash
 scripts/run_in_dusky.sh python scripts/processing/ec.py
@@ -154,6 +200,16 @@ That script reads the canonical filtered ectopic table directly and writes:
 - `results/figures/ectopic_recombination/ectopic_ratio_violin_log10.png`
 - `results/data/ectopic_recombination_species_summary.csv`
 - `results/data/ectopic_recombination_species_tests.txt`
+
+The release-facing corrected branch is:
+
+```bash
+scripts/run_in_dusky.sh python scripts/processing/build_corrected_ectopic_recombination.py
+```
+
+It restricts analysis to the final panel, retains zero-depth positions, requires
+exact ≥5/6-domain elements, reports coverage and robust/influence summaries,
+and writes only proxy-labeled products under `results/data/corrected/ectopic/`.
 
 ### 4. Divergence Analysis
 

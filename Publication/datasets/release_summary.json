@@ -1,0 +1,15 @@
+{
+  "publication_dataset_count": 39,
+  "csv_files": 39,
+  "non_csv_tree_files": 3,
+  "total_csv_rows": 24107,
+  "total_csv_bytes": 14973568,
+  "release_status_counts": {
+    "main_candidate": 16,
+    "sensitivity_only": 12,
+    "audit_only": 6,
+    "supplementary": 5
+  },
+  "manifest_sha256": "bfe5160febbc237213556c0aaa8fb78b1fd1ceaf6736bd2c04e21f8dbc03a300",
+  "column_inventory_sha256": "e0da1570acd866b74a52e707d8f9c46b326452441100e92a7a9cf80f33c687f5"
+}

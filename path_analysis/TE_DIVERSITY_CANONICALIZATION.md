@@ -11,6 +11,10 @@ as part of this step.
 
 The canonical diversity summary tables are now provenance-resolved locally.
 
+`Simpson_Diversity` is the standard, scale-invariant Gini-Simpson index
+`1 - sum(p_i^2)`. The rows are relative abundances, so no finite-count
+correction is applied.
+
 As of this cleanup, `scripts/processing/diversity_stats.py` has been promoted as
 the canonical upstream writer for:
 
@@ -62,6 +66,9 @@ Current audit interpretation:
 - candidate tables match the current canonical snapshots within `1e-12`
 - the `0.0` threshold metrics also match direct recomputation from the
   breakdown tables within `1e-12`
+- the production and non-destructive audit helpers use the same Gini-Simpson
+  definition and are guarded by percent-versus-proportion scale-invariance
+  tests
 
 The candidate CSV text is not byte-identical to the stored snapshots in every
 case because of negligible floating-point string formatting differences in some
@@ -84,7 +91,9 @@ side path rather than the audited order/superfamily diversity snapshots.
 ## Current Recommendation
 
 Treat the diversity provenance issue as resolved for analysis and
-path-analysis use.
+descriptive path-analysis staging. Inferential use still requires the declared
+classified/unresolved denominator and phylogenetic treatment documented in
+`te_diversity_pca_corrected_analysis18_v1.md`.
 
 Current safe operating rule:
 

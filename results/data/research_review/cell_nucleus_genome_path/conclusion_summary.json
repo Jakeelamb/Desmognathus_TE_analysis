@@ -1,0 +1,34 @@
+{
+  "primary_top_class": "cell_bridge",
+  "primary_top_global_p": 0.975509706887934,
+  "primary_top_cicc": 13.382923669911122,
+  "primary_top_weight": 0.9167423772846516,
+  "primary_second_class": "cell_collider",
+  "primary_second_delta_cicc": 6.312424225585602,
+  "primary_second_weight": 0.0390410782077731,
+  "primary_admissible_competitive_classes": [
+    "cell_bridge"
+  ],
+  "measurement_bootstrap_replicates": 250,
+  "measurement_nucleus_bridge_top_rate": 0.0,
+  "measurement_cell_bridge_top_rate": 0.984,
+  "measurement_median_nucleus_minus_cell_cicc": 11.45531297839175,
+  "leave_one_out_fits": 24,
+  "leave_one_out_nucleus_bridge_top_rate": 0.0,
+  "leave_one_out_cell_bridge_top_rate": 1.0,
+  "published_bootstrap_tree_fits": 200,
+  "published_bootstrap_tree_top_counts": {
+    "cell_bridge": 200
+  },
+  "evolutionary_model_top_classes": {
+    "lambda": "cell_bridge",
+    "BM": "cell_bridge",
+    "OUfixedRoot": "cell_bridge",
+    "OUrandomRoot": "cell_bridge"
+  },
+  "causal_direction_identified": false,
+  "user_mechanisms_markov_equivalent": true,
+  "shared_testable_claim": "genome_size is independent of cell_size conditional on nucleus_size",
+  "iod_nucleus_coupling_caveat": "The genome estimate is derived from nuclear integrated optical density, which contains a nuclear-area component; genome\u2013nucleus evidence is not an independent causal validation.",
+  "reportable_verdict": "The data support a connected three-trait system; the point estimate favors Cell bridge (second-class delta CICc = 6.31). The cross-sectional data still cannot orient Markov-equivalent causal arrows."
+}

@@ -1,0 +1,9 @@
+generating_class,residual_regime,n_simulations,true_class_top_rate,true_class_delta_le_2_rate,true_class_global_fit_rate,unique_true_class_rate,any_bridge_top_rate,median_admissible_competitive_models
+cell_bridge,brownian,100,0.78,0.87,0.95,0.58,0.89,1
+cell_bridge,iid,100,0.8,0.9,0.97,0.66,0.92,1
+genome_bridge,brownian,100,0.29,0.61,0.96,0.13,0.44,2
+genome_bridge,iid,100,0.33,0.65,0.92,0.12,0.5,2
+independent,brownian,100,0.4,0.65,0.93,0.05,0.09,3
+independent,iid,100,0.36,0.67,0.98,0.04,0.06,3
+nucleus_bridge,brownian,100,0.49,0.74,0.91,0.29,0.63,2
+nucleus_bridge,iid,100,0.41,0.73,0.93,0.18,0.59,2

@@ -1,0 +1,170 @@
+{
+  "analysis_state": "historical_pre_audit_outputs",
+  "mutated_historical_results": false,
+  "alpha": 0.05,
+  "competitive_delta_cicc": 2.0,
+  "n_families": 19,
+  "n_ranking_gate_unique_top_pass": 10,
+  "n_competitive_sets": 0,
+  "n_publication_claims_allowed": 0,
+  "n_blocked_families": 9,
+  "audit_csv": "plans/publication-readiness-deep-audit/path_model_release_gate_audit.csv",
+  "audit_csv_sha256": "45a0a3d2b9f0e3c8b5e7201a94c27b2772c5d115e8d33156e507c0082a84f8f3",
+  "report": "plans/publication-readiness-deep-audit/path_model_release_gate_audit.md",
+  "report_sha256": "74b8635bfeae36033bca1679541c41e34995a667cc4e5a235bab20f1b712e864",
+  "method_source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923215/",
+  "source_files": [
+    {
+      "path": "path_analysis/results/genome_morphology_model_ranking.csv",
+      "sha256": "5279fb96cd8d0c8c7b2332eb67130a703e438b478267a9007f39889344e3f80c"
+    },
+    {
+      "path": "path_analysis/results/genome_morphology_analysis_input.csv",
+      "sha256": "ddb592c2698e08ede0213d8f02996f240e2485476875be3bb60aad27b7eddd24"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_organismal_primary_mediumplus_model_ranking.csv",
+      "sha256": "f501b550e2634425780f36e268e7088594822d0e08f09d3bbd102ffb25c73733"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_organismal_primary_mediumplus_analysis_input.csv",
+      "sha256": "a1a446ed8944422995d4681ab96fd4cd0f81aff4e3486b818a190dfc7da9be03"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_organismal_primary_phylofill_model_ranking.csv",
+      "sha256": "f501b550e2634425780f36e268e7088594822d0e08f09d3bbd102ffb25c73733"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_organismal_primary_phylofill_analysis_input.csv",
+      "sha256": "a1a446ed8944422995d4681ab96fd4cd0f81aff4e3486b818a190dfc7da9be03"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_organismal_primary_strict_body_model_ranking.csv",
+      "sha256": "dccfd1be6d12afa5b20735cac0f60249013f738fd6c844839a2801442fa465f8"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_organismal_primary_strict_body_analysis_input.csv",
+      "sha256": "3202c98a107853269c7fb9e6052b3af57c597c5f095416964ac9cc9b9383d16d"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_primary_mediumplus_model_ranking.csv",
+      "sha256": "5eb1cd7b4eb91d1fbc66f89e48d9e6554af0832a72ac03da8fd36ce4c42da780"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_primary_mediumplus_analysis_input.csv",
+      "sha256": "6f4a3f771ea6a94aa63fdaa262f8a2927ac45bc184a6fc4ede7c689c0d9d0c85"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_primary_phylofill_model_ranking.csv",
+      "sha256": "5eb1cd7b4eb91d1fbc66f89e48d9e6554af0832a72ac03da8fd36ce4c42da780"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_primary_phylofill_analysis_input.csv",
+      "sha256": "6f4a3f771ea6a94aa63fdaa262f8a2927ac45bc184a6fc4ede7c689c0d9d0c85"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_primary_strict_body_model_ranking.csv",
+      "sha256": "a9e8525d0211a94b4d1f5934e7e7bc4363c572de20e72f125c778a2d9269b4f9"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ectopic_primary_strict_body_analysis_input.csv",
+      "sha256": "9ba56d96c972e993206fc4832d672146e0ac8305fabb620b705bbad52fc92d6d"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ltr_history_primary_mediumplus_model_ranking.csv",
+      "sha256": "cad4ebe8f4e78c1556ae951628e3b4284bdf88a58a4d4558b238cc232efadb25"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ltr_history_primary_mediumplus_analysis_input.csv",
+      "sha256": "38c8a9abc4257d7b1fd65be3bf09c477c3601e60871295c2e01ad1890fa7f559"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ltr_history_primary_strict_body_model_ranking.csv",
+      "sha256": "11f95c99eccc51efbb171edce8cc38074e9099be289b0ac7a13948b629f6c3e8"
+    },
+    {
+      "path": "path_analysis/results/te_genome_ltr_history_primary_strict_body_analysis_input.csv",
+      "sha256": "188f6a80a19450497e8a452b54b8ccdf7d0a45511cb58759007e27a4b6ae16df"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_model_ranking.csv",
+      "sha256": "54fb2422a0930642c1bf60a9e57f513a6c3b05aaeee378d9f6e919811f08a693"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_analysis_input.csv",
+      "sha256": "54e273ed217e76bae4408d9417db0dbce5ff3bebca5af06713327e232175d555"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_primary_mediumplus_model_ranking.csv",
+      "sha256": "bd68bc19d5afb027baa105d53e5845981bca6b32703616cf93e5d74ed117792c"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_primary_mediumplus_analysis_input.csv",
+      "sha256": "3be28ef13c5f25aa7e345fbadad0db8dd6ddd9ae96340f3ce26c2ef9198466c9"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_primary_phylofill_model_ranking.csv",
+      "sha256": "bd68bc19d5afb027baa105d53e5845981bca6b32703616cf93e5d74ed117792c"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_primary_phylofill_analysis_input.csv",
+      "sha256": "3be28ef13c5f25aa7e345fbadad0db8dd6ddd9ae96340f3ce26c2ef9198466c9"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_primary_strict_body_model_ranking.csv",
+      "sha256": "31fe116f9fc4a4f3f78034a93cd604506667671a0cc1a1d02ed46fe361bf931e"
+    },
+    {
+      "path": "path_analysis/results/te_genome_morphology_primary_strict_body_analysis_input.csv",
+      "sha256": "14baf62b8ddef41abc516262000d5dcce92574c21a1f34696c1113133cf9c434"
+    },
+    {
+      "path": "path_analysis/results/te_genome_organismal_primary_mediumplus_model_ranking.csv",
+      "sha256": "b98e8cb92824575f131d3f53c456f312a51d004345a7b171e30857544fd93f20"
+    },
+    {
+      "path": "path_analysis/results/te_genome_organismal_primary_mediumplus_analysis_input.csv",
+      "sha256": "26945c1e05252b9299a8620f7a619a2a445f062680b9a8a724f79875fa76f5ee"
+    },
+    {
+      "path": "path_analysis/results/te_genome_organismal_primary_phylofill_model_ranking.csv",
+      "sha256": "b98e8cb92824575f131d3f53c456f312a51d004345a7b171e30857544fd93f20"
+    },
+    {
+      "path": "path_analysis/results/te_genome_organismal_primary_phylofill_analysis_input.csv",
+      "sha256": "26945c1e05252b9299a8620f7a619a2a445f062680b9a8a724f79875fa76f5ee"
+    },
+    {
+      "path": "path_analysis/results/te_genome_organismal_primary_strict_body_model_ranking.csv",
+      "sha256": "8234b237569192d146dd0cbf7fd7d0e0406631290a2c35beee71fff8e6802bbf"
+    },
+    {
+      "path": "path_analysis/results/te_genome_organismal_primary_strict_body_analysis_input.csv",
+      "sha256": "a78c650d085cc8126875ee853f4729149c1ff8edf306be3625d33783298479c5"
+    },
+    {
+      "path": "path_analysis/results/te_genome_primary_mediumplus_model_ranking.csv",
+      "sha256": "70b4d32a0bdf6646826affb18dc53810c443a27ebfea6d85cee41ee3d2cf7c0d"
+    },
+    {
+      "path": "path_analysis/results/te_genome_primary_mediumplus_analysis_input.csv",
+      "sha256": "732ca238d0cb221e81bf3ed00b2fba556cb8f0245114db240588aa4dbf936980"
+    },
+    {
+      "path": "path_analysis/results/te_genome_primary_phylofill_model_ranking.csv",
+      "sha256": "70b4d32a0bdf6646826affb18dc53810c443a27ebfea6d85cee41ee3d2cf7c0d"
+    },
+    {
+      "path": "path_analysis/results/te_genome_primary_phylofill_analysis_input.csv",
+      "sha256": "732ca238d0cb221e81bf3ed00b2fba556cb8f0245114db240588aa4dbf936980"
+    },
+    {
+      "path": "path_analysis/results/te_genome_primary_strict_body_model_ranking.csv",
+      "sha256": "7e3003849772cf72c6bc7e8f5e50f53f7cdb4e14f4766f4721c84511de87abae"
+    },
+    {
+      "path": "path_analysis/results/te_genome_primary_strict_body_analysis_input.csv",
+      "sha256": "3e81e9494363c92228d064dbcb74900c363735abe0c33b64e909e7b996bd3342"
+    }
+  ]
+}

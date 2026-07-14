@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the frozen, image-quality-matched nuclear-IOD analysis notebook."""
+"""Build the canonical image-quality-matched genome-size review notebook."""
 
 from __future__ import annotations
 
@@ -15,6 +15,28 @@ from scipy.stats import ks_2samp, spearmanr, trim_mean
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+REVIEW_DATA_DIR = PROJECT_ROOT / "results" / "data" / "research_review"
+REVIEW_FIGURE_DIR = PROJECT_ROOT / "results" / "figures" / "research_review"
+FROZEN_REGISTRY_PATH = REVIEW_DATA_DIR / "frozen_input_registry.csv"
+
+
+def resolve_portable_artifact(source: Path) -> Path:
+    """Use a hashed review snapshot when an ignored upstream source is absent."""
+
+    if source.exists() or not FROZEN_REGISTRY_PATH.exists():
+        return source
+    try:
+        source_relative = str(source.resolve().relative_to(PROJECT_ROOT))
+    except ValueError:
+        return source
+    registry = pd.read_csv(FROZEN_REGISTRY_PATH)
+    match = registry.loc[registry["source_path"].eq(source_relative), "frozen_path"]
+    if match.empty:
+        return source
+    frozen = PROJECT_ROOT / str(match.iloc[0])
+    return frozen if frozen.exists() else source
+
+
 SOURCE_DIR = (
     PROJECT_ROOT
     / "path_analysis"
@@ -23,22 +45,40 @@ SOURCE_DIR = (
     / "derived"
     / "image_quality_matched_genome_iod"
 )
-FROZEN_PATH = SOURCE_DIR / "image_quality_matched_nuclei_frozen_reviewed.csv.gz"
-MATCH_MANIFEST_PATH = SOURCE_DIR / "manifest.json"
-DECISION_PATHS = [
-    PROJECT_ROOT / "image_quality_matched_all_species_decisions.csv",
-    PROJECT_ROOT / "image_quality_matched_replacement_review_decisions.csv",
-]
-REPORT_DIR = (
-    PROJECT_ROOT
-    / "notebooks"
-    / "presentation"
-    / "frozen_genome_iod_analysis"
+SOURCE_FROZEN_PATH = (
+    SOURCE_DIR / "finalized_quality_matched_nuclei_all_reviewed_species.csv.gz"
 )
-NOTEBOOK_PATH = REPORT_DIR / "frozen_genome_iod_analysis.ipynb"
-EXECUTED_NOTEBOOK_PATH = REPORT_DIR / "frozen_genome_iod_analysis.executed.ipynb"
-FIGURE_DIR = REPORT_DIR / "figures"
-HTML_PATH = REPORT_DIR / "index.html"
+SOURCE_MATCH_MANIFEST_PATH = (
+    PROJECT_ROOT
+    / "path_analysis"
+    / "data"
+    / "external"
+    / "derived"
+    / "microscopy_review_finalization_20260714.json"
+)
+FROZEN_PATH = resolve_portable_artifact(SOURCE_FROZEN_PATH)
+MATCH_MANIFEST_PATH = resolve_portable_artifact(SOURCE_MATCH_MANIFEST_PATH)
+DECISION_PATHS = [
+    resolve_portable_artifact(
+        PROJECT_ROOT / "image_quality_matched_all_species_decisions.csv"
+    ),
+    resolve_portable_artifact(
+        PROJECT_ROOT / "image_quality_matched_replacement_review_decisions.csv"
+    ),
+    resolve_portable_artifact(
+        PROJECT_ROOT
+        / "input_data"
+        / "specimen_slides"
+        / "image_quality_matched_review_extension_20260714_decisions_aeneus_wrighti_orestes_ochrophaeus.csv"
+    ),
+]
+REPORT_DIR = REVIEW_DATA_DIR / "genome_size_estimation"
+FIGURE_DIR = REVIEW_FIGURE_DIR / "genome_size_estimation"
+NOTEBOOK_PATH = (
+    PROJECT_ROOT / "notebooks" / "research_review" / "06_genome_size_estimation.ipynb"
+)
+# The canonical notebook is executed in place; a second rendered copy adds no information.
+EXECUTED_NOTEBOOK_PATH = NOTEBOOK_PATH
 SPECIES_SUMMARY_PATH = REPORT_DIR / "species_relative_genome_iod_summary.csv"
 IMAGE_SUMMARY_PATH = REPORT_DIR / "image_relative_genome_iod_summary.csv"
 QUALITY_BALANCE_PATH = REPORT_DIR / "frozen_quality_balance.csv"
@@ -52,6 +92,7 @@ MATCH_FEATURES = [
 REFERENCE_SPECIES = "D. fuscus"
 REFERENCE_GENOME_SIZE_PG = 16.36
 CALIBRATION_KIND = "D. fuscus-anchored nuclear-IOD ratio"
+PRIOR_MINIMUM_NUCLEI_PER_SPECIES = 30
 
 
 def sha256_file(path: Path) -> str:
@@ -185,7 +226,15 @@ def summarize_species(
                 if group["filename"].nunique() == 1
                 else "multiple_observed_images"
             ),
+            "sample_size_support": (
+                "below_prior_minimum_30"
+                if len(group) < PRIOR_MINIMUM_NUCLEI_PER_SPECIES
+                else "meets_prior_minimum_30"
+            ),
         }
+        if "quality_match_status" in group.columns:
+            statuses = sorted(group["quality_match_status"].dropna().astype(str).unique())
+            row["quality_match_status"] = ";".join(statuses)
         row["pooled_median_difference_pct"] = float(
             100.0 * (row["iod_pooled_nucleus_median"] / estimate - 1.0)
         )
@@ -325,6 +374,7 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     frozen = pd.read_csv(FROZEN_PATH, low_memory=False)
     match_manifest = json.loads(MATCH_MANIFEST_PATH.read_text())
+    iod_release = match_manifest.get("iod", {})
     decisions = load_latest_decisions()
 
     frozen_keys = set(
@@ -343,16 +393,18 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
     )
     rejected_leaks = frozen_keys & rejected_keys
     counts = frozen.groupby("species").size()
-    if match_manifest.get("freeze_status") != "frozen_reviewed_only_no_further_replacement":
-        raise ValueError("Source panel is not marked frozen.")
+    if match_manifest.get("status") != "finalized_reviewed_keeps_only":
+        raise ValueError("Source panel is not a finalized reviewed-keeps release.")
+    if iod_release.get("output_sha256") != sha256_file(FROZEN_PATH):
+        raise ValueError("Finalized IOD source hash does not match its release manifest.")
     if not frozen["review_status"].eq("reviewed_keep").all():
         raise ValueError("Frozen panel contains a nucleus that was not reviewed keep.")
     if frozen.duplicated(["species", "review_key"]).any():
         raise ValueError("Frozen panel contains duplicate review keys.")
     if rejected_leaks:
         raise ValueError(f"Rejected nuclei leaked into frozen panel: {len(rejected_leaks)}")
-    if counts.min() < 30:
-        raise ValueError("At least one primary species has fewer than 30 reviewed nuclei.")
+    if counts.min() < 1:
+        raise ValueError("Every measured species must retain at least one reviewed nucleus.")
 
     species_summary, image_summary = summarize_species(
         frozen, n_bootstrap=n_bootstrap
@@ -374,7 +426,7 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
         .max()
     )
     manifest: dict[str, Any] = {
-        "analysis": "Frozen image-quality-matched fuscus-anchored genome-size analysis",
+        "analysis": "Finalized image-quality-matched fuscus-anchored genome-size analysis",
         "frozen_source_csv": str(FROZEN_PATH.resolve()),
         "frozen_source_sha256": sha256_file(FROZEN_PATH),
         "source_match_manifest": str(MATCH_MANIFEST_PATH.resolve()),
@@ -383,12 +435,28 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
         "decision_file_sha256": {
             str(path.resolve()): sha256_file(path) for path in DECISION_PATHS
         },
+        "n_finalized_nuclei": int(len(frozen)),
         "n_frozen_nuclei": int(len(frozen)),
-        "n_primary_species": int(frozen["species"].nunique()),
+        "n_measured_species": int(frozen["species"].nunique()),
+        "n_primary_species": int(len(species_summary)),
         "n_images": int(frozen["filename"].nunique()),
         "n_specimens": int(frozen["specimen_group"].nunique()),
         "minimum_nuclei_per_species": int(counts.min()),
         "maximum_nuclei_per_species": int(counts.max()),
+        "prior_minimum_nuclei_per_species": PRIOR_MINIMUM_NUCLEI_PER_SPECIES,
+        "species_below_prior_minimum_30": {
+            str(species): int(count)
+            for species, count in counts.loc[
+                counts.lt(PRIOR_MINIMUM_NUCLEI_PER_SPECIES)
+            ].items()
+        },
+        "reduced_sample_sizes_allowed": True,
+        "limited_overlap_species": sorted(
+            species_summary.loc[
+                species_summary["quality_match_status"].eq("limited_overlap"),
+                "species",
+            ].tolist()
+        ),
         "n_rejected_nuclei_leaked": int(len(rejected_leaks)),
         "primary_estimator": "mean across image-specific median nuclear IOD values",
         "bootstrap": {
@@ -421,7 +489,9 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
             ),
             "anchor_uncertainty_included": False,
         },
-        "relative_index_anchor": "median of the 20 species equal-image IOD estimates",
+        "relative_index_anchor": (
+            f"median of the {len(species_summary)} measured-species equal-image IOD estimates"
+        ),
         "relative_index_anchor_iod": float(
             species_summary["relative_iod_anchor"].iloc[0]
         ),
@@ -462,17 +532,19 @@ def build_analysis_outputs(*, n_bootstrap: int = 2_000) -> dict[str, Any]:
             "to D. fuscus = 16.36 pg. They are image-IOD-derived estimates, not "
             "independent direct C-value measurements."
         ),
-        "limited_overlap_species_excluded_from_primary": match_manifest.get(
-            "limited_overlap_species", []
+        "limited_overlap_species_included_in_analysis": sorted(
+            species_summary.loc[
+                species_summary["quality_match_status"].eq("limited_overlap"),
+                "species",
+            ].tolist()
         ),
+        "all_finalized_species_included_in_analysis": True,
         "outputs": {
             "species_summary_csv": str(SPECIES_SUMMARY_PATH.resolve()),
             "image_summary_csv": str(IMAGE_SUMMARY_PATH.resolve()),
             "quality_balance_csv": str(QUALITY_BALANCE_PATH.resolve()),
             "quality_residual_csv": str(QUALITY_RESIDUAL_PATH.resolve()),
-            "source_notebook": str(NOTEBOOK_PATH.resolve()),
-            "executed_notebook": str(EXECUTED_NOTEBOOK_PATH.resolve()),
-            "html": str(HTML_PATH.resolve()),
+            "canonical_notebook": str(NOTEBOOK_PATH.resolve()),
         },
     }
     ANALYSIS_MANIFEST_PATH.write_text(
@@ -511,10 +583,11 @@ def build_notebook() -> Any:
     nb.cells = [
         md(
             """
-            # Frozen Quality-Matched Genome-Size Analysis
+            # Finalized Quality-Matched Genome-Size Analysis
 
             This notebook analyzes every nucleus in the final reviewed panel:
-            721 manually accepted nuclei from 20 species. The primary estimator
+            805 manually accepted nuclei from 24 species. Observed reviewed
+            counts are retained rather than forcing equal sample sizes. The primary estimator
             is the mean of the image-specific median IOD values, giving every
             observed image/specimen equal weight.
 
@@ -527,7 +600,7 @@ def build_notebook() -> Any:
             imaged with these samples.
             """
         ),
-        md("## Exact frozen inputs and analysis setup"),
+        md("## Exact finalized inputs and analysis setup"),
         code(
             r'''
 from pathlib import Path
@@ -552,6 +625,27 @@ def find_project_root(start=None) -> Path:
 PROJECT_ROOT = find_project_root()
 sys.path.insert(0, str(PROJECT_ROOT / "path_analysis" / "scripts"))
 import build_frozen_genome_iod_notebook as analysis
+
+REVIEW_DATA_DIR = PROJECT_ROOT / "results/data/research_review"
+FROZEN_REGISTRY_PATH = REVIEW_DATA_DIR / "frozen_input_registry.csv"
+if not FROZEN_REGISTRY_PATH.exists():
+    raise FileNotFoundError(
+        f"Portable dependency registry missing: {FROZEN_REGISTRY_PATH}. "
+        "Rebuild the research-review notebooks first."
+    )
+frozen_registry = pd.read_csv(FROZEN_REGISTRY_PATH)
+required_registry_columns = {"source_path", "frozen_path", "source_sha256", "frozen_sha256"}
+if not required_registry_columns.issubset(frozen_registry.columns):
+    raise RuntimeError("Frozen dependency registry schema is incomplete")
+if not frozen_registry.source_sha256.eq(frozen_registry.frozen_sha256).all():
+    raise RuntimeError("Frozen dependency registry contains a source/snapshot hash mismatch")
+FROZEN_ARTIFACTS = dict(zip(frozen_registry.source_path, frozen_registry.frozen_path))
+
+def resolve_artifact(relative):
+    path = Path(relative)
+    if path.is_absolute():
+        return path
+    return PROJECT_ROOT / FROZEN_ARTIFACTS.get(str(relative), str(relative))
 
 FROZEN_PATH = analysis.FROZEN_PATH
 MATCH_MANIFEST_PATH = analysis.MATCH_MANIFEST_PATH
@@ -597,8 +691,8 @@ def save_figure(fig, filename):
     return path
 
 
-print("Frozen source:", FROZEN_PATH)
-print("Frozen SHA-256:", analysis.sha256_file(FROZEN_PATH))
+print("Finalized source:", FROZEN_PATH)
+print("Finalized SHA-256:", analysis.sha256_file(FROZEN_PATH))
 print("Rows:", len(frozen), "| Species:", frozen["species"].nunique())
 print(
     "Genome-size calibration:",
@@ -610,11 +704,13 @@ print("Calibration factor (pg per IOD unit):", round(calibration_factor, 7))
         ),
         md(
             """
-            ## Freeze and source audit
+            ## Finalization and source audit
 
             These checks are hard failures: all rows must be reviewed keeps,
-            no rejected key can appear, every species must retain at least 30
-            nuclei, and the source manifest must mark the panel frozen.
+            no rejected key can appear, every species must retain at least one
+            reviewed nucleus, and the source manifest must identify the
+            reviewed-keeps release. Counts below the former 30-nucleus gate are
+            retained and visibly flagged so uncertainty reflects the available data.
             """
         ),
         code(
@@ -632,7 +728,7 @@ frozen_keys = set(map(
 counts = frozen.groupby("species").size()
 audit = pd.DataFrame({
     "check": [
-        "manifest freeze status",
+        "finalization status",
         "reviewed nuclei",
         "primary species",
         "images/specimens",
@@ -643,7 +739,7 @@ audit = pd.DataFrame({
         "all rows explicitly reviewed keep",
     ],
     "value": [
-        match_manifest["freeze_status"],
+        match_manifest["status"],
         len(frozen),
         frozen["species"].nunique(),
         f'{frozen["filename"].nunique()} / {frozen["specimen_group"].nunique()}',
@@ -655,11 +751,18 @@ audit = pd.DataFrame({
     ],
 })
 display(audit)
-assert match_manifest["freeze_status"] == "frozen_reviewed_only_no_further_replacement"
+assert match_manifest["status"] == "finalized_reviewed_keeps_only"
+assert match_manifest["iod"]["output_sha256"] == analysis.sha256_file(FROZEN_PATH)
 assert frozen.duplicated(["species", "review_key"]).sum() == 0
 assert not (frozen_keys & problem_keys)
 assert frozen["review_status"].eq("reviewed_keep").all()
-assert counts.min() >= 30
+assert counts.min() >= 1
+display(
+    counts.loc[counts.lt(analysis.PRIOR_MINIMUM_NUCLEI_PER_SPECIES)]
+    .rename("reviewed_nuclei")
+    .to_frame()
+    .assign(status="retained_below_prior_minimum_30")
+)
 '''
         ),
         md("## Complete species-level results"),
@@ -671,6 +774,8 @@ summary_columns = [
     "n_nuclei",
     "n_images",
     "n_specimens",
+    "sample_size_support",
+    "quality_match_status",
     "iod_equal_image_estimate",
     "iod_equal_image_ci_low",
     "iod_equal_image_ci_high",
@@ -718,12 +823,12 @@ display(
         ),
         md(
             """
-            ## All 721 raw nuclei
+            ## All 805 reviewed nuclei
 
             Every accepted nucleus is included below. IOD, its two algebraic
             components, image identity, and the two matching-quality features
-            are visible. The frozen source download retains all 189 provenance
-            and QC columns.
+            are visible. The finalized source download retains the complete
+            provenance and QC schema.
             """
         ),
         code(
@@ -745,12 +850,9 @@ raw_columns = [
 raw_display = frozen[raw_columns].sort_values(
     ["species", "filename", "nuc_iod"], kind="mergesort"
 )
-relative_source_link = (
-    "../../../path_analysis/data/external/derived/image_quality_matched_genome_iod/"
-    "image_quality_matched_nuclei_frozen_reviewed.csv.gz"
-)
+relative_source_link = "../../" + str(FROZEN_PATH.relative_to(PROJECT_ROOT))
 display(HTML(
-    f'<p><a href="{relative_source_link}">Download the complete frozen 189-column CSV</a></p>'
+    f'<p><a href="{relative_source_link}">Download the complete finalized reviewed CSV</a></p>'
     '<div style="max-height:620px;overflow:auto;border:1px solid #ccd3da;padding:4px">'
     + raw_display.to_html(index=False, float_format=lambda value: f"{value:.5f}")
     + "</div>"
@@ -834,12 +936,13 @@ plt.show()
             """
             ## Measured-only time-calibrated phylogeny
 
-            This panel includes all 21 species in the frozen literal-largest
+            This panel includes all 24 species in the finalized literal-largest
             cell panel. Every species has observed cell and corresponding
             nucleus distributions. Fuscus-anchored genome-size estimates in pg
-            are shown for the 20 common-support species; *D. ochrophaeus* is
-            retained with its observed size data and an explicitly empty genome
-            slot because its image-quality overlap was limited. Every violin is
+            are available for all 24 species, and all 24 are retained in the
+            analysis. *D. aeneus*, *D. ochrophaeus*, and *D. wrighti* are
+            flagged as limited-overlap quality matches so their observed sample
+            sizes and uncertainty can be interpreted explicitly. Every violin is
             a bootstrap distribution of the plotted estimator, and no species
             is filled by phylogenetic imputation.
             """
@@ -867,8 +970,8 @@ display(pd.read_csv(phylogeny_correlation_path))
             nucleotypic expectation, but they are descriptive rather than
             causal: the calibrated genome estimate is derived from IOD, which
             contains nuclear area algebraically; the size panel is an upper-tail
-            top-50 estimand; and shared ancestry is not corrected in these
-            correlations.
+            estimand with observed reviewed counts; and the fitted associations
+            use Pagel-λ PGLS on the time-calibrated phylogeny.
             """
         ),
         code(
@@ -1142,8 +1245,9 @@ image/specimen, so their interval cannot measure between-image variation.</p>
             """
             ## Conclusions and next validation step
 
-            1. The frozen panel provides **fuscus-anchored genome-size estimates
-               in pg** across the 20 image-quality-compatible species.
+            1. The finalized panel provides **fuscus-anchored genome-size estimates
+               in pg** for all 24 measured species, and all 24 are included in
+               the genome comparisons.
             2. Equal-image weighting is the primary estimate because it avoids
                letting images with more accepted nuclei dominate.
             3. The raw values, image-specific medians, bootstrap intervals,
@@ -1158,16 +1262,18 @@ image/specimen, so their interval cannot measure between-image variation.</p>
                DNA-content standard processed with the same staining and
                imaging protocol; changing the assumed reference value rescales
                every species proportionally.
-            6. *D. ochrophaeus* remains excluded from the primary comparison
-               because its technical image-quality distribution had limited
-               overlap; it belongs only in a labeled sensitivity analysis.
+            6. *D. aeneus*, *D. ochrophaeus*, and *D. wrighti* retain limited-overlap
+               quality flags and their observed nucleus counts are reported, but
+               they are included in the analysis with the other 21 species.
             """
         ),
         md("## Reproducibility and exported files"),
         code(
             r'''
 exports = pd.DataFrame([
-    {"artifact": "Frozen 721-nucleus source", "path": str(analysis.FROZEN_PATH)},
+    {"artifact": "Genome-size analysis source", "path": "path_analysis/scripts/build_frozen_genome_iod_notebook.py"},
+    {"artifact": "Tree/pairwise figure source", "path": "path_analysis/scripts/build_frozen_genome_iod_phylogeny_figure.py"},
+    {"artifact": "Finalized 805-nucleus source", "path": str(analysis.FROZEN_PATH)},
     {"artifact": "Species result table", "path": str(analysis.SPECIES_SUMMARY_PATH)},
     {"artifact": "Image result table", "path": str(analysis.IMAGE_SUMMARY_PATH)},
     {"artifact": "Frozen quality balance", "path": str(analysis.QUALITY_BALANCE_PATH)},
@@ -1177,32 +1283,16 @@ exports = pd.DataFrame([
     {"artifact": "Measured phylogeny source table", "path": str(analysis.REPORT_DIR / "phylogeny_genome_nucleus_cell_summary.csv")},
     {"artifact": "Measured phylogeny correlation table", "path": str(analysis.REPORT_DIR / "phylogeny_genome_nucleus_cell_correlations.csv")},
     {"artifact": "Analysis manifest", "path": str(analysis.ANALYSIS_MANIFEST_PATH)},
-    {"artifact": "Executed notebook", "path": str(analysis.EXECUTED_NOTEBOOK_PATH)},
-    {"artifact": "Rendered HTML", "path": str(analysis.HTML_PATH)},
+    {"artifact": "Canonical executed notebook", "path": str(analysis.NOTEBOOK_PATH)},
 ])
 display(exports)
-print("Build source notebook:")
-print("  uv run python path_analysis/scripts/build_frozen_genome_iod_notebook.py")
-print("Build measured phylogeny figure:")
+print("Rebuild all eight lightweight notebook sources and genome-size artifacts:")
+print("  scripts/run_in_dusky.sh python scripts/processing/build_research_review_notebooks.py")
+print("Execute this canonical notebook in place:")
 print(
-    "  uv run --with biopython python "
-    "path_analysis/scripts/build_frozen_genome_iod_phylogeny_figure.py"
-)
-print("Execute notebook:")
-print(
-    "  uv run jupyter nbconvert --to notebook --execute "
-    "notebooks/presentation/frozen_genome_iod_analysis/frozen_genome_iod_analysis.ipynb "
-    "--output frozen_genome_iod_analysis.executed.ipynb "
-    "--output-dir notebooks/presentation/frozen_genome_iod_analysis "
-    "--ExecutePreprocessor.timeout=300"
-)
-print("Render HTML:")
-print(
-    "  uv run jupyter nbconvert --to html "
-    "notebooks/presentation/frozen_genome_iod_analysis/"
-    "frozen_genome_iod_analysis.executed.ipynb "
-    "--output index.html "
-    "--output-dir notebooks/presentation/frozen_genome_iod_analysis"
+    "  scripts/run_in_dusky.sh jupyter nbconvert --to notebook --execute "
+    "notebooks/research_review/06_genome_size_estimation.ipynb --inplace "
+    "--ExecutePreprocessor.timeout=600"
 )
 '''
         ),
@@ -1221,9 +1311,7 @@ def write_notebook() -> None:
 def finalize_manifest() -> dict[str, Any]:
     manifest = json.loads(ANALYSIS_MANIFEST_PATH.read_text())
     for label, path in [
-        ("source_notebook", NOTEBOOK_PATH),
-        ("executed_notebook", EXECUTED_NOTEBOOK_PATH),
-        ("html", HTML_PATH),
+        ("canonical_notebook", NOTEBOOK_PATH),
         ("species_summary_csv", SPECIES_SUMMARY_PATH),
         ("image_summary_csv", IMAGE_SUMMARY_PATH),
         ("quality_balance_csv", QUALITY_BALANCE_PATH),

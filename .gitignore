@@ -49,8 +49,14 @@ venv/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
+# Local browser/test-runner state
+.playwright-cli/
+test-results/
+
 # Exploratory notebooks (keep in scripts but don't track)
 *.ipynb
+# The eight executed collaborator-review notebooks are release artifacts.
+!notebooks/research_review/*.ipynb
 
 ##### LARGE DATA / BIOINFORMATICS FORMATS #####
 # Generally ignore large sequence/alignment/compressed files everywhere
@@ -85,15 +91,37 @@ venv/
 
 ##### PROJECT STRUCTURE SPECIFIC #####
 
-# Ignore all contents of the main data/results directories
-# NO exceptions below this line for these directories
+# Ignore all contents of the main data/results directories by default.
 input_data/
 interim/
 results/
 
+# Ship the compact, frozen collaborator-review bundle without exposing the
+# expensive upstream result tree. Re-ignore every sibling after reopening the
+# parent directories required by git's ignore traversal.
+!results/
+results/*
+!results/data/
+results/data/*
+!results/data/research_review/
+!results/data/research_review/**
+!results/figures/
+results/figures/*
+!results/figures/research_review/
+!results/figures/research_review/**
+
 # Keep local literature/source PDFs out of git while retaining their hashes in
 # the path-analysis source inventory.
 path_analysis/data/external/raw/*.pdf
+
+# Interactive review galleries contain thousands of regenerable crop/mask
+# thumbnails. Keep them available locally, but commit their builders, compact
+# review decisions, summaries, and frozen collaborator tables instead.
+path_analysis/data/external/derived/**/*viewer*/
+
+# Legacy scaffold/model outputs are reproducible and superseded by the
+# canonical collaborator bundle under results/{data,figures}/research_review/.
+path_analysis/results/
 
 # Note: Core files like README.md, Dusky.yml, .gitignore in the root,
 # and all files within the scripts/ directory ARE tracked by default

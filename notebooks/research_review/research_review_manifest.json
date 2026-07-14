@@ -1,0 +1,645 @@
+{
+  "schema_version": 1,
+  "analysis_id": "Desmognathus_research_review_notebooks_v1",
+  "audited_at_utc": "2026-07-14T19:41:29.541062+00:00",
+  "status": "pass",
+  "audit_scope": "Static integrity audit of executed notebook code/output, optional local HTML review surfaces, and portable review figures; no notebook or upstream tool was run.",
+  "gates": {
+    "expected_notebook_set_complete": true,
+    "no_unexpected_notebooks": true,
+    "all_code_cells_executed": true,
+    "no_error_outputs": true,
+    "no_expensive_or_external_execution_detected_in_code": true,
+    "optional_viewer_availability_recorded": true,
+    "notebook_sha256_recorded": true,
+    "review_figures_present": true,
+    "figure_sha256_recorded": true
+  },
+  "expensive_upstream_tools_executed": false,
+  "expensive_upstream_execution_detection_scope": "notebook code cells",
+  "forbidden_execution_evidence": [],
+  "notebooks": {
+    "01_phylogeny_tree_trimming.ipynb": {
+      "path": "notebooks/research_review/01_phylogeny_tree_trimming.ipynb",
+      "sha256": "76bbfc6e39affc1ae94a25ae9b4288ef2c09b63ae018baf7aedc5e7898b89590",
+      "size_bytes": 1437194,
+      "n_cells": 9,
+      "n_code_cells": 4,
+      "n_markdown_cells": 5,
+      "n_outputs": 12,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "02_data_tables_and_provenance.ipynb": {
+      "path": "notebooks/research_review/02_data_tables_and_provenance.ipynb",
+      "sha256": "f3c8f548d8abb241186916b8c9ac8f0a83ca96a3e1e301a347c095c75137cbb9",
+      "size_bytes": 911945,
+      "n_cells": 14,
+      "n_code_cells": 7,
+      "n_markdown_cells": 7,
+      "n_outputs": 14,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "03_repeat_analysis_te34.ipynb": {
+      "path": "notebooks/research_review/03_repeat_analysis_te34.ipynb",
+      "sha256": "3ad676b53e322e7ca382c2193e7fb29b5279355abb53fda7317565f6be4e87f1",
+      "size_bytes": 5806426,
+      "n_cells": 21,
+      "n_code_cells": 10,
+      "n_markdown_cells": 11,
+      "n_outputs": 37,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "04_ltr_deletion_footprint.ipynb": {
+      "path": "notebooks/research_review/04_ltr_deletion_footprint.ipynb",
+      "sha256": "417b7195e27524649db6c3a6d3bae7cb276c87c6f34247740333e3e2d4cb3d10",
+      "size_bytes": 2083190,
+      "n_cells": 13,
+      "n_code_cells": 6,
+      "n_markdown_cells": 7,
+      "n_outputs": 14,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "05_cell_modeling_and_measurement.ipynb": {
+      "path": "notebooks/research_review/05_cell_modeling_and_measurement.ipynb",
+      "sha256": "b89b77789bdf8b6242973d27d989df2859c86afaa9bd2d7320addb7c27c86754",
+      "size_bytes": 4838782,
+      "n_cells": 16,
+      "n_code_cells": 8,
+      "n_markdown_cells": 8,
+      "n_outputs": 20,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "06_genome_size_estimation.ipynb": {
+      "path": "notebooks/research_review/06_genome_size_estimation.ipynb",
+      "sha256": "8ebb8df54deaa68fc205bbb2162a0afc269c958dcbd5b8d4c137a007dd6006d8",
+      "size_bytes": 3638997,
+      "n_cells": 30,
+      "n_code_cells": 14,
+      "n_markdown_cells": 16,
+      "n_outputs": 26,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "07_cell_nucleus_genome_path_analysis.ipynb": {
+      "path": "notebooks/research_review/07_cell_nucleus_genome_path_analysis.ipynb",
+      "sha256": "0d5894aa1249bf296ee675154f0c8897a0004182b379cb9cead18285cb8fa4c6",
+      "size_bytes": 3075963,
+      "n_cells": 31,
+      "n_code_cells": 12,
+      "n_markdown_cells": 19,
+      "n_outputs": 45,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    },
+    "08_integrated_phylogenetic_path_analysis.ipynb": {
+      "path": "notebooks/research_review/08_integrated_phylogenetic_path_analysis.ipynb",
+      "sha256": "4c5dbcac1a2b7015410b3a3da896337e61251d2f6b21592b913ffbb880d91753",
+      "size_bytes": 2484345,
+      "n_cells": 14,
+      "n_code_cells": 7,
+      "n_markdown_cells": 7,
+      "n_outputs": 20,
+      "all_code_cells_executed": true,
+      "n_error_outputs": 0,
+      "forbidden_execution_findings": [],
+      "kernel_name": "python3",
+      "status": "pass"
+    }
+  },
+  "optional_viewer_html": [
+    {
+      "path": "../cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/linkage/index.html",
+      "sha256": "f3c5950be1a8906c85252ef2bd7289740355e8b229989739df03d8fdda386835",
+      "size_bytes": 9295
+    },
+    {
+      "path": "../cellprofiler_test/output/tile_annotation_bundle_v1/index.html",
+      "sha256": "ec9bd1dfd94ba795dc1b647664b2f9009370d6e8b7b1ecac94d3378998c64a98",
+      "size_bytes": 45254
+    },
+    {
+      "path": "../cellprofiler_test/output/tile_bootstrap_review_v1/index.html",
+      "sha256": "3d711a04b0c81dda52a69a570d741bf76448803fe22202b178d62cf1289fa19b",
+      "size_bytes": 23061
+    },
+    {
+      "path": "../cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/linked_species_stats_reviewed/index.html",
+      "sha256": "278bc751b21b1ad1aa5905734afcbdbadea4e006d81a7e9b82fa95086df4eba8",
+      "size_bytes": 29979
+    },
+    {
+      "path": "../cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/phylogenetic_analysis/index.html",
+      "sha256": "98e79f6e76b85a3fef3302fed80e8fa076780245bdfb244e23c3c77f6900337a",
+      "size_bytes": 8851
+    },
+    {
+      "path": "../cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/integrated_multinode_phylo/index.html",
+      "sha256": "116c44a114ae24b2a6c5601dcc5871c1ace217b09b33b1964e0e5f6b9dc1bb53",
+      "size_bytes": 9566
+    }
+  ],
+  "optional_viewer_html_missing": [],
+  "figure_outputs": [
+    {
+      "path": "results/figures/research_review/analysis18_pipeline_evidence_streams_v1.pdf",
+      "sha256": "485679c4c8da2aa14fc1ba3200ca41ead99cf247072928147c256d76a771e3c6",
+      "size_bytes": 18585
+    },
+    {
+      "path": "results/figures/research_review/analysis18_pipeline_evidence_streams_v1.png",
+      "sha256": "d13765f7086648537a6e9916d313505e01fcba58f50802b879d3b93926c0464f",
+      "size_bytes": 183838
+    },
+    {
+      "path": "results/figures/research_review/assembly_quality_te34_v1.pdf",
+      "sha256": "d0636d19bd86f7db313810db119fe3acd2ea7f83222632955c3a76d5f7392128",
+      "size_bytes": 9066
+    },
+    {
+      "path": "results/figures/research_review/assembly_quality_te34_v1.png",
+      "sha256": "8bde0751ebc8a97ddea68b08eed1a2e27f03f9f3e479510ff213c8d4ef86a383",
+      "size_bytes": 802204
+    },
+    {
+      "path": "results/figures/research_review/cell21_cell_nucleus_relative_iod_v1.png",
+      "sha256": "4157bf23c621754c3c29fe8c120166648dd27c2f8a29320bbd7fd1e6fa2663c9",
+      "size_bytes": 200853
+    },
+    {
+      "path": "results/figures/research_review/cell_mask_examples_analysis18_v1.pdf",
+      "sha256": "4449bd5d220e2310e962532245127b843c38131509ce72ad4e2d2141515ad099",
+      "size_bytes": 827091
+    },
+    {
+      "path": "results/figures/research_review/cell_mask_examples_analysis18_v1.png",
+      "sha256": "115f3275e01ba821cb559607e63fb953d269a999e8e94d796235aa2cd4a74ef8",
+      "size_bytes": 1055443
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/01_raw_trait_relationships.pdf",
+      "sha256": "65fd46b4fa52b76510f25c7aa36b7f1ab1947e1ec61e853809f131d66e16e020",
+      "size_bytes": 60896
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/01_raw_trait_relationships.png",
+      "sha256": "21cda4fb5c913b944f28c780eec9550f63603343d20ff16a7ab0a0491184583f",
+      "size_bytes": 497132
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/02_primary_model_ranking.pdf",
+      "sha256": "dc6d49029bbc16dd294830c24431b108d7d4ad51274d576bc7f516a2f1968a32",
+      "size_bytes": 30643
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/02_primary_model_ranking.png",
+      "sha256": "163a7b8e02f35e590b6d1d5b337f842b97b2a3bd5e18d8d71877bf3a8a63ef44",
+      "size_bytes": 266195
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/03_markov_equivalent_user_mechanisms.pdf",
+      "sha256": "d395cac388dda7ab2d57a6303ec2347424b185487f5d58296d72b33d4c3f680e",
+      "size_bytes": 29283
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/03_markov_equivalent_user_mechanisms.png",
+      "sha256": "194103a088053586173d0a411a2cfe84936a9e17151fc2bef9f095d7cd1c0f68",
+      "size_bytes": 180139
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/04_candidate_equivalence_class_gallery.pdf",
+      "sha256": "154d9594a9c377a68208f8708600158ee9a1c19a7d32978787d8c389006d7671",
+      "size_bytes": 25684
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/04_candidate_equivalence_class_gallery.png",
+      "sha256": "00d41d9d1cc5c53f5d896aa5d9c49075bd120fee969fd37a6b33a09f7a7fa8c1",
+      "size_bytes": 239148
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/05_model_stability.pdf",
+      "sha256": "8bfafd45b2f4df46b2199d78b8a0604c29d5b578df2970a4ac02c6856994264e",
+      "size_bytes": 33414
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/05_model_stability.png",
+      "sha256": "5f87e895669b5b27ca47bdbc2adbd47467ae0ee3591bfa07cb2760039dcf9db4",
+      "size_bytes": 247074
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/06_nucleus_vs_cell_bridge_contrast.pdf",
+      "sha256": "2935be261690263f42dde2ddf3522bc8d80d17fb33bce29cc3e37cb442d5fb5e",
+      "size_bytes": 30121
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/06_nucleus_vs_cell_bridge_contrast.png",
+      "sha256": "ed149b677fdca71c265c0fefe8dbdcacf014c65f6c0910aa6e5ccbe720cbf228",
+      "size_bytes": 257615
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/07_structural_sensitivity_heatmap.pdf",
+      "sha256": "42b65c8a00c8546dc26e9aa5dea728c5fce0edc2544c66e052826fce2cd07cda",
+      "size_bytes": 35764
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/07_structural_sensitivity_heatmap.png",
+      "sha256": "65e256e8f1e7a2cb7db6674575f36e4fb7ddfd88d9f413e96a5161a8f2dd304d",
+      "size_bytes": 312506
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/08_simulation_calibration.pdf",
+      "sha256": "6eb3bf5bea84f458ac1a08bb83dcce74623bb1f60603fe39a3b479d7c9272bd7",
+      "size_bytes": 29982
+    },
+    {
+      "path": "results/figures/research_review/cell_nucleus_genome_path/08_simulation_calibration.png",
+      "sha256": "2b5c898d94ebe17a068763b84856811c22b2c9080d913882ab8d6a0246abacc2",
+      "size_bytes": 199105
+    },
+    {
+      "path": "results/figures/research_review/cell_trait_pairwise_bm_pgls_analysis18_v1.pdf",
+      "sha256": "2e7e5cf8bb9b1690bad4a9221e520479d290f3ba6957fab658cad759f7198a33",
+      "size_bytes": 28228
+    },
+    {
+      "path": "results/figures/research_review/cell_trait_pairwise_bm_pgls_analysis18_v1.png",
+      "sha256": "be829f5c91504e90209c0867459db4c3137e6845811cac245aadea411a6717f3",
+      "size_bytes": 273863
+    },
+    {
+      "path": "results/figures/research_review/cell_trait_phylogeny_tracks_analysis18_v1.pdf",
+      "sha256": "da9e126d641dbde9cbf3bd138762daebd34a8450922ad6a8fade4d4e8546b389",
+      "size_bytes": 41064
+    },
+    {
+      "path": "results/figures/research_review/cell_trait_phylogeny_tracks_analysis18_v1.png",
+      "sha256": "1dbe1462e4ced52718b256bbfbf5ebd46a10851538a314b650ee40fb7506e3d4",
+      "size_bytes": 260618
+    },
+    {
+      "path": "results/figures/research_review/corrected_path_anchor_dag_analysis18_v1.png",
+      "sha256": "83c125724d44a2c2a425b981b3ffd49bb1b5793d5bd197625d54d445f6e1f4a8",
+      "size_bytes": 126942
+    },
+    {
+      "path": "results/figures/research_review/corrected_path_anchor_model_comparison_analysis18_v1.png",
+      "sha256": "8000fea6e6318ed6f20eb7de834b41c547f42973d14fb87cab6d6589489cfe5d",
+      "size_bytes": 352776
+    },
+    {
+      "path": "results/figures/research_review/corrected_path_leave_one_out_influence_analysis18_v1.png",
+      "sha256": "5ea0f30490bbba05ff5150a16994ff7eb2e9bbfd21968f647341d6efbadf9299",
+      "size_bytes": 250973
+    },
+    {
+      "path": "results/figures/research_review/corrected_path_measurement_model_weights_analysis18_v1.png",
+      "sha256": "eb93205a473bd96eca5651ccce44ba539aeb324b42fb408edac4ed4ef6bc09d4",
+      "size_bytes": 223753
+    },
+    {
+      "path": "results/figures/research_review/corrected_path_simulation_calibration_analysis18_v1.png",
+      "sha256": "92095e61224eb373a2dbffa28836136918e97b0bf4b4fdc362bcf64ac04aa258",
+      "size_bytes": 251859
+    },
+    {
+      "path": "results/figures/research_review/corrected_path_tree_uncertainty_analysis18_v1.png",
+      "sha256": "d8ebddc44a2b7ebc78f0ce9b6cfb4f44f37941690493aaf8b766c6f030d67868",
+      "size_bytes": 106110
+    },
+    {
+      "path": "results/figures/research_review/dnapipete_quality_te34_v1.pdf",
+      "sha256": "b08505160dc0e0489e6e4ba2ab2221b49ba87f2bccf10012b962464d7e54ebd9",
+      "size_bytes": 8107
+    },
+    {
+      "path": "results/figures/research_review/dnapipete_quality_te34_v1.png",
+      "sha256": "14debfd90b233f28935163dceb8e79654d8d03b1d218137c0f26e050dfe2d615",
+      "size_bytes": 444191
+    },
+    {
+      "path": "results/figures/research_review/ectopic_ltr30_coverage_qc_v1.pdf",
+      "sha256": "a1a8b6f594ecd249f67c35d95c564bad8356a0f7bdcb46a0f87045bf9aa57b7f",
+      "size_bytes": 40009
+    },
+    {
+      "path": "results/figures/research_review/ectopic_ltr30_coverage_qc_v1.png",
+      "sha256": "825c6ed959d96d3b3ad3df22720a1025dd88557f2366075719adc26d40d52d9b",
+      "size_bytes": 307100
+    },
+    {
+      "path": "results/figures/research_review/final18_evidence_completeness_analysis18_v1.pdf",
+      "sha256": "191f24a95c9b425d0dcc2f21c2819f72bf57a8a98dc42fd7a73a6b17e0ad134c",
+      "size_bytes": 16186
+    },
+    {
+      "path": "results/figures/research_review/final18_evidence_completeness_analysis18_v1.png",
+      "sha256": "3f1963a74b1a6db831d4245636b0d7913f4bdc71cbfb9b47122e008e3b7c859f",
+      "size_bytes": 346413
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/01_all_raw_nuclear_iod.png",
+      "sha256": "798f9c27457781961b6fd4950ae15865466755538f2677b370a30fc554f0e73f",
+      "size_bytes": 296036
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/02_relative_iod_estimates.png",
+      "sha256": "d163d182f5c00cb81bef07d88341735f0b53372bfd08dc899c548f7dbe7d3e94",
+      "size_bytes": 154545
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/03_image_level_iod.png",
+      "sha256": "612b8891b4b10a5b0150650c7faf2c36f3e45a63fb03e495e90b744028fb6fdb",
+      "size_bytes": 152912
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/04_iod_components.png",
+      "sha256": "5896846f28f4372294d420af72d4740ad78bbede92e5bdbe91882550f9e07618",
+      "size_bytes": 179046
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/05_aggregation_sensitivity.png",
+      "sha256": "eb0fcaf04deb7f656c551a42a77d3bcd9fd751bd35ddf34a2e2ba0cb65260de1",
+      "size_bytes": 158586
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/06_quality_diagnostics.png",
+      "sha256": "df47b9c7ab7ad85c15441b106cc066844fcf43892fae10265f495fd7106e9717",
+      "size_bytes": 463379
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/07_measured_phylogeny_genome_nucleus_cell.pdf",
+      "sha256": "7c1d42bab4e5e1ce050e270cc386105460adc78c6a93f44b99610f62c3350d6a",
+      "size_bytes": 192479
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/07_measured_phylogeny_genome_nucleus_cell.png",
+      "sha256": "5e5548c9324150f6fbb49524a598c8d48408fcb5bb4102882b083d5232a4bd83",
+      "size_bytes": 882504
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/08_pairwise_genome_nucleus_cell_relationships.pdf",
+      "sha256": "6fe9038762a129a46b8cff696aedc4c2f27a6167e29efbcb3b81e73f75085b8a",
+      "size_bytes": 68303
+    },
+    {
+      "path": "results/figures/research_review/genome_size_estimation/08_pairwise_genome_nucleus_cell_relationships.png",
+      "sha256": "9a9a54391033a0f38e3d4a3ddad69115badb476ac2e912827c30577820d49268",
+      "size_bytes": 591560
+    },
+    {
+      "path": "results/figures/research_review/ltr_terminal_internal_artifact_screened_ltr30_v1.pdf",
+      "sha256": "3fdc5b2117f4e64b8d81c7a4ad7027727f03f92672658d708264b7df544aedd5",
+      "size_bytes": 139082
+    },
+    {
+      "path": "results/figures/research_review/ltr_terminal_internal_artifact_screened_ltr30_v1.png",
+      "sha256": "50f921193e075ece5279dbccd1a35dd8733f24dfeac34c9651534d9932c54ce7",
+      "size_bytes": 319469
+    },
+    {
+      "path": "results/figures/research_review/ltr_terminal_internal_log_ltr30_v1.pdf",
+      "sha256": "86ee57caab8134397adca31a392786feb514fb2d27bf2c8860d9e0827701112b",
+      "size_bytes": 151051
+    },
+    {
+      "path": "results/figures/research_review/ltr_terminal_internal_log_ltr30_v1.png",
+      "sha256": "27d1b6216a2b2793245976cd7b960c20d933ef0d16ff38a0b480d236085a58b3",
+      "size_bytes": 430340
+    },
+    {
+      "path": "results/figures/research_review/ltr_terminal_internal_violin_ltr30_v1.pdf",
+      "sha256": "58c5192af50103c52272ebb8cdafb962fb841094771b77e139700028083d1025",
+      "size_bytes": 129838
+    },
+    {
+      "path": "results/figures/research_review/ltr_terminal_internal_violin_ltr30_v1.png",
+      "sha256": "cc6fa61238a7b3d9c5f1374a99a78f048b946ee82d642ab3dc164d0eb0c137d1",
+      "size_bytes": 230655
+    },
+    {
+      "path": "results/figures/research_review/microscopy_estimand_sensitivity_analysis18_v1.png",
+      "sha256": "f0711799d61278516bba634ff5f0b15920ccffcfda0b57aecfc10734de1cbe6b",
+      "size_bytes": 253509
+    },
+    {
+      "path": "results/figures/research_review/microscopy_estimator_rank_stability_analysis18_v1.png",
+      "sha256": "383dffacf6a6f7b7dd96de002a569a502ba8577c0851984568cb47c9c46911b9",
+      "size_bytes": 347397
+    },
+    {
+      "path": "results/figures/research_review/microscopy_image_iod_qc_analysis18_v1.png",
+      "sha256": "20c0bd93c5c756f344edcbb4e76746f86a240b88f09844dcd9a80537316fb3b9",
+      "size_bytes": 194237
+    },
+    {
+      "path": "results/figures/research_review/microscopy_iod_decomposition_analysis18_v1.png",
+      "sha256": "8e9b0a94d78d462d5c16b8452e306c0aaafa30458d04f4fc1d1cc395bc5708cd",
+      "size_bytes": 170646
+    },
+    {
+      "path": "results/figures/research_review/microscopy_relative_iod_qc_sensitivity_analysis18_v1.png",
+      "sha256": "669d9176e623ee83804cf69f29667200b1c16eccec91940d2e33cecf046c4c97",
+      "size_bytes": 188091
+    },
+    {
+      "path": "results/figures/research_review/microscopy_segmentation_validation_analysis18_v1.png",
+      "sha256": "9e7e5bc1b5b052de2fe8ffa2427b14b83e33407083130db3cd63975bcaf3843f",
+      "size_bytes": 152513
+    },
+    {
+      "path": "results/figures/research_review/microscopy_selection_depth_analysis18_v1.png",
+      "sha256": "fdeb1c4fefb249718be75c7678f612a7241a5558cc281a11444038ef563b1bfe",
+      "size_bytes": 245102
+    },
+    {
+      "path": "results/figures/research_review/microscopy_support_and_review_analysis18_v1.png",
+      "sha256": "f50e601512ae115a79b6eb151b95cae1c000b71b844cf46d147e491af46d76f3",
+      "size_bytes": 199093
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_focal_vs_published_topology_analysis18_v1.png",
+      "sha256": "d591fb6b737394c33c9719eef8a87600d748288e8ce0c51f1b1bd00b37d81216",
+      "size_bytes": 100019
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_patristic_uncertainty_analysis18_v1.png",
+      "sha256": "0843e14a927466bdcb418e51855b888b9c16d316e0b05f859ce3c9416a119d3b",
+      "size_bytes": 197439
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_processed_scale_comparison_v1.png",
+      "sha256": "3a3a6a047986656e5efe65a8c70ed044933c07afa6256f626ca9425929ed05fd",
+      "size_bytes": 140837
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_published_bootstrap_density_analysis18_v1.png",
+      "sha256": "a3e4eab29c75bbe10be0433a079c373f34db8d66490fd0dc6229f2622d4123d2",
+      "size_bytes": 88854
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_root_age_uncertainty_analysis18_v1.png",
+      "sha256": "07a9318f9af72495b7e315ee4aa5b0d9bb8fb5caf7d51fea16487cfd3b0d5e28",
+      "size_bytes": 79674
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_source46_vs_final18_trim_analysis18_v1.pdf",
+      "sha256": "5e20438b9632826e34f4fb654654a0673dba25fff7b92d259786f07c2177e8a7",
+      "size_bytes": 20851
+    },
+    {
+      "path": "results/figures/research_review/phylogeny_source46_vs_final18_trim_analysis18_v1.png",
+      "sha256": "7f2c1c07aebdba983e97bec372470e084585017bd135f090683a281d00d0c929",
+      "size_bytes": 430224
+    },
+    {
+      "path": "results/figures/research_review/publication_release_gate_matrix_analysis18_v1.png",
+      "sha256": "b599a7ae592bd9f2e7d74598b47b421b0a561901ac1199ed4d315b50f4cafeb0",
+      "size_bytes": 278096
+    },
+    {
+      "path": "results/figures/research_review/te_diversity_te34_v1.pdf",
+      "sha256": "fe024317838e27c508b5b089d69f85b861ebc6ef65e93b6cc9a31587da16bc57",
+      "size_bytes": 13438
+    },
+    {
+      "path": "results/figures/research_review/te_diversity_te34_v1.png",
+      "sha256": "c9e0cf1dba7c2403460cda66297c1391a99d693da2ebd7e4c2f450beb00a46d9",
+      "size_bytes": 257838
+    },
+    {
+      "path": "results/figures/research_review/te_mass_composition_te34_v1.pdf",
+      "sha256": "bd3891d488707ff8f553aa6b4749a0e826a9dabf3650c2fcf5b23603d631fd2c",
+      "size_bytes": 8605
+    },
+    {
+      "path": "results/figures/research_review/te_mass_composition_te34_v1.png",
+      "sha256": "d92357988e3b64f525dc3e1e462f2ba19501d8365cdb86c73bbb5aae4bed66f6",
+      "size_bytes": 373688
+    },
+    {
+      "path": "results/figures/research_review/te_mean_order_te34_v1.pdf",
+      "sha256": "19edf4e1263c0bbb0e1db9269d61569215c7245e74b44647e9221875c0adeb91",
+      "size_bytes": 5088
+    },
+    {
+      "path": "results/figures/research_review/te_mean_order_te34_v1.png",
+      "sha256": "f5ecf526031b182262a5beef290ec4d013334a27535db2b6fcd3c92e38974f34",
+      "size_bytes": 126551
+    },
+    {
+      "path": "results/figures/research_review/te_mean_superfamily_te34_v1.pdf",
+      "sha256": "6a1ee937f5b6d623475301ab54155d5f8415669046e5befe55548ec9a783f39d",
+      "size_bytes": 5495
+    },
+    {
+      "path": "results/figures/research_review/te_mean_superfamily_te34_v1.png",
+      "sha256": "ad35b61bf6cde3d0449d1d73bb5553960b3f850bde20d8f3dcd866ad774a305b",
+      "size_bytes": 151790
+    },
+    {
+      "path": "results/figures/research_review/te_pca_clusters_phylogeny_te34_v1.pdf",
+      "sha256": "f7e745cdbf5026e9025994db73085670705cdc0bf13980f9934f7d5318182f7f",
+      "size_bytes": 12180
+    },
+    {
+      "path": "results/figures/research_review/te_pca_clusters_phylogeny_te34_v1.png",
+      "sha256": "f365101d4e1dcaa30590fc54e8816011e9e5ebf4194bbc9fa335ca50f3d15a5a",
+      "size_bytes": 642077
+    },
+    {
+      "path": "results/figures/research_review/te_pca_clusters_te34_v1.pdf",
+      "sha256": "94332c4bcb0ba14b64cc8fd3cb378bb2c0a5b0e660c460b5f2acfacfbb660b0f",
+      "size_bytes": 7933
+    },
+    {
+      "path": "results/figures/research_review/te_pca_clusters_te34_v1.png",
+      "sha256": "4f0381abc9e6709411eb1cc4a61ca97ade4bda1e5180aae29348c5570955ab66",
+      "size_bytes": 207763
+    },
+    {
+      "path": "results/figures/research_review/te_pca_elbow_te34_v1.pdf",
+      "sha256": "f2fbd1e49609bbe28401385a1c22dc7c7efb2551e089648ee5efe211875ae998",
+      "size_bytes": 5548
+    },
+    {
+      "path": "results/figures/research_review/te_pca_elbow_te34_v1.png",
+      "sha256": "48b14d521ab0bbc0722d50f746823405cef303a6576fd3612d5c6ab2123530bd",
+      "size_bytes": 154841
+    },
+    {
+      "path": "results/figures/research_review/te_pca_scree_te34_v1.pdf",
+      "sha256": "be920175beff50e353ff13e62bc7a4b97dc0f9842312b27dcce59aff72ad99a6",
+      "size_bytes": 6870
+    },
+    {
+      "path": "results/figures/research_review/te_pca_scree_te34_v1.png",
+      "sha256": "5195218b9d76dae5c265889b9f38ee15e852d7b30eaeb3d0b4aba22b952413e4",
+      "size_bytes": 162280
+    },
+    {
+      "path": "results/figures/research_review/te_pca_silhouette_te34_v1.pdf",
+      "sha256": "1ea56d2653736777d087d22c33993d6a1088feaf0cc91add4474231bddfd6740",
+      "size_bytes": 5437
+    },
+    {
+      "path": "results/figures/research_review/te_pca_silhouette_te34_v1.png",
+      "sha256": "cacf27ebad7179fea0efe56d784fb0ba163d8ce9797f717d56f48b50b3d56b22",
+      "size_bytes": 153055
+    },
+    {
+      "path": "results/figures/research_review/te_pca_species_te34_v1.pdf",
+      "sha256": "ff7bb3b9b84e270db8d66042a1a6929a0955ee35344c143cdecd5c77fd80912b",
+      "size_bytes": 8821
+    },
+    {
+      "path": "results/figures/research_review/te_pca_species_te34_v1.png",
+      "sha256": "436e583cef47d9a1fd1f33fe4c15e8c2d7040476a288766b66b54d25f6d9ed4b",
+      "size_bytes": 277902
+    },
+    {
+      "path": "results/figures/research_review/te_shannon_cross_taxon_context_te34_v1.pdf",
+      "sha256": "640f918da1922603530d06015b5758f12811e55d31873b0d5416cecda4b2c2bf",
+      "size_bytes": 5824
+    },
+    {
+      "path": "results/figures/research_review/te_shannon_cross_taxon_context_te34_v1.png",
+      "sha256": "f04c99808e443bce3619f091a1504716ea4c763c65f51fe937c37bb4447c7043",
+      "size_bytes": 166119
+    },
+    {
+      "path": "results/figures/research_review/te_shannon_genome_size_scatter_te18_v1.pdf",
+      "sha256": "9797a2b356671c5563205e8caf181b9e830f06ce2bea871b324d59d7407b6ddc",
+      "size_bytes": 7425
+    },
+    {
+      "path": "results/figures/research_review/te_shannon_genome_size_scatter_te18_v1.png",
+      "sha256": "6bc41d36706e93af8bf957da65062f6addf36bdde7e26c5d843fd3234fb2e300",
+      "size_bytes": 147086
+    }
+  ]
+}

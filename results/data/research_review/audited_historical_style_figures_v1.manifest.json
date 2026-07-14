@@ -1,0 +1,505 @@
+{
+  "analysis_id": "audited_historical_style_figures_v1",
+  "runner": "scripts/processing/build_audited_historical_style_figures.R",
+  "rebuild_mode": "Current audited and clean frozen data rendered with Jake's historical R and ggplot grammar; no embedded historical PNGs.",
+  "generated_at_utc": "2026-07-10 19:20:18 UTC",
+  "expensive_upstream_tools_executed": false,
+  "historical_code_provenance": {
+    "assembly_and_mass": "/home/jake/Projects/misc_desmog_scripts/Master_data_vis.R",
+    "pca_git": "1ad5e8c:te_pca_analysis.R",
+    "pca_original_git": "89c0879:Master_data_vis_PCA.R",
+    "pca_vscode_history": "DWDT.R",
+    "composition_git": "1ad5e8c:scripts/visualization/te_landscape_plots.R",
+    "shannon": "/home/jake/Projects/misc_desmog_scripts/Master_shannon_diversity_vis.R",
+    "ectopic_git": "1ad5e8c:scripts/visualization/ectopic_recomb_plots.R",
+    "ectopic_original_git": "89c0879:Master_data_vis2_ectopicrecomb.R"
+  },
+  "scopes": {
+    "te": {
+      "panel": "TE34",
+      "n_species": 34
+    },
+    "ltr": {
+      "panel": "LTR30 available-resource subset",
+      "n_species": 30,
+      "n_elements": 1086,
+      "n_artifact_screened_elements": 1085
+    },
+    "cross_taxon_shannon": {
+      "role": "descriptive cross-study context only",
+      "n_historical_context_rows": 87,
+      "n_current_desmognathus": 34,
+      "n_total": 121
+    },
+    "genome_size_shannon_scatter": {
+      "panel": "exact TE-genome overlap / path18",
+      "n_current_desmognathus": 18,
+      "n_historical_salamanders": 10,
+      "n_total": 28
+    },
+    "integrated_path_analysis": "not performed by this figure runner"
+  },
+  "species_identity": {
+    "fuscus_analysis_label": "fuscus",
+    "fuscus_te_resource": "GCA_032353935.1",
+    "ncbi_public_label_for_resource": "Desmognathus planiceps",
+    "mapping_basis": "expert reidentification supplied by Alex Pyron; mapping applies to the genomic resource only"
+  },
+  "dnapipete_retry_policy": {
+    "method_id": "equal_weight_mean_of_run_level_estimates",
+    "method": "equal-weight mean of run-level estimates within species",
+    "retries_are_additional_species": false,
+    "species_with_retry": "orestes",
+    "source_labels": ["SRX19952890", "SRX19952890R2"]
+  },
+  "denominators": {
+    "dnapipete_repeat_aligned": "total aligned repeat bases / configured 1,500,000,000-bp quantification sample",
+    "dnapipete_order_classification": "classified or unresolved aligned bases / total repeat-aligned bases",
+    "dnapipete_superfamily_classification": "classified or unresolved aligned bases / total repeat-aligned bases",
+    "mean_order_and_superfamily": "within-species classified-conditional composition, then equal species mean",
+    "diversity": "both classified_conditional and mass_aware_unresolved_bin modes shown",
+    "cross_taxon_diversity": "published top-10-superfamily natural-log Shannon contract; top 10 are renormalized to sum to one within species",
+    "ltr": "all-position mean terminal depth / all-position mean internal depth; explicit zero-depth positions retained"
+  },
+  "superfamily_pca_filter": {
+    "panel": "TE34",
+    "panel_species": 34,
+    "data": "dnaPipeTE retry-averaged species-level superfamily relative composition",
+    "historical_user_decision_context": {
+      "panel_species": 35,
+      "prevalence": {
+        "Chapaev": {
+          "species_present": 14,
+          "prevalence_percent": 40
+        },
+        "Dada": {
+          "species_present": 10,
+          "prevalence_percent": 28.57
+        },
+        "Ginger": {
+          "species_present": 1,
+          "prevalence_percent": 2.86
+        }
+      },
+      "note": "Historical 35-species counts document the original filtering decision; they are not relabeled as TE34 counts."
+    },
+    "current_audited_prevalence": [
+      {
+        "superfamily": "Chapaev",
+        "species_present": 12,
+        "panel_species": 34,
+        "prevalence_percent": 35.2941176470588,
+        "pca_decision": "retain",
+        "decision_reason": "user_declared_retained_sparse_superfamily"
+      },
+      {
+        "superfamily": "Dada",
+        "species_present": 9,
+        "panel_species": 34,
+        "prevalence_percent": 26.4705882352941,
+        "pca_decision": "retain",
+        "decision_reason": "user_declared_retained_sparse_superfamily"
+      },
+      {
+        "superfamily": "Ginger",
+        "species_present": 1,
+        "panel_species": 34,
+        "prevalence_percent": 2.94117647058824,
+        "pca_decision": "exclude",
+        "decision_reason": "user_declared_sparse_superfamily"
+      }
+    ],
+    "retained_by_explicit_policy": ["Chapaev", "Dada"],
+    "excluded_by_explicit_policy": ["Ginger"],
+    "other_exclusions": [],
+    "variance_rule": "exclude zero-variance features; do not prevalence-filter Chapaev or Dada",
+    "prevalence_audit": {
+      "path": "results/data/research_review/te_superfamily_prevalence_te34_v1.csv",
+      "sha256": "6fe646ee37bafdca655c134f2e98bce790546e42515595840fc0f6427ef8c6cf",
+      "rows": 29
+    },
+    "exact_pca_matrix": {
+      "path": "results/data/research_review/te_pca_superfamily_feature_matrix_te34_v1.csv",
+      "sha256": "8e1557341d7a6403a564b01f7da3ae4474262e738855c7d0c42864584b459761",
+      "species_rows": 34,
+      "retained_features": 28
+    }
+  },
+  "pca_and_clustering": {
+    "data": "TE34 retry-averaged superfamily relative composition",
+    "transform": "historical scaled raw relative composition",
+    "feature_rule": "retain Chapaev and Dada; exclude Ginger; remove Unknown.TIR if present and all zero-variance features",
+    "n_features": 28,
+    "clustering_axes": 6,
+    "deterministic_seed": 20260710,
+    "k_range": "1-10; silhouette evaluated for 2-10",
+    "selection_rule": "maximum mean silhouette width",
+    "selected_k": 2,
+    "selected_mean_silhouette": 0.631438881421788
+  },
+  "cross_taxon_shannon": {
+    "historical_plot_grammar": "literal boxplot statement from Master_shannon_diversity_vis.R",
+    "current_desmognathus_data": "audited TE34 retry-averaged classified-conditional superfamily composition",
+    "metric": "natural-log Shannon entropy over each species' 10 most abundant TE superfamilies, renormalized within the top 10",
+    "context_source": "87-row historical published-vertebrate composite used by prior project code",
+    "context_source_sha256": "4ec3237a6ecd361c7e040b11dccfc9e2ac635cf10b739a4e95920015edccbb0e",
+    "published_data_repository": "Dryad DOI 10.5061/dryad.zpc866tkv",
+    "context_scope_disclosure": "Not an exact export of Wang et al. 2025's 84-species analysis; includes 4 caecilians and 10 salamanders and is used only as descriptive cross-study context.",
+    "inference": "none for the pooled cross-study context; Desmognathus-only Pearson, Spearman, OLS, and Brownian PGLS are exported as exploratory summaries",
+    "genome_size_scatter": {
+      "historical_plot_grammar": "literal point/color/lab/theme statement from Master_shannon_diversity_vis.R, with horizontal bootstrap intervals added for current Desmognathus estimates",
+      "n_current_desmognathus": 18,
+      "n_historical_salamanders": 10,
+      "overlap_rule": "exact intersection of current TE34 top-10-superfamily Shannon and the 21-species frozen fuscus-anchored genome estimate table; equals path18",
+      "calibration_reference_species": "D. fuscus",
+      "calibration_reference_pg": 16.36,
+      "pg_to_gb_factor": 0.978,
+      "measurement_kind": "fuscus_anchored_image_iod_genome_size_estimate",
+      "absolute_c_value_claimed": false,
+      "measurement_boundary": "Desmognathus values are fuscus-anchored image-IOD genome-size estimates with conditional bootstrap intervals, not direct C-values; historical salamander values remain descriptive cross-study context.",
+      "pooled_cross_study_inference": "none",
+      "data": {
+        "scatter": {
+          "path": "results/data/research_review/te_shannon_genome_size_scatter_te18_v1.csv",
+          "sha256": "6943b9fb7f0bed8cd9c6931faf52a3f81109bb06b3899df9c00401d412c003d7",
+          "rows": 28
+        },
+        "match_audit": {
+          "path": "results/data/research_review/te_shannon_genome_size_match_audit_te34_v1.csv",
+          "sha256": "95a43705ff558f5273c8b11c92002193c81c05770fa562ac02b2f9f91a412899",
+          "rows": 37
+        },
+        "statistics": {
+          "path": "results/data/research_review/te_shannon_genome_size_stats_te18_v1.txt",
+          "sha256": "4752ce073ee67c318cda8ef5abac1bd8c147ee441377b8e334c406ade67b5ed2"
+        }
+      }
+    },
+    "data_artifacts": {
+      "historical_context": {
+        "path": "results/data/research_review/wang_ji_2025_shannon_context_v1.csv",
+        "sha256": "6e40ecc7a18aacfdffc394cdb9ca6a11eba1adf5892b13382cd6d8dc93cd71eb",
+        "rows": 87
+      },
+      "provenance": {
+        "path": "results/data/research_review/wang_ji_2025_shannon_context_v1.provenance.json",
+        "sha256": "faff44098695d60e1141ca584c94401bbbe40c9741e95f614f5435fa83c9507f",
+        "rows": 1
+      },
+      "combined_context": {
+        "path": "results/data/research_review/te_shannon_cross_taxon_context_te34_v1.csv",
+        "sha256": "1b2e886d6e9045320233ffe03208529bae2238d6c2ebcdc8c0d7319fe1dd8536",
+        "rows": 121
+      },
+      "group_counts": {
+        "path": "results/data/research_review/te_shannon_cross_taxon_group_counts_v1.csv",
+        "sha256": "a08b6cf6a0b73bf3d0d0108604ffc72a570f8a9a214fdbd5b353e0303007fbaa",
+        "rows": 10
+      },
+      "desmognathus_top10_contributions": {
+        "path": "results/data/research_review/te_top10_superfamily_contributions_te34_v1.csv",
+        "sha256": "63561ec81c7f49bcdf2d348c41247dd711d0fb8456d502fef1a591905d3f5dac",
+        "rows": 340
+      }
+    }
+  },
+  "ltr_mapping_artifact_screen": {
+    "role": "presentation and sensitivity branch; unfiltered corrected input remains intact",
+    "rule_id": "one_sided_terminal_pileup_v1",
+    "n_input_elements": 1086,
+    "n_flagged_elements": 1,
+    "n_retained_elements": 1085,
+    "n_retained_species": 30,
+    "left_right_abs_log2_threshold": 6,
+    "additional_required_conditions": ["upper within-species 1.5-IQR outlier", "element contributes more than 50% of species ratio sum"],
+    "flagged_element_ids": "JAUEJH010597481.1_De_5169_11831",
+    "unfiltered_input_modified": false,
+    "audit_table": {
+      "path": "results/data/research_review/ltr_mapping_artifact_screen_ltr30_v1.csv",
+      "sha256": "28fb235f0e9c4a9f757b06dab299eff82d2ff40b64afb9b075a52987034c8536",
+      "rows": 1086
+    }
+  },
+  "methodological_deviations_from_historical_scripts": ["The vetted current TE34 replaces the historical unvetted species set.", "dnaPipeTE retries are averaged within species before species-level analysis.", "The original sparse-feature decision is explicit and audited on TE34: Chapaev and Dada are retained, while Ginger is excluded.", "A deterministic seed and nstart=100 replace unseeded or lightly restarted historical k-means.", "k is selected by maximum mean silhouette instead of hard-coding k=5.", "Stacked mass bars use mathematically correct stacking and explicitly named denominators.", "All PCA species labels are retained with deterministic repulsion for readability.", "The discrete viridis cluster palette is reversed so the 33-species majority cluster remains legible on white while the singleton outlier stays visually distinct.", "The corrected TE34 denominator-sensitivity panel is retained as an audit companion; the historical cross-taxon boxplot is separately restored with the published top-10-superfamily metric contract.", "The assembly panel uses the current audited accessions and explicitly maps the public planiceps row to the expert-reidentified fuscus genomic resource.", "The complete 1,086-element corrected LTR audit remains unfiltered and is shown on raw and log scales.", "A separate presentation branch screens one row-auditable one-sided terminal pileup only when it also exceeds the within-species upper 1.5-IQR fence and contributes over half the species ratio sum; blanket IQR deletion is not used.", "The LTR30 figures use the audited all-position, zero-aware estimator and exclude exactly two proven-truncated depth files.", "The restored cross-taxon Shannon boxplot replaces the stale historical Desmognathus rows with current audited TE34 top-10-superfamily values.", "The genome-size/Shannon scatter replaces the historical all-16 Desmognathus placeholder with the exact 18-species TE/genome overlap and retains the historical point/color/lab/theme grammar.", "Current Desmognathus x values are visibly identified as fuscus-anchored image-IOD genome-size estimates with bootstrap intervals, not direct C-values."],
+  "inference_limits": ["PCA clustering is descriptive and is not a phylogenetically corrected hypothesis test.", "The cross-taxon Shannon boxplot is descriptive context only; heterogeneous repeat libraries, annotation protocols, sampling, and strongly imbalanced group sizes preclude inferential comparison.", "The pooled 28-point genome-size/Shannon scatter is descriptive only because current fuscus-anchored image-IOD estimates and historical salamander genome-size values come from non-homogeneous assays and TE annotation workflows.", "Desmognathus-only genome-size/Shannon tests are exploratory and conditional on the fuscus calibration anchor, archived image workflow, and selected TE diversity definition.", "Genome-size/Shannon association tests use point estimates and one frozen time tree; measurement and tree uncertainty are not propagated.", "Element-level LTR ANOVA/Tukey output is historical-style exploratory output and does not remove pseudoreplication or establish an ectopic-recombination rate.", "The LTR artifact screen is a conservative mapping-quality sensitivity rule, not proof that every statistically extreme element is non-biological.", "No confirmatory phylogenetic path inference is performed in this runner."],
+  "inputs": [
+    {
+      "id": "panel",
+      "path": "results/data/research_review/frozen_inputs/path_analysis/data/derived/panels/study_te_resource_panel34_v1.csv",
+      "sha256": "ca684212f8c1171296e49f1ed10a410dfb894d1dfe7f5cff22fd89a8590a73f8",
+      "rows_or_tips": 34
+    },
+    {
+      "id": "integrated_panel",
+      "path": "results/data/research_review/frozen_inputs/path_analysis/data/derived/panels/study_integrated_path_panel18_v1.csv",
+      "sha256": "6b455e67be53e16ffb071fea2608802911ef27e88a0ad8e15c98be69decbd103",
+      "rows_or_tips": 18
+    },
+    {
+      "id": "genome_estimates",
+      "path": "results/data/research_review/frozen_inputs/path_analysis/data/external/derived/cellprofiler_final_species_results.csv",
+      "sha256": "9587ed8a281e2641744c12cd244195714a7a414105cc676554247c8779a1c332",
+      "rows_or_tips": 21
+    },
+    {
+      "id": "genome_state",
+      "path": "results/data/research_review/frozen_inputs/path_analysis/data/external/derived/cellprofiler_genome_state_summary.csv",
+      "sha256": "feb7ccf9fbb1b32ceb36d0f3e215540b9049c92793708801305dfbce725e4dc6",
+      "rows_or_tips": 21
+    },
+    {
+      "id": "retry_manifest",
+      "path": "results/data/research_review/frozen_inputs/results/data/corrected/te34_replicate_averaged/te34_replicate_averaged_v1.manifest.json",
+      "sha256": "534b711053bb73c3637dfe6c545725423982fa35653d124736bbb01c1b10d0f9",
+      "rows_or_tips": 1
+    },
+    {
+      "id": "mass",
+      "path": "results/data/research_review/frozen_inputs/results/data/corrected/te34_replicate_averaged/dnapipete_mass_accounting_te34_replicate_averaged_v1.csv",
+      "sha256": "28434b2d2c9ae6d5ca2c60250c703c73e9bce12e2c0b1c4c7a7b92ef003ff718",
+      "rows_or_tips": 34
+    },
+    {
+      "id": "quality",
+      "path": "results/data/research_review/frozen_inputs/results/data/legacy_descriptive/dnapipete_species_quality_te34_legacy_descriptive_v1.csv",
+      "sha256": "311c01b84abebed64efefab5744cf67a6e60f25c8b9115bc2cc1de3dc9142cc3",
+      "rows_or_tips": 34
+    },
+    {
+      "id": "order_composition",
+      "path": "results/data/research_review/frozen_inputs/results/data/legacy_descriptive/te_order_composition_te34_legacy_descriptive_v1.csv",
+      "sha256": "c136d5ee7071f33b18abc4264bca0c72f425b956d0f088a86fa304b0c4cc7e6d",
+      "rows_or_tips": 34
+    },
+    {
+      "id": "superfamily_composition",
+      "path": "results/data/research_review/frozen_inputs/results/data/legacy_descriptive/te_superfamily_composition_te34_legacy_descriptive_v1.csv",
+      "sha256": "a7b5a9e18055601a2c908d39ae4d05ee9c8d51242727a04be155ffa1f6d87a62",
+      "rows_or_tips": 34
+    },
+    {
+      "id": "diversity",
+      "path": "results/data/research_review/frozen_inputs/results/data/corrected/te34_replicate_averaged/te_diversity_mass_sensitivity_te34_replicate_averaged_v1.csv",
+      "sha256": "1efd309a24040c1374b110a0948f2f0c07c8d41d1c11e39c3153739795449855",
+      "rows_or_tips": 136
+    },
+    {
+      "id": "wang_ji_context",
+      "path": "results/data/research_review/wang_ji_2025_shannon_context_v1.csv",
+      "sha256": "6e40ecc7a18aacfdffc394cdb9ca6a11eba1adf5892b13382cd6d8dc93cd71eb",
+      "rows_or_tips": 87
+    },
+    {
+      "id": "wang_ji_provenance",
+      "path": "results/data/research_review/wang_ji_2025_shannon_context_v1.provenance.json",
+      "sha256": "faff44098695d60e1141ca584c94401bbbe40c9741e95f614f5435fa83c9507f",
+      "rows_or_tips": 1
+    },
+    {
+      "id": "ltr_elements",
+      "path": "results/data/research_review/frozen_inputs/results/data/corrected/ectopic_ltr30/ectopic_element_metrics_ltr30_v1.csv",
+      "sha256": "fa0e1aebef50b4811042086e64a38edba362814ef772c6060424d0bb609e2afa",
+      "rows_or_tips": 1086
+    },
+    {
+      "id": "ltr_exclusions",
+      "path": "results/data/research_review/frozen_inputs/results/data/corrected/ectopic_ltr30/ectopic_excluded_elements_ltr30_v1.csv",
+      "sha256": "dbf78614d297a8aba8c845e823de04a3c6e78a001e7017835337bde29a7580a0",
+      "rows_or_tips": 2
+    },
+    {
+      "id": "ltr_manifest",
+      "path": "results/data/research_review/frozen_inputs/results/data/corrected/ectopic_ltr30/ectopic_ltr30_v1.manifest.json",
+      "sha256": "38ed29e570da8b58ae7ac19e58a13a687e6e0e1567ee3b5b0aba07fe745954d1",
+      "rows_or_tips": 1
+    },
+    {
+      "id": "tree",
+      "path": "results/data/research_review/frozen_inputs/results/phylogeny/processed_phylogeny.nwk",
+      "sha256": "5a81b7edcc0bf1c035c896051a249c5837ebbbabafdb74c29b3fc03e2f3ad771",
+      "rows_or_tips": 34
+    }
+  ],
+  "data_outputs": [
+    "results/data/research_review/assembly_quality_te34_v1.csv",
+    "results/data/research_review/dnapipete_quality_te34_v1.csv",
+    "results/data/research_review/te_pca_cluster_metrics_te34_v1.csv",
+    "results/data/research_review/te_pca_scores_clusters_te34_v1.csv",
+    "results/data/research_review/te_superfamily_prevalence_te34_v1.csv",
+    "results/data/research_review/te_pca_superfamily_feature_matrix_te34_v1.csv",
+    "results/data/research_review/te_pca_superfamily_loadings_te34_v1.csv",
+    "results/data/research_review/te_pca_variance_te34_v1.csv",
+    "results/data/research_review/wang_ji_2025_shannon_context_v1.csv",
+    "results/data/research_review/wang_ji_2025_shannon_context_v1.provenance.json",
+    "results/data/research_review/te_shannon_cross_taxon_context_te34_v1.csv",
+    "results/data/research_review/te_shannon_cross_taxon_group_counts_v1.csv",
+    "results/data/research_review/te_top10_superfamily_contributions_te34_v1.csv",
+    "results/data/research_review/te_shannon_genome_size_scatter_te18_v1.csv",
+    "results/data/research_review/te_shannon_genome_size_match_audit_te34_v1.csv",
+    "results/data/research_review/te_shannon_genome_size_stats_te18_v1.txt",
+    "results/data/research_review/ltr_mapping_artifact_screen_ltr30_v1.csv",
+    "results/data/research_review/ltr_terminal_internal_stats_v1.txt"
+  ],
+  "companion_figure_references": [
+    {
+      "role": "corrected LTR30 coverage and source-QC companion",
+      "path": "results/figures/research_review/ectopic_ltr30_coverage_qc_v1.png",
+      "sha256": "825c6ed959d96d3b3ad3df22720a1025dd88557f2366075719adc26d40d52d9b"
+    }
+  ],
+  "figures": [
+    {
+      "stem": "assembly_quality_te34_v1",
+      "png": "results/figures/research_review/assembly_quality_te34_v1.png",
+      "pdf": "results/figures/research_review/assembly_quality_te34_v1.pdf",
+      "width_inches": 18,
+      "height_inches": 12,
+      "png_sha256": "8bde0751ebc8a97ddea68b08eed1a2e27f03f9f3e479510ff213c8d4ef86a383",
+      "pdf_sha256": "d0636d19bd86f7db313810db119fe3acd2ea7f83222632955c3a76d5f7392128"
+    },
+    {
+      "stem": "dnapipete_quality_te34_v1",
+      "png": "results/figures/research_review/dnapipete_quality_te34_v1.png",
+      "pdf": "results/figures/research_review/dnapipete_quality_te34_v1.pdf",
+      "width_inches": 16,
+      "height_inches": 10,
+      "png_sha256": "14debfd90b233f28935163dceb8e79654d8d03b1d218137c0f26e050dfe2d615",
+      "pdf_sha256": "b08505160dc0e0489e6e4ba2ab2221b49ba87f2bccf10012b962464d7e54ebd9"
+    },
+    {
+      "stem": "te_mass_composition_te34_v1",
+      "png": "results/figures/research_review/te_mass_composition_te34_v1.png",
+      "pdf": "results/figures/research_review/te_mass_composition_te34_v1.pdf",
+      "width_inches": 16,
+      "height_inches": 11,
+      "png_sha256": "d92357988e3b64f525dc3e1e462f2ba19501d8365cdb86c73bbb5aae4bed66f6",
+      "pdf_sha256": "bd3891d488707ff8f553aa6b4749a0e826a9dabf3650c2fcf5b23603d631fd2c"
+    },
+    {
+      "stem": "te_mean_order_te34_v1",
+      "png": "results/figures/research_review/te_mean_order_te34_v1.png",
+      "pdf": "results/figures/research_review/te_mean_order_te34_v1.pdf",
+      "width_inches": 12,
+      "height_inches": 7,
+      "png_sha256": "f5ecf526031b182262a5beef290ec4d013334a27535db2b6fcd3c92e38974f34",
+      "pdf_sha256": "19edf4e1263c0bbb0e1db9269d61569215c7245e74b44647e9221875c0adeb91"
+    },
+    {
+      "stem": "te_mean_superfamily_te34_v1",
+      "png": "results/figures/research_review/te_mean_superfamily_te34_v1.png",
+      "pdf": "results/figures/research_review/te_mean_superfamily_te34_v1.pdf",
+      "width_inches": 12,
+      "height_inches": 7,
+      "png_sha256": "ad35b61bf6cde3d0449d1d73bb5553960b3f850bde20d8f3dcd866ad774a305b",
+      "pdf_sha256": "6a1ee937f5b6d623475301ab54155d5f8415669046e5befe55548ec9a783f39d"
+    },
+    {
+      "stem": "te_diversity_te34_v1",
+      "png": "results/figures/research_review/te_diversity_te34_v1.png",
+      "pdf": "results/figures/research_review/te_diversity_te34_v1.pdf",
+      "width_inches": 12,
+      "height_inches": 7,
+      "png_sha256": "c9e0cf1dba7c2403460cda66297c1391a99d693da2ebd7e4c2f450beb00a46d9",
+      "pdf_sha256": "fe024317838e27c508b5b089d69f85b861ebc6ef65e93b6cc9a31587da16bc57"
+    },
+    {
+      "stem": "te_shannon_cross_taxon_context_te34_v1",
+      "png": "results/figures/research_review/te_shannon_cross_taxon_context_te34_v1.png",
+      "pdf": "results/figures/research_review/te_shannon_cross_taxon_context_te34_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 6,
+      "png_sha256": "f04c99808e443bce3619f091a1504716ea4c763c65f51fe937c37bb4447c7043",
+      "pdf_sha256": "640f918da1922603530d06015b5758f12811e55d31873b0d5416cecda4b2c2bf"
+    },
+    {
+      "stem": "te_shannon_genome_size_scatter_te18_v1",
+      "png": "results/figures/research_review/te_shannon_genome_size_scatter_te18_v1.png",
+      "pdf": "results/figures/research_review/te_shannon_genome_size_scatter_te18_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 6,
+      "png_sha256": "6bc41d36706e93af8bf957da65062f6addf36bdde7e26c5d843fd3234fb2e300",
+      "pdf_sha256": "9797a2b356671c5563205e8caf181b9e830f06ce2bea871b324d59d7407b6ddc"
+    },
+    {
+      "stem": "te_pca_species_te34_v1",
+      "png": "results/figures/research_review/te_pca_species_te34_v1.png",
+      "pdf": "results/figures/research_review/te_pca_species_te34_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "436e583cef47d9a1fd1f33fe4c15e8c2d7040476a288766b66b54d25f6d9ed4b",
+      "pdf_sha256": "ff7bb3b9b84e270db8d66042a1a6929a0955ee35344c143cdecd5c77fd80912b"
+    },
+    {
+      "stem": "te_pca_scree_te34_v1",
+      "png": "results/figures/research_review/te_pca_scree_te34_v1.png",
+      "pdf": "results/figures/research_review/te_pca_scree_te34_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "5195218b9d76dae5c265889b9f38ee15e852d7b30eaeb3d0b4aba22b952413e4",
+      "pdf_sha256": "be920175beff50e353ff13e62bc7a4b97dc0f9842312b27dcce59aff72ad99a6"
+    },
+    {
+      "stem": "te_pca_elbow_te34_v1",
+      "png": "results/figures/research_review/te_pca_elbow_te34_v1.png",
+      "pdf": "results/figures/research_review/te_pca_elbow_te34_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "48b14d521ab0bbc0722d50f746823405cef303a6576fd3612d5c6ab2123530bd",
+      "pdf_sha256": "f2fbd1e49609bbe28401385a1c22dc7c7efb2551e089648ee5efe211875ae998"
+    },
+    {
+      "stem": "te_pca_silhouette_te34_v1",
+      "png": "results/figures/research_review/te_pca_silhouette_te34_v1.png",
+      "pdf": "results/figures/research_review/te_pca_silhouette_te34_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "cacf27ebad7179fea0efe56d784fb0ba163d8ce9797f717d56f48b50b3d56b22",
+      "pdf_sha256": "1ea56d2653736777d087d22c33993d6a1088feaf0cc91add4474231bddfd6740"
+    },
+    {
+      "stem": "te_pca_clusters_te34_v1",
+      "png": "results/figures/research_review/te_pca_clusters_te34_v1.png",
+      "pdf": "results/figures/research_review/te_pca_clusters_te34_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "4f0381abc9e6709411eb1cc4a61ca97ade4bda1e5180aae29348c5570955ab66",
+      "pdf_sha256": "94332c4bcb0ba14b64cc8fd3cb378bb2c0a5b0e660c460b5f2acfacfbb660b0f"
+    },
+    {
+      "stem": "te_pca_clusters_phylogeny_te34_v1",
+      "png": "results/figures/research_review/te_pca_clusters_phylogeny_te34_v1.png",
+      "pdf": "results/figures/research_review/te_pca_clusters_phylogeny_te34_v1.pdf",
+      "width_inches": 12,
+      "height_inches": 12,
+      "png_sha256": "f365101d4e1dcaa30590fc54e8816011e9e5ebf4194bbc9fa335ca50f3d15a5a",
+      "pdf_sha256": "f7e745cdbf5026e9025994db73085670705cdc0bf13980f9934f7d5318182f7f"
+    },
+    {
+      "stem": "ltr_terminal_internal_violin_ltr30_v1",
+      "png": "results/figures/research_review/ltr_terminal_internal_violin_ltr30_v1.png",
+      "pdf": "results/figures/research_review/ltr_terminal_internal_violin_ltr30_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "cc6fa61238a7b3d9c5f1374a99a78f048b946ee82d642ab3dc164d0eb0c137d1",
+      "pdf_sha256": "58c5192af50103c52272ebb8cdafb962fb841094771b77e139700028083d1025"
+    },
+    {
+      "stem": "ltr_terminal_internal_artifact_screened_ltr30_v1",
+      "png": "results/figures/research_review/ltr_terminal_internal_artifact_screened_ltr30_v1.png",
+      "pdf": "results/figures/research_review/ltr_terminal_internal_artifact_screened_ltr30_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "50f921193e075ece5279dbccd1a35dd8733f24dfeac34c9651534d9932c54ce7",
+      "pdf_sha256": "3fdc5b2117f4e64b8d81c7a4ad7027727f03f92672658d708264b7df544aedd5"
+    },
+    {
+      "stem": "ltr_terminal_internal_log_ltr30_v1",
+      "png": "results/figures/research_review/ltr_terminal_internal_log_ltr30_v1.png",
+      "pdf": "results/figures/research_review/ltr_terminal_internal_log_ltr30_v1.pdf",
+      "width_inches": 10,
+      "height_inches": 8,
+      "png_sha256": "27d1b6216a2b2793245976cd7b960c20d933ef0d16ff38a0b480d236085a58b3",
+      "pdf_sha256": "86ee57caab8134397adca31a392786feb514fb2d27bf2c8860d9e0827701112b"
+    }
+  ]
+}

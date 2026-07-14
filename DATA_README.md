@@ -4,7 +4,14 @@ This document describes how to obtain the input data required to run the Desmogn
 
 ## Overview
 
-The current TE analysis scope is 34 Desmognathus salamander species. Large sequencing and genome-analysis inputs are not included in this repository due to size constraints (~40GB total). `path_analysis/data/external/raw/` may include small source-backed literature or external-data snapshots when their license and sensitivity boundary are documented.
+The active TE/genome analysis scope is the 18-species
+`te_genome_primary_mediumplus` panel. The lookup and staged directories retain
+additional resources for provenance and historical reconstruction, but those
+resources are not automatically analysis inputs. Large sequencing and
+genome-analysis inputs are not included in this repository due to size
+constraints (~40GB total). `path_analysis/data/external/raw/` may include small
+source-backed literature or external-data snapshots when their license and
+sensitivity boundary are documented.
 
 ## Required Data Files
 
@@ -12,14 +19,26 @@ The current TE analysis scope is 34 Desmognathus salamander species. Large seque
 
 **Location:** `input_data/dnaPipeTE/`
 
-**Source:** Run dnaPipeTE on RNA-seq data from NCBI SRA
+**Source:** Run dnaPipeTE on nuclear-filtered genomic WGS reads from NCBI SRA
 
 **Files needed:** One file per species named `{SRX_ID}_reads_per_component_and_annotation`
 
 **How to obtain:**
-1. Download RNA-seq reads from NCBI SRA using the accessions in `input_data/lookup_table.txt`
-2. Run dnaPipeTE on each sample
+1. Download genomic WGS reads from NCBI SRA using the accessions in `input_data/lookup_table.txt`
+2. Reproduce the nuclear-read filtering and run dnaPipeTE on one read mate
 3. Copy the `reads_per_component_and_annotation` output files to `input_data/dnaPipeTE/`
+
+The historical upstream command is recoverable from Git commit
+`cc64ffb134968250671ff0e3456255063a1aba97` (`dnaPipeTE.sh`). It used a
+15,000,000,000-bp configured genome, 0.1× coverage, two Trinity samples, a 0.15
+RepeatMasker annotation threshold, and
+`/nfs/home/jlamb/TE_libs/dedupe_telib.fasta`. The historical container digest,
+library checksum, runtime logs, and sampling replicates are not stored, so the
+reconstructed absolute-load output remains sensitivity-only.
+
+Suffixes added after an SRX accession identify computational retries, not new
+specimens or biological replicates. Select exactly one completed output per SRX
+using a run manifest; never sum retries.
 
 Example SRA accessions (see lookup_table.txt for complete list):
 - D. fuscus: SRX20497025
@@ -30,19 +49,19 @@ Example SRA accessions (see lookup_table.txt for complete list):
 
 **Location:** `input_data/repeatmasker/`
 
-**Source:** Run RepeatMasker on genome assemblies from NCBI
+**Source:** RepeatMasker `-align` output for the dnaPipeTE `Trinity.fasta`
+repeat-contig assembly, using the custom repeat library
 
 **Files needed:** One `.align` file per species named `{SRX_ID}_Trinity.align`
 
 **How to obtain:**
-1. Download genome assemblies from NCBI using GCA accessions in `input_data/lookup_table.txt`
-2. Run RepeatMasker with the `-align` flag
+1. Retain the `Trinity.fasta` repeat-contig assembly from each dnaPipeTE run
+2. Run RepeatMasker with the same custom library and the `-align` flag
 3. Copy the `.align` output files to `input_data/repeatmasker/`
 
-Example genome accessions:
-- D. fuscus: GCA_032353935.1
-- D. monticola: GCA_031753675.1
-- D. ocoee: GCA_030264995.1
+Despite the `Trinity.align` name, these are not alignments over the GCA genome
+assemblies. Assembly-dependent LTR-pair and ectopic-recombination inputs are
+separate resources linked through `input_data/lookup_table.txt`.
 
 ### 3. Phylogenetic Tree
 
@@ -50,7 +69,16 @@ Example genome accessions:
 
 **Files needed:** `desmo900dated_test.tre` (Newick format)
 
-**Source:** Time-calibrated phylogeny from published Desmognathus phylogenomic analysis
+**Focal source:** Collaborator-supplied time-calibrated *Desmognathus* tree.
+Its exact publication, archive, tree identifier, and calibration record still
+need to be supplied; the release audit locks its SHA-256 and derives only an
+exact 18-tip, rounding-corrected tree.
+
+**Published uncertainty sensitivity:** Stewart and Wiens (2025),
+DOI `10.1016/j.ympev.2024.108272`, Supplementary File S3 (optimal dated tree)
+and Supplementary File S4 (200 time-calibrated bootstrap trees). Publisher
+archives, extracted files, checksums, and final-panel derivatives are recorded
+in `results/data/corrected/phylogeny/phylogeny_source_registry_v1.csv`.
 
 ### 4. Ectopic Recombination Data
 
@@ -81,6 +109,75 @@ Species    SRA_Accension    Genome_Accension
 D.fuscus   SRX20497025      GCA_032353935.1
 ...
 ```
+
+### 6. Microscopy release-audit inputs
+
+The raw microscopy data and model artifacts live in the sibling
+`/home/jake/Projects/cellprofiler_test` workspace. The corrected final-18 audit
+records absolute source paths and SHA-256 hashes in
+`results/data/corrected/microscopy/microscopy_source_registry_analysis18_v1.csv`.
+It scores the exact archived production cell masks, audits the locally trained
+nucleus model, compares six morphology estimators, builds conditional
+hierarchical intervals, and withdraws the unsupported picogram conversion.
+
+Run:
+
+```bash
+scripts/run_in_dusky.sh python scripts/processing/audit_microscopy_release.py
+```
+
+The approved release variable is a relative nuclear-IOD sensitivity index, not
+absolute genome size. Historical bridge outputs remain preserved.
+
+### 7. Corrected path-audit products
+
+Corrected path inputs and results live under
+`results/data/corrected/path_analysis/`. They are generated only from the
+declared final-18 TE features, corrected microscopy estimators, relative-IOD
+subsets, and corrected tree products. The builder never reads the historical
+`genome_size_pg` field.
+
+```bash
+scripts/run_in_dusky.sh python scripts/processing/build_corrected_path_inputs.py
+scripts/run_in_dusky.sh Rscript scripts/processing/audit_corrected_path_models.R --phase all
+scripts/run_in_dusky.sh Rscript scripts/processing/simulate_corrected_path_calibration.R
+scripts/run_in_dusky.sh python scripts/processing/summarize_corrected_path_audit.py
+scripts/run_in_dusky.sh python scripts/processing/build_publication_audit_notebook.py
+scripts/run_in_dusky.sh jupyter nbconvert --to notebook --execute notebooks/Desmognathus_publication_audit_analysis18_v1.ipynb --inplace --ExecutePreprocessor.timeout=600
+scripts/run_in_dusky.sh python scripts/processing/audit_publication_notebook.py
+```
+
+The output bundle includes every candidate ranking, basis-set component,
+best-model edge, 200-tree fit, species-omission fit, simulation replicate,
+review figure, and release gate. It is explicitly exploratory because the
+image trait is not an independently calibrated genome-size measurement.
+
+### 8. Canonical research-review notebooks from frozen outputs
+
+The primary collaborator-review surface is split into eight analysis-domain
+notebooks under `notebooks/research_review/`. Building and executing them reads
+frozen corrected inputs and runs only the lightweight frozen image-IOD summary;
+it does not rerun RepeatMasker, RepeatModeler, dnaPipeTE, read mapping, model
+training, or cell/nucleus segmentation.
+
+```bash
+scripts/run_in_dusky.sh python scripts/processing/build_corrected_repeat_landscape.py
+scripts/run_in_dusky.sh python scripts/processing/build_research_review_notebooks.py
+scripts/run_in_dusky.sh Rscript scripts/processing/build_audited_historical_style_figures.R
+scripts/run_in_dusky.sh Rscript path_analysis/scripts/run_cell_nucleus_genome_phylogenetic_path_analysis.R
+scripts/run_in_dusky.sh python path_analysis/scripts/build_cell_nucleus_genome_path_presentation.py
+uv run --with pandas --with numpy --with matplotlib --with nbformat --with nbclient --with nbconvert --with jupyter-client --with ipykernel python path_analysis/scripts/publish_cell_nucleus_genome_path_notebook.py
+for notebook in notebooks/research_review/[0-9][0-9]_*.ipynb; do
+  scripts/run_in_dusky.sh jupyter nbconvert --to notebook --execute "$notebook" --inplace --ExecutePreprocessor.timeout=600
+done
+scripts/run_in_dusky.sh python path_analysis/scripts/build_frozen_genome_iod_notebook.py --finalize
+scripts/run_in_dusky.sh python scripts/processing/audit_research_review_notebooks.py
+scripts/run_in_dusky.sh jupyter lab notebooks/research_review
+```
+
+The compact RepeatMasker landscape uses inclusive hit query-coordinate bp and
+exactly conserves the corrected hit-level manifest. Its denominator is
+within-species corrected aligned hit bp, not genome or assembly span.
 
 ## Directory Structure
 

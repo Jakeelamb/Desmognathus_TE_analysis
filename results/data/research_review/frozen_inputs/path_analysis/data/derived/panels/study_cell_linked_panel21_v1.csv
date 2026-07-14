@@ -1,0 +1,22 @@
+species,te_resource_panel34_v1,cell_linked_panel21_v1,integrated_path_panel18_v1,decision_basis,te_sra_accession,te_assembly_accession,has_tree_tip,has_te,has_genome,has_ectopic,has_morphology,has_ltr_history,has_ltr_high_confidence,ltr_history_n_pairs_high_confidence,analysis_role
+amphileucus,True,True,True,active WGS and current linked-cell record,SRX20502537,GCA_032360725.1,True,True,True,True,True,True,True,10.0,cell_linked_descriptive
+anicetus,True,True,True,active WGS and current linked-cell record,SRX21425396,GCA_033119125.1,True,True,True,True,True,True,True,4.0,cell_linked_descriptive
+apalachicolae,True,True,True,active WGS and current linked-cell record,SRX19952657,GCA_030264955.1,True,True,True,True,True,True,False,0.0,cell_linked_descriptive
+auriculatus,True,True,True,active WGS and current linked-cell record,SRX19953419,GCA_030264895.1,True,True,True,True,True,True,True,3.0,cell_linked_descriptive
+bairdi,True,True,True,active WGS and current linked-cell record,SRX21425397,GCA_034783875.1,True,True,True,True,True,True,True,6.0,cell_linked_descriptive
+brimleyorum,False,True,False,current linked-cell record; absent from active WGS lookup,,,True,False,True,False,True,False,False,0.0,cell_linked_descriptive
+campi,True,True,True,active WGS and current linked-cell record,SRX21425398,GCA_033118305.1,True,True,True,True,True,True,True,11.0,cell_linked_descriptive
+folkertsi,False,True,False,current linked-cell record; genomic resource excluded as untrusted,,,True,False,True,False,True,False,False,0.0,cell_linked_descriptive
+fuscus,True,True,True,active reidentified SRX20497025 resource and current linked-cell record,SRX20497025,GCA_032353935.1,True,True,True,True,True,True,True,9.0,cell_linked_descriptive
+gvnigeusgwotli,True,True,True,active WGS and current linked-cell record,SRX20502827,GCA_032353775.1,True,True,True,True,True,True,True,5.0,cell_linked_descriptive
+intermedius,True,True,True,active WGS and current linked-cell record,SRX20502776,GCA_032275315.1,True,True,True,True,True,True,True,7.0,cell_linked_descriptive
+kanawha,True,True,True,active WGS and current linked-cell record; terminal-internal proxy absent,SRX20502939,GCA_032353855.1,True,True,True,False,True,False,False,0.0,cell_linked_descriptive
+marmoratus,True,True,True,active WGS and current linked-cell record,SRX19954879,GCA_031753695.1,True,True,True,True,True,True,True,3.0,cell_linked_descriptive
+mavrokoilius,True,True,True,active WGS and current linked-cell record,SRX20503049,GCA_032354855.1,True,True,True,True,True,True,True,5.0,cell_linked_descriptive
+monticola,True,True,True,active WGS and current linked-cell record,SRX19955091,GCA_031753675.1,True,True,True,True,True,True,True,8.0,cell_linked_descriptive
+ochrophaeus,False,True,False,current linked-cell record; genomic resource excluded as untrusted,,,True,False,True,False,True,False,False,0.0,cell_linked_descriptive
+ocoee,True,True,True,active WGS and current linked-cell record,SRX19952863,GCA_030264995.1,True,True,True,True,True,True,True,5.0,cell_linked_descriptive
+perlapsus,True,True,True,active WGS and current linked-cell record,SRX20503048,GCA_032275285.1,True,True,True,True,True,True,True,7.0,cell_linked_descriptive
+tilleyi,True,True,True,active WGS and current linked-cell record,SRX21394251,GCA_034782015.1,True,True,True,True,True,True,True,36.0,cell_linked_descriptive
+valtos,True,True,True,active WGS and current linked-cell record; terminal-internal proxy absent,SRX20503015,GCA_032357565.1,True,True,True,False,True,False,False,0.0,cell_linked_descriptive
+welteri,True,True,True,active WGS and current linked-cell record,SRX19958882,GCA_030264495.1,True,True,True,True,True,True,True,14.0,cell_linked_descriptive

@@ -10,6 +10,9 @@ If returning after a context switch or changing focus within the project, start 
   The current high-level map of the workspace, pipeline, panel definitions, generated outputs, and claim boundaries. This should be the first file to read when restarting or shifting to a different task within the same analysis.
 - `README.md`
   This overview and the current staged plan.
+- `STUDY_SPECIES_PANELS.md`
+  The authoritative TE34 / linked-cell21 / integrated-path18 contract. Read
+  this before interpreting a missing species as an analytical exclusion.
 - `DATA_DICTIONARY.md`
   Variable definitions, preferred observed proxies, and current caveats.
 - `TE_DATA_AUDIT.md`
@@ -21,7 +24,7 @@ If returning after a context switch or changing focus within the project, start 
 - `TE_PROVENANCE_AUDIT.md`
   Upstream provenance map for the canonical TE summary tables, including the now-resolved diversity-summary reconstruction path.
 - `CELLPROFILER_PROVENANCE_AUDIT.md`
-  Human-readable audit note for the imported CellProfiler genome and morphology layer, including the linked-run reconstruction rule used by the refresh bridge.
+  Human-readable audit note for the imported CellProfiler genome and morphology layer, including the verified-species import rule used by the refresh bridge.
 - `INPUT_PREPARATION_PLAN.md`
   Detailed plan for literature trait mining, taxonomy crosswalks, and TE feature engineering.
 - `SOURCE_TRACKING.md`
@@ -31,7 +34,7 @@ If returning after a context switch or changing focus within the project, start 
 - `scripts/build_master_dataset.py`
   Builds overlap-ready species tables from the repo plus the imported CellProfiler snapshots in `path_analysis/data/external/derived/`.
 - `scripts/pull_cellprofiler_estimates.py`
-  Rebuilds the imported CellProfiler snapshots and traceability audits from the active `cellprofiler_test` run outputs, reconstructing the genome species bundle from linked YOLO nucleus measurements after cell linkage.
+  Rebuilds the imported CellProfiler snapshots and traceability audits from the active `cellprofiler_test` run outputs, preferring the verified species dataset when present and falling back to legacy linked YOLO reconstruction otherwise.
 - `scripts/path_model_scaffold.R`
   Prepares transformed analysis inputs and defines the current candidate model sets.
 - `scripts/prepare_te_features.py`
@@ -71,9 +74,9 @@ If returning after a context switch or changing focus within the project, start 
 
 These counts reflect the current files already present in the workspace:
 
-- TE species in this repo: `34`
-- Linked genome estimates imported from CellProfiler: `21`
-- TE + genome overlap: `18`
+- Vetted genomic-resource species (TE34): `34`
+- Current linked-cell species (Cell21): `21`
+- TE + linked-cell evidence intersection (path18): `18`
 - TE + genome + ectopic overlap: `16`
 - Genome + linked morphology overlap: `21`
 - TE + genome + linked morphology overlap: `18`
@@ -81,20 +84,57 @@ These counts reflect the current files already present in the workspace:
 
 ## Important Caveat
 
-The current `genome_size_pg` values imported from `cellprofiler_test` are still provisional for path-analysis purposes. The active imported snapshot is derived from strict-core linked YOLO nucleus IOD, prefers analysis-ready linked images when available, and records that reconstruction in a machine-readable audit. Any model that simultaneously treats current genome size and nucleus size as separate causal variables should therefore be interpreted as planning and sensitivity work, not a final causal result.
+The historical CellProfiler bridge uses the exact frozen top-50 dataset under
+`cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/`.
+The publication-release interpretation is now narrower than the bridge column
+names: cell and nucleus areas are quality-screened upper-tail sensitivity
+traits, and image IOD is a relative nuclear-intensity proxy rather than an
+approved absolute genome-size assay. See
+`../plans/publication-readiness-deep-audit/microscopy_release_audit_analysis18_v1.md`
+and `../results/data/corrected/microscopy/`.
 
 For now:
 
-- `TE -> genome size` models are the cleanest first target.
-- `TE -> genome size <- ectopic / DNA loss` mechanism models are the next layer.
-- `genome size -> nucleus size -> cell size` models are scaffolded here, but should wait for the independent final genome-size estimates before formal interpretation.
+- `TE -> relative nuclear IOD` is exploratory proxy analysis only.
+- terminal:internal LTR depth is an exploratory deletion-footprint/mapping
+  proxy, not an ectopic-recombination rate.
+- `genome size -> nucleus size -> cell size` remains scaffolded until an
+  independent genome-size assay is available.
+
+## Corrected Final-18 Audit Branch
+
+The non-destructive corrected branch is the integrated path18 layer only. It
+does not replace the larger TE34 or Cell21 descriptive analyses, historical
+tables, or promote relative IOD to genome size. See `STUDY_SPECIES_PANELS.md`.
+
+```bash
+scripts/run_in_dusky.sh python scripts/processing/build_corrected_path_inputs.py
+scripts/run_in_dusky.sh Rscript scripts/processing/audit_corrected_path_models.R --phase all
+scripts/run_in_dusky.sh Rscript scripts/processing/simulate_corrected_path_calibration.R
+scripts/run_in_dusky.sh python scripts/processing/summarize_corrected_path_audit.py
+scripts/run_in_dusky.sh python scripts/processing/build_publication_audit_notebook.py
+scripts/run_in_dusky.sh jupyter nbconvert --to notebook --execute notebooks/Desmognathus_publication_audit_analysis18_v1.ipynb --inplace --ExecutePreprocessor.timeout=600
+scripts/run_in_dusky.sh python scripts/processing/audit_publication_notebook.py
+```
+
+Review these first:
+
+- `../plans/publication-readiness-deep-audit/corrected_path_analysis_audit_analysis18_v1.md`
+- `../results/data/corrected/path_analysis/publication_release_gate_matrix_analysis18_v1.csv`
+- `../notebooks/Desmognathus_publication_audit_analysis18_v1.ipynb`
+- `../notebooks/Desmognathus_publication_audit_analysis18_v1.manifest.json`
+
+The model branch exports all rankings, basis-set components, best-model edges,
+tree distributions, species-omission results, and simulation replicates. Every
+row marks absolute-genome and publication-causal claims false.
 
 ## Recommended Analysis Order
 
 1. Build the consolidated species tables.
-2. Start with the `te_genome` family.
-3. Add ectopic recombination in `te_genome_ectopic`.
-4. Hold the morphology chain as a staged plan until the final genome estimates are independent enough to defend `genome -> nucleus` causality.
+2. Use the corrected final-18 TE and phylogeny inputs.
+3. Run data-estimator, IOD-QC, leave-one-species-out, and 200-tree sensitivity.
+4. Keep every image-IOD path result explicitly exploratory; do not promote a
+   genome-size causal claim.
 
 ## How To Use
 
@@ -227,4 +267,7 @@ Those snapshots are rebuilt from the active `cellprofiler_test` outputs:
 snapshots with `pull_cellprofiler_estimates.py` before rebuilding merged
 path-analysis tables.
 
-The pull step now reconstructs the imported genome bundle directly from the active linked YOLO nucleus measurements, writes a species-by-state summary sidecar, and records that reconstruction explicitly in the audit outputs rather than silently reusing downstream path-analysis tables.
+The pull step now imports the verified species dataset directly when available,
+writes species-level morphology, genome, genome-sensitivity, image-QC, and
+traceability sidecars, and records that import explicitly in the audit outputs
+rather than silently reusing downstream path-analysis tables.

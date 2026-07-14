@@ -18,7 +18,8 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr, spearmanr
+from scipy.optimize import minimize_scalar
+from scipy.stats import pearsonr, spearmanr, t as student_t
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -28,16 +29,18 @@ import build_frozen_genome_iod_notebook as genome_analysis  # noqa: E402
 
 GENOME_PATH = genome_analysis.FROZEN_PATH
 GENOME_SUMMARY_PATH = genome_analysis.SPECIES_SUMMARY_PATH
-CELL_PATH = (
+SOURCE_CELL_PATH = (
     PROJECT_ROOT
     / "path_analysis"
     / "data"
     / "external"
     / "derived"
     / "largest_cell_mask_review"
-    / "frozen_largest_cell_mask_top50.csv.gz"
+    / "finalized_largest_cell_masks_all_reviewed_species.csv.gz"
 )
-TREE_PATH = PROJECT_ROOT / "input_data" / "phylogeny" / "desmo900dated_test.tre"
+SOURCE_TREE_PATH = PROJECT_ROOT / "input_data" / "phylogeny" / "desmo900dated_test.tre"
+CELL_PATH = genome_analysis.resolve_portable_artifact(SOURCE_CELL_PATH)
+TREE_PATH = genome_analysis.resolve_portable_artifact(SOURCE_TREE_PATH)
 OUTPUT_DIR = genome_analysis.REPORT_DIR
 FIGURE_DIR = genome_analysis.FIGURE_DIR
 PNG_PATH = FIGURE_DIR / "07_measured_phylogeny_genome_nucleus_cell.png"
@@ -53,6 +56,32 @@ METRIC_ORDER = (
     "nucleus_area_um2",
     "cell_area_um2",
 )
+PAIRWISE_SPECS = (
+    (
+        "genome_size_vs_nucleus_area",
+        "genome_size_pg_fuscus_anchored",
+        "nucleus_area_um2",
+        "Genome-size estimate (pg; D. fuscus = 16.36)",
+        "Nucleus area (µm²)",
+        "#4C78A8",
+    ),
+    (
+        "genome_size_vs_cell_area",
+        "genome_size_pg_fuscus_anchored",
+        "cell_area_um2",
+        "Genome-size estimate (pg; D. fuscus = 16.36)",
+        "Cell area (µm²)",
+        "#D56A4A",
+    ),
+    (
+        "nucleus_area_vs_cell_area",
+        "nucleus_area_um2",
+        "cell_area_um2",
+        "Nucleus area (µm²)",
+        "Cell area (µm²)",
+        "#765A9A",
+    ),
+)
 METRIC_STYLE = {
     "genome_size_pg_fuscus_anchored": {
         "title": "Genome size",
@@ -62,13 +91,13 @@ METRIC_STYLE = {
     },
     "nucleus_area_um2": {
         "title": "Nucleus area",
-        "xlabel": "Nucleus area (µm²)\nmedian of vetted top-50 cells",
+        "xlabel": "Nucleus area (µm²)\nmedian of finalized vetted cells",
         "color": "#9A8CB4",
         "format": ".1f",
     },
     "cell_area_um2": {
         "title": "Cell area",
-        "xlabel": "Cell area (µm²)\nmedian of vetted top-50 cells",
+        "xlabel": "Cell area (µm²)\nmedian of finalized vetted cells",
         "color": "#D39768",
         "format": ".1f",
     },
@@ -162,12 +191,14 @@ def build_figure_data(
     figure_species = sorted(cell_species)
     if not genome_species.issubset(cell_species):
         raise ValueError(
-            "Every frozen genome-panel species must have a frozen size panel."
+            "Every finalized genome-panel species must have a finalized size panel."
         )
-    if len(figure_species) != 21:
-        raise ValueError(f"Expected 21 frozen cell-panel species, found {len(figure_species)}.")
-    if not cells.groupby("species").size().eq(50).all():
-        raise ValueError("Size panel must contain exactly 50 vetted cells per species.")
+    if not figure_species:
+        raise ValueError("Finalized size panel contains no measured species.")
+    if cells.groupby("species").size().min() < 1:
+        raise ValueError("Every size-panel species must retain a reviewed cell pair.")
+    if not cells["review_status"].eq("reviewed_keep").all():
+        raise ValueError("Size panel contains a row that is not reviewed keep.")
     if not genome["review_status"].eq("reviewed_keep").all():
         raise ValueError("Genome panel contains a row that is not reviewed keep.")
 
@@ -219,10 +250,23 @@ def build_figure_data(
                 / reference_iod
                 * genome_analysis.REFERENCE_GENOME_SIZE_PG
             )
-            genome_status = "frozen_primary_common_support"
+            quality_statuses = sorted(
+                genome_group["quality_match_status"].dropna().astype(str).unique()
+            )
+            if quality_statuses == ["common_support"]:
+                genome_status = "finalized_included_common_support"
+                include_in_primary_genome_analysis = True
+            elif quality_statuses == ["limited_overlap"]:
+                genome_status = "finalized_included_limited_overlap"
+                include_in_primary_genome_analysis = True
+            else:
+                raise ValueError(
+                    f"Unexpected quality-match status for {species}: {quality_statuses}"
+                )
         else:
             genome_point = np.nan
-            genome_status = "limited_overlap_no_frozen_primary_iod"
+            genome_status = "no_finalized_genome_iod"
+            include_in_primary_genome_analysis = False
         points = {
             "genome_size_pg_fuscus_anchored": genome_point,
             "nucleus_area_um2": float(cell_group["nuc_area_um2"].median()),
@@ -231,10 +275,14 @@ def build_figure_data(
         row: dict[str, Any] = {
             "species": species,
             "genome_panel_status": genome_status,
+            "include_in_primary_genome_analysis": include_in_primary_genome_analysis,
             "n_genome_nuclei": int(len(genome_group)),
             "n_genome_images": int(genome_group["filename"].nunique()),
             "n_size_cells": int(len(cell_group)),
             "n_size_images": int(cell_group["filename"].nunique()),
+            "size_sample_size_support": (
+                "below_top50_target" if len(cell_group) < 50 else "top50_target_met"
+            ),
         }
         for metric in METRIC_ORDER:
             row[metric] = points[metric]
@@ -259,24 +307,22 @@ def build_figure_data(
 
     summary = pd.DataFrame(summary_rows)
     draws = pd.concat(draw_frames, ignore_index=True)
-    comparison_specs = [
-        (
-            "genome_size_vs_nucleus_area",
-            "genome_size_pg_fuscus_anchored",
-            "nucleus_area_um2",
-        ),
-        (
-            "genome_size_vs_cell_area",
-            "genome_size_pg_fuscus_anchored",
-            "cell_area_um2",
-        ),
-        ("nucleus_area_vs_cell_area", "nucleus_area_um2", "cell_area_um2"),
-    ]
     correlation_rows = []
-    for label, left, right in comparison_specs:
-        complete = summary[[left, right]].dropna()
+    for label, left, right, _x_label, _y_label, _color in PAIRWISE_SPECS:
+        analysis_columns = ["species", left, right]
+        if "genome_size_pg_fuscus_anchored" in {left, right}:
+            complete = summary.loc[
+                summary["include_in_primary_genome_analysis"], analysis_columns
+            ].dropna()
+        else:
+            complete = summary[analysis_columns].dropna()
         rho, p_value = spearmanr(complete[left], complete[right])
         pearson_r, pearson_p = pearsonr(complete[left], complete[right])
+        pgls = fit_pagel_lambda_pgls(
+            complete,
+            predictor=left,
+            outcome=right,
+        )
         correlation_rows.append(
             {
                 "comparison": label,
@@ -287,7 +333,8 @@ def build_figure_data(
                 "pearson_r": float(pearson_r),
                 "pearson_p_value_descriptive_only": float(pearson_p),
                 "n_species": int(len(complete)),
-                "phylogenetically_corrected": False,
+                "phylogenetically_corrected": True,
+                **pgls,
             }
         )
     return summary, draws, pd.DataFrame(correlation_rows)
@@ -323,6 +370,163 @@ def load_measured_tree(species: list[str]) -> Any:
     if max(tip_depths) - min(tip_depths) > 1e-4:
         raise ValueError("Pruned time tree is not ultrametric within tolerance.")
     return tree
+
+
+def phylogenetic_brownian_covariance(
+    tree: Any,
+    tip_order: list[str],
+) -> np.ndarray:
+    """Return the Brownian shared-path covariance for an ordered tip set."""
+    terminals = {terminal.name: terminal for terminal in tree.get_terminals()}
+    if set(terminals) != set(tip_order):
+        raise ValueError("Tree tips do not match the requested covariance order.")
+    covariance = np.empty((len(tip_order), len(tip_order)), dtype=float)
+    for row_index, row_tip in enumerate(tip_order):
+        for column_index, column_tip in enumerate(tip_order):
+            if row_index == column_index:
+                target = terminals[row_tip]
+            else:
+                target = tree.common_ancestor(
+                    terminals[row_tip], terminals[column_tip]
+                )
+            covariance[row_index, column_index] = float(
+                tree.distance(tree.root, target)
+            )
+    if not np.isfinite(covariance).all():
+        raise ValueError("Phylogenetic covariance contains non-finite values.")
+    if np.any(np.diag(covariance) <= 0):
+        raise ValueError("Phylogenetic covariance requires positive tip depths.")
+    return covariance
+
+
+def fit_pagel_lambda_pgls(
+    frame: pd.DataFrame,
+    *,
+    predictor: str,
+    outcome: str,
+) -> dict[str, Any]:
+    """Fit ML Pagel-lambda PGLS to log10, sample-standardized traits.
+
+    The likelihood and residual degrees-of-freedom standard error reproduce the
+    ``phylolm(..., model = "lambda")`` point fits used by the path analysis.
+    """
+    data = frame[["species", predictor, outcome]].dropna().copy()
+    if len(data) < 4:
+        raise ValueError("PGLS requires at least four complete species.")
+    if data["species"].duplicated().any():
+        raise ValueError("PGLS input contains duplicate species.")
+    if (data[[predictor, outcome]] <= 0).any().any():
+        raise ValueError("PGLS log10 traits must be strictly positive.")
+
+    tree = load_measured_tree(data["species"].tolist())
+    tip_order = [terminal.name for terminal in tree.get_terminals()]
+    data["tree_tip"] = data["species"].str.replace("D. ", "", regex=False)
+    data = data.set_index("tree_tip").loc[tip_order]
+    brownian = phylogenetic_brownian_covariance(tree, tip_order)
+    diagonal = np.diag(np.diag(brownian))
+    off_diagonal = brownian - diagonal
+
+    predictor_log10 = np.log10(data[predictor].to_numpy(dtype=float))
+    outcome_log10 = np.log10(data[outcome].to_numpy(dtype=float))
+    predictor_mean = float(predictor_log10.mean())
+    predictor_sd = float(predictor_log10.std(ddof=1))
+    outcome_mean = float(outcome_log10.mean())
+    outcome_sd = float(outcome_log10.std(ddof=1))
+    if predictor_sd <= 0 or outcome_sd <= 0:
+        raise ValueError("PGLS cannot standardize a zero-variance trait.")
+    predictor_z = (predictor_log10 - predictor_mean) / predictor_sd
+    outcome_z = (outcome_log10 - outcome_mean) / outcome_sd
+    design = np.column_stack([np.ones(len(data)), predictor_z])
+
+    def profile_fit(lambda_value: float) -> dict[str, Any]:
+        covariance = diagonal + float(lambda_value) * off_diagonal
+        sign, log_determinant = np.linalg.slogdet(covariance)
+        if sign <= 0:
+            raise ValueError("Pagel-lambda covariance is not positive definite.")
+        covariance_inverse_design = np.linalg.solve(covariance, design)
+        information = design.T @ covariance_inverse_design
+        covariance_inverse_outcome = np.linalg.solve(covariance, outcome_z)
+        coefficients = np.linalg.solve(
+            information,
+            design.T @ covariance_inverse_outcome,
+        )
+        residual = outcome_z - design @ coefficients
+        quadratic = float(residual @ np.linalg.solve(covariance, residual))
+        n_species = len(data)
+        profile_nll = 0.5 * (
+            n_species * np.log(2.0 * np.pi)
+            + log_determinant
+            + n_species * np.log(quadratic / n_species)
+            + n_species
+        )
+        return {
+            "profile_nll": float(profile_nll),
+            "coefficients": coefficients,
+            "quadratic": quadratic,
+            "information": information,
+            "covariance": covariance,
+        }
+
+    lambda_floor = 1e-7
+    optimization = minimize_scalar(
+        lambda value: profile_fit(value)["profile_nll"],
+        bounds=(lambda_floor, 1.0),
+        method="bounded",
+        options={"xatol": 1e-13},
+    )
+    candidates = [
+        (lambda_floor, profile_fit(lambda_floor)),
+        (float(optimization.x), profile_fit(float(optimization.x))),
+        (1.0, profile_fit(1.0)),
+    ]
+    lambda_estimate, fit = min(
+        candidates,
+        key=lambda item: item[1]["profile_nll"],
+    )
+    coefficients = np.asarray(fit["coefficients"], dtype=float)
+    degrees_freedom = len(data) - design.shape[1]
+    residual_variance = fit["quadratic"] / degrees_freedom
+    coefficient_covariance = residual_variance * np.linalg.inv(fit["information"])
+    standard_errors = np.sqrt(np.diag(coefficient_covariance))
+    t_value = float(coefficients[1] / standard_errors[1])
+    p_value = float(2.0 * student_t.sf(abs(t_value), degrees_freedom))
+    critical_value = float(student_t.ppf(0.975, degrees_freedom))
+
+    covariance_inverse = np.linalg.inv(fit["covariance"])
+    weighted_mean = float(
+        (np.ones(len(data)) @ covariance_inverse @ outcome_z)
+        / (np.ones(len(data)) @ covariance_inverse @ np.ones(len(data)))
+    )
+    null_residual = outcome_z - weighted_mean
+    null_quadratic = float(null_residual @ covariance_inverse @ null_residual)
+    generalized_r_squared = 1.0 - fit["quadratic"] / null_quadratic
+
+    return {
+        "pgls_model": "Pagel_lambda_ML",
+        "trait_transformation": "log10_then_sample_zscore",
+        "pgls_standardized_beta": float(coefficients[1]),
+        "pgls_standard_error": float(standard_errors[1]),
+        "pgls_ci_low": float(
+            coefficients[1] - critical_value * standard_errors[1]
+        ),
+        "pgls_ci_high": float(
+            coefficients[1] + critical_value * standard_errors[1]
+        ),
+        "pgls_t_value": t_value,
+        "pgls_degrees_freedom": int(degrees_freedom),
+        "pgls_p_value": p_value,
+        "pagel_lambda": float(lambda_estimate),
+        "pagel_lambda_at_lower_boundary": bool(lambda_estimate <= 1.01e-7),
+        "pgls_generalized_r_squared": float(generalized_r_squared),
+        "pgls_intercept_z": float(coefficients[0]),
+        "pgls_var_intercept": float(coefficient_covariance[0, 0]),
+        "pgls_cov_intercept_slope": float(coefficient_covariance[0, 1]),
+        "pgls_var_slope": float(coefficient_covariance[1, 1]),
+        "predictor_log10_mean": predictor_mean,
+        "predictor_log10_sd": predictor_sd,
+        "outcome_log10_mean": outcome_mean,
+        "outcome_log10_sd": outcome_sd,
+    }
 
 
 def tree_coordinates(tree: Any) -> tuple[dict[Any, float], dict[Any, float], list[Any]]:
@@ -433,7 +637,8 @@ def draw_trait_axis(
         body.set_linewidth(0.8)
         body.set_alpha(0.44)
 
-    points = summary.set_index("species")[metric]
+    indexed_summary = summary.set_index("species")
+    points = indexed_summary[metric]
     all_values = np.concatenate(distributions)
     lower = float(np.quantile(all_values, 0.002))
     upper = float(np.quantile(all_values, 0.998))
@@ -446,7 +651,7 @@ def draw_trait_axis(
             ax.text(
                 0.02,
                 y,
-                "limited overlap; no calibrated genome estimate",
+                "no finalized IOD estimate",
                 transform=ax.get_yaxis_transform(),
                 va="center",
                 ha="left",
@@ -455,11 +660,25 @@ def draw_trait_axis(
                 fontstyle="italic",
             )
             continue
-        ax.scatter(value, y, s=24, color="#24282D", zorder=4)
+        limited_overlap = bool(
+            metric == "genome_size_pg_fuscus_anchored"
+            and indexed_summary.loc[species, "genome_panel_status"]
+            == "finalized_included_limited_overlap"
+        )
+        ax.scatter(
+            value,
+            y,
+            s=30 if limited_overlap else 24,
+            marker="D" if limited_overlap else "o",
+            facecolor="none" if limited_overlap else "#24282D",
+            edgecolor="#9A4D45" if limited_overlap else "#24282D",
+            linewidth=1.1 if limited_overlap else 0.6,
+            zorder=4,
+        )
         ax.text(
             value + label_offset,
             y,
-            format(value, style["format"]),
+            format(value, style["format"]) + ("†" if limited_overlap else ""),
             va="center",
             ha="left",
             fontsize=7,
@@ -504,7 +723,7 @@ def render_figure(
             y_by_species=y_by_species,
         )
 
-    correlation_lookup = correlations.set_index("comparison")["spearman_rho"]
+    correlation_lookup = correlations.set_index("comparison")
     fig.suptitle(
         "Time-calibrated Desmognathus phylogeny with audited bootstrap trait distributions",
         fontsize=16,
@@ -515,9 +734,11 @@ def render_figure(
         0.5,
         0.946,
         (
-            "Size panel: all 21 species, with 50 manually vetted largest cells and corresponding nuclei each. "
-            "Genome panel: 20 image-quality-matched species calibrated as species/fuscus IOD × 16.36 pg; "
-            "D. ochrophaeus has no genome estimate because image-quality overlap was limited. No phylogenetic fills."
+            f"Size panel: {len(summary)} species with all finalized vetted cell–nucleus pairs "
+            f"(n = {int(summary['n_size_cells'].min())}–{int(summary['n_size_cells'].max())} per species). "
+            f"Genome estimates: {int(summary['genome_size_pg_fuscus_anchored'].notna().sum())} species; "
+            f"analysis includes all {int(summary['include_in_primary_genome_analysis'].sum())}. "
+            "Hollow diamonds mark limited-overlap quality matches; no phylogenetic fills."
         ),
         ha="center",
         va="center",
@@ -528,11 +749,11 @@ def render_figure(
         0.5,
         0.925,
         (
-            "Descriptive species-level Spearman ρ: "
-            f"genome–nucleus {correlation_lookup['genome_size_vs_nucleus_area']:.2f}; "
-            f"genome–cell {correlation_lookup['genome_size_vs_cell_area']:.2f}; "
-            f"nucleus–cell {correlation_lookup['nucleus_area_vs_cell_area']:.2f}. "
-            "These correlations are not phylogenetically corrected."
+            "Phylogenetically corrected standardized PGLS β: "
+            f"genome–nucleus {correlation_lookup.loc['genome_size_vs_nucleus_area', 'pgls_standardized_beta']:.2f}; "
+            f"genome–cell {correlation_lookup.loc['genome_size_vs_cell_area', 'pgls_standardized_beta']:.2f}; "
+            f"nucleus–cell {correlation_lookup.loc['nucleus_area_vs_cell_area', 'pgls_standardized_beta']:.2f}. "
+            "Pagel's λ was estimated by maximum likelihood for each relationship."
         ),
         ha="center",
         va="center",
@@ -586,33 +807,7 @@ def render_pairwise_figure(
     summary: pd.DataFrame,
     correlations: pd.DataFrame,
 ) -> None:
-    """Plot the three unique pairwise trait relationships with bootstrap intervals."""
-    specs = [
-        (
-            "genome_size_vs_nucleus_area",
-            "genome_size_pg_fuscus_anchored",
-            "nucleus_area_um2",
-            "Genome-size estimate (pg; D. fuscus = 16.36)",
-            "Nucleus area (µm²)",
-            "#4C78A8",
-        ),
-        (
-            "genome_size_vs_cell_area",
-            "genome_size_pg_fuscus_anchored",
-            "cell_area_um2",
-            "Genome-size estimate (pg; D. fuscus = 16.36)",
-            "Cell area (µm²)",
-            "#D56A4A",
-        ),
-        (
-            "nucleus_area_vs_cell_area",
-            "nucleus_area_um2",
-            "cell_area_um2",
-            "Nucleus area (µm²)",
-            "Cell area (µm²)",
-            "#765A9A",
-        ),
-    ]
+    """Plot all pairwise traits with Pagel-lambda PGLS fits and uncertainty."""
     correlation_lookup = correlations.set_index("comparison")
     fig, axes = plt.subplots(1, 3, figsize=(18, 6.7))
     for panel_index, (
@@ -622,10 +817,12 @@ def render_pairwise_figure(
         x_label,
         y_label,
         color,
-    ) in enumerate(specs):
+    ) in enumerate(PAIRWISE_SPECS):
         ax = axes[panel_index]
         columns = [
             "species",
+            "include_in_primary_genome_analysis",
+            "genome_panel_status",
             x_column,
             f"{x_column}_ci_low",
             f"{x_column}_ci_high",
@@ -660,9 +857,15 @@ def render_pairwise_figure(
             capsize=0,
             zorder=1,
         )
+        genome_comparison = "genome_size_pg_fuscus_anchored" in {x_column, y_column}
+        primary_mask = (
+            data["include_in_primary_genome_analysis"].to_numpy(dtype=bool)
+            if genome_comparison
+            else np.ones(len(data), dtype=bool)
+        )
         ax.scatter(
-            x,
-            y,
+            x[primary_mask],
+            y[primary_mask],
             s=48,
             color=color,
             edgecolor="white",
@@ -670,14 +873,76 @@ def render_pairwise_figure(
             alpha=0.92,
             zorder=3,
         )
-        x_line = np.linspace(float(x.min()), float(x.max()), 100)
-        slope, intercept = np.polyfit(x, y, 1)
+        if genome_comparison and (~primary_mask).any():
+            ax.scatter(
+                x[~primary_mask],
+                y[~primary_mask],
+                s=58,
+                marker="D",
+                facecolors="none",
+                edgecolors="#6F7479",
+                linewidth=1.2,
+                zorder=4,
+            )
+        stats_row = correlation_lookup.loc[comparison]
+        x_line = np.linspace(float(x.min()), float(x.max()), 200)
+        predictor_z = (
+            np.log10(x_line) - float(stats_row["predictor_log10_mean"])
+        ) / float(stats_row["predictor_log10_sd"])
+        predicted_z = (
+            float(stats_row["pgls_intercept_z"])
+            + float(stats_row["pgls_standardized_beta"]) * predictor_z
+        )
+        design_line = np.column_stack([np.ones(len(x_line)), predictor_z])
+        coefficient_covariance = np.array(
+            [
+                [
+                    float(stats_row["pgls_var_intercept"]),
+                    float(stats_row["pgls_cov_intercept_slope"]),
+                ],
+                [
+                    float(stats_row["pgls_cov_intercept_slope"]),
+                    float(stats_row["pgls_var_slope"]),
+                ],
+            ]
+        )
+        mean_variance = np.einsum(
+            "ij,jk,ik->i",
+            design_line,
+            coefficient_covariance,
+            design_line,
+        )
+        model_se = np.sqrt(np.maximum(mean_variance, 0.0))
+        critical_value = float(
+            student_t.ppf(
+                0.975,
+                int(stats_row["pgls_degrees_freedom"]),
+            )
+        )
+        outcome_mean = float(stats_row["outcome_log10_mean"])
+        outcome_sd = float(stats_row["outcome_log10_sd"])
+        y_line = 10.0 ** (outcome_mean + outcome_sd * predicted_z)
+        y_line_low = 10.0 ** (
+            outcome_mean + outcome_sd * (predicted_z - critical_value * model_se)
+        )
+        y_line_high = 10.0 ** (
+            outcome_mean + outcome_sd * (predicted_z + critical_value * model_se)
+        )
+        ax.fill_between(
+            x_line,
+            y_line_low,
+            y_line_high,
+            color=color,
+            alpha=0.12,
+            linewidth=0,
+            zorder=1,
+        )
         ax.plot(
             x_line,
-            intercept + slope * x_line,
+            y_line,
             color=color,
-            linewidth=1.6,
-            alpha=0.72,
+            linewidth=2.0,
+            alpha=0.82,
             zorder=2,
         )
         for label_index, row in enumerate(data.itertuples(index=False)):
@@ -695,14 +960,19 @@ def render_pairwise_figure(
                 color="#353A40",
                 fontstyle="italic",
             )
-        stats_row = correlation_lookup.loc[comparison]
+        lambda_text = (
+            "<0.001"
+            if float(stats_row["pagel_lambda"]) < 0.001
+            else f"{float(stats_row['pagel_lambda']):.2f}"
+        )
         ax.set_title(
             (
-                f"Spearman ρ = {stats_row['spearman_rho']:.2f}; "
-                f"descriptive p = {stats_row['p_value_descriptive_only']:.3f}; "
-                f"n = {int(stats_row['n_species'])}"
+                f"PGLS βstd = {stats_row['pgls_standardized_beta']:.2f} "
+                f"[{stats_row['pgls_ci_low']:.2f}, {stats_row['pgls_ci_high']:.2f}]; "
+                f"P = {stats_row['pgls_p_value']:.3f}\n"
+                f"Pagel's λ {lambda_text}; n = {int(stats_row['n_species'])}"
             ),
-            fontsize=10.5,
+            fontsize=10.0,
             fontweight="bold",
         )
         ax.set_xlabel(x_label)
@@ -712,7 +982,7 @@ def render_pairwise_figure(
             ax.spines[spine].set_visible(False)
 
     fig.suptitle(
-        "Pairwise relationships among genome size, nucleus area, and cell area",
+        "Phylogenetically corrected relationships among genome size, nucleus area, and cell area",
         fontsize=15,
         fontweight="bold",
         y=0.985,
@@ -722,7 +992,8 @@ def render_pairwise_figure(
         0.94,
         (
             "Points are species estimates; bars are 95% bootstrap intervals conditional on "
-            "the frozen image and selected-cell panels. Genome size is calibrated to D. fuscus = 16.36 pg."
+            "the finalized image and selected-cell panels. Hollow diamonds mark limited-overlap quality matches; "
+            "all 24 species are included in genome PGLS fits. Lines are Pagel-λ PGLS fits; ribbons are 95% confidence intervals."
         ),
         ha="center",
         va="center",
@@ -733,15 +1004,55 @@ def render_pairwise_figure(
         0.5,
         0.015,
         (
-            "Genome estimates are scaled from nuclear IOD, which includes nuclear area algebraically; "
-            "size traits are top-50 estimands and correlations are not phylogenetically corrected."
+            "Genome size is calibrated to D. fuscus = 16.36 pg and is scaled from nuclear IOD, which includes nuclear area algebraically. "
+            "All λ estimates reached the near-zero boundary, so shared ancestry did not materially change these slopes; PGLS does not establish causal direction."
         ),
         ha="center",
         va="bottom",
         fontsize=9.0,
         color="#4A4F55",
     )
-    fig.subplots_adjust(top=0.87, bottom=0.14, left=0.06, right=0.99, wspace=0.23)
+    legend_handles = [
+        Line2D(
+            [],
+            [],
+            marker="o",
+            linestyle="",
+            color="#59636B",
+            label="Species estimate with measurement-bootstrap interval",
+        ),
+        Line2D(
+            [],
+            [],
+            marker="D",
+            linestyle="",
+            markerfacecolor="none",
+            markeredgecolor="#6F7479",
+            label="Limited-overlap quality match (included in fit)",
+        ),
+        Line2D(
+            [],
+            [],
+            color="#59636B",
+            linewidth=2.0,
+            label="Pagel-λ PGLS fit",
+        ),
+        Patch(
+            facecolor="#59636B",
+            alpha=0.12,
+            edgecolor="none",
+            label="95% model confidence interval",
+        ),
+    ]
+    fig.legend(
+        handles=legend_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.905),
+        ncol=4,
+        frameon=False,
+        fontsize=8.5,
+    )
+    fig.subplots_adjust(top=0.79, bottom=0.15, left=0.06, right=0.99, wspace=0.23)
     fig.savefig(PAIRWISE_PNG_PATH, dpi=220, bbox_inches="tight", facecolor="white")
     fig.savefig(
         PAIRWISE_PDF_PATH,
@@ -769,8 +1080,24 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
         "analysis": "Measured-only time-tree alignment of audited microscopy traits",
         "n_measured_species": int(len(summary)),
         "n_primary_genome_species": int(
+            summary["include_in_primary_genome_analysis"].sum()
+        ),
+        "n_genome_estimate_species": int(
             summary["genome_size_pg_fuscus_anchored"].notna().sum()
         ),
+        "limited_overlap_included_species": sorted(
+            summary.loc[
+                summary["genome_panel_status"].eq(
+                    "finalized_included_limited_overlap"
+                ),
+                "species",
+            ].tolist()
+        ),
+        "all_finalized_species_included_in_genome_models": True,
+        "reduced_size_sample_species": {
+            str(row.species): int(row.n_size_cells)
+            for row in summary.loc[summary["n_size_cells"].lt(50)].itertuples()
+        },
         "missing_primary_genome_species": sorted(
             summary.loc[
                 summary["genome_size_pg_fuscus_anchored"].isna(), "species"
@@ -798,17 +1125,34 @@ def build(*, n_bootstrap: int = 2_000, seed: int = 20260710) -> dict[str, Any]:
         ),
         "genome_intervals_propagate_reference_image_uncertainty": True,
         "size_estimators": (
-            "pooled medians of the 50 manually vetted literal-largest cells "
-            "and their corresponding nuclei"
+            "pooled medians of all finalized manually vetted literal-largest cells "
+            "and their corresponding nuclei; observed species counts are retained"
         ),
         "bootstrap_scope": (
             "genome: images then nuclei within images; size: paired resampling "
-            "of the frozen selected cell-nucleus rows"
+            "of the finalized selected cell-nucleus rows"
         ),
         "phylogenetic_fills_used": False,
         "absolute_genome_size_claimed": False,
         "conditional_genome_size_estimates_reported": True,
-        "correlations_are_phylogenetically_corrected": False,
+        "correlations_are_phylogenetically_corrected": True,
+        "pairwise_phylogenetic_method": (
+            "Pagel-lambda maximum-likelihood PGLS on separately log10-transformed "
+            "and sample-standardized species traits"
+        ),
+        "pairwise_phylogenetic_tree": str(TREE_PATH.resolve()),
+        "pairwise_complete_case_species": {
+            str(row.comparison): int(row.n_species)
+            for row in correlations.itertuples(index=False)
+        },
+        "pairwise_pagel_lambda": {
+            str(row.comparison): float(row.pagel_lambda)
+            for row in correlations.itertuples(index=False)
+        },
+        "pairwise_interpretation_limit": (
+            "PGLS adjusts pairwise association for modeled shared ancestry but "
+            "does not identify causal direction; genome IOD includes nuclear area algebraically"
+        ),
         "summary_csv": str(SUMMARY_PATH.resolve()),
         "summary_sha256": sha256_file(SUMMARY_PATH),
         "correlation_csv": str(CORRELATION_PATH.resolve()),

@@ -28,27 +28,55 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         np.testing.assert_array_equal(first["nuc_area_um2"], second["nuc_area_um2"])
         self.assertEqual(len(first), 100)
 
-    def test_figure_data_uses_all_twenty_one_frozen_cell_species(self) -> None:
+    def test_figure_data_uses_all_finalized_species_and_flags_support(self) -> None:
         summary, draws, correlations = figure.build_figure_data(
             n_bootstrap=100, seed=20260710
         )
         cell_species = set(pd.read_csv(figure.CELL_PATH, low_memory=False)["species"])
         self.assertEqual(set(summary["species"]), cell_species)
-        self.assertEqual(len(summary), 21)
+        self.assertEqual(len(summary), 24)
         self.assertIn("D. ochrophaeus", set(summary["species"]))
         ochrophaeus = summary.loc[summary["species"].eq("D. ochrophaeus")].iloc[0]
-        self.assertTrue(pd.isna(ochrophaeus["genome_size_pg_fuscus_anchored"]))
-        self.assertEqual(ochrophaeus["genome_panel_status"], "limited_overlap_no_frozen_primary_iod")
+        self.assertTrue(pd.notna(ochrophaeus["genome_size_pg_fuscus_anchored"]))
+        self.assertEqual(
+            ochrophaeus["genome_panel_status"],
+            "finalized_included_limited_overlap",
+        )
+        self.assertEqual(
+            summary.set_index("species").loc["D. aeneus", "genome_panel_status"],
+            "finalized_included_limited_overlap",
+        )
+        self.assertEqual(
+            summary.set_index("species").loc["D. wrighti", "genome_panel_status"],
+            "finalized_included_limited_overlap",
+        )
+        self.assertEqual(
+            summary.set_index("species").loc["D. orestes", "genome_panel_status"],
+            "finalized_included_common_support",
+        )
         self.assertEqual(set(draws["metric"]), set(figure.METRIC_ORDER))
         draw_counts = draws.groupby("metric").size()
-        self.assertEqual(draw_counts["genome_size_pg_fuscus_anchored"], 20 * 100)
-        self.assertEqual(draw_counts["nucleus_area_um2"], 21 * 100)
-        self.assertEqual(draw_counts["cell_area_um2"], 21 * 100)
+        self.assertEqual(draw_counts["genome_size_pg_fuscus_anchored"], 24 * 100)
+        self.assertEqual(draw_counts["nucleus_area_um2"], 24 * 100)
+        self.assertEqual(draw_counts["cell_area_um2"], 24 * 100)
         self.assertEqual(set(correlations["comparison"]), {
             "genome_size_vs_nucleus_area",
             "genome_size_vs_cell_area",
             "nucleus_area_vs_cell_area",
         })
+        self.assertTrue(correlations["phylogenetically_corrected"].all())
+        self.assertEqual(
+            correlations.set_index("comparison")["n_species"].to_dict(),
+            {
+                "genome_size_vs_nucleus_area": 24,
+                "genome_size_vs_cell_area": 24,
+                "nucleus_area_vs_cell_area": 24,
+            },
+        )
+        support = summary.set_index("species")
+        self.assertEqual(int(support.loc["D. aeneus", "n_size_cells"]), 44)
+        self.assertEqual(int(support.loc["D. orestes", "n_size_cells"]), 50)
+        self.assertEqual(int(support.loc["D. wrighti", "n_size_cells"]), 8)
         fuscus = summary.loc[summary["species"].eq("D. fuscus")].iloc[0]
         self.assertAlmostEqual(
             fuscus["genome_size_pg_fuscus_anchored"],
@@ -85,10 +113,40 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
             check_names=False,
         )
 
+    def test_pagel_lambda_pgls_matches_established_path_fit(self) -> None:
+        summary, _draws, correlations = figure.build_figure_data(
+            n_bootstrap=20, seed=22
+        )
+        observed = correlations.set_index("comparison")
+        self.assertAlmostEqual(
+            observed.loc[
+                "genome_size_vs_nucleus_area", "pgls_standardized_beta"
+            ],
+            0.41901841,
+            places=8,
+        )
+        self.assertAlmostEqual(
+            observed.loc[
+                "genome_size_vs_cell_area", "pgls_standardized_beta"
+            ],
+            0.71666442,
+            places=8,
+        )
+        self.assertAlmostEqual(
+            observed.loc[
+                "nucleus_area_vs_cell_area", "pgls_standardized_beta"
+            ],
+            0.5793012834,
+            places=8,
+        )
+        self.assertTrue((observed["pagel_lambda"] < 1e-6).all())
+        self.assertEqual(len(summary), 24)
+
     def test_rendered_artifacts_and_manifest_are_presentation_ready(self) -> None:
         manifest = json.loads(figure.MANIFEST_PATH.read_text())
         notebook = json.loads(figure.EXECUTED_NOTEBOOK_PATH.read_text())
         source = "\n".join("".join(cell["source"]) for cell in notebook["cells"])
+        figure_source = Path(figure.__file__).read_text()
 
         self.assertTrue(figure.PNG_PATH.exists())
         self.assertGreater(figure.PNG_PATH.stat().st_size, 200_000)
@@ -98,22 +156,45 @@ class GenomeIodPhylogenyFigureTests(unittest.TestCase):
         self.assertGreater(figure.PAIRWISE_PNG_PATH.stat().st_size, 150_000)
         self.assertTrue(figure.PAIRWISE_PDF_PATH.exists())
         self.assertGreater(figure.PAIRWISE_PDF_PATH.stat().st_size, 20_000)
-        self.assertEqual(manifest["n_measured_species"], 21)
-        self.assertEqual(manifest["n_primary_genome_species"], 20)
-        self.assertEqual(manifest["missing_primary_genome_species"], ["D. ochrophaeus"])
+        self.assertEqual(manifest["n_measured_species"], 24)
+        self.assertEqual(manifest["n_primary_genome_species"], 24)
+        self.assertEqual(manifest["n_genome_estimate_species"], 24)
+        self.assertEqual(manifest["missing_primary_genome_species"], [])
+        self.assertEqual(
+            manifest["limited_overlap_included_species"],
+            ["D. aeneus", "D. ochrophaeus", "D. wrighti"],
+        )
+        self.assertEqual(manifest["all_finalized_species_included_in_genome_models"], True)
+        self.assertEqual(
+            manifest["reduced_size_sample_species"],
+            {"D. aeneus": 44, "D. wrighti": 8},
+        )
         self.assertEqual(manifest["phylogenetic_fills_used"], False)
         self.assertEqual(manifest["absolute_genome_size_claimed"], False)
         self.assertEqual(manifest["conditional_genome_size_estimates_reported"], True)
+        self.assertEqual(manifest["correlations_are_phylogenetically_corrected"], True)
+        self.assertIn("Pagel-lambda", manifest["pairwise_phylogenetic_method"])
         self.assertEqual(manifest["genome_reference_species"], "D. fuscus")
         self.assertEqual(manifest["genome_reference_pg"], 16.36)
         self.assertIn("Measured-only time-calibrated phylogeny", source)
         self.assertIn("Fuscus-anchored genome-size estimates", source)
         self.assertIn(figure.PNG_PATH.name, source)
         self.assertIn(figure.PAIRWISE_PNG_PATH.name, source)
+        self.assertNotIn("D. ochrophaeus has no finalized IOD estimate", figure_source)
 
         correlations = pd.read_csv(figure.CORRELATION_PATH)
         self.assertTrue(
-            {"spearman_rho", "pearson_r", "n_species"}.issubset(correlations.columns)
+            {
+                "spearman_rho",
+                "pearson_r",
+                "pgls_standardized_beta",
+                "pgls_standard_error",
+                "pgls_ci_low",
+                "pgls_ci_high",
+                "pgls_p_value",
+                "pagel_lambda",
+                "n_species",
+            }.issubset(correlations.columns)
         )
         self.assertEqual(
             set(correlations["comparison"]),

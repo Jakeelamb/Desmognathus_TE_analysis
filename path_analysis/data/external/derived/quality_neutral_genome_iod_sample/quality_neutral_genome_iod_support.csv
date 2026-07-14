@@ -1,0 +1,22 @@
+species,n_strict_candidates,n_candidate_images,n_candidate_specimens,n_selected,n_selected_images,n_selected_specimens,target_reached
+D. amphileucus,557,3,2,100,3,2,True
+D. anicetus,199,1,1,100,1,1,True
+D. apalachicolae,440,2,2,100,2,2,True
+D. auriculatus,678,4,2,100,4,2,True
+D. bairdi,313,1,1,100,1,1,True
+D. brimleyorum,466,2,2,100,2,2,True
+D. campi,269,2,2,100,2,2,True
+D. folkertsi,566,2,2,100,2,2,True
+D. fuscus,1038,8,4,100,8,4,True
+D. gvnigeusgwotli,251,1,1,100,1,1,True
+D. intermedius,543,2,2,100,2,2,True
+D. kanawha,442,2,2,100,2,2,True
+D. marmoratus,376,4,2,100,4,2,True
+D. mavrokoilius,441,3,2,100,3,2,True
+D. monticola,422,4,2,100,4,2,True
+D. ochrophaeus,65,2,2,65,2,2,False
+D. ocoee,875,3,3,100,3,3,True
+D. perlapsus,402,3,3,100,3,3,True
+D. tilleyi,527,2,2,100,2,2,True
+D. valtos,526,2,2,100,2,2,True
+D. welteri,430,4,2,100,4,2,True

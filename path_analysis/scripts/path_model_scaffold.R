@@ -464,6 +464,33 @@ write_model_warnings <- function(fit, output_path) {
   invisible(NULL)
 }
 
+write_plot_pdf <- function(output_path, warning_path, plot_expr) {
+  plot_error <- NULL
+  grDevices::pdf(output_path, width = 10, height = 7)
+  ok <- tryCatch(
+    {
+      force(plot_expr)
+      TRUE
+    },
+    error = function(e) {
+      plot_error <<- conditionMessage(e)
+      FALSE
+    },
+    finally = {
+      grDevices::dev.off()
+    }
+  )
+
+  if (!ok) {
+    if (file.exists(output_path)) {
+      unlink(output_path)
+    }
+    writeLines(plot_error, warning_path)
+  }
+
+  invisible(ok)
+}
+
 run_phylopath_family <- function(family, analysis_df, tree, results_dir, output_tag = family) {
   if (!requireNamespace("phylopath", quietly = TRUE)) {
     stop(
@@ -495,22 +522,30 @@ run_phylopath_family <- function(family, analysis_df, tree, results_dir, output_
     readr::write_csv(avg_edges, file.path(results_dir, paste0(output_tag, "_average_model_edges.csv")))
   }
 
-  pdf(file.path(results_dir, paste0(output_tag, "_model_set.pdf")), width = 10, height = 7)
-  phylopath_ns$plot_model_set(model_set)
-  dev.off()
+  write_plot_pdf(
+    file.path(results_dir, paste0(output_tag, "_model_set.pdf")),
+    file.path(results_dir, paste0(output_tag, "_model_set_plot_warning.txt")),
+    phylopath_ns$plot_model_set(model_set)
+  )
 
-  pdf(file.path(results_dir, paste0(output_tag, "_model_summary.pdf")), width = 10, height = 7)
-  plot(summary(fit))
-  dev.off()
+  write_plot_pdf(
+    file.path(results_dir, paste0(output_tag, "_model_summary.pdf")),
+    file.path(results_dir, paste0(output_tag, "_model_summary_plot_warning.txt")),
+    plot(summary(fit))
+  )
 
-  pdf(file.path(results_dir, paste0(output_tag, "_best_model.pdf")), width = 10, height = 7)
-  plot(best_fit)
-  dev.off()
+  write_plot_pdf(
+    file.path(results_dir, paste0(output_tag, "_best_model.pdf")),
+    file.path(results_dir, paste0(output_tag, "_best_model_plot_warning.txt")),
+    plot(best_fit)
+  )
 
   if (!inherits(avg_fit, "try-error")) {
-    pdf(file.path(results_dir, paste0(output_tag, "_average_model.pdf")), width = 10, height = 7)
-    plot(avg_fit)
-    dev.off()
+    write_plot_pdf(
+      file.path(results_dir, paste0(output_tag, "_average_model.pdf")),
+      file.path(results_dir, paste0(output_tag, "_average_model_plot_warning.txt")),
+      plot(avg_fit)
+    )
   }
 
   invisible(fit)
@@ -533,8 +568,9 @@ main <- function() {
 
   if (opts$family %in% c("genome_morphology", "te_genome_morphology")) {
     warning(
-      "Morphology families are scaffolded for planning. ",
-      "Current genome_size_pg is still provisional for formal genome->nucleus interpretation."
+      "Morphology families are scaffolded for causal interpretation. ",
+      "Current genome_size_pg is final for the verified IOD-calibrated workflow, ",
+      "but it is not an independent non-IOD assay for formal genome->nucleus causality."
     )
   }
 

@@ -63,12 +63,19 @@ def sha256_for_file(path: Path) -> str:
 
 
 def calculate_simpson_diversity(row: pd.Series) -> float:
-    row = row[row > 0]
+    """Return standard Gini-Simpson diversity, 1 - sum(p_i^2).
+
+    The source rows are relative abundances (percentages), not integer counts,
+    so a finite-count correction is neither defined nor scale invariant here.
+    """
+
+    row = pd.to_numeric(row, errors="coerce")
+    row = row[np.isfinite(row) & (row > 0)]
     total = row.sum()
-    if total <= 1 or pd.isna(total) or total * (total - 1) == 0:
+    if row.empty or total <= 0 or pd.isna(total):
         return 0.0
-    simpson_dominance = np.sum(row * (row - 1)) / (total * (total - 1))
-    return float(1.0 - simpson_dominance)
+    proportions = row / total
+    return float(1.0 - np.sum(proportions * proportions))
 
 
 def calculate_shannon_diversity(row: pd.Series) -> float:

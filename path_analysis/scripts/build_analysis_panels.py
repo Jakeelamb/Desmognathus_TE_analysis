@@ -232,6 +232,10 @@ def main() -> None:
 
     base_cols = [
         "species",
+        "te_sra_accession",
+        "te_assembly_accession",
+        "te_resource_lookup_path",
+        "te_resource_lookup_sha256",
         "has_tree_tip",
         "has_te",
         "has_genome",

@@ -1,0 +1,25 @@
+{
+  "analysis": "Cell-nucleus-genome phylogenetic path design and input audit",
+  "status": "design_complete_model_fit_pending",
+  "n_primary_species": 24,
+  "n_labeled_three_node_dags": 25,
+  "n_markov_equivalence_classes": 11,
+  "n_testable_dags": 19,
+  "n_saturated_untestable_dags": 6,
+  "user_mechanism_equivalence_classes": [
+    "nucleus_bridge"
+  ],
+  "shared_user_mechanism_basis_claim": "genome_size _||_ cell_size | nucleus_size",
+  "measurement_bootstrap_replicates": 250,
+  "random_seed": 20260710,
+  "actual_phylogenetic_path_models_fitted": false,
+  "interpretation": "The three proposed arrow directions are Markov-equivalent in cross-sectional three-trait data. This artifact audits candidate DAGs and inputs; it does not report a fitted causal winner.",
+  "outputs": {
+    "dag_table": "results/data/research_review/cell_nucleus_genome_path/all_three_trait_dags.csv",
+    "dag_table_sha256": "05dc49fe32e56b8ddcb560437733ac772f74fbab6b0975bba2a5ccb9577e6627",
+    "primary_trait_table": "results/data/research_review/cell_nucleus_genome_path/primary_traits_all_finalized.csv",
+    "primary_trait_table_sha256": "d89c379062f1cb2029d142464537a7f0d785468b4cd95f1e73f87b6e445ac1f3",
+    "measurement_bootstrap_table": "results/data/research_review/cell_nucleus_genome_path/measurement_bootstrap_traits_250.csv",
+    "measurement_bootstrap_table_sha256": "74ba269e53cc3b52bcb32ac38b3bf6be89438094644b2f0b48a99dd1906622be"
+  }
+}

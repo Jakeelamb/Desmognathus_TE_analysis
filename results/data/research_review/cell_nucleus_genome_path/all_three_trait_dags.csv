@@ -1,0 +1,26 @@
+dag_id,n_edges,equivalence_class,basis_claim,testable_by_dsep,class_member_count
+no_edges,0,independent,genome_size _||_ nucleus_size; genome_size _||_ cell_size; nucleus_size _||_ cell_size,True,1
+CS->GS,1,genome_cell_only,nucleus_size _||_ genome_size; nucleus_size _||_ cell_size,True,2
+GS->CS,1,genome_cell_only,nucleus_size _||_ genome_size; nucleus_size _||_ cell_size,True,2
+GS->NS,1,genome_nucleus_only,cell_size _||_ genome_size; cell_size _||_ nucleus_size,True,2
+NS->GS,1,genome_nucleus_only,cell_size _||_ genome_size; cell_size _||_ nucleus_size,True,2
+CS->NS,1,nucleus_cell_only,genome_size _||_ nucleus_size; genome_size _||_ cell_size,True,2
+NS->CS,1,nucleus_cell_only,genome_size _||_ nucleus_size; genome_size _||_ cell_size,True,2
+CS->GS;CS->NS,2,cell_bridge,genome_size _||_ nucleus_size | cell_size,True,3
+GS->CS;CS->NS,2,cell_bridge,genome_size _||_ nucleus_size | cell_size,True,3
+NS->CS;CS->GS,2,cell_bridge,genome_size _||_ nucleus_size | cell_size,True,3
+GS->CS;NS->CS,2,cell_collider,genome_size _||_ nucleus_size,True,1
+GS->CS;NS->GS,2,genome_bridge,nucleus_size _||_ cell_size | genome_size,True,3
+GS->NS;CS->GS,2,genome_bridge,nucleus_size _||_ cell_size | genome_size,True,3
+GS->NS;GS->CS,2,genome_bridge,nucleus_size _||_ cell_size | genome_size,True,3
+NS->GS;CS->GS,2,genome_collider,nucleus_size _||_ cell_size,True,1
+GS->NS;NS->CS,2,nucleus_bridge,genome_size _||_ cell_size | nucleus_size,True,3
+NS->GS;CS->NS,2,nucleus_bridge,genome_size _||_ cell_size | nucleus_size,True,3
+NS->GS;NS->CS,2,nucleus_bridge,genome_size _||_ cell_size | nucleus_size,True,3
+GS->NS;CS->NS,2,nucleus_collider,genome_size _||_ cell_size,True,1
+GS->CS;NS->GS;NS->CS,3,saturated,none (no d-separation claim),False,6
+GS->NS;CS->GS;CS->NS,3,saturated,none (no d-separation claim),False,6
+GS->NS;GS->CS;CS->NS,3,saturated,none (no d-separation claim),False,6
+GS->NS;GS->CS;NS->CS,3,saturated,none (no d-separation claim),False,6
+NS->GS;CS->GS;CS->NS,3,saturated,none (no d-separation claim),False,6
+NS->GS;NS->CS;CS->GS,3,saturated,none (no d-separation claim),False,6

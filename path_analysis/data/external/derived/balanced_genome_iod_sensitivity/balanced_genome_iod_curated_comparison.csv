@@ -1,0 +1,22 @@
+species,estimated_genome_pg_balanced_qc_only,estimated_genome_pg_balanced_qc_curated,curated_minus_original_pg,curated_vs_original_pct,iod_ratio_to_reference_balanced_qc_only,iod_ratio_to_reference_balanced_qc_curated,curated_iod_ratio_minus_original,n_selected_pairs_balanced_qc_only,n_selected_pairs_balanced_qc_curated,n_selected_images_balanced_qc_only,n_selected_images_balanced_qc_curated,n_selected_specimens_balanced_qc_only,n_selected_specimens_balanced_qc_curated,support_label_balanced_qc_only,support_label_balanced_qc_curated,support_warnings_balanced_qc_only,support_warnings_balanced_qc_curated
+D. intermedius,23.336758,23.176011,-0.160747,-0.688813,1.426452,1.416627,-0.009826,50,50,2,2,2,2,medium,medium,,
+D. tilleyi,21.626794,21.626794,0.000000,0.000000,1.321931,1.321931,0.000000,50,50,2,2,2,2,medium,medium,,
+D. perlapsus,18.663094,18.663094,0.000000,0.000000,1.140776,1.140776,0.000000,50,50,3,3,3,3,medium,medium,,
+D. ocoee,21.654861,21.654861,0.000000,0.000000,1.323647,1.323647,0.000000,50,50,3,3,3,3,medium,medium,,
+D. ochrophaeus,17.959458,17.959458,0.000000,0.000000,1.097766,1.097766,0.000000,50,50,2,2,2,2,limited,limited,,
+D. monticola,18.701906,18.701906,0.000000,0.000000,1.143148,1.143148,0.000000,50,50,4,4,2,2,medium,medium,,
+D. mavrokoilius,17.047910,17.047910,0.000000,0.000000,1.042048,1.042048,0.000000,50,50,3,3,2,2,medium,medium,,
+D. marmoratus,19.073482,19.073482,0.000000,0.000000,1.165861,1.165861,0.000000,50,50,4,4,2,2,medium,medium,,
+D. gvnigeusgwotli,20.425734,20.425734,0.000000,0.000000,1.248517,1.248517,0.000000,50,50,1,1,1,1,low,low,low_image_count; low_specimen_count,low_image_count; low_specimen_count
+D. amphileucus,21.513422,21.513422,0.000000,0.000000,1.315001,1.315001,0.000000,50,50,3,3,2,2,medium,medium,,
+D. folkertsi,21.602707,21.602707,0.000000,0.000000,1.320459,1.320459,0.000000,50,50,2,2,2,2,medium,medium,,
+D. campi,19.132985,19.132985,0.000000,0.000000,1.169498,1.169498,0.000000,50,50,2,2,2,2,medium,medium,,
+D. brimleyorum,23.656833,23.656833,0.000000,0.000000,1.446017,1.446017,0.000000,50,50,2,2,2,2,medium,medium,,
+D. bairdi,24.418940,24.418940,0.000000,0.000000,1.492600,1.492600,0.000000,50,50,1,1,1,1,low,low,low_image_count; low_specimen_count,low_image_count; low_specimen_count
+D. auriculatus,19.628853,19.628853,0.000000,0.000000,1.199808,1.199808,0.000000,50,50,4,4,2,2,medium,medium,,
+D. apalachicolae,20.119741,20.119741,0.000000,0.000000,1.229813,1.229813,0.000000,50,50,2,2,2,2,medium,medium,,
+D. anicetus,19.866164,19.866164,0.000000,0.000000,1.214313,1.214313,0.000000,50,50,1,1,1,1,low,low,low_image_count; low_specimen_count,low_image_count; low_specimen_count
+D. fuscus,16.360000,16.360000,0.000000,0.000000,1.000000,1.000000,0.000000,50,50,8,8,4,4,medium,medium,,
+D. welteri,17.066358,17.066358,0.000000,0.000000,1.043176,1.043176,0.000000,50,50,4,4,2,2,medium,medium,,
+D. valtos,28.899468,28.951554,0.052086,0.180233,1.766471,1.769655,0.003184,50,50,2,2,2,2,medium,medium,,
+D. kanawha,21.488225,22.457220,0.968995,4.509423,1.313461,1.372691,0.059230,50,50,2,2,2,2,medium,medium,,

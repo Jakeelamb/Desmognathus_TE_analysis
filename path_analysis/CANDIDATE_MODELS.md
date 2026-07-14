@@ -7,7 +7,31 @@ These model families are the starting point for development. They are intentiona
 - Use one observed proxy per conceptual block in the first-pass DAGs.
 - Start with order-level TE summaries, not full superfamily matrices.
 - Keep candidate sets small enough to compare cleanly with CICc.
-- Treat morphology families as scaffolded and provisional until independent final genome-size estimates are ready.
+- Treat morphology causal families as scaffolded until an independent non-IOD genome-size assay is available.
+
+## Corrected Audit Boundary
+
+The families below document the historical genome-size design target. The
+publication-readiness audit does **not** fit `gs`: the repository has no
+approved absolute genome-size measurement. Its separate implementation in
+`../scripts/processing/audit_corrected_path_models.R` uses `iod` for a log,
+standardized **relative nuclear-IOD proxy** and provides an explicit null in
+each family:
+
+- `te_iod`: null, LTR only, evenness only, additive composition, and
+  LTR-to-evenness-to-IOD.
+- `iod_morphology`: null, IOD-to-nucleus, IOD-to-cell, and
+  IOD-to-nucleus-to-cell.
+- `integrated`: a full null, IOD-morphology only, TE-evenness chain, additive
+  TE chain, nucleus bypass, and cell bypass.
+- `terminal_internal_iod`: null and four terminal:internal deletion-footprint
+  proxy structures.
+
+These corrected families were formalized during the audit after historical
+results already existed. They are therefore exploratory candidate sets, not a
+prospectively preregistered confirmatory test. The terminal:internal metric is
+not named `ectopic_index` in corrected outputs because it is not a validated
+ectopic-recombination rate.
 
 ## Family 1: `te_genome`
 
@@ -96,7 +120,7 @@ Interpretation goal:
 
 Caveat:
 
-- This family should remain a planning or sensitivity analysis until the final genome estimates are independent of nucleus-area scaling.
+- This family should remain a planning or sensitivity analysis until genome estimates are independent of nucleus IOD.
 
 ## Family 4: `te_genome_morphology`
 
@@ -261,5 +285,5 @@ Interpretation goal:
 
 - Do not put `morph_nc_ratio` in the same DAG as both `ns` and `cs`.
 - Do not add many raw TE order percentages to the same small-sample DAG.
-- Do not mix provisional area-derived genome size with nucleus size and then over-interpret directionality.
+- Do not mix IOD-calibrated genome size with nucleus size and then over-interpret directionality as independent causal evidence.
 - Do not fold the TE dilution simulation into the same path-analysis family. That is a separate appendix/supplement question.

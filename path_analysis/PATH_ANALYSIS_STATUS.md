@@ -22,10 +22,28 @@ There is now also an organismal extension layer for:
 
 ## Current Bottom Line
 
-The data-build phase is the trustworthy layer right now: source-backed
-organismal traits, CellProfiler traceability snapshots, TE feature tables, panel
-definitions, and species readiness audits. Panel-specific model rankings should
-be regenerated from the current panels before making winner claims.
+The historical data-build is reproducible, but its image-IOD picogram column
+and causal model rankings are not publication-approved. Corrected final-18
+audits now exist for TE composition/diversity, terminal:internal depth,
+phylogeny, microscopy, and path-model sensitivity. The corrected path branch
+uses relative nuclear IOD only, never reads the historical `genome_size_pg`
+column, and is explicitly exploratory.
+
+The corrected implementation completed 958 family-level fits: 84 data/tree
+specifications, 804 fits over the published main tree plus 200 time trees, and
+70 leave-one-species-out fits. All completed without a fit failure. Stable
+selection does not promote the analysis to a genome-size or causal claim:
+relative IOD is uncalibrated and algebraically contains nuclear area,
+segmentation lacks held-out final-panel species validation, upper-tail
+morphometry has uneven biological support, and trait measurement error is not
+jointly propagated.
+
+Separately, the genome24 three-trait notebook reports the current conditional
+*D. fuscus*-anchored genome-size estimates in **picograms**, never on a
+relative-IOD axis. Its 250 measurement bootstraps propagate the audited image
+and morphology sampling uncertainty, but the analysis remains exploratory
+because the pg values are still derived from nuclear IOD and the three proposed
+causal orientations are Markov-equivalent.
 
 ## Workspace Structure
 
@@ -66,6 +84,35 @@ Important scripts:
   Writes panel CSVs and the species readiness audit.
 - `scripts/path_model_scaffold.R`
   Prepares transformed model inputs and runs the `phylopath` families.
+- `../scripts/processing/build_corrected_path_inputs.py`
+  Builds the six-morphology-by-three-IOD final-18 sensitivity cube without the
+  historical picogram column.
+- `../scripts/processing/audit_corrected_path_models.R`
+  Runs the fail-closed corrected candidate sets, 200-tree sensitivity, and
+  leave-one-species-out audit.
+- `../scripts/processing/simulate_corrected_path_calibration.R`
+  Measures actual-tree null false selection, signal recovery, coefficient
+  bias, and approximate interval coverage at `n=18`.
+- `../scripts/processing/summarize_corrected_path_audit.py`
+  Freezes review tables, publication gates, figures, and the corrected report.
+- `../scripts/processing/build_publication_audit_notebook.py`
+  Builds the executable collaborator workbench under `../notebooks/`.
+- `../scripts/processing/build_research_review_notebooks.py`
+  Builds eight independent analysis-domain notebooks from frozen corrected
+  outputs under `../notebooks/research_review/`.
+- `scripts/build_cell_nucleus_genome_path_notebook.py`
+  Freezes the exact genome24 traits, all 25 labeled DAGs, 11 equivalence
+  classes, and 250 paired measurement-bootstrap trait panels.
+- `scripts/run_cell_nucleus_genome_phylogenetic_path_analysis.R`
+  Fits the ten testable genome24 classes and the declared measurement, tree,
+  species, evolutionary-model, and actual-tree simulation sensitivities.
+- `scripts/build_cell_nucleus_genome_path_presentation.py`
+  Fails closed on quick/incomplete path runs and writes eight PNG/PDF figures
+  plus the canonical Notebook 07 source.
+- `../scripts/processing/audit_research_review_notebooks.py`
+  Fails closed on missing/unexecuted/error notebooks or any external-process
+  execution surface, records optional microscopy viewer availability, and
+  writes the bundle integrity manifest.
 
 Important derived data:
 
@@ -85,6 +132,9 @@ Important derived data:
   Generated model rankings and edge tables for each family/panel combination.
   These are not tracked source artifacts and should be regenerated from the
   documented inputs when needed.
+- `results/top50_size_analysis_summary.md`
+  Compact readout of the exact top-50 cell, nucleus, genome, spread, correlation,
+  and top model ranking summaries.
 
 ## How The Pipeline Works
 
@@ -185,14 +235,30 @@ identical.
 
 ## Tree Inputs
 
-There is one canonical tree source for path analysis:
+There is one collaborator-supplied focal tree source for historical path analysis:
 
 - `input_data/phylogeny/desmo900dated_test.tre`
 
 The path-model scaffold and phylogenetic trait-imputation builder both read this
-tracked input tree. The imputation builder normalizes tip labels internally so it
+local, currently Git-ignored input tree. The imputation builder normalizes tip labels internally so it
 does not depend on the generated `results/phylogeny/processed_phylogeny.nwk`
 artifact.
+
+The publication-readiness branch now adds:
+
+- `results/data/corrected/phylogeny/desmognathus_time_tree_analysis18_v1.nwk`
+  — exact final-panel prune of the focal tree with rounding-only terminal
+  padding; structurally approved, but focal citation/calibration provenance is
+  still required.
+- `results/data/corrected/phylogeny/stewart_wiens_2025_main_analysis18_v1.nwk`
+  — published optimal time-tree sensitivity.
+- `results/data/corrected/phylogeny/stewart_wiens_2025_bootstrap_analysis18_v1.nex`
+  — 200 published time-calibrated bootstrap trees for branch-time and path-model
+  sensitivity.
+
+The tracked `results/phylogeny/processed_phylogeny.nwk` is not a second tree
+hypothesis: it has the same common-tip topology as the focal source and an
+undocumented exact 0.8 branch-length scale. It is not approved for inference.
 
 ## Model Result Boundary
 
@@ -209,6 +275,28 @@ Current support rules:
 - Phylogenetic trait backfilling remains sensitivity-only and currently changes
   no panel membership.
 
+Corrected release artifacts:
+
+- `../results/data/corrected/path_analysis/corrected_path_anchor_model_comparison_analysis18_v1.csv`
+- `../results/data/corrected/path_analysis/corrected_path_model_stability_analysis18_v1.csv`
+- `../results/data/corrected/path_analysis/corrected_path_simulation_calibration_analysis18_v1.csv`
+- `../results/data/corrected/path_analysis/publication_release_gate_matrix_analysis18_v1.csv`
+- `../plans/publication-readiness-deep-audit/corrected_path_analysis_audit_analysis18_v1.md`
+- `../notebooks/Desmognathus_publication_audit_analysis18_v1.ipynb`
+- `../notebooks/research_review/01_phylogeny_tree_trimming.ipynb`
+- `../notebooks/research_review/02_data_tables_and_provenance.ipynb`
+- `../notebooks/research_review/03_repeat_analysis_te34.ipynb`
+- `../notebooks/research_review/04_ltr_deletion_footprint.ipynb`
+- `../notebooks/research_review/05_cell_modeling_and_measurement.ipynb`
+- `../notebooks/research_review/06_genome_size_estimation.ipynb`
+- `../notebooks/research_review/07_cell_nucleus_genome_path_analysis.ipynb`
+- `../notebooks/research_review/08_integrated_phylogenetic_path_analysis.ipynb`
+
+The integrated TE-evenness and IOD-morphology chain is a robust exploratory
+association pattern across the audited specifications. The terminal:internal
+family has no globally supported model in any full-panel specification and
+must not be described as an ectopic-recombination mechanism.
+
 ## What To Trust Most Right Now
 
 Most trustworthy:
@@ -216,12 +304,16 @@ Most trustworthy:
 - panel definitions and species counts
 - source-backed organismal table
 - source traceability audits
-- CellProfiler image/mask/tile traceability snapshots
+- CellProfiler image/mask/tile traceability snapshots and exact archived-mask
+  benchmark hashes
+- corrected final-18 morphology-estimator and relative-IOD sensitivity tables
 
-More provisional:
+Not publication-approved:
 
-- generated model rankings until rerun from current panels
-- morphology-linked causal interpretation
+- all historical generated model rankings
+- the image-IOD-to-picogram conversion
+- segmentation generalization beyond the two excluded-species test tiles
+- morphology-linked causal interpretation without an independent genome assay
 - phylogenetic imputation as anything beyond sensitivity analysis
 - any interpretation that relies on the strict-body morphology subset
 
@@ -252,6 +344,6 @@ It is:
 
 If more data work is ever needed later, the most useful remaining targets are:
 
-- independent final genome-size estimates
+- an independent non-IOD genome-size assay
 - expanded linked morphology coverage
 - possibly a cleaner tree for phylogenetic imputation coverage

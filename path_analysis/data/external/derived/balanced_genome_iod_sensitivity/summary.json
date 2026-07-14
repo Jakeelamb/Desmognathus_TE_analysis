@@ -1,0 +1,67 @@
+{
+  "purpose": "Additive apples-to-apples genome-IOD sensitivity panel. Balanced panels are selected by focus/shape/linkage QC, not nucleus darkness, cell size, nucleus size, or IOD.",
+  "comparison_baseline_panel": "current_top50_primary",
+  "candidates_csv": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/pair_review_postrepair_strict/triage/all_scored_masks.csv",
+  "candidates_sha256": "dc3eb40d556999a34637c7d19dc0f94985af74532594fb04ca4681aafca62cf8",
+  "current_top50_csv": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/verified_species_dataset_top50_latest/selected_high_quality_linked_pairs_with_iod_qc.csv.gz",
+  "current_top50_sha256": "7902695173f1a8e16b3698e5cba919d79a2792fe7be3d294ca98698f81c3813e",
+  "output_dir": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity",
+  "selected_pairs_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity/balanced_genome_iod_selected_pairs.csv.gz",
+  "species_estimates_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity/balanced_genome_iod_species_estimates.csv",
+  "comparison_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity/balanced_genome_iod_comparison.csv",
+  "curated_comparison_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity/balanced_genome_iod_curated_comparison.csv",
+  "viewer_decisions_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity/viewer_balanced_qc_only/recovered_localstorage_decisions.csv",
+  "viewer_problem_decisions_applied_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/balanced_genome_iod_sensitivity/viewer_problem_decisions_applied.csv",
+  "n_viewer_problem_decisions_applied": 30,
+  "viewer_problem_decisions_by_species": {
+    "D. intermedius": 8,
+    "D. kanawha": 16,
+    "D. valtos": 6
+  },
+  "n_strict_candidates": 9826,
+  "target_per_species": 50,
+  "min_clarity_percentile": 0.25,
+  "reference_species": "D. fuscus",
+  "reference_genome_pg": 16.36,
+  "panels": {
+    "balanced_all_strict": 21,
+    "balanced_qc_curated": 21,
+    "balanced_qc_only": 21,
+    "current_top50_all_selected": 21,
+    "current_top50_primary": 21
+  },
+  "largest_abs_balanced_vs_current_pct": [
+    {
+      "species": "D. perlapsus",
+      "balanced_vs_current_pct": 74.00119668825764
+    },
+    {
+      "species": "D. ochrophaeus",
+      "balanced_vs_current_pct": 62.41345299496667
+    },
+    {
+      "species": "D. kanawha",
+      "balanced_vs_current_pct": 62.169153967555815
+    },
+    {
+      "species": "D. apalachicolae",
+      "balanced_vs_current_pct": 58.58416328932932
+    },
+    {
+      "species": "D. brimleyorum",
+      "balanced_vs_current_pct": 56.871500853885635
+    },
+    {
+      "species": "D. folkertsi",
+      "balanced_vs_current_pct": 56.607429304912785
+    },
+    {
+      "species": "D. tilleyi",
+      "balanced_vs_current_pct": 54.10881828457514
+    },
+    {
+      "species": "D. anicetus",
+      "balanced_vs_current_pct": 51.99940568325094
+    }
+  ]
+}

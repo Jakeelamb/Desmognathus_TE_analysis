@@ -15,6 +15,7 @@ DEFAULT_CELLPROFILER_ROOT = Path.home() / "Projects" / "cellprofiler_test"
 DEFAULT_OUT_DIR = PROJECT_ROOT / "path_analysis" / "data" / "external" / "derived"
 DEFAULT_RAW_RUN_TAG = "full_dataset_v1"
 DEFAULT_MIXED_RUN_TAG = "mixed_cellpose_yolo_full_dataset_v1"
+DEFAULT_VERIFIED_RUN_TAG = "mixed_cellpose_yolo_full_dataset_v1_bgclean"
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -39,6 +40,17 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_MIXED_RUN_TAG,
         help="Mixed linkage run tag to import",
     )
+    parser.add_argument(
+        "--verified-run-tag",
+        default=DEFAULT_VERIFIED_RUN_TAG,
+        help="Run tag containing verified_species_dataset_latest; preferred when present",
+    )
+    parser.add_argument(
+        "--verified-species-dir",
+        type=Path,
+        default=None,
+        help="Optional explicit path to a verified species dataset directory",
+    )
     return parser.parse_args()
 
 
@@ -49,6 +61,8 @@ def main() -> None:
         out_dir=args.out_dir,
         raw_run_tag=args.raw_run_tag,
         mixed_run_tag=args.mixed_run_tag,
+        verified_run_tag=args.verified_run_tag,
+        verified_species_dir=args.verified_species_dir,
     )
     print(json.dumps(payload, indent=2, sort_keys=True))
 

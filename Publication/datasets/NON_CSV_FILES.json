@@ -1,0 +1,23 @@
+[
+  {
+    "filename": "trees/desmognathus_time_tree_analysis18_v1.nwk",
+    "format": "NWK",
+    "reason_not_csv": "Newick/NEXUS preserves standard phylogenetic structure and bootstrap tree sets.",
+    "sha256": "5dcd3c874636081fe9852747ac0d4d79f68a44ed93d72eff68c6bdba089b40bb",
+    "bytes": 736
+  },
+  {
+    "filename": "trees/stewart_wiens_2025_main_analysis18_v1.nwk",
+    "format": "NWK",
+    "reason_not_csv": "Newick/NEXUS preserves standard phylogenetic structure and bootstrap tree sets.",
+    "sha256": "008736b15dd69e4cea68d5e307b0d28ef62cdfe9708309ef320a240ca74ebc32",
+    "bytes": 509
+  },
+  {
+    "filename": "trees/stewart_wiens_2025_bootstrap_analysis18_v1.nex",
+    "format": "NEX",
+    "reason_not_csv": "Newick/NEXUS preserves standard phylogenetic structure and bootstrap tree sets.",
+    "sha256": "0fc10b77e5a20fe01448abf5a9e2ab5c0b836e9fc02281fe06bc9a57504016e9",
+    "bytes": 107635
+  }
+]

@@ -1,0 +1,7 @@
+mechanism,equivalence_class,parent,child,standardized_coefficient,standard_error,ci_low,ci_high,interval_excludes_zero
+genome_to_nucleus_to_cell,nucleus_bridge,genome_size,nucleus_size,0.41901840554013065,0.19358150469366928,0.039598656340538885,0.79843815473972235,TRUE
+genome_to_nucleus_to_cell,nucleus_bridge,nucleus_size,cell_size,0.5793012833996936,0.17378278130418665,0.23868703204348773,0.9199155347558994,TRUE
+cell_to_nucleus_to_genome,nucleus_bridge,cell_size,nucleus_size,0.5793012899686544,0.17378278327478872,0.23868703475006847,0.9199155451872403,TRUE
+cell_to_nucleus_to_genome,nucleus_bridge,nucleus_size,genome_size,0.2893446527314013,0.17456626614998877,-0.052805228922576664,0.6314945343853793,FALSE
+nucleus_to_genome_and_cell,nucleus_bridge,nucleus_size,cell_size,0.5793012833996936,0.17378278130418665,0.23868703204348773,0.9199155347558994,TRUE
+nucleus_to_genome_and_cell,nucleus_bridge,nucleus_size,genome_size,0.2893446527314013,0.17456626614998877,-0.052805228922576664,0.6314945343853793,FALSE
