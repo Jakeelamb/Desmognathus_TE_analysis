@@ -1,23 +1,16 @@
 [
   {
-    "filename": "trees/desmognathus_time_tree_analysis18_v1.nwk",
-    "format": "NWK",
-    "reason_not_csv": "Newick/NEXUS preserves standard phylogenetic structure and bootstrap tree sets.",
-    "sha256": "5dcd3c874636081fe9852747ac0d4d79f68a44ed93d72eff68c6bdba089b40bb",
-    "bytes": 736
+    "filename": "trees/desmo900dated_source46.tre",
+    "format": "TRE",
+    "reason_not_csv": "Newick/tree text preserves the source or exact Path24 phylogenetic structure.",
+    "sha256": "1cf561526405c794b70d5767182eefe84dfa1552f9f9c0be6b36c465b19301aa",
+    "bytes": 1322
   },
   {
-    "filename": "trees/stewart_wiens_2025_main_analysis18_v1.nwk",
+    "filename": "trees/desmognathus_time_tree_path24_v1.nwk",
     "format": "NWK",
-    "reason_not_csv": "Newick/NEXUS preserves standard phylogenetic structure and bootstrap tree sets.",
-    "sha256": "008736b15dd69e4cea68d5e307b0d28ef62cdfe9708309ef320a240ca74ebc32",
-    "bytes": 509
-  },
-  {
-    "filename": "trees/stewart_wiens_2025_bootstrap_analysis18_v1.nex",
-    "format": "NEX",
-    "reason_not_csv": "Newick/NEXUS preserves standard phylogenetic structure and bootstrap tree sets.",
-    "sha256": "0fc10b77e5a20fe01448abf5a9e2ab5c0b836e9fc02281fe06bc9a57504016e9",
-    "bytes": 107635
+    "reason_not_csv": "Newick/tree text preserves the source or exact Path24 phylogenetic structure.",
+    "sha256": "5c05e24b5b63d5a4e7cecf054ec7c34bc1607548845d1ea3bd745062db54beab",
+    "bytes": 659
   }
 ]

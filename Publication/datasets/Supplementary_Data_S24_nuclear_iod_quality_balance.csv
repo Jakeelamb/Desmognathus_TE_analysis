@@ -1,4 +1,5 @@
 species,template_species,n_nuclei,standardized_mean_difference_match_log_edge_sharpness,ks_distance_match_log_edge_sharpness,standardized_mean_difference_match_log_relative_ring_noise,ks_distance_match_log_relative_ring_noise,max_abs_standardized_mean_difference,max_ks_distance,passes_prespecified_balance_thresholds
+D. aeneus,D. apalachicolae,21,0.86536020,0.60617761,-0.66948082,0.64736165,0.86536020,0.64736165,False
 D. amphileucus,D. apalachicolae,33,0.04993231,0.14742015,0.00759831,0.09909910,0.04993231,0.14742015,True
 D. anicetus,D. apalachicolae,39,0.00416683,0.09286209,-0.01557767,0.12751213,0.01557767,0.12751213,True
 D. apalachicolae,D. apalachicolae,37,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000,True
@@ -14,8 +15,11 @@ D. kanawha,D. apalachicolae,34,0.01896323,0.10651828,-0.02001611,0.10890302,0.02
 D. marmoratus,D. apalachicolae,37,-0.00649012,0.08108108,0.01257263,0.08108108,0.01257263,0.08108108,True
 D. mavrokoilius,D. apalachicolae,38,-0.00575250,0.12446657,-0.00531152,0.08961593,0.00575250,0.12446657,True
 D. monticola,D. apalachicolae,36,0.01507428,0.17867868,0.03017203,0.11936937,0.03017203,0.17867868,True
+D. ochrophaeus,D. apalachicolae,32,-0.20980916,0.39611486,-0.34305118,0.44594595,0.34305118,0.44594595,False
 D. ocoee,D. apalachicolae,35,0.00441258,0.07181467,-0.00073177,0.08030888,0.00441258,0.08030888,True
+D. orestes,D. apalachicolae,22,-0.01024368,0.13759214,-0.16344222,0.35012285,0.16344222,0.35012285,False
 D. perlapsus,D. apalachicolae,33,0.02038995,0.11302211,0.00617724,0.12694513,0.02038995,0.12694513,True
 D. tilleyi,D. apalachicolae,36,-0.00164552,0.09609610,-0.00318080,0.06681682,0.00318080,0.09609610,True
 D. valtos,D. apalachicolae,37,-0.00225556,0.08108108,0.00707345,0.08108108,0.00707345,0.08108108,True
 D. welteri,D. apalachicolae,38,-0.01654071,0.07539118,0.01996008,0.09174964,0.01996008,0.09174964,True
+D. wrighti,D. apalachicolae,9,-0.23836127,0.42942943,-0.02513011,0.22822823,0.23836127,0.42942943,False

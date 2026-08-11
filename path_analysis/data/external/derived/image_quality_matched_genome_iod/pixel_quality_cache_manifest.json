@@ -1,5 +1,0 @@
-{
-  "candidates_csv": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/pair_review_postrepair_strict/triage/all_scored_masks.csv",
-  "candidates_sha256": "dc3eb40d556999a34637c7d19dc0f94985af74532594fb04ca4681aafca62cf8",
-  "n_rows": 9826
-}

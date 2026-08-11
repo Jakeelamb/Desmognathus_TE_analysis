@@ -1,0 +1,213 @@
+{
+  "schema_version": 3,
+  "analysis_id": "ltr_terminal_internal_release_v1",
+  "release_status": "frozen_sensitivity_only",
+  "canonical_files": {
+    "S14": {
+      "path": "analyses/01_transposable_elements/data/ltr_element_metrics.csv",
+      "sha256": "c332c2ba11a083b25d4edbf55bd5b2d2fd7c0f2b3da6cef9ab3dff1d7bf35bae",
+      "rows": 1086,
+      "columns": 82
+    },
+    "S15": {
+      "path": "analyses/01_transposable_elements/data/ltr_species_robustness.csv",
+      "sha256": "9e33b0974f3a24227117652caf5f866bd16e05b7147e21eedf70dc7c1b460387",
+      "rows": 148,
+      "columns": 23
+    },
+    "S16": {
+      "path": "analyses/01_transposable_elements/data/ltr_resource_coverage.csv",
+      "sha256": "25cb335ea86ec62b2e246ffd29987babd0dd7f4c2298180f0025e0d7365a4d3e",
+      "rows": 34,
+      "columns": 18
+    },
+    "S17": {
+      "path": "analyses/01_transposable_elements/data/ltr_excluded_elements.csv",
+      "sha256": "c3f8aefe0d9fab25f19fc57c2acf6ca5f38d5769600b627813fdd5d7bbfcad04",
+      "rows": 2,
+      "columns": 27
+    }
+  },
+  "active_replay": {
+    "path": "analyses/01_transposable_elements/recompute_ltr_release.py",
+    "sha256": "7e597cd842fa6c336474208840c298caaa362ceb5ab0171fb3febc47a2d830df",
+    "default_mode": "read_only_verification",
+    "promotion_flag": "--write"
+  },
+  "availability_projection": {
+    "path": "data/identity/analysis_availability.csv",
+    "sha256": "d72824e662605b4d42e4e2e0d5458e787f8cc0173a44fe8b3ae355385c6c14e8",
+    "rows": 37,
+    "columns": 43,
+    "authority": "S16 corrected resource fields projected by the active replay"
+  },
+  "original_iqr_method_evidence": {
+    "path": "../misc_desmog_scripts/Dusky_Data_visualization.ipynb",
+    "sha256": "52fb3f96c0514f116c4b8fc498914df49329dc67d174481b713326525888fbca",
+    "notebook_cell_index_zero_based": 7,
+    "method": "within_species_two_sided_tukey_1.5_iqr",
+    "lower_bound": "Q1 - 1.5 * IQR",
+    "upper_bound": "Q3 + 1.5 * IQR",
+    "inclusive_retention": true,
+    "coverage_gate_present_in_original_notebook": false,
+    "translation_to_current_release": "quartiles and fences are calculated within species from the 408 correctly selected LTR/Gypsy elements with at least five whitespace-delimited TEsorter domain annotations; the primary release is the intersection of IQR retention and the independently declared 80% regional positive-depth gate"
+  },
+  "archived_evidence": {
+    "corrected_release_builder": {
+      "path": "../Desmognathus_TE_archive/scripts/processing/build_corrected_ectopic_ltr30.py",
+      "sha256": "8f0a3cf408da25472c035ed4be49190c5dfb7e0945aa937c6bf2badf46d4536b"
+    },
+    "corrected_release_manifest": {
+      "path": "../Desmognathus_TE_archive/results/data/corrected/ectopic_ltr30/ectopic_ltr30_v1.manifest.json",
+      "sha256": "38ed29e570da8b58ae7ac19e58a13a687e6e0e1567ee3b5b0aba07fe745954d1"
+    },
+    "historical_screen_table": {
+      "path": "../Desmognathus_TE_archive/results/data/research_review/ltr_mapping_artifact_screen_ltr30_v1.csv",
+      "sha256": "28fb235f0e9c4a9f757b06dab299eff82d2ff40b64afb9b075a52987034c8536"
+    },
+    "historical_screen_rule_source": {
+      "path": "../Desmognathus_TE_archive/scripts/processing/build_audited_historical_style_figures.R",
+      "sha256": "64713710880b18fd7521e370b733dfbcd82838e9d20051d096bf220bbb5aef4a"
+    }
+  },
+  "mapping_workflow": {
+    "evidence_status": "partially_recovered_historical_workflow",
+    "input_reads": "paired_trimmed_mitochondrial_filtered_reads",
+    "reference": "per_species_ltr_contigs",
+    "alignment": {
+      "tool": "Bowtie2",
+      "known_options": [
+        "-L",
+        "20",
+        "--very-sensitive-local"
+      ]
+    },
+    "post_alignment": {
+      "tool": "SAMtools",
+      "known_operations": [
+        "BAM_conversion",
+        "sort",
+        "index",
+        "depth"
+      ]
+    },
+    "unresolved": [
+      "read_trimming_and_mitochondrial_filtering_commands_and_versions",
+      "bowtie2_version",
+      "samtools_version",
+      "mapq_threshold",
+      "multimapper_policy",
+      "secondary_and_supplementary_alignment_policy",
+      "duplicate_policy"
+    ]
+  },
+  "selection": {
+    "minimum_element_length_bp": 3000,
+    "required_order": "LTR",
+    "required_superfamily": "Gypsy",
+    "minimum_domain_annotations": 5,
+    "domain_field_grammar": "whitespace-delimited DOMAIN|MODEL annotations",
+    "domain_count_method": "count validated whitespace-delimited annotation tokens",
+    "annotation_join": "exact_sequence_and_coordinate_tesorter_join",
+    "legacy_error": "the archived parser split the Domains field on the within-token pipe delimiter, so four annotations were stored as five and five annotations were stored as six",
+    "historical_rows_preserved": true
+  },
+  "release_counts": {
+    "te_panel_species": 34,
+    "species_with_eligible_elements": 30,
+    "historical_pipe_split_selected_elements": 1088,
+    "historical_source_corrupt_elements": 2,
+    "historical_usable_audit_elements": 1086,
+    "selected_ltr_gypsy_ge5_domain_elements": 408,
+    "selected_source_corrupt_exclusions": 0,
+    "iqr_retained_elements": 381,
+    "iqr_outliers_removed": 27,
+    "iqr_lower_outliers_removed": 1,
+    "iqr_upper_outliers_removed": 26,
+    "positive_depth_gate_elements": 407,
+    "primary_elements": 380
+  },
+  "depth_policy": {
+    "regional_means_include_explicit_zero_depth_positions": true,
+    "regional_means_treat_unreported_positions_as_zero": true,
+    "terminal_mean": "length_weighted_mean_of_left_and_right_ltr_all_position_means",
+    "ratio": "terminal_all_position_mean_divided_by_internal_all_position_mean"
+  },
+  "coverage_gate": {
+    "metric": "regional_positive_depth_position_fraction",
+    "threshold": 0.8,
+    "operator": "greater_than_or_equal",
+    "required_regions": [
+      "left_ltr",
+      "right_ltr",
+      "internal"
+    ],
+    "all_regions_required": true,
+    "not_a_reported_position_fraction_gate": true
+  },
+  "primary_iqr_filter": {
+    "rule_id": "within_species_two_sided_tukey_1.5_iqr_v1",
+    "role": "required_primary_element_filter",
+    "applied_to_primary_release": true,
+    "grouping": "species",
+    "ratio_column": "ratio_terminal_internal_all_positions",
+    "lower_bound": "Q1 - 1.5 * IQR",
+    "upper_bound": "Q3 + 1.5 * IQR",
+    "inclusive_retention": true,
+    "calculation_population": "all_408_correctly_selected_ltr_gypsy_ge5_domain_elements_before_coverage_intersection",
+    "n_input_elements": 408,
+    "n_retained_by_iqr": 381,
+    "n_removed_by_iqr": 27,
+    "n_lower_outliers": 1,
+    "n_upper_outliers": 26,
+    "coverage_gate_intersection": true,
+    "n_primary_elements": 380,
+    "n_primary_species": 30,
+    "primary_analysis_branch": "primary_iqr_filtered_coverage_ge_80pct"
+  },
+  "corrupt_exclusions": [
+    {
+      "species": "santeetlah",
+      "element_id": "JASANM010280042.1_De_179_6669",
+      "depth_file_sha256": "61f925e91eef555f9e3eaf1b711c8524e67062db36f649d2ca613dc563b0cb5b"
+    },
+    {
+      "species": "aureatus",
+      "element_id": "JAUEJG010675316.1_De_4598_10648",
+      "depth_file_sha256": "a7caa6c839cca080c5aaa55293df2b299780888b9a1925942ef60741d131fe0a"
+    }
+  ],
+  "corrupt_exclusion_scope": {
+    "role": "historical_pipe_split_selected_audit_only",
+    "corrected_domain_count": 4,
+    "eligible_for_current_cohort": false,
+    "selected_cohort_corrupt_exclusions": 0
+  },
+  "claim_boundary": {
+    "allowed": "mapping_and_deletion_footprint_proxy",
+    "not_direct_measures": [
+      "ectopic_recombination_rate",
+      "solo_ltr_rate",
+      "dna_loss_rate"
+    ],
+    "release_status": "sensitivity_only"
+  },
+  "retired_compound_screen_reconstruction": {
+    "rule_id": "one_sided_terminal_pileup_v1",
+    "role": "later_audit_reconstruction_not_the_original_iqr_method",
+    "applied_to_primary_release": false,
+    "n_input_elements": 1086,
+    "n_flagged_elements": 1,
+    "n_retained_elements": 1085,
+    "conditions": [
+      "ratio above the within-species Q3 + 1.5 * IQR upper fence",
+      "absolute left:right terminal log2 imbalance > 6 (>64-fold)",
+      "element contributes >50% of its species ratio sum"
+    ],
+    "flagged_element": {
+      "species": "intermedius",
+      "element_id": "JAUEJH010597481.1_De_5169_11831"
+    },
+    "retirement_reason": "the original analysis notebook documents a two-sided within-species Tukey IQR filter; the later three-condition one-element screen must not be substituted for that method"
+  }
+}

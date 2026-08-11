@@ -1,4 +1,0 @@
-comparison,left_trait,right_trait,spearman_rho,spearman_p,log10_pearson_r,log10_pearson_p,n_species,phylogenetically_corrected
-genome_nucleus,genome_size_pg,nucleus_area_um2,0.29478260869565215,0.16201059639566898,0.4190184122075993,0.04154378404377866,24,FALSE
-genome_cell,genome_size_pg,cell_area_um2,0.6695652173913043,3.455201283035728e-4,0.7166644320756408,8.156830290325334e-5,24,FALSE
-nucleus_cell,nucleus_area_um2,cell_area_um2,0.5730434782608694,0.0034227320772804424,0.5793012890986212,0.0030127748483662698,24,FALSE

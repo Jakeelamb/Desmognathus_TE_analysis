@@ -11,14 +11,16 @@ The project house style follows the documented GBE/OUP requirements in
 - no figure-internal title unless scientifically necessary;
 - one legend and one alt-text record for every finalized figure.
 
-Main-text figures will be limited to eight total display items. Diagnostic and
-audit figures belong in the supplementary-information PDF or DOI repository.
+GBE Articles allow eight combined main-text display items (figures plus tables),
+not eight of each. The curated placement and scientific role of every current
+figure are in `GBE_FIGURE_PLAN.md`; diagnostic and audit figures belong in the
+supplementary-information PDF or DOI repository.
 
 ## Rebuild
 
 ```bash
-conda env create -f Publication/figure_environment.yml  # first run only
-scripts/publication/run_gbe_figure_build.sh
+make setup-r  # first run only
+make figures
 ```
 
 `FIGURE_MANIFEST.csv` maps each figure to its source supplemental datasets,

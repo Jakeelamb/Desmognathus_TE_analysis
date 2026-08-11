@@ -1,0 +1,191 @@
+{
+  "analysis_id": "te34_final_clr_pca_structure_audit_v1",
+  "analysis_date": "2026-08-10",
+  "analysis_status": "exploratory_post_hoc_no_discrete_cluster_accepted",
+  "selected_k": null,
+  "inputs": {
+    "te34_panel": {
+      "path": "data/identity/te34_panel.csv",
+      "sha256": "b78afbff2fee4067a4987d837c29ba970b296bb9f0d09104f0b6bf0770a27fbd"
+    },
+    "order_composition": {
+      "path": "analyses/01_transposable_elements/data/te_order_composition.csv",
+      "sha256": "c7b00470d8e26b1ed6063a9d68b3c8403618df3298d485346c16818fb9c1b965"
+    },
+    "superfamily_composition": {
+      "path": "analyses/01_transposable_elements/data/te_superfamily_composition.csv",
+      "sha256": "8b3b33eef684a53b474ed00352d924a946ed6820beaa47aaed9699423755c4e1"
+    },
+    "scores": {
+      "path": "analyses/01_transposable_elements/data/te_pca_scores.csv",
+      "sha256": "baa282fbe82ea825fde1ef83d345db802509992b8e5241ea21eb93fd4dab5795"
+    },
+    "variance": {
+      "path": "analyses/01_transposable_elements/data/te_pca_variance.csv",
+      "sha256": "11a22893342324c22fa55f90ddf1b61df197b6f2503e0e688cb192a87376d20c"
+    },
+    "loadings": {
+      "path": "analyses/01_transposable_elements/data/te_pca_loadings.csv",
+      "sha256": "cd6b43016b33a29249a22e3c2ad361a70943575946119284ecd434095139590e"
+    },
+    "clr": {
+      "path": "analyses/01_transposable_elements/data/te_pca_clr_matrix.csv",
+      "sha256": "c58a7cc71ed4306544e81397007cd3f8b348e6df4fce54066e0f2f748f52ff39"
+    },
+    "prevalence": {
+      "path": "analyses/01_transposable_elements/data/te_feature_prevalence.csv",
+      "sha256": "51db50ef85bcf0f7562780f1a8a3d6a6618a0393032c370b62d9362bcd0d5f31"
+    },
+    "traits": {
+      "path": "analyses/03_phylogenetic_path/data/organismal_traits.csv",
+      "sha256": "0512d7c75b05358a7cd1a230b38f9d2bb362be1147119ab2919898602eecdd9e"
+    },
+    "tree": {
+      "path": "analyses/03_phylogenetic_path/trees/source_time_tree_46.tre",
+      "sha256": "1cf561526405c794b70d5767182eefe84dfa1552f9f9c0be6b36c465b19301aa"
+    },
+    "pca_recompute_script": {
+      "path": "analyses/01_transposable_elements/recompute_pca.py",
+      "sha256": "0e439b262bfe2d8e6562acb0653b073eae167e892ae36fce8c124f73c6178937"
+    },
+    "analysis_script": {
+      "path": "analyses/01_transposable_elements/analyze_pca_structure.R",
+      "sha256": "ccb5ef28ee4915238cf7da303fc836de2cde15b9a8388428d330fa619342234b"
+    },
+    "environment": {
+      "path": "environment.yml",
+      "sha256": "e257c51e459cb76c470001d2b70ed71a036376e5b9c8bc42e42104eb30edf95c"
+    },
+    "python_project": {
+      "path": "pyproject.toml",
+      "sha256": "13c69ddacccb33bd7795c91e4958f53eda570dbc11dd9fb6855d79a4cc2f8866"
+    },
+    "python_lock": {
+      "path": "uv.lock",
+      "sha256": "3621c4007e6318756b54a8278f2f9bdf41da661dd9e65ef9bb779536c10b23d8"
+    }
+  },
+  "pca_geometry": {
+    "species": 34,
+    "ubiquitous_superfamilies": 24,
+    "clr_rank": 23,
+    "nonzero_pcs": 23,
+    "maximum_clr_to_all_pc_distance_difference": 3.1086244689504383e-15,
+    "pc1_pc2_variance": 0.43984440493682908,
+    "pc1_pc6_variance": 0.86670197856060249,
+    "zero_replacement": false,
+    "sparse_features_excluded_from_primary_pca": [
+      {
+        "feature": "Ginger",
+        "n_species_positive": 1,
+        "prevalence_fraction": 0.029411764705882349
+      },
+      {
+        "feature": "Merlin",
+        "n_species_positive": 4,
+        "prevalence_fraction": 0.1176470588235294
+      },
+      {
+        "feature": "Dada",
+        "n_species_positive": 9,
+        "prevalence_fraction": 0.26470588235294118
+      },
+      {
+        "feature": "Chapaev",
+        "n_species_positive": 12,
+        "prevalence_fraction": 0.35294117647058826
+      },
+      {
+        "feature": "CR1",
+        "n_species_positive": 18,
+        "prevalence_fraction": 0.52941176470588236
+      }
+    ]
+  },
+  "clustering": {
+    "primary_representation": "all 23 unscaled released PC scores; exactly preserves CLR/Aitchison distances",
+    "k_grid": [1, 2, 3, 4, 5, 6, 7, 8],
+    "kmeans_nstart": 1000,
+    "gap_replicates": 1000,
+    "gap_reference": "scaledPCA uniform reference",
+    "gap_primary_rule": {
+      "distance_power": 2,
+      "selector": "Tibs2001SEmax",
+      "standard_error_multiplier": 1,
+      "selected_k": 1
+    },
+    "gap_selector_sensitivities": {
+      "distance_power_1": {
+        "firstSEmax": 1,
+        "Tibs2001SEmax": 1,
+        "globalSEmax": 1
+      },
+      "distance_power_2": {
+        "firstSEmax": 1,
+        "Tibs2001SEmax": 1,
+        "globalSEmax": 1
+      }
+    },
+    "stability": {
+      "leave_one_superfamily_out": "recompute the CLR of each 23-part subcomposition",
+      "species_subsampling": "1000 replicates of 28 of 34 species",
+      "sensitivity_representations": ["first_6_pcs", "first_2_pcs"]
+    },
+    "conservative_release_gates": {
+      "note": "Audit gates adopted for this rebuild; not preregistered or confirmatory.",
+      "requires_primary_gap_rule_to_select_more_than_one_cluster": true,
+      "minimum_cluster_size": 3,
+      "downstream_minimum_cluster_size": 5,
+      "minimum_mean_silhouette": 0.25,
+      "minimum_feature_stability_median_ari": 0.80000000000000004,
+      "minimum_feature_stability_q10_ari": 0.59999999999999998,
+      "minimum_species_stability_median_ari": 0.80000000000000004,
+      "minimum_species_stability_q10_ari": 0.59999999999999998,
+      "minimum_first_6_pc_ari": 0.80000000000000004
+    },
+    "unconstrained_silhouette_best_k": 7,
+    "singleton_free_silhouette_best_k": 2,
+    "accepted_k": null,
+    "conclusion": "No k-means partition passes all release gates; candidate labels are audit-only."
+  },
+  "trait_association": {
+    "permutations": 99999,
+    "primary_endpoint": "reproductive_strategy PERMANOVA on full Aitchison distances",
+    "primary_status": "post hoc exploratory; expert categories followed review of initial PCA",
+    "dispersion_diagnostic": "PERMDISP using spatial medians with small-sample bias adjustment",
+    "planned_post_hoc_contrasts": ["direct development versus aquatic larvae", "aquatic versus terrestrial eggs among aquatic-larval species"],
+    "contrast_adjustment": "Holm within the two contrast tests",
+    "size_sensitivity": "marginal PERMANOVA of strategy and log10 maximum SVL",
+    "deliberately_not_duplicated": ["development_mode is a deterministic collapse of reproductive_strategy on common complete cases", "microhabitat_class is the same partition as aquaticity_index"],
+    "phylogenetic_correction": false
+  },
+  "phylogenetic_signal": {
+    "permutations": 99999,
+    "primary_test": "Adams 2014 Equation 7 K_mult",
+    "primary_k_mult": 0.65813402704454371,
+    "clr_all_pc_k_mult_absolute_difference": 1.6653345369377348e-15,
+    "source_tree_tips": 46,
+    "retained_te34_tips": 34,
+    "maximum_root_to_tip_spread": 2.0000000020559128e-06,
+    "all_edges_positive": true,
+    "provenance_status": "provisional: source-tree citation, calibration, and branch-length provenance unresolved"
+  },
+  "random_seeds": {
+    "base": 20260810,
+    "gap_d1": 20260811,
+    "gap_d2": 20260810,
+    "species_subsampling": 20260820,
+    "trait_tests": "20270810 through 20270870",
+    "k_mult": 20260810,
+    "candidate_patristic": 20260812,
+    "candidate_fitch": 20260813,
+    "first_2_pc_patristic": 20260814
+  },
+  "software": {
+    "R": "R version 4.4.3 (2025-02-28)",
+    "ape": "5.8.1",
+    "cluster": "2.1.8.3",
+    "vegan": "2.7.5"
+  },
+  "interpretation_boundaries": ["Continuous composition can have phylogenetic or trait association without forming stable discrete clusters.", "No cluster labels are accepted for publication as biological groups.", "Trait-label permutations are species-level and do not correct for phylogenetic non-independence.", "The reproductive-strategy hypothesis is post hoc rather than confirmatory.", "Tree-based results remain provisional until the source tree citation and calibration are supplied."]
+}

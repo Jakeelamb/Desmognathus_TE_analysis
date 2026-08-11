@@ -1,6 +1,0 @@
-dataset,n_species,species_list
-dataset_te_genome,18,amphileucus;anicetus;apalachicolae;auriculatus;bairdi;campi;fuscus;gvnigeusgwotli;intermedius;kanawha;marmoratus;mavrokoilius;monticola;ocoee;perlapsus;tilleyi;valtos;welteri
-dataset_te_genome_ectopic,16,amphileucus;anicetus;apalachicolae;auriculatus;bairdi;campi;fuscus;gvnigeusgwotli;intermedius;marmoratus;mavrokoilius;monticola;ocoee;perlapsus;tilleyi;welteri
-dataset_genome_morphology,21,amphileucus;anicetus;apalachicolae;auriculatus;bairdi;brimleyorum;campi;folkertsi;fuscus;gvnigeusgwotli;intermedius;kanawha;marmoratus;mavrokoilius;monticola;ochrophaeus;ocoee;perlapsus;tilleyi;valtos;welteri
-dataset_te_genome_morphology,18,amphileucus;anicetus;apalachicolae;auriculatus;bairdi;campi;fuscus;gvnigeusgwotli;intermedius;kanawha;marmoratus;mavrokoilius;monticola;ocoee;perlapsus;tilleyi;valtos;welteri
-dataset_te_genome_ectopic_morphology,16,amphileucus;anicetus;apalachicolae;auriculatus;bairdi;campi;fuscus;gvnigeusgwotli;intermedius;marmoratus;mavrokoilius;monticola;ocoee;perlapsus;tilleyi;welteri

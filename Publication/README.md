@@ -1,51 +1,50 @@
 # Desmognathus GBE publication package
 
-This directory is the controlled release surface for the planned *Genome
-Biology and Evolution* Article. It is generated from frozen, accession-explicit
-artifacts and keeps manuscript-ready evidence separate from sensitivity and
-audit-only products.
+This is the controlled release surface for the planned *Genome Biology and
+Evolution* article. It is built from the compact canonical data under `data/`
+and `analyses/`, keeping paper outputs separate from frozen upstream evidence
+and archive-only computation.
 
 ## Layout
 
-- `journal_requirements/` — current first-party GBE/OUP requirements and the
-  project figure house specification.
-- `methods/` — Methods source matrix, required author-supplied wet-lab details,
-  Markdown source, and generated DOCX.
-- `datasets/` — plain-CSV supplemental tables where structurally possible,
-  standard phylogenetic files where CSV would lose scientific structure, and a
-  SHA-256 release manifest.
-- `figures/` — GBE-styled ggplot figure masters, legends, and alt text.
+- `datasets/` — S01–S40 CSV supplements, two phylogenetic tree files, column
+  inventory, SHA-256 manifest, and release summary.
+- `figures/` — current GBE-styled ggplot masters, legends, alt text, and figure
+  manifest.
+- `methods/` — factual Methods scaffold, evidence matrix, and missing
+  author-input checklist.
+- `journal_requirements/` — the current project copy of the GBE/OUP submission
+  requirements.
+
+## Rebuild and validate
+
+From the repository root:
+
+```bash
+# Canonical analysis tables -> S01-S40, tree copies, manifests, and catalog
+make publication
+
+# Eight GBE ggplot figures and PDF/PNG/TIFF derivatives
+make figures
+
+# Dataset identity, dimensions, hashes, panels, taxonomy decision, and tree tips
+make test
+```
+
+Both figure production and the Path24 R analysis use the single `desmognathus`
+environment defined in `environment.yml`. Python uses `pyproject.toml` and
+`uv.lock`. There is no separate publication-figure environment.
 
 ## Release rule
 
 `main_candidate`, `supplementary`, `sensitivity_only`, and `audit_only` are not
-interchangeable. The dataset manifest carries one of these labels for every
-file. In particular, the current image assay supports a relative nuclear-IOD
-sensitivity index but does not yet establish an absolute genome size in pg.
-The terminal:internal LTR statistic is an exploratory deletion-footprint proxy,
-not a measured ectopic-recombination rate.
+interchangeable. `datasets/DATASET_MANIFEST.csv` records the class for every
+supplement. Relative nuclear IOD is not an independently validated absolute
+genome size, the LTR terminal:internal statistic is not a measured
+ectopic-recombination rate, and the Path24 graph comparisons do not establish a
+unique causal direction.
 
-## Rebuild
-
-```bash
-# Frozen supplemental CSVs and tree views
-uv run --with biopython scripts/publication/build_publication_datasets.py
-
-# One-time R/ggplot environment creation
-conda env create -f Publication/figure_environment.yml
-
-# Seven GBE-styled ggplot figures and all derivatives
-scripts/publication/run_gbe_figure_build.sh
-
-# Double-spaced, line-numbered DOCX with embedded figures
-uv run --with python-docx python scripts/publication/build_methods_docx.py
-
-# Release validation
-uv run python -m unittest \
-  scripts.python.tests.test_publication_package \
-  scripts.python.tests.test_publication_outputs
-```
-
-The DOCX is a working Methods draft, not a submission-ready assertion that all
-methods are known. Complete every row in
-`methods/METHODS_REQUIRED_AUTHOR_INPUT.csv` before manuscript freeze.
+`methods/METHODS_BULLET_SCAFFOLD.md` is the sole active factual Methods
+authority. Complete every unresolved row in
+`methods/METHODS_REQUIRED_AUTHOR_INPUT.csv` before manuscript prose and DOCX
+production. Dataset rebuilds intentionally do not generate manuscript prose.

@@ -1,0 +1,27 @@
+name: desmognathus
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - r-base=4.4
+  - r-ape
+  - r-cluster
+  - r-dplyr
+  - r-future.apply
+  - r-ggm
+  - r-ggplot2
+  - r-ggrepel
+  - r-ggraph
+  - r-igraph
+  - r-jsonlite
+  - r-patchwork
+  - r-phylolm
+  - r-purrr
+  - r-readr
+  - r-scales
+  - r-systemfonts
+  - r-tibble
+  - r-tidyr
+  - r-vegan
+  - ghostscript
+  - imagemagick

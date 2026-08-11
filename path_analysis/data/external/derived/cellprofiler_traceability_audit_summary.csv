@@ -1,4 +1,0 @@
-bundle,present,n_species,n_images,n_rows,nonempty_source_image_path_pct,existing_source_image_path_pct,nonempty_tile_manifest_path_pct,existing_tile_manifest_path_pct,nonempty_mask_path_pct,existing_mask_path_pct,nonempty_roi_zip_path_pct,existing_roi_zip_path_pct,notes
-genome_species_bundle,True,21,27,21,,,,,,,,,Imported from verified reviewed linked pairs; genome primary uses OD-QC-pass images with sensitivity sidecar.
-morphology,True,21,43,1050,100.0,100.0,100.0,100.0,100.0,100.0,0.0,0.0,Cell and nucleus morphology estimates come from weighted medians of verified selected linked pairs. ROI ZIP artifacts are not required for this mask-based workflow.
-verified_species_dataset,True,21,43,1050,100.0,100.0,100.0,100.0,100.0,100.0,0.0,0.0,"Verified species dataset is the authoritative per-species cell, nucleus, and genome estimate surface for the current path-analysis import."

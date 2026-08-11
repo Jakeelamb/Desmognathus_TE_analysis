@@ -1,0 +1,167 @@
+{
+  "lineage_id": "desmognathus_cell_nucleus_production_v1_20260714",
+  "status": "canonical_active",
+  "scope": "Cell segmentation, nucleus segmentation/IOD measurement, cell-nucleus linkage, and quality-ranked candidate selection",
+  "canonical_entrypoint": "scripts/run_production_cell_nucleus_pipeline.py",
+  "models": {
+    "cell_segmentation": {
+      "framework": "Cellpose",
+      "artifact": "output/tile_training_round_v1/train/models/desmognathus_tile_round1",
+      "sha256": "e04ee76afc0bd1e1526a3bb455aac51e5389e87442129eb45ac87653014a7c14",
+      "training_summary": "output/tile_training_round_v1/summary.json",
+      "training_manifest": "output/tile_training_round_v1/training_manifest.csv",
+      "training_manifest_sha256": "f126b2136c39090dab65c501516fbfd94549901273b2d0fa959d31d8eb21d19d",
+      "training_command_source": "output/tile_training_round_v1/README.md",
+      "training_set": {
+        "annotated_tiles": 12,
+        "train_tiles": 10,
+        "held_out_tiles": 2,
+        "species": 2
+      },
+      "inference": {
+        "min_size_px": 353,
+        "batch_size": 16,
+        "gpu_device": "0"
+      },
+      "measurement_filters": {
+        "min_mask_area_px": 353,
+        "min_circularity": 0.4,
+        "min_solidity": 0.7,
+        "nearest_neighbor_distance_px": 50,
+        "edge_margin_px": 200
+      }
+    },
+    "nucleus_segmentation": {
+      "framework": "Ultralytics YOLO segmentation",
+      "artifact": "runs/segment/output/yolo_nucleus_training_final_area500_shape/weights/best.pt",
+      "sha256": "36d20b16f4bef51c6e3657f655471e7dedb6bba149a996ded1f2161c676f7f19",
+      "training_args": "runs/segment/output/yolo_nucleus_training_final_area500_shape/args.yaml",
+      "training_args_sha256": "f821de251dd8ff9e25a3c006452ceb04bf27376e2d1683e683c6acfc224ab586",
+      "training_dataset": "output/yolo_nucleus_dataset_final_area500_shape",
+      "training_dataset_summary_sha256": "a2dbca6bdbafb2e6925d4981ba89130ecfec578d58c15542070da6a2a8fca797",
+      "training_set": {
+        "labeled_source_tiles": 12,
+        "train_patches": 156,
+        "validation_patches": 32,
+        "instances_across_patches": 536
+      },
+      "inference": {
+        "patch_size_px": 1024,
+        "stride_px": 1024,
+        "image_size_px": 1024,
+        "batch_size": 8,
+        "confidence": 0.1,
+        "iou": 0.5,
+        "max_detections": 512,
+        "device": "0"
+      },
+      "measurement_filters": {
+        "min_mask_area_px": 500,
+        "min_circularity": 0.55,
+        "min_solidity": 0.92,
+        "max_aspect_ratio": 2.8
+      }
+    },
+    "pair_quality_selection": {
+      "framework": "scikit-learn logistic regression",
+      "artifact": "output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/top50_linked_pair_review/pair_quality_model/pair_quality_model.joblib",
+      "sha256": "e47b06dfc2657899ed363fc67aecd9af894790eae345985be0630a02d460cda8",
+      "training_labels": "output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/top50_linked_pair_review/pair_quality_model/training_labels.csv",
+      "training_labels_sha256": "d6d7dbfcb747655c85a26217853d93e626abe048f0b3c4a08fc39bcff7b98f5b",
+      "evaluation": "output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/top50_linked_pair_review/pair_quality_model/model_evaluation.json",
+      "evaluation_sha256": "ee5f147b5226bbd7b936d4b9afadb9e4cf561058e9c9499264e4545875dd910c",
+      "training_set": {
+        "labels": 876,
+        "keep": 603,
+        "discard": 273,
+        "cross_validation_splits": 5,
+        "species_feature_used": false
+      },
+      "performance": {
+        "balanced_accuracy": 0.7377034242705884,
+        "roc_auc": 0.8115527369258713,
+        "keep_precision": 0.8499095840867993,
+        "keep_recall": 0.7794361525704809
+      },
+      "selection": {
+        "candidate_class": "one-to-one physical cell-nucleus mask pairs",
+        "ranking_profile": "size_nucleus_darkness",
+        "minimum_darkness_percentile": 0.25,
+        "minimum_clarity_percentile": 0.25,
+        "strict_shortfall_fallback": "mask_pair",
+        "overlap_evidence": "mask",
+        "quality_weight": 0.7,
+        "target_per_species": 50
+      }
+    }
+  },
+  "retained_training_assets": [
+    "output/tile_annotation_bundle_v1",
+    "output/tile_bootstrap_review_v1",
+    "output/tile_training_round_v1",
+    "output/nucleus_label_manual_round1",
+    "output/yolo_nucleus_label_round2",
+    "output/yolo_nucleus_label_round3",
+    "output/yolo_nucleus_dataset_final_area500_shape",
+    "output/yolo_models/yolo26n-seg.pt",
+    "runs/segment/output/yolo_nucleus_training_final_area500_shape",
+    "output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/top50_linked_pair_review"
+  ],
+  "current_application": {
+    "source_manifest": "data/manifests/life_history_target_vsi_v1.csv",
+    "source_manifest_sha256": "f500b3647b0a20b30c64c9d31fd91a10b230dbf91bfa45f3fc50d8dee0bd18aa",
+    "run_root": "output/runs/life_history_target_vsi_v1",
+    "staged_slides": 22,
+    "staged_tiles": 230,
+    "cell_objects": 4536,
+    "nucleus_objects": 1652,
+    "linked_mask_pairs": 1043,
+    "selection_output": "output/runs/life_history_target_vsi_v1/top50_yolo_exact_v1/pair_quality_model/model_recommended_top50_worklist.csv",
+    "species_results": [
+      {
+        "species": "D. aeneus",
+        "eligible_pairs": 70,
+        "selected_pairs": 50,
+        "shortfall_to_50": 0,
+        "selected_slides": 3,
+        "selected_specimens": 2,
+        "selected_by_specimen": {"166183": 4, "168277": 46},
+        "median_pair_quality_probability": 0.519872
+      },
+      {
+        "species": "D. orestes",
+        "eligible_pairs": 414,
+        "selected_pairs": 50,
+        "shortfall_to_50": 0,
+        "selected_slides": 2,
+        "selected_specimens": 2,
+        "selected_by_specimen": {"109787": 48, "169445": 2},
+        "median_pair_quality_probability": 0.972698
+      },
+      {
+        "species": "D. wrighti",
+        "eligible_pairs": 22,
+        "selected_pairs": 22,
+        "shortfall_to_50": 28,
+        "selected_slides": 4,
+        "selected_specimens": 3,
+        "selected_by_specimen": {"220829": 13, "220830": 6, "220831": 3},
+        "median_pair_quality_probability": 0.129234
+      }
+    ],
+    "manual_review_complete": false,
+    "ready_for_final_freeze": false
+  },
+  "excluded_from_active_production": [
+    "YOLO cell-reset models and clean/not-clean cell-object classifiers",
+    "MicroSAM cell-annotation framework",
+    "SAM 3.1 prompt-sweep framework",
+    "ImageJ nucleus segmentation fallback for the life_history_target_vsi_v1 top-50 candidate path"
+  ],
+  "provenance_boundaries": [
+    "No image, mask, crop, annotation, or measurement data is removed by the non-production cleanup.",
+    "The ImageJ-derived life_history_target_vsi_v1 review remains a historical output but is not a production input.",
+    "The July 8 pair-quality classifier was trained from 21-species linked-pair review data. This manifest does not claim that the custom Cellpose checkpoint generated every older 21-species archived cell mask.",
+    "D. wrighti currently has 22 eligible production-path pairs; it must not be represented as a complete top-50 sample without new valid imagery or a preregistered method change."
+  ]
+}

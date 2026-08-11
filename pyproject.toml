@@ -1,0 +1,27 @@
+[project]
+name = "desmognathus-paper"
+version = "0.1.0"
+description = "Compact analysis and publication workspace for the Desmognathus TE study"
+requires-python = ">=3.12"
+dependencies = [
+  "biopython>=1.85",
+  "jupyterlab>=4.4",
+  "nbformat>=5.10",
+  "numpy>=2.2",
+  "openpyxl>=3.1",
+  "pandas>=2.2",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.4",
+  "ruff>=0.12",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

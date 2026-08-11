@@ -1,0 +1,16 @@
+analysis_type,replicate_id,tree_id,evolutionary_model,candidate_model,independence_claim,component_p,fitted_phylogenetic_parameter,path_trait_definition
+primary,point_estimate,focal_primary,lambda,independent,n ~ i,0.0415437877671364,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,independent,c ~ n,0.0030127749981267,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,independent,c ~ i,8.156831918074695e-05,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,iod_nucleus_only,c ~ i,8.156831918074695e-05,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,iod_nucleus_only,c ~ i + n,0.0353583510744721,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,nucleus_cell_only,n ~ i,0.0415437877671364,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,nucleus_cell_only,c ~ n + i,0.0009971099340485869,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,iod_cell_only,n ~ i,0.0415437877671364,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,iod_cell_only,c ~ i + n,0.0353583510744721,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,nucleus_bridge,c ~ n + i,0.0009971099340485869,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,nucleus_collider,c ~ i,8.156831918074695e-05,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,cell_bridge,n ~ c + i,0.975509706887934,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,cell_collider,n ~ i,0.0415437877671364,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,iod_bridge,c ~ i + n,0.0353583510744721,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size
+primary,point_estimate,focal_primary,lambda,iod_collider,c ~ n,0.0030127749981267,9.999999999999994e-08,relative_nuclear_iod_index; not_absolute_genome_size

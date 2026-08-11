@@ -1,6 +1,0 @@
-observed_panel,phylofill_panel,n_observed_panel,n_phylofill_panel,n_added_species,added_species,n_removed_species,removed_species,n_species_with_phylo_assistance,species_with_phylo_assistance,is_species_set_identical
-te_genome_primary_mediumplus,te_genome_primary_phylofill,18,18,0,,0,,0,,True
-te_genome_organismal_primary_mediumplus,te_genome_organismal_primary_phylofill,18,18,0,,0,,0,,True
-te_genome_ectopic_primary_mediumplus,te_genome_ectopic_primary_phylofill,16,16,0,,0,,0,,True
-te_genome_ectopic_organismal_primary_mediumplus,te_genome_ectopic_organismal_primary_phylofill,16,16,0,,0,,0,,True
-te_genome_morphology_primary_mediumplus,te_genome_morphology_primary_phylofill,18,18,0,,0,,0,,True

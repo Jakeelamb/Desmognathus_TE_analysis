@@ -1,128 +1,29 @@
-# .gitignore for Desmognathus_TE project (Simplified - No Exceptions)
-
-##### GENERAL #####
-# OS-specific files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Editor/IDE specific
-.vscode/
-.idea/
-.cursor/
-.claude/
-*.swp
-*~
-
-# Log files
-*.log
-*.out
-
-##### LANGUAGE ARTIFACTS #####
-# Python
+# Local environments and caches
+.venv/
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-*.egg-info/
-.eggs/
-build/
-dist/
-*.egg
-env/
-venv/
-.env
-
-# R
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
 .Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
-*.Rcheck/
-*utf8.md
-*_.utf8.md
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# Local browser/test-runner state
+# Editor, OS, and local runner state
+.DS_Store
+._*
+.idea/
+.vscode/
+.cursor/
+.claude/
 .playwright-cli/
 test-results/
+*.swp
+*~
 
-# Exploratory notebooks (keep in scripts but don't track)
-*.ipynb
-# The eight executed collaborator-review notebooks are release artifacts.
-!notebooks/research_review/*.ipynb
-
-##### LARGE DATA / BIOINFORMATICS FORMATS #####
-# Generally ignore large sequence/alignment/compressed files everywhere
-*.fasta
-*.fa
-*.fna
-*.fastq
-*.fq
-*.bam
-*.sam
-*.bai
-*.sai
-*.crai
-*.gz
-*.bz2
-*.zip
-*.tar
-*.tgz
-
-# Specific tool outputs (add more as needed)
-*.masked
-*.cat
-*.out.gff
-*.tbl
-*.html
-*.cls.tsv
-*.cls.pep
-*.cls.rexdb
-*.dom.faa
-*.dom.gff
-*.dom.tsv
-
-##### PROJECT STRUCTURE SPECIFIC #####
-
-# Ignore all contents of the main data/results directories by default.
-input_data/
-interim/
-results/
-
-# Ship the compact, frozen collaborator-review bundle without exposing the
-# expensive upstream result tree. Re-ignore every sibling after reopening the
-# parent directories required by git's ignore traversal.
-!results/
-results/*
-!results/data/
-results/data/*
-!results/data/research_review/
-!results/data/research_review/**
-!results/figures/
-results/figures/*
-!results/figures/research_review/
-!results/figures/research_review/**
-
-# Keep local literature/source PDFs out of git while retaining their hashes in
-# the path-analysis source inventory.
-path_analysis/data/external/raw/*.pdf
-
-# Interactive review galleries contain thousands of regenerable crop/mask
-# thumbnails. Keep them available locally, but commit their builders, compact
-# review decisions, summaries, and frozen collaborator tables instead.
-path_analysis/data/external/derived/**/*viewer*/
-
-# Legacy scaffold/model outputs are reproducible and superseded by the
-# canonical collaborator bundle under results/{data,figures}/research_review/.
-path_analysis/results/
-
-# Note: Core files like README.md, Dusky.yml, .gitignore in the root,
-# and all files within the scripts/ directory ARE tracked by default
-# unless explicitly ignored by a rule above (which they are not).
+# Disposable analysis outputs. Canonical data and publication outputs are tracked.
+analyses/02_morphology/output/
+analyses/03_phylogenetic_path/output/
+Publication/figures/*.rgb.pdf
+*.log

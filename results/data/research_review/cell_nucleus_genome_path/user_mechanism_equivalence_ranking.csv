@@ -1,4 +1,0 @@
-analysis_type,replicate_id,tree_id,evolutionary_model,generating_class,residual_regime,n_species,rank,model,k,q,C,p,CICc,delta_CICc,l,w,globally_supported,delta_competitive,admissible_competitive,stored_warning_count,runtime_warning_count
-user_mechanisms,point_estimate,focal_primary,lambda,NA,NA,24,1,genome_to_nucleus_to_cell,1,5,13.82129905847608,9.971099340485567e-4,27.154632391809415,0,1,0.3333333333333333,FALSE,TRUE,FALSE,2,1
-user_mechanisms,point_estimate,focal_primary,lambda,NA,NA,24,2,cell_to_nucleus_to_genome,1,5,13.82129905847608,9.971099340485567e-4,27.154632391809415,0,1,0.3333333333333333,FALSE,TRUE,FALSE,2,1
-user_mechanisms,point_estimate,focal_primary,lambda,NA,NA,24,3,nucleus_to_genome_and_cell,1,5,13.82129905847608,9.971099340485567e-4,27.154632391809415,0,1,0.3333333333333333,FALSE,TRUE,FALSE,2,1
