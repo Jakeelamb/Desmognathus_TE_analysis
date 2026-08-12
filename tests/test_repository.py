@@ -6,7 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import nbformat
 import numpy as np
 import pandas as pd
 
@@ -145,21 +144,6 @@ def test_expert_reproductive_strategy_coding_and_provenance() -> None:
     assert "Original email date not yet recorded" in sources.loc[source_id, "notes"]
 
 
-def test_one_notebook_per_analysis_component() -> None:
-    notebooks = sorted((ROOT / "analyses").glob("*/explore.ipynb"))
-    assert len(notebooks) == 3
-    for path in notebooks:
-        book = nbformat.read(path, as_version=4)
-        errors = [
-            output
-            for cell in book.cells
-            if cell.cell_type == "code"
-            for output in cell.get("outputs", [])
-            if output.get("output_type") == "error"
-        ]
-        assert not errors, f"{path}: {errors}"
-
-
 def test_compact_te_inputs_reproduce_released_pca() -> None:
     result = run_python("analyses/01_transposable_elements/recompute_pca.py")
     assert result.returncode == 0, result.stdout + result.stderr
@@ -197,7 +181,9 @@ def test_compact_te_inputs_reproduce_released_pca() -> None:
 
     makefile = (ROOT / "Makefile").read_text()
     assert "\nte-pca:\n" in makefile
-    assert "\nte-pca-view:\n" in makefile
+    assert "\nreport: figures validate\n" in makefile
+    assert "\nfigure-review: figures validate\n" in makefile
+    assert "\nte-pca-view:\n" not in makefile
     assert "\nte-structure:\n" not in makefile
 
 
@@ -339,4 +325,5 @@ def test_only_one_active_environment_specification() -> None:
     assert not (ROOT / "Publication/figure_environment.yml").exists()
     environment = (ROOT / "environment.yml").read_text()
     assert "r-cluster" in environment
+    assert "r-rmarkdown=2.31" in environment
     assert "r-vegan" in environment

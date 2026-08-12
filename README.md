@@ -1,8 +1,8 @@
 # Desmognathus transposable elements, morphology, and phylogenetic path analysis
 
 This is the compact working repository for finishing the paper. It contains the
-analysis-ready datasets, the decisions needed to interpret them, three editable
-notebooks, the current R analyses, and the controlled publication package. The
+analysis-ready datasets, the decisions needed to interpret them, one shareable
+R Markdown data report, the current R analyses, and the controlled publication package. The
 large HPC products and the complete pre-cleanup working tree are preserved in a
 separate archival checkout rather than mixed into the paper workspace.
 
@@ -24,8 +24,11 @@ make te-pca
 # See the compact data inventory
 make status
 
-# Open one notebook per analysis component
-make notebooks
+# Render the shareable data, code, methods, and ggplot report
+make report
+
+# Build the single indexed workbook of exact ggplot figure inputs
+make figure-data
 ```
 
 The active scientific contract is:
@@ -41,23 +44,30 @@ The active scientific contract is:
 
 ```text
 analyses/
-  01_transposable_elements/   TE34 summaries, LTR proxy, and TE notebook
+  01_transposable_elements/   TE34 summaries, LTR proxy, and formal PCA audit
   02_morphology/              reviewed objects, relative IOD, and provenance
   03_phylogenetic_path/       Path24 traits, trees, sensitivities, and R model
 data/
   identity/                   shared panels, taxonomy, accessions, and sources
   DATA_CATALOG.csv            hash and shape inventory of every canonical file
-Publication/                  supplemental tables, figures, and manuscript aids
+Publication/                  data report, figure-input workbook, supplemental tables, figures, and manuscript aids
 scripts/
   project.py                  catalog, identity, publication, status, validation
-  build_notebooks.py          regenerates the three small notebooks
   publication/                GBE ggplot figure code
 tests/                        compact repository contract tests
 ```
 
-Each analysis directory has its own README and one `explore.ipynb`. The
-notebooks intentionally read only the small canonical tables beside them, so
-they remain useful after the HPC-era directory tree is removed.
+`Publication/Desmognathus_study_data.Rmd` is the researcher-facing data and
+methods inspection surface. It reads the compact controlled release, exposes
+the filters and equations, links every supplemental CSV, and embeds the ggplot
+figures without becoming a second data authority. The companion
+`Publication/Desmognathus_figure_review.Rmd` is a manifest-driven gallery for
+critiquing every current figure, legend, alt text, and final-size layout.
+`Publication/Desmognathus_figure_data.xlsx` is the single indexed workbook of
+the 19 non-tree CSV tables directly consumed by those figures. Tree inputs stay
+under `Publication/datasets/` in Newick and reviewer-readable CSV formats rather
+than being forced into spreadsheet tabs. The workbook is a generated
+convenience view; the manifest-bound release files remain authoritative.
 
 ## What can be rerun here
 
@@ -78,8 +88,14 @@ make path-quick
 # Reconstruct the complete CLR/PCA audit trail and replay the formal structure audit
 make te-pca
 
-# Open the focused interactive PCA/data notebook
-make te-pca-view
+# Render the shareable study-data report
+make report
+
+# Render the visual critique gallery with every current figure
+make figure-review
+
+# Build and verify the labeled multi-sheet figure-data workbook
+make figure-data
 
 # Rebuild the current GBE ggplot figures
 make figures
@@ -134,9 +150,10 @@ replacement and deletion audit is in
 `make publication` copies one canonical source into each supplement and updates
 its SHA-256, dimensions, column inventory, tree inventory, and release summary.
 `Publication/methods/METHODS_BULLET_SCAFFOLD.md` is the sole active factual
-Methods authority. Submission prose will be created from that scaffold after
-the remaining author inputs are resolved; the active repository does not carry
-a stale parallel manuscript draft.
+Methods authority. Its Word-ready scaffold and narrative DOCX are synchronized
+working exports for review, not independent authorities or submission-final
+prose. Remaining author inputs must be resolved before the narrative is
+finalized.
 
 The focal 46-tip collaborator tree is preserved, but its final source and
 calibration citation is still unresolved. That is a publication blocker, not a

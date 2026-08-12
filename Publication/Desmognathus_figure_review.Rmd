@@ -1,0 +1,423 @@
+---
+title: "Desmognathus figure review"
+subtitle: "Manifest-driven visual critique gallery"
+output:
+  html_document:
+    self_contained: true
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    code_folding: hide
+    theme: readable
+    highlight: tango
+---
+
+<style>
+:root {
+  --review-ink: #1a1a1a;
+  --review-muted: #5f6368;
+  --review-line: #b8b8b8;
+  --review-paper: #ffffff;
+  --review-ground: #f3f1ed;
+  --review-warning: #fff3df;
+  --review-warning-line: #c56f13;
+  --review-info: #eef6f8;
+  --review-info-line: #247b86;
+}
+
+body {
+  color: var(--review-ink);
+  background: var(--review-ground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.main-container {
+  max-width: 1600px !important;
+  padding-bottom: 5rem;
+}
+
+h1, h2, h3, h4, .title, .subtitle {
+  color: var(--review-ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.gallery-summary,
+.review-checklist,
+.review-callout,
+.figure-card {
+  background: var(--review-paper);
+  border: 1px solid var(--review-line);
+}
+
+.gallery-summary,
+.review-checklist,
+.review-callout {
+  margin: 1.25rem 0;
+  padding: 1rem 1.2rem;
+}
+
+.review-callout {
+  border-left-width: 6px;
+}
+
+.review-callout.warning {
+  background: var(--review-warning);
+  border-left-color: var(--review-warning-line);
+}
+
+.review-callout.info {
+  background: var(--review-info);
+  border-left-color: var(--review-info-line);
+}
+
+.review-checklist ul {
+  columns: 2 28rem;
+  column-gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.review-checklist li {
+  break-inside: avoid;
+  margin: 0 0 0.75rem;
+  padding-left: 1.6rem;
+  position: relative;
+}
+
+.review-checklist li::before {
+  content: "\2610";
+  left: 0;
+  position: absolute;
+  top: -0.05rem;
+}
+
+.figure-card {
+  margin: 2rem 0 3rem;
+  padding: 1.25rem 1.4rem 1.4rem;
+}
+
+.figure-card h2 {
+  border: 0;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+
+.figure-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.figure-meta span {
+  background: #f4f4f4;
+  border: 1px solid #d5d5d5;
+  border-radius: 2px;
+  color: #343434;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.45rem;
+}
+
+.figure-frame {
+  border-bottom: 1px solid #d7d7d7;
+  border-top: 1px solid #d7d7d7;
+  margin: 0 -0.2rem 1rem;
+  overflow-x: auto;
+  padding: 1.25rem 0.2rem;
+  text-align: center;
+}
+
+.figure-frame img {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+}
+
+.figure-copy {
+  display: grid;
+  gap: 1rem 1.5rem;
+  grid-template-columns: minmax(0, 3fr) minmax(18rem, 2fr);
+}
+
+.figure-copy p {
+  margin: 0;
+}
+
+.figure-copy .alt-text {
+  color: var(--review-muted);
+}
+
+code {
+  color: #252525;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 850px) {
+  .figure-copy {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+```{r review-setup, echo=FALSE}
+suppressPackageStartupMessages({
+  library(readr)
+})
+
+ROOT <- normalizePath(getwd(), mustWork = TRUE)
+FIGURE_DIR <- file.path(ROOT, "Publication", "figures")
+MANIFEST_PATH <- file.path(FIGURE_DIR, "FIGURE_MANIFEST.csv")
+AUXILIARY_DAG_BASENAME <- "Path_DAG_equivalence_class_reference.png"
+AUXILIARY_DAG_PATH <- file.path(FIGURE_DIR, AUXILIARY_DAG_BASENAME)
+AUXILIARY_DAG_RELATIVE_PATH <- file.path("figures", AUXILIARY_DAG_BASENAME)
+
+figure_manifest <- read_csv(
+  MANIFEST_PATH,
+  show_col_types = FALSE,
+  progress = FALSE
+)
+
+required_columns <- c(
+  "figure_id", "basename", "width_mm", "height_mm", "final_font_family",
+  "minimum_target_text_pt", "datasets", "release_status", "legend", "alt_text",
+  "pdf", "png", "tiff"
+)
+
+if (!all(required_columns %in% names(figure_manifest))) {
+  stop(
+    "Figure manifest is missing required columns: ",
+    paste(setdiff(required_columns, names(figure_manifest)), collapse = ", ")
+  )
+}
+if (nrow(figure_manifest) == 0L || anyDuplicated(figure_manifest$figure_id)) {
+  stop("Figure manifest must contain unique, ordered figure records")
+}
+if (any(!is.finite(figure_manifest$width_mm)) || any(figure_manifest$width_mm <= 0)) {
+  stop("Every figure must declare a positive final width")
+}
+
+figure_paths <- file.path(FIGURE_DIR, figure_manifest$png)
+if (any(!file.exists(figure_paths))) {
+  stop(
+    "Missing review PNG files: ",
+    paste(basename(figure_paths[!file.exists(figure_paths)]), collapse = ", ")
+  )
+}
+
+maximum_width_mm <- max(figure_manifest$width_mm)
+figure_manifest$review_width_percent <-
+  100 * figure_manifest$width_mm / maximum_width_mm
+
+escape_html <- function(value, attribute = FALSE) {
+  htmltools::htmlEscape(as.character(value), attribute = attribute)
+}
+
+format_inline <- function(value) {
+  escaped <- escape_html(value)
+  gsub("`([^`]+)`", "<code>\\1</code>", escaped, perl = TRUE)
+}
+
+figure_one <- figure_manifest[figure_manifest$figure_id == "Figure_1", , drop = FALSE]
+figure_one_evidence <- if (nrow(figure_one) == 1L) {
+  paste(
+    figure_one$datasets,
+    figure_one$legend,
+    figure_one$alt_text,
+    figure_one$basename,
+    collapse = " "
+  )
+} else {
+  ""
+}
+figure_1_has_phylogeny <- nrow(figure_one) == 1L && grepl(
+  "S38|S39|phylogen|dated[ -]tree|time-calibrated",
+  figure_one_evidence,
+  ignore.case = TRUE,
+  perl = TRUE
+)
+```
+
+<div class="gallery-summary">
+This page is a visual-review surface, not a second figure authority. It reads
+`Publication/figures/FIGURE_MANIFEST.csv` in row order and displays the exact
+current review PNG for every record. Declared final widths are preserved
+proportionally, so a 120-mm figure appears narrower than a 185-mm figure.
+</div>
+
+```{r review-status, echo=FALSE, results='asis'}
+cat(
+  sprintf(
+    "<p><strong>Current gallery:</strong> %d manifest figures; widest declared figure: %.0f mm.</p>\n",
+    nrow(figure_manifest),
+    maximum_width_mm
+  )
+)
+
+if (figure_1_has_phylogeny) {
+  cat(paste0(
+    '<div class="review-callout info"><strong>Figure 1 includes the Path24 dated phylogeny.</strong> ',
+    'The tree is shown with the study-design and genomic-QC material so its time scale, ',
+    'taxon labels, spacing, and relationship to the other panels can be reviewed together.</div>\n'
+  ))
+} else {
+  cat(paste0(
+    '<div class="review-callout info"><strong>Figure 1 phylogeny status:</strong> ',
+    'the current manifest does not yet declare a Path24 dated-phylogeny panel. ',
+    'This notice will change automatically when Figure 1 records that material.</div>\n'
+  ))
+}
+```
+
+<div class="review-callout warning">
+<strong>Unresolved tree provenance.</strong> The focal dated tree was supplied
+directly by Alex Pyron, but its publication or archive identifier, calibration method,
+and branch-length provenance remain unresolved. Review the displayed
+time scale as supplied; do not interpret this gallery as independent validation
+of the calibration.
+</div>
+
+# Critique checklist
+
+<div class="review-checklist">
+<ul>
+<li><strong>Narrative and material:</strong> Does every panel earn its place and support the intended manuscript claim?</li>
+<li><strong>Cross-figure coherence:</strong> Do repeated concepts use the same visual grammar without implying false equivalence?</li>
+<li><strong>Typography:</strong> Are font family, size, weight, italics, symbols, and panel tags consistent and legible at final size?</li>
+<li><strong>Color:</strong> Are hues meaningful, high-contrast, color-vision accessible, and reinforced by shape or line type?</li>
+<li><strong>Marks and uncertainty:</strong> Are points, lines, intervals, raw observations, and summary estimates visually distinct?</li>
+<li><strong>Axes and labels:</strong> Are units, transformations, abbreviations, tick density, and scientific names clear?</li>
+<li><strong>Spacing:</strong> Are gutters, panel proportions, margins, legend placement, and whitespace balanced?</li>
+<li><strong>Reference-paper fit:</strong> Do framing, density, hierarchy, and annotation feel like one visual family?</li>
+<li><strong>Legend and alt text:</strong> Can each figure be understood without manuscript body text?</li>
+<li><strong>Phylogeny:</strong> Are topology, tip order, time direction, scale, and provenance boundary immediately clear?</li>
+</ul>
+</div>
+
+# Figure gallery
+
+```{r manifest-gallery, echo=FALSE, results='asis'}
+for (index in seq_len(nrow(figure_manifest))) {
+  row <- figure_manifest[index, , drop = FALSE]
+  figure_label <- gsub("_", " ", row$figure_id[[1]], fixed = TRUE)
+  relative_png <- file.path("figures", row$png[[1]])
+  width_percent <- row$review_width_percent[[1]]
+
+  cat(
+    sprintf(
+      '<section class="figure-card" data-figure-id="%s">\n',
+      escape_html(row$figure_id[[1]], attribute = TRUE)
+    )
+  )
+  cat(sprintf("<h2>%s</h2>\n", escape_html(figure_label)))
+  cat('<div class="figure-meta">\n')
+  cat(sprintf(
+    "<span>Final size: %.0f × %.0f mm</span>\n",
+    row$width_mm[[1]],
+    row$height_mm[[1]]
+  ))
+  cat(sprintf(
+    "<span>Font: %s</span>\n",
+    escape_html(row$final_font_family[[1]])
+  ))
+  cat(sprintf(
+    "<span>Target text: ≥%g pt</span>\n",
+    row$minimum_target_text_pt[[1]]
+  ))
+  cat(sprintf(
+    "<span>Datasets: %s</span>\n",
+    escape_html(row$datasets[[1]])
+  ))
+  cat(sprintf(
+    "<span>Status: <code>%s</code></span>\n",
+    escape_html(row$release_status[[1]])
+  ))
+  cat("</div>\n")
+
+  cat('<div class="figure-frame">\n')
+  cat(sprintf(
+    paste0(
+      '<img src="%s" alt="%s" ',
+      'style="width: %.3f%%; max-width: 100%%;" />\n'
+    ),
+    escape_html(relative_png, attribute = TRUE),
+    escape_html(row$alt_text[[1]], attribute = TRUE),
+    width_percent
+  ))
+  cat("</div>\n")
+
+  cat('<div class="figure-copy">\n')
+  cat(sprintf(
+    '<p class="legend"><strong>Legend.</strong> %s</p>\n',
+    format_inline(row$legend[[1]])
+  ))
+  cat(sprintf(
+    '<p class="alt-text"><strong>Alt text.</strong> %s</p>\n',
+    format_inline(row$alt_text[[1]])
+  ))
+  cat("</div>\n</section>\n")
+}
+```
+
+<div class="review-callout info">
+Record critiques by figure ID and panel letter. Changes belong in the shared
+ggplot theme or production figure builder, not in this gallery or its embedded
+images.
+</div>
+
+# Auxiliary path-DAG reference
+
+```{r auxiliary-dag-reference, echo=FALSE, results='asis'}
+cat(
+  paste0(
+    '<section class="figure-card" data-figure-id="Auxiliary_Path_DAG_reference">',
+    '<h2>Auxiliary Path DAG reference</h2>',
+    '<div class="figure-meta">',
+    '<span>Status: <code>auxiliary_review_only</code></span>',
+    '<span>Asset: <code>', escape_html(AUXILIARY_DAG_BASENAME), "</code></span>",
+    "</div>",
+    '<div class="review-callout info"><strong>Not a numbered manuscript figure.</strong> ',
+    'This auxiliary review-only graphic shows one representative for each of the 10 testable equivalence classes. ',
+    'The saturated 6-member class is not shown and remains unscored because it has no d-separation claim. ',
+    'The current Path24 relative IOD-only analysis remains exploratory and does not orient a unique causal arrow.</div>'
+  )
+)
+
+if (file.exists(AUXILIARY_DAG_PATH)) {
+  cat('<div class="figure-frame">\n')
+  cat(sprintf(
+    paste0(
+      '<img src="%s" alt="%s" ',
+      'style="width: 100%%; max-width: 100%%;" />\n'
+    ),
+    escape_html(AUXILIARY_DAG_RELATIVE_PATH, attribute = TRUE),
+    escape_html(
+      paste(
+        "Auxiliary review-only path-DAG reference showing one representative",
+        "for each of the 10 testable equivalence classes, with the saturated",
+        "6-member class identified as unscored for the current Path24 relative IOD-only analysis."
+      ),
+      attribute = TRUE
+    )
+  ))
+  cat("</div>\n")
+} else {
+  cat(
+    paste0(
+      '<div class="review-callout warning"><strong>Auxiliary DAG image pending.</strong> ',
+      'Expected <code>', escape_html(AUXILIARY_DAG_BASENAME),
+      "</code> under <code>Publication/figures/</code> before the self-contained review HTML is refreshed.</div>\n"
+    )
+  )
+}
+
+cat(
+  paste0(
+    '<div class="figure-copy">',
+    '<p class="legend"><strong>Boundary.</strong> One representative for each of the 10 testable equivalence classes is shown for review. ',
+    'The saturated 6-member class is not shown and remains unscored because it has no d-separation claim.</p>',
+    '<p class="alt-text"><strong>Scope.</strong> Current Path24 relative IOD only; no TE, SVL, or unique causal-arrow claim is introduced by this auxiliary panel.</p>',
+    "</div></section>\n"
+  )
+)
+```

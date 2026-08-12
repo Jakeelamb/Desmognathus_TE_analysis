@@ -1,6 +1,6 @@
 # Materials and Methods bullet scaffold
 
-**Evidence checked:** 11 August 2026
+**Evidence checked:** 12 August 2026
 
 - Author-facing factual outline; convert these bullets into the authors' own prose.
 - `[VERIFIED]`: supported by the current repository.
@@ -38,16 +38,15 @@
 - `[AUTHOR INPUT]` Confirm the checksum lineage from the CD-HIT product to `/nfs/home/jlamb/TE_libs/dedupe_telib.fasta`; the repository does not prove that identity.
 - `[HISTORICAL COMMAND]` dnaPipeTE: Singularity 4.1.2; 16 CPUs; nuclear-filtered mate 1; configured 15-Gb genome-size denominator; 0.1× target coverage; `RM_t=0.15`; two internal samples; custom `dedupe_telib.fasta`.
 - `[BOUNDARY]` The configured 15-Gb dnaPipeTE denominator is a sensitivity setting, not a measured genome size or validated absolute TE load.
-- `[VERIFIED]` Stored dnaPipeTE components were parsed to class, order, and superfamily; aligned bases define total, retained, and unresolved repeat mass.
-- `[VERIFIED]` Classified-conditional and unresolved-mass-aware compositions were retained as separate denominator definitions.
+- `[VERIFIED]` Stored dnaPipeTE components were parsed to class, order, and superfamily; aligned bases define total, retained, and unresolved repeat mass for S06-S07 dnaPipeTE quality control. Unresolved aligned-base mass was excluded from diversity calculations.
 - `[VERIFIED]` RepeatMasker `.align` inputs describe dnaPipeTE `Trinity.fasta` repeat-contig assemblies, not the accession-linked GCA assemblies.
 - `[AUTHOR INPUT]` Supply dnaPipeTE version/commit, container digest, custom-library checksum, random-seed/iteration details, Trinity settings, RepeatMasker version/search engine/options/library release, and complete command logs.
 
 ## 3. TE composition, diversity, repeat landscapes, and LTR proxy
 
-- `[VERIFIED]` Diversity was calculated separately at order and superfamily level under two denominator definitions, giving four exact 34-species strata (136 rows total): classified-conditional composition and mass-aware composition with one explicit unresolved accounting bin. The classified-conditional order-level stratum is the primary paper-facing diversity analysis; superfamily and mass-aware strata are sensitivity/audit views.
+- `[VERIFIED]` Diversity was calculated separately at order and superfamily level after each species' classified categories were reclosed to one. S08 is one 68-row, five-column table with 34 order-level and 34 superfamily-level rows. The order-level stratum is the primary paper-facing diversity analysis, and the superfamily-level stratum is a sensitivity/audit view.
 - `[VERIFIED]` Only exact-positive bins entered the formulas. Natural-log Shannon entropy was `H′ = −Σpᵢ ln(pᵢ)` and the explicitly named Gini-Simpson index was `1 − Σpᵢ²`. These are the only paper-facing diversity indices. Observed richness is retained as an audit/support count, `S = count(pᵢ > 0)`, not as a diversity endpoint.
-- `[BOUNDARY]` In mass-aware rows, a positive unresolved bin contributes as an accounting category, not as a biological TE taxon. Rare features excluded from the shared-feature PCA remain in these diversity calculations.
+- `[BOUNDARY]` Unresolved aligned-base mass remains only in S06-S07 dnaPipeTE quality-control tables and does not enter S08 diversity. Rare classified features excluded from the shared-feature PCA remain in both order- and superfamily-level diversity calculations.
 - `[VERIFIED]` TE34 superfamily PCA: retain features with positive abundance in all 34 species after same-species retry averaging; close rows; apply CLR; center columns; fit without post-CLR variance scaling; orient each axis so its largest absolute loading is positive. The retained matrix contains no zeros, so no zero replacement is required.
 - `[VERIFIED]` S09 scores, S10 variance, S11 loadings, and Figure 2 now come from the same retry-averaged 24-feature CLR-PCA fit.
 - `[VERIFIED]` Formal clustering audit used all 23 nonzero, unscaled PCA axes, which preserve the complete 24-feature CLR/Aitchison distances; PC1–PC2 and PC1–PC6 fits were sensitivity analyses rather than the selection surface.
@@ -109,7 +108,8 @@
 - `[VERIFIED]` S23 (`nuclear_iod_by_image.csv`) is the unnormalized 51-image aggregation audit. Its image medians and means are not relative indices or ratios.
 - `[VERIFIED]` The declared IOD quality-balance gate is maximum absolute standardized mean difference `≤ 0.10` and maximum Kolmogorov–Smirnov distance `≤ 0.25`. *D. aeneus*, *D. ochrophaeus*, *D. orestes*, and *D. wrighti* fail this gate and remain visibly flagged rather than silently removed.
 - `[VERIFIED]` *D. anicetus*, *D. bairdi*, and *D. gvnigeusgwotli* each have one IOD image from one animal. Point shape exposes this support limitation in Figure 6.
-- `[BOUNDARY]` Primary variable is relative image-derived nuclear IOD. The *D. fuscus* 16.36-pg conversion remains conditional and is not an independently validated C-value.
+- `[AUTHOR CONFIRMED]` Process_413/specimen 32469 and Process_414/specimen 32470 were the *D. fuscus* DNA-content standards, and the standards were stained in the same experimental runs as the unknowns. The exact standard-to-target run map and the approximately 41% difference between the two standard-slide median IOD values remain unresolved calibration/QC issues.
+- `[BOUNDARY]` Primary variable is relative image-derived nuclear IOD. The separate descriptive scale uses the published pooled *D. fuscus* assembly estimate of `16.1 Gbp`, converted with `1 pg = 0.978 Gbp` to `16.462167689 pg/1C`. This assembly-derived anchor remains conditional and is not an independently validated C-value.
 
 ## 5. Phylogenetic comparative analyses
 

@@ -10,8 +10,8 @@ but no format can guarantee editorial acceptance.
 
 | Figure | Evidence panel | Narrative role | Why it belongs in the main text |
 |---|---:|---|---|
-| Figure 1 — study design and genomic QC | TE34 / Path24 / overlap21 | Defines the three real denominators and accession/QC boundary. | Prevents the 21-species overlap from being mistaken for a universal study panel. |
-| Figure 2 — TE diversity and CLR ordination | TE34 | Establishes order-level Shannon and Gini-Simpson denominator sensitivity plus major superfamily compositional structure. | Central genomic result; panel A compares classified-conditional and mass-aware-unresolved values without presenting observed richness as a diversity index, while S09–S11 come from one retry-averaged 24-feature CLR-PCA fit restricted to superfamilies detected in all 34 species. |
+| Figure 1 — focal phylogeny, study design, and genomic QC | TE34 / Path24 / overlap21 | Shows the supplied 24-tip dated Path24 tree and defines the three real denominators and accession/QC boundary. | Establishes phylogenetic context while preventing the 21-species overlap from being mistaken for a universal study panel; tree calibration and publication provenance remain visibly pending. |
+| Figure 2 — TE diversity and CLR ordination | TE34 | Establishes classified order-level Shannon and Gini-Simpson diversity plus major superfamily compositional structure. | Central genomic result; panel A shows the 34-species order-level Shannon and Gini-Simpson distributions without presenting observed richness as a diversity index. S08 contains the primary order stratum and a superfamily sensitivity/audit stratum after classified categories are reclosed to one; unresolved aligned-base mass is excluded from diversity and remains only in S06-S07 dnaPipeTE QC. S09-S11 come from one retry-averaged 24-feature CLR-PCA fit restricted to superfamilies detected in all 34 species. |
 | Figure 3 — repeat divergence landscape | TE34 | Shows category-specific divergence profiles and among-species young-repeat fractions. | Central repeat-landscape result; means now zero-fill absent category/bin combinations and weight all 34 species equally. |
 | Figure 5 — reviewed cell and nucleus morphology | Path24 | Shows the finalized upper-tail image phenotype and its conditional uncertainty. | Point shape exposes the seven species represented by one animal, so object counts are not mistaken for biological replication. |
 
@@ -31,12 +31,20 @@ Figure 7 should move into the main text only if the final manuscript treats the
 path-model comparison as a core result and keeps its exploratory interpretation.
 If so, replace another main display item rather than exceeding the combined cap.
 
+`Path_DAG_equivalence_class_reference.{pdf,png,tif}` is a companion review
+asset, not a numbered manuscript figure. It stays outside
+`FIGURE_MANIFEST.csv`, summarizes representative DAGs for the 10 testable
+Path24 equivalence classes, and leaves the saturated class explicitly
+unscored.
+
 ## Matching visual system
 
 - Nimbus Sans, a Helvetica-compatible sans serif, embedded in vector PDF.
 - Seven-point minimum target text at final dimensions.
-- White background, consistent axes, panel labels, line weights, and Okabe–Ito
-  colors.
+- White background, complete black panel boxes, no grids, parenthesized panel
+  tags, compact gutters, and a reference-inspired coral/cyan/viridis palette.
+- Italic scientific names and a single shared typography/spacing system across
+  every panel.
 - Shape or line-type redundancy wherever color encodes groups.
 - No figure-internal titles; the first legend sentence states the result.
 - PDF master, review PNG, and 300-ppi CMYK TIFF derivative for every figure.

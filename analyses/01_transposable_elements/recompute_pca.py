@@ -16,16 +16,13 @@ PANEL = ROOT / "data" / "identity" / "te34_panel.csv"
 COMPOSITION_MODE = "classified_conditional"
 EXCLUSION_REASON = "not_positive_in_all_retry_averaged_te34_species"
 EXPECTED_EXCLUDED_SUPERFAMILIES = {"CR1", "Chapaev", "Dada", "Ginger", "Merlin"}
-DIVERSITY_MODES = ("classified_conditional", "mass_aware_unresolved_bin")
 DIVERSITY_COLUMNS = [
     "species",
     "te_level",
-    "composition_mode",
     "observed_richness",
     "shannon_entropy",
     "gini_simpson",
 ]
-UNRESOLVED_ACCOUNTING_BIN = "Unresolved"
 
 
 def fail(code: str, detail: str) -> None:
@@ -111,40 +108,6 @@ def read_mass_accounting(panel_species: list[str]) -> pd.DataFrame:
     return mass
 
 
-def add_unresolved_accounting_bin(
-    composition: pd.DataFrame,
-    mass: pd.DataFrame,
-    level: str,
-) -> pd.DataFrame:
-    if UNRESOLVED_ACCOUNTING_BIN in composition.columns:
-        fail(
-            "DIVERSITY_COMPOSITION_INVALID",
-            f"{level} composition already contains {UNRESOLVED_ACCOUNTING_BIN}",
-        )
-    indexed_mass = mass.set_index("species")
-    if indexed_mass.index.tolist() != composition.index.tolist():
-        fail(
-            "DIVERSITY_PANEL_MISMATCH",
-            f"{level} composition and mass-accounting species differ",
-        )
-    retained = indexed_mass[f"{level}_retained_fraction"].astype(float)
-    unresolved = indexed_mass[f"{level}_unresolved_fraction"].astype(float)
-    mass_aware = composition.mul(retained, axis=0)
-    mass_aware[UNRESOLVED_ACCOUNTING_BIN] = unresolved
-    values = mass_aware.to_numpy(dtype=float)
-    if not np.isfinite(values).all() or (values < 0).any():
-        fail(
-            "DIVERSITY_COMPOSITION_INVALID",
-            f"mass-aware {level} composition is not finite and nonnegative",
-        )
-    if not np.allclose(values.sum(axis=1), 1, rtol=0, atol=5e-12):
-        fail(
-            "DIVERSITY_COMPOSITION_INVALID",
-            f"mass-aware {level} composition rows do not close to one",
-        )
-    return mass_aware
-
-
 def diversity_metrics(probabilities: np.ndarray | pd.Series) -> dict[str, float | int]:
     values = np.asarray(probabilities, dtype=float)
     if values.ndim != 1 or not np.isfinite(values).all() or (values < 0).any():
@@ -166,38 +129,25 @@ def diversity_metrics(probabilities: np.ndarray | pd.Series) -> dict[str, float 
     }
 
 
-def build_diversity(
-    compositions: dict[str, pd.DataFrame],
-    mass: pd.DataFrame,
-) -> pd.DataFrame:
+def build_diversity(compositions: dict[str, pd.DataFrame]) -> pd.DataFrame:
     rows: list[dict[str, object]] = []
-    for level, classified in compositions.items():
-        mode_tables = {
-            "classified_conditional": classified,
-            "mass_aware_unresolved_bin": add_unresolved_accounting_bin(
-                classified,
-                mass,
-                level,
-            ),
-        }
-        for mode in DIVERSITY_MODES:
-            for species, probabilities in mode_tables[mode].iterrows():
-                rows.append(
-                    {
-                        "species": species,
-                        "te_level": level,
-                        "composition_mode": mode,
-                        **diversity_metrics(probabilities),
-                    }
-                )
+    for level, composition in compositions.items():
+        for species, probabilities in composition.iterrows():
+            rows.append(
+                {
+                    "species": species,
+                    "te_level": level,
+                    **diversity_metrics(probabilities),
+                }
+            )
 
     diversity = pd.DataFrame(rows, columns=DIVERSITY_COLUMNS)
-    key_columns = ["species", "te_level", "composition_mode"]
+    key_columns = ["species", "te_level"]
     if diversity.duplicated(key_columns).any():
         fail("DIVERSITY_RELEASE_INVALID", "diversity keys are not unique")
-    strata = diversity.groupby(["te_level", "composition_mode"], sort=False).size().to_dict()
-    expected_strata = {(level, mode): 34 for level in compositions for mode in DIVERSITY_MODES}
-    if strata != expected_strata or len(diversity) != 136:
+    strata = diversity.groupby("te_level", sort=False).size().to_dict()
+    expected_strata = {level: 34 for level in compositions}
+    if strata != expected_strata or len(diversity) != 68:
         fail("DIVERSITY_RELEASE_INVALID", f"unexpected diversity strata: {strata}")
     return diversity
 
@@ -327,8 +277,8 @@ def fit_pca(clr: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame
 def reconstruct_release() -> dict[str, pd.DataFrame]:
     panel_species = read_panel()
     compositions = read_compositions(panel_species)
-    mass = read_mass_accounting(panel_species)
-    diversity = build_diversity(compositions, mass)
+    read_mass_accounting(panel_species)
+    diversity = build_diversity(compositions)
     prevalence = build_prevalence(compositions)
     included_counts = (
         prevalence.loc[prevalence["pca_included"]].groupby("te_level").size().to_dict()
@@ -422,7 +372,7 @@ def main() -> None:
     check_release(products)
     print(
         "PASS: compact TE34 inputs reproduce feature prevalence, complete CLR, "
-        "and final superfamily PCA; all 136 canonical diversity rows also reproduce"
+        "and final superfamily PCA; all 68 canonical diversity rows also reproduce"
     )
 
 

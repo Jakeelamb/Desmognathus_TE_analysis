@@ -70,6 +70,38 @@
   "balance_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/image_quality_matched_genome_iod/image_quality_match_balance.csv",
   "target_leakage_audit_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/image_quality_matched_genome_iod/image_quality_target_leakage_audit.csv",
   "pairwise_quality_distance_csv": "/home/jake/Projects/Desmognathus_TE/path_analysis/data/external/derived/image_quality_matched_genome_iod/image_quality_species_pairwise_distance.csv",
+  "conditional_genome_size_anchor": {
+    "reference_species": "D. fuscus",
+    "reference_standard_processes": [
+      "Process_413_green.ome.tiff",
+      "Process_414_green.ome.tiff"
+    ],
+    "reference_standard_specimen_ids": [
+      "32469",
+      "32470"
+    ],
+    "basis": "published_rounded_pooled_assembly_span",
+    "reported_assembly_span_gbp": 16.1,
+    "reported_precision_gbp": 0.1,
+    "gbp_per_pg": 0.978,
+    "derived_anchor_pg_1c": 16.462167689161554,
+    "ploidy_semantics": "1C_equivalent",
+    "assembly_accession": "GCA_050004315.1",
+    "assembly_source_doi": "10.1093/g3journal/jkaf157",
+    "conversion_source_doi": "10.1002/cyto.a.10013",
+    "decision_source_id": "author_curator_decision_2026_08_12_genome_size_anchor",
+    "decision_date": "2026-08-12",
+    "status": "conditional_assembly_derived_not_measured_c_value",
+    "author_confirmed_same_staining_runs": true,
+    "anchor_uncertainty_included": false,
+    "current_release_denominator": "D. fuscus equal-image IOD from target Processes 314, 315, 320, and 321; standards 413 and 414 are not yet the denominator",
+    "remaining_validation": [
+      "recover the exact target-to-staining-run-to-standard mapping",
+      "review and remeasure standards with the target QC pipeline",
+      "resolve the approximately 41 percent difference between standard-slide median IOD values",
+      "establish acquisition linearity and cross-image-type comparability"
+    ]
+  },
   "feature_scaling": {
     "match_log_edge_sharpness": {
       "clip_low": 0.0918853819511443,

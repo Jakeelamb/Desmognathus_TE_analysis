@@ -25,9 +25,9 @@ edit the publication copies as a second source of truth.
 
 ## What can be changed locally
 
-Use `explore.ipynb` to change filters, summaries, uncertainty calculations,
-plots, or add exploratory cells. It reads only the compact tables above, so
-none of this requires Cellpose, YOLO, raw microscopy images, or an HPC cluster.
+Use `Publication/Desmognathus_study_data.Rmd` to change display filters,
+summaries, or ggplot views. It reads only the compact tables above, so none of
+this requires Cellpose, YOLO, raw microscopy images, or an HPC cluster.
 
 From the repository root:
 
@@ -35,21 +35,13 @@ From the repository root:
 make setup-python
 uv run python analyses/02_morphology/validate_release.py
 make validate
-uv run jupyter lab analyses/02_morphology/explore.ipynb
+make report
 ```
 
 `validate_release.py` replays the compact release without raw imagery. It checks
 the S19 species summaries against S18, the S23 image summaries and S22 relative
 index against S21, the fixed physical-area conversion, the S24 balance rule,
 and the declared animal-support totals.
-
-To reset all three component notebooks to their small generated starting
-versions, run the following. This overwrites edits in `explore.ipynb`, so save
-any work first.
-
-```bash
-uv run python scripts/build_notebooks.py
-```
 
 If a reviewed canonical table is intentionally revised, update its matching
 decision/provenance record, then refresh the publication copies and catalog:
@@ -68,7 +60,7 @@ the old decision, source hash, and reason.
 frozen object tables, manual review decisions, review-finalization manifest,
 IOD source manifest, legacy hash registry, and the production model-lineage
 documents needed to audit the active CSVs. These files document how the release
-was made; the notebook should not rewrite them.
+was made; the report should not rewrite them.
 
 `provenance/review_finalization.json` is the authority for the final reviewed
 S18/S21 release. `provenance/production_cell_nucleus_lineage.json` is an earlier
@@ -96,9 +88,15 @@ the compact finalized tables and provenance above define the paper release.
 
 Nuclear IOD is a **relative image-derived phenotype** within this reviewed
 imaging workflow. It is not an independently validated absolute genome size or
-C-value. Any *D. fuscus*-anchored picogram rescaling is conditional and may be
-used only when it is named explicitly as a sensitivity or descriptive scale;
-the Path24 analysis uses relative IOD.
+C-value. The separate *D. fuscus*-anchored descriptive scale uses the published
+pooled-assembly estimate of `16.1 Gbp`, converted with `1 pg = 0.978 Gbp` to
+`16.462167689 pg/1C`. Process_413/specimen 32469 and Process_414/specimen 32470
+were author-confirmed as the *D. fuscus* standards and were stained in the same
+experimental runs as the unknowns. Their exact standard-to-target run map and
+the approximately 41% difference between their median IOD values remain
+unresolved calibration/QC issues. The assembly-derived picogram scale is
+therefore conditional; the Path24 analysis continues to use relative IOD as its
+primary phenotype.
 
 The stored physical-area conversion is exactly `0.0144 µm²/pixel`. Per-nucleus
 integrated optical density (IOD) is the sum of optical density over nuclear-mask

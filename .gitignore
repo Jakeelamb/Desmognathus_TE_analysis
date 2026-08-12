@@ -27,3 +27,4 @@ analyses/02_morphology/output/
 analyses/03_phylogenetic_path/output/
 Publication/figures/*.rgb.pdf
 *.log
+.~lock.*#

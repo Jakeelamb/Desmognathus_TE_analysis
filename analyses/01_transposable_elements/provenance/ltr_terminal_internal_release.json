@@ -36,10 +36,10 @@
   },
   "availability_projection": {
     "path": "data/identity/analysis_availability.csv",
-    "sha256": "d72824e662605b4d42e4e2e0d5458e787f8cc0173a44fe8b3ae355385c6c14e8",
+    "sha256": "6ccef7d6ccedc6cd9d29363e0117506ba73dc6d2d160f7dabe59990283c2776f",
     "rows": 37,
     "columns": 43,
-    "authority": "S16 corrected resource fields projected by the active replay"
+    "authority": "S16 corrected resource fields projected by the active replay; S22 conditional genome-scale projection is independently validated by the morphology replay"
   },
   "original_iqr_method_evidence": {
     "path": "../misc_desmog_scripts/Dusky_Data_visualization.ipynb",

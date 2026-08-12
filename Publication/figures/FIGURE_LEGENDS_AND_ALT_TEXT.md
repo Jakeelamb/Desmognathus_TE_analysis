@@ -2,15 +2,15 @@
 
 ## Figure_1
 
-The declared panels contain 34 genomic TE species, 24 finalized phenotype/path species, and an exact 21-species overlap for integrated TE-phenotype summaries. Assembly contiguity and dnaPipeTE classification accounting are shown for TE34; the dashed line is the median unresolved order fraction.
+The focal 24-tip Path24 time tree is shown with branch time exactly as supplied by Alex Pyron; its publication or archive identifier, calibration method, and branch-length provenance remain pending. The declared panels contain 34 genomic TE species, 24 finalized phenotype/path species, and an exact 21-species overlap for integrated TE-phenotype summaries. Assembly contiguity and dnaPipeTE classification accounting are shown for TE34; the dashed line is the median unresolved order fraction.
 
-**Alt text:** Three panels show the 34-species genomic panel, 24-species finalized phenotype and path panel, and their 21-species overlap; assembly span versus contig N50; and repeat-aligned read fraction versus unresolved TE-order mass.
+**Alt text:** Panel A shows the supplied 24-tip time-calibrated Path24 phylogeny from approximately 30.6 million years before present to the present, with italic species labels. Panel B shows counts for the 34-species genomic panel, 24-species phenotype/path panel, and 21-species overlap. Panels C and D show assembly span versus contig N50 and repeat-aligned read fraction versus unresolved TE-order mass.
 
 ## Figure_2
 
-Order-level Shannon entropy and the Gini-Simpson index (1 − Σᵢpᵢ²) are higher when unresolved order mass is retained as an explicit category than when diversity is conditioned on classified order mass. Panel A compares these two denominators across the same 34 species; boxes show medians and interquartile ranges, and points are species. Observed richness is not plotted as a diversity index. The retry-averaged 24-feature CLR-PCA summarizes species differences among superfamilies detected in all 34 species; only the ten most distant PCA scores are labeled.
+Panel A shows classified-only order-level Shannon entropy and the Gini-Simpson index (1 − Σᵢpᵢ²) across 34 species; classified categories are reclosed to one within each species. Boxes show medians and interquartile ranges, and points are species. Observed richness is not plotted as a diversity index. Unresolved aligned-base mass remains separate in S07 as dnaPipeTE classification-accounting QC and is not a diversity category. The retry-averaged 24-feature CLR-PCA summarizes species differences among superfamilies detected in all 34 species; only the ten most distant PCA scores are labeled.
 
-**Alt text:** Panel A shows order-level Shannon entropy and Gini-Simpson index distributions for 34 species under classified-conditional and mass-aware-unresolved denominator choices. Panel B shows species scores on the first two superfamily CLR principal components, and panel C shows variance explained by the first ten components.
+**Alt text:** Panel A shows classified-only order-level Shannon entropy and Gini-Simpson index distributions for 34 species. Unresolved aligned-base mass is retained separately in S07 as dnaPipeTE quality-control accounting and is not included in diversity. Panel B shows species scores on the first two superfamily CLR principal components, and panel C shows variance explained by the first ten components.
 
 ## Figure_3
 
@@ -20,9 +20,9 @@ RepeatMasker divergence profiles vary among reported repeat categories and speci
 
 ## Figure_4
 
-The zero-aware terminal:internal LTR depth proxy varies among species but has uneven element support. The analysis starts from 408 LTR/Gypsy candidates at least 3,000 bp long with at least five correctly parsed TEsorter domain annotations. Points are species medians from the 380-element primary branch: ratios retained inclusively within each species' two-sided 1.5-IQR fences and elements whose left LTR, right LTR, and internal region each have at least 80% positive-depth coverage. Intervals are 2,000-replicate element-bootstrap intervals; the dashed line marks equal terminal and internal depth.
+The zero-aware terminal:internal LTR depth proxy is shown for the 380-element primary branch across 30 species. Light hollow points are individual element-level observations shown descriptively; blue points are species medians and blue intervals are 2,000-replicate element-bootstrap intervals. Elements are not biological replicates, and intervals are conditional on the recovered elements and sequencing resources. The right-hand n column gives the exact element support count for every species. Elements were retained inclusively within each species' two-sided 1.5-IQR fences and only when the left LTR, right LTR, and internal region each had at least 80% positive-depth coverage. The primary branch derives from 408 LTR/Gypsy candidates at least 3,000 bp long with at least five correctly parsed TEsorter domain annotations. Catahoula, kanawha, and valtos lacked tabout resources; lycos had no eligible LTR/Gypsy element with at least five domains. The dashed line marks equal terminal and internal mean depth (1:1). This mapping/deletion-footprint proxy is not an estimate of an ectopic-recombination, solo-LTR, or DNA-loss rate.
 
-**Alt text:** A forest plot ranks species by median log2 terminal-to-internal LTR read depth and a matched bar plot shows the exact number of elements contributing to each displayed estimate.
+**Alt text:** Horizontal element-level observations and species median intervals show the log2 terminal-to-internal read-depth ratio for 30 Desmognathus species, ordered by median. A right-hand support count reports the number of retained elements per species, and a dashed vertical line marks equal terminal and internal depth.
 
 ## Figure_5
 

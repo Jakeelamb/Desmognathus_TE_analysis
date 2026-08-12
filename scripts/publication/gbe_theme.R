@@ -1,4 +1,6 @@
-# Shared Genome Biology and Evolution figure style for this project.
+# Shared Genome Biology and Evolution figure style for this project. The panel
+# grammar and palette follow the supplied salamander-genome reference, while the
+# journal-facing sans-serif typography and redundant shapes/linetypes remain.
 
 suppressPackageStartupMessages({
   library(ggplot2)
@@ -8,20 +10,22 @@ suppressPackageStartupMessages({
 GBE_FONT <- "Arial"
 GBE_FALLBACK_FONT <- "Nimbus Sans"
 GBE_BASE_SIZE <- 8
+GBE_MIN_TEXT_PT <- 7
+GBE_LABEL_SIZE_MM <- GBE_MIN_TEXT_PT / ggplot2::.pt
 GBE_SINGLE_COLUMN_MM <- 89
 GBE_DOUBLE_COLUMN_MM <- 185
 
 GBE_COLORS <- c(
-  blue = "#0072B2",
-  orange = "#E69F00",
-  green = "#009E73",
-  vermillion = "#D55E00",
-  sky = "#56B4E9",
-  purple = "#CC79A7",
-  yellow = "#F0E442",
-  charcoal = "#30343B",
-  gray = "#7A7F84",
-  light_gray = "#D9DEE2"
+  blue = "#00BFC4",
+  orange = "#F8766D",
+  green = "#35B779",
+  vermillion = "#C44E52",
+  sky = "#31688E",
+  purple = "#440154",
+  yellow = "#FDE725",
+  charcoal = "#1A1A1A",
+  gray = "#767676",
+  light_gray = "#D6D6D6"
 )
 
 resolve_gbe_font <- function() {
@@ -39,33 +43,40 @@ theme_gbe <- function(base_size = GBE_BASE_SIZE, base_family = resolve_gbe_font(
       text = element_text(colour = GBE_COLORS[["charcoal"]]),
       axis.title = element_text(size = base_size, face = "plain"),
       axis.text = element_text(size = base_size - 0.5, colour = GBE_COLORS[["charcoal"]]),
-      axis.line = element_line(linewidth = 0.35, colour = GBE_COLORS[["charcoal"]]),
+      axis.line = element_blank(),
       axis.ticks = element_line(linewidth = 0.3, colour = GBE_COLORS[["charcoal"]]),
       axis.ticks.length = grid::unit(1.5, "mm"),
-      panel.grid.major.y = element_blank(),
+      panel.background = element_rect(fill = "white", colour = NA),
+      panel.border = element_rect(fill = NA, linewidth = 0.4, colour = GBE_COLORS[["charcoal"]]),
+      panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      panel.grid.major.x = element_line(linewidth = 0.2, colour = "#E7EAEC"),
-      strip.background = element_blank(),
-      strip.text = element_text(size = base_size, face = "bold", hjust = 0),
+      panel.spacing = grid::unit(5, "pt"),
+      strip.background = element_rect(fill = "white", linewidth = 0.35, colour = GBE_COLORS[["charcoal"]]),
+      strip.text = element_text(size = base_size, face = "bold", hjust = 0.5),
       plot.title = element_blank(),
       plot.subtitle = element_blank(),
       plot.caption = element_text(size = base_size - 1, hjust = 0, colour = GBE_COLORS[["gray"]]),
       plot.tag = element_text(size = base_size + 1, face = "bold"),
       plot.tag.position = c(0, 1),
       legend.position = "bottom",
-      legend.title = element_text(size = base_size - 0.5, face = "bold"),
+      legend.justification = "left",
+      legend.box.just = "left",
+      legend.title = element_text(size = base_size - 0.5, face = "plain"),
       legend.text = element_text(size = base_size - 0.5),
-      legend.key.height = grid::unit(3.5, "mm"),
-      legend.key.width = grid::unit(5, "mm"),
-      plot.margin = margin(4, 5, 4, 5, unit = "pt")
+      legend.key.height = grid::unit(3, "mm"),
+      legend.key.width = grid::unit(4.5, "mm"),
+      legend.spacing.x = grid::unit(2, "pt"),
+      legend.margin = margin(1, 0, 0, 0, unit = "pt"),
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.margin = margin(3, 4, 3, 4, unit = "pt")
     )
 }
 
-scale_color_gbe <- function(..., values = unname(GBE_COLORS[c("blue", "orange", "green", "vermillion", "purple", "sky")])) {
+scale_color_gbe <- function(..., values = unname(GBE_COLORS[c("purple", "sky", "blue", "green", "yellow", "orange")])) {
   scale_color_manual(values = values, ...)
 }
 
-scale_fill_gbe <- function(..., values = unname(GBE_COLORS[c("blue", "orange", "green", "vermillion", "purple", "sky")])) {
+scale_fill_gbe <- function(..., values = unname(GBE_COLORS[c("purple", "sky", "blue", "green", "yellow", "orange")])) {
   scale_fill_manual(values = values, ...)
 }
 

@@ -46,7 +46,7 @@
     },
     "pca_recompute_script": {
       "path": "analyses/01_transposable_elements/recompute_pca.py",
-      "sha256": "0e439b262bfe2d8e6562acb0653b073eae167e892ae36fce8c124f73c6178937"
+      "sha256": "7db9894ec6fb13b6416527415d23b086b70a35cbe1854d4a9652b84274ef9f25"
     },
     "analysis_script": {
       "path": "analyses/01_transposable_elements/analyze_pca_structure.R",
@@ -54,15 +54,15 @@
     },
     "environment": {
       "path": "environment.yml",
-      "sha256": "e257c51e459cb76c470001d2b70ed71a036376e5b9c8bc42e42104eb30edf95c"
+      "sha256": "0739ff3a72b0846e2ad10a60c647618508494468185f88ceea39351e329e59f1"
     },
     "python_project": {
       "path": "pyproject.toml",
-      "sha256": "13c69ddacccb33bd7795c91e4958f53eda570dbc11dd9fb6855d79a4cc2f8866"
+      "sha256": "4ee48e5d8870f8e7f8b8370842c9876ce9cde0154602dc9d02aec67e9702b1ef"
     },
     "python_lock": {
       "path": "uv.lock",
-      "sha256": "3621c4007e6318756b54a8278f2f9bdf41da661dd9e65ef9bb779536c10b23d8"
+      "sha256": "77eca4b4558dab4d1fcbde502a81f076f9c3f5660233321af5487943937f6b93"
     }
   },
   "pca_geometry": {

@@ -6,6 +6,13 @@ SHA-256 hashes, dimensions, and byte size of every exported CSV. For joined
 products, `additional_source_paths` and `additional_source_sha256` record every
 other input in the same order.
 
+`../Desmognathus_figure_data.xlsx` is a generated, indexed cross-sheet view of
+the exact non-tree tables directly consumed by the current ggplot figure
+builder. Tree inputs stay here in standard Newick and reviewer-readable CSV
+formats because those representations do not work well as spreadsheet tabs.
+The workbook does not replace this manifest, the S01-S40 CSV release, or the
+standard tree files.
+
 ## Interpretation classes
 
 - `main_candidate`: suitable for a main descriptive or comparative result after
@@ -20,16 +27,17 @@ classified-superfamily Shannon entropy to relative nuclear IOD and its
 conditional interval. It contains no pg/Gb conversion and does not represent
 an independently validated absolute genome-size measurement.
 
-S08 contains four complete 34-species diversity strata: order and superfamily
-summaries under classified-conditional and unresolved-mass-aware composition.
-Its manifest row binds both compact composition matrices and the mass-accounting
-table. Natural-log Shannon entropy and the explicitly named Gini-Simpson index
-are the only paper-facing diversity indices. The classified-conditional
-order-level stratum is primary; superfamily and unresolved-mass-aware strata are
-sensitivity/audit views. Observed richness is an audit/support count rather than
-a diversity endpoint. A positive `Unresolved` bin is an accounting category,
-not a biological TE taxon. Rare features excluded from the shared-feature PCA
-remain in S08 diversity calculations.
+S08 is one 68-row, five-column classified-only diversity table: 34 order-level
+and 34 superfamily-level species summaries. For each species and level,
+classified categories are reclosed to one before calculation. Its manifest row
+therefore binds only the two compact composition matrices. Natural-log Shannon
+entropy and the explicitly named Gini-Simpson index are the only paper-facing
+diversity indices. The order-level stratum is primary, and the superfamily-level
+stratum is a sensitivity/audit view. Observed richness is an audit/support count
+rather than a diversity endpoint. Rare features excluded from the
+shared-feature PCA remain in both S08 diversity calculations. Unresolved
+aligned-base mass is excluded from S08 and remains only in the S06-S07
+dnaPipeTE quality-control tables.
 
 S14-S17 are bound to
 `analyses/01_transposable_elements/provenance/ltr_terminal_internal_release.json`.
@@ -55,6 +63,15 @@ fits numerically invariant to that one positive scale factor. Publication
 exports therefore use `relative_iod`/`iod` labels and retain the exact saved
 coefficients, rankings, and sensitivity results without implying an absolute
 genome-size measurement.
+
+S22's separate descriptive picogram fields use the selected published pooled
+*D. fuscus* assembly estimate: `16.1 Gbp / 0.978 Gbp per pg = 16.462167689
+pg/1C`. Process_413/specimen 32469 and Process_414/specimen 32470 are
+author-confirmed standards stained in the same experimental runs as the
+unknowns, but their exact standard-to-target run map and the approximately 41%
+difference between their median IOD values remain unresolved. The assembly-
+derived scale is therefore conditional; S22 relative IOD remains the primary
+phenotype and must not be described as an independently measured C-value.
 
 S19 includes animal support for every morphology estimate:
 `n_size_specimens`, `largest_specimen_n`, and `largest_specimen_fraction`.

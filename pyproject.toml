@@ -5,8 +5,6 @@ description = "Compact analysis and publication workspace for the Desmognathus T
 requires-python = ">=3.12"
 dependencies = [
   "biopython>=1.85",
-  "jupyterlab>=4.4",
-  "nbformat>=5.10",
   "numpy>=2.2",
   "openpyxl>=3.1",
   "pandas>=2.2",

@@ -1,0 +1,894 @@
+---
+title: "Desmognathus study data, methods, and figures"
+output:
+  html_document:
+    self_contained: true
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+    df_print: paged
+    theme: readable
+    highlight: tango
+---
+
+<style>
+body { max-width: 1500px; }
+.callout { border-left: 5px solid #0072B2; background: #f3f8fb; padding: 0.8em 1em; margin: 1em 0; }
+.warning { border-left-color: #D55E00; background: #fff7f2; }
+.boundary { border-left-color: #E69F00; background: #fffaf0; }
+code { white-space: pre-wrap; }
+.figure img { border: 1px solid #D9DEE2; }
+</style>
+
+```{r report-setup}
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(ggrepel)
+  library(knitr)
+  library(patchwork)
+  library(readr)
+  library(rmarkdown)
+  library(scales)
+  library(tidyr)
+})
+
+ROOT <- normalizePath(getwd(), mustWork = TRUE)
+DATA <- file.path(ROOT, "Publication", "datasets")
+FIGURES <- file.path(ROOT, "Publication", "figures")
+REPORT_SOURCE <- file.path(ROOT, "Publication", "Desmognathus_study_data.Rmd")
+
+source(file.path(ROOT, "scripts", "publication", "gbe_theme.R"))
+knitr::read_chunk(file.path(ROOT, "scripts", "publication", "build_gbe_figures.R"))
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  out.width = "100%"
+)
+options(knitr.kable.NA = "")
+
+manifest <- read_csv(
+  file.path(DATA, "DATASET_MANIFEST.csv"),
+  show_col_types = FALSE,
+  progress = FALSE
+)
+
+manifest_row <- function(supplement_id) {
+  row <- manifest %>% filter(.data$supplement_id == .env$supplement_id)
+  if (nrow(row) != 1L) stop("Expected one manifest row for ", supplement_id)
+  row
+}
+
+read_supp <- function(supplement_id) {
+  row <- manifest_row(supplement_id)
+  read_csv(
+    file.path(DATA, row$filename[[1]]),
+    show_col_types = FALSE,
+    progress = FALSE
+  )
+}
+
+show_table <- function(data, rows = 10L, columns = 12L) {
+  rmarkdown::paged_table(
+    data,
+    options = list(
+      rows.print = min(rows, nrow(data)),
+      cols.print = min(columns, ncol(data))
+    )
+  )
+}
+
+sha256_file <- function(path) {
+  output <- system2("sha256sum", path, stdout = TRUE, stderr = TRUE)
+  if (length(output) != 1L) stop("Could not hash ", path)
+  strsplit(output, "[[:space:]]+")[[1]][[1]]
+}
+
+species_label <- function(x) {
+  text <- as.character(x)
+  ifelse(grepl("^D\\. ", text), text, paste("D.", text))
+}
+
+figure_path <- function(filename) {
+  path <- file.path(FIGURES, filename)
+  if (!file.exists(path)) stop("Missing figure: ", path, ". Run `make figures`.")
+  path
+}
+
+stopifnot(
+  nrow(manifest) == 40L,
+  identical(manifest$supplement_id, sprintf("S%02d", seq_len(40)))
+)
+```
+
+<div class="callout">
+This is a **read-only researcher-facing view** over the controlled study
+release. The CSV files and their hashes remain the data authority. Code chunks
+make the filters and equations visible; the report does not overwrite a source
+table, review decision, or publication dataset.
+</div>
+
+<div class="callout boundary">
+**Claim boundaries.** Relative nuclear IOD is an image-derived relative
+phenotype, not an independently validated absolute genome size. The separate
+*D. fuscus* scale uses an assembly-derived conditional anchor of 16.462167689
+pg/1C (`16.1 Gbp / 0.978 Gbp per pg`). The LTR terminal:internal statistic is a
+mapping/deletion-footprint proxy, not a direct ectopic-recombination, solo-LTR,
+or DNA-loss rate. Cell and nucleus summaries describe the reviewed upper tail
+of observed erythrocytes and their intervals are conditional on the observed
+animals and images. Current path analyses are exploratory and do not orient a
+unique causal arrow.
+</div>
+
+# Study report {.tabset .tabset-fade}
+
+## Guide and dataset index
+
+### What is included
+
+- **TE34:** 34 species with accession-linked genomic resources.
+- **Path24:** 24 species with finalized cell, nucleus, and relative-IOD data.
+- **overlap21:** the exact 21-species intersection; no TE or phenotype values
+  are imputed.
+- **S01–S40:** controlled CSV supplements with source/output SHA-256 hashes.
+- **Figures:** the exact current ggplot figures built by
+  [`scripts/publication/build_gbe_figures.R`](../scripts/publication/build_gbe_figures.R).
+
+The report shows compact species-level tables directly. Large object- and
+element-level tables remain downloadable CSVs so the HTML stays responsive.
+
+```{r dataset-index}
+manifest %>%
+  select(
+    supplement_id,
+    analysis_section,
+    title,
+    release_status,
+    manuscript_use,
+    rows,
+    columns,
+    filename,
+    output_sha256
+  ) %>%
+  show_table(rows = 12, columns = 9)
+```
+
+### Package versions
+
+```{r package-versions}
+tibble(
+  package = c(
+    "R", "rmarkdown", "knitr", "readr", "dplyr", "tidyr",
+    "ggplot2", "ggrepel", "patchwork", "scales"
+  ),
+  version = c(
+    as.character(getRversion()),
+    vapply(
+      c(
+        "rmarkdown", "knitr", "readr", "dplyr", "tidyr",
+        "ggplot2", "ggrepel", "patchwork", "scales"
+      ),
+      function(package) as.character(packageVersion(package)),
+      character(1)
+    )
+  )
+)
+```
+
+## Study panels and genomic QC
+
+The report checks the panel contract directly before showing the current study
+design and genomic-resource figure.
+
+```{r panel-contract}
+availability <- read_supp("S01")
+te_panel <- read_supp("S02")
+path_panel <- read_supp("S03")
+path_traits <- read_supp("S04")
+assembly_quality <- read_supp("S05")
+dnapipete_quality <- read_supp("S06")
+
+overlap_species <- inner_join(
+  te_panel %>% select(species),
+  path_panel %>% select(species),
+  by = "species"
+)
+
+stopifnot(
+  nrow(te_panel) == 34L,
+  n_distinct(te_panel$species) == 34L,
+  nrow(path_panel) == 24L,
+  n_distinct(path_panel$species) == 24L,
+  nrow(overlap_species) == 21L,
+  nrow(path_traits) == 24L
+)
+
+tibble(
+  panel = c("TE34", "Path24", "overlap21"),
+  n_species = c(nrow(te_panel), nrow(path_panel), nrow(overlap_species))
+)
+```
+
+### Species availability table
+
+```{r availability-table}
+availability %>% show_table(rows = 12, columns = 12)
+```
+
+### Exact ggplot code and current figure
+
+The following collapsed source chunk is the production ggplot code, read from
+the single figure builder rather than copied into this report.
+
+```{r figure-1, eval=FALSE}
+```
+
+```{r show-figure-1, echo=FALSE, fig.cap="Figure 1. Path24 time tree, study panels, and genomic QC."}
+knitr::include_graphics(
+  figure_path("Figure_1_study_design_and_genomic_qc.png"),
+  rel_path = FALSE
+)
+```
+
+## TE diversity and PCA
+
+### Diversity equations and primary filter
+
+For proportions \(p_i\) within a species:
+
+\[
+H' = -\sum_i p_i \ln(p_i)
+\]
+
+\[
+D_{GS} = 1 - \sum_i p_i^2
+\]
+
+These are natural-log Shannon entropy and the Gini-Simpson index.
+
+The paper-facing primary stratum is `te_level == "order"`. Observed richness
+is retained only as an audit count, and the superfamily stratum is retained as
+a sensitivity/audit view. S08 contains classified-only diversity: classified
+categories are reclosed to one within each species. Unresolved aligned-base
+mass remains separate in S07 as dnaPipeTE classification-accounting QC and is
+not treated as a diversity category.
+
+```{r diversity-replay}
+te_diversity <- read_supp("S08")
+order_composition <- read_csv(
+  file.path(
+    ROOT, "analyses", "01_transposable_elements", "data",
+    "te_order_composition.csv"
+  ),
+  show_col_types = FALSE
+)
+
+primary_diversity <- te_diversity %>%
+  filter(te_level == "order")
+
+recomputed_primary <- order_composition %>%
+  pivot_longer(-species, names_to = "feature", values_to = "proportion") %>%
+  group_by(species) %>%
+  summarise(
+    observed_richness = sum(proportion > 0),
+    shannon_entropy = -sum(proportion[proportion > 0] * log(proportion[proportion > 0])),
+    gini_simpson = 1 - sum(proportion^2),
+    .groups = "drop"
+  ) %>%
+  arrange(species)
+
+observed_primary <- primary_diversity %>%
+  select(species, observed_richness, shannon_entropy, gini_simpson) %>%
+  arrange(species)
+
+stopifnot(
+  nrow(te_diversity) == 68L,
+  nrow(primary_diversity) == 34L,
+  n_distinct(te_diversity$species) == 34L,
+  setequal(te_diversity$te_level, c("order", "superfamily")),
+  nrow(te_diversity %>% count(te_level)) == 2L,
+  all(te_diversity %>% count(te_level) %>% pull(n) == 34L),
+  !any(grepl("unresolved", names(te_diversity), ignore.case = TRUE)),
+  isTRUE(all.equal(recomputed_primary, observed_primary, tolerance = 1e-12))
+)
+
+primary_diversity %>%
+  arrange(desc(shannon_entropy)) %>%
+  show_table(rows = 12, columns = 5)
+```
+
+### PCA normalization
+
+The PCA uses retry-averaged superfamily compositions, retains features positive
+in all 34 TE species, closes each row, and applies the centered log-ratio
+transformation:
+
+\[
+\operatorname{clr}(p_{ij}) = \ln(p_{ij}) - \frac{1}{D}\sum_{k=1}^{D}\ln(p_{ik})
+\]
+
+Columns are centered and an unscaled SVD is fit. There is no zero replacement
+in the retained 24-superfamily matrix. CR1, Chapaev, Dada, Ginger, and Merlin
+remain available for diversity but fail the ubiquitous-feature PCA gate.
+
+```{r pca-contract}
+te_scores <- read_supp("S09")
+te_variance <- read_supp("S10")
+te_loadings <- read_supp("S11")
+feature_prevalence <- read_csv(
+  file.path(
+    ROOT, "analyses", "01_transposable_elements", "data",
+    "te_feature_prevalence.csv"
+  ),
+  show_col_types = FALSE
+)
+
+retained_superfamilies <- feature_prevalence %>%
+  filter(te_level == "superfamily", pca_included)
+excluded_superfamilies <- feature_prevalence %>%
+  filter(te_level == "superfamily", !pca_included)
+
+stopifnot(
+  nrow(te_scores) == 34L,
+  nrow(te_variance) == 23L,
+  nrow(te_loadings) == 24L,
+  nrow(retained_superfamilies) == 24L,
+  setequal(
+    excluded_superfamilies$feature,
+    c("CR1", "Chapaev", "Dada", "Ginger", "Merlin")
+  )
+)
+
+excluded_superfamilies %>%
+  select(
+    feature, n_species_positive, prevalence_fraction,
+    minimum_proportion, maximum_proportion, pca_exclusion_reason
+  )
+```
+
+No final sensitivity analysis asks whether forcing CR1 or Chapaev into the
+shared-feature PCA changes support; the report does not invent one.
+
+### Exact ggplot code and current figure
+
+```{r figure-2, eval=FALSE}
+```
+
+```{r show-figure-2, echo=FALSE, fig.cap="Figure 2. TE diversity and compositional ordination."}
+knitr::include_graphics(
+  figure_path("Figure_2_te_diversity_and_ordination.png"),
+  rel_path = FALSE
+)
+```
+
+## Repeat landscape
+
+The production plot selects the six reported categories with the greatest
+total aligned bases, combines the remainder as `Other`, zero-fills every
+species/category/divergence-bin combination, and gives all 34 species equal
+weight in the across-species curves. The young-repeat summary uses bins below
+5% divergence.
+
+```{r repeat-support}
+repeat_landscape <- read_supp("S12")
+repeat_inventory <- read_supp("S13")
+
+stopifnot(
+  n_distinct(repeat_landscape$species) == 34L,
+  nrow(repeat_inventory) == 34L
+)
+
+repeat_inventory %>%
+  arrange(desc(aligned_hit_bp)) %>%
+  show_table(rows = 12, columns = 4)
+```
+
+The full 13,371-row landscape is available as
+[S12 CSV](datasets/Supplementary_Data_S12_repeatmasker_divergence_landscape.csv).
+
+```{r figure-3, eval=FALSE}
+```
+
+```{r show-figure-3, echo=FALSE, fig.cap="Figure 3. RepeatMasker divergence landscape."}
+knitr::include_graphics(
+  figure_path("Figure_3_repeat_divergence_landscape.png"),
+  rel_path = FALSE
+)
+```
+
+## LTR terminal:internal depth proxy
+
+### Gate and IQR replay
+
+An eligible element is at least 3,000 bp long, has an exact TEsorter
+annotation, is LTR/Gypsy, and has at least five whitespace-delimited
+`DOMAIN|MODEL` annotations. The essential filter is inclusive and is computed
+within species over the 408 eligible elements:
+
+\[
+Q1 - 1.5\,IQR \leq T:I \leq Q3 + 1.5\,IQR
+\]
+
+The independent coverage gate requires positive depth across at least 80% of
+positions separately in the left LTR, right LTR, and internal region. The
+primary branch is the intersection of IQR retention and that coverage gate.
+
+```{r ltr-filter-replay}
+ltr_elements <- read_supp("S14")
+ltr_species <- read_supp("S15")
+ltr_coverage <- read_supp("S16")
+ltr_excluded <- read_supp("S17")
+
+count_tesorter_domains <- function(value) {
+  text <- trimws(as.character(value))
+  if (is.na(value) || text == "" || tolower(text) == "none") return(0L)
+  length(strsplit(text, "[[:space:]]+")[[1]])
+}
+
+ltr_check <- ltr_elements %>%
+  mutate(
+    recomputed_domain_count = vapply(Domains, count_tesorter_domains, integer(1)),
+    recomputed_domain_gate =
+      .data[["element length"]] >= 3000 &
+      tesorter_annotation_found &
+      Order == "LTR" &
+      Superfamily == "Gypsy" &
+      recomputed_domain_count >= 5
+  )
+
+fences <- ltr_check %>%
+  filter(recomputed_domain_gate) %>%
+  group_by(species) %>%
+  summarise(
+    q1 = quantile(ratio_terminal_internal_all_positions, 0.25),
+    q3 = quantile(ratio_terminal_internal_all_positions, 0.75),
+    iqr = q3 - q1,
+    lower = q1 - 1.5 * iqr,
+    upper = q3 + 1.5 * iqr,
+    .groups = "drop"
+  )
+
+ltr_check <- ltr_check %>%
+  left_join(fences, by = "species") %>%
+  mutate(
+    recomputed_iqr_keep = recomputed_domain_gate &
+      ratio_terminal_internal_all_positions >= lower &
+      ratio_terminal_internal_all_positions <= upper,
+    recomputed_coverage =
+      left_ltr_positive_coverage_fraction >= 0.8 &
+      right_ltr_positive_coverage_fraction >= 0.8 &
+      internal_positive_coverage_fraction >= 0.8,
+    recomputed_primary = recomputed_iqr_keep & recomputed_coverage
+  )
+
+stopifnot(
+  nrow(ltr_elements) == 1086L,
+  all(ltr_check$recomputed_domain_count == as.integer(ltr_check$domain_count)),
+  all(ltr_check$recomputed_domain_gate == as.logical(ltr_check$domain_gate_keep)),
+  all(ltr_check$recomputed_iqr_keep == as.logical(ltr_check$iqr_filter_keep)),
+  all(ltr_check$recomputed_coverage == as.logical(ltr_check$coverage_ge_80pct)),
+  all(ltr_check$recomputed_primary == as.logical(ltr_check$primary_ltr_element)),
+  sum(ltr_check$recomputed_domain_gate) == 408L,
+  sum(ltr_check$recomputed_iqr_keep) == 381L,
+  sum(ltr_check$recomputed_domain_gate & ltr_check$recomputed_coverage) == 407L,
+  sum(ltr_check$recomputed_primary) == 380L,
+  n_distinct(ltr_check$species[ltr_check$recomputed_primary]) == 30L
+)
+
+primary_ltr_species <- ltr_species %>%
+  filter(
+    analysis_branch == "primary_iqr_filtered_coverage_ge_80pct",
+    ratio_median > 0
+  ) %>%
+  select(
+    species, n_elements, ratio_median,
+    median_bootstrap_ci_low, median_bootstrap_ci_high,
+    fraction_ratio_gt_1,
+    median_terminal_positive_coverage_fraction,
+    median_internal_positive_coverage_fraction
+  ) %>%
+  arrange(desc(ratio_median))
+
+stopifnot(nrow(primary_ltr_species) == 30L)
+primary_ltr_species %>% show_table(rows = 12, columns = 8)
+```
+
+The 1,086-row audit table remains intact; filtering changes branch membership
+instead of deleting evidence. No canonical between-species omnibus test has
+been finalized for this corrected 380-element branch, so none is added here.
+
+```{r figure-4, eval=FALSE}
+```
+
+```{r show-figure-4, echo=FALSE, fig.cap="Figure 4. LTR terminal:internal mapping/deletion-footprint proxy."}
+knitr::include_graphics(
+  figure_path("Figure_4_ltr_terminal_internal_proxy.png"),
+  rel_path = FALSE
+)
+```
+
+## Cell and nucleus morphology
+
+The object table contains 1,152 frozen reviewed cell-nucleus pairs across 24
+species; the report does not silently refilter it. Physical area uses the fixed conversion
+\(0.0144\;\mu m^2\) per pixel. Species point estimates are medians of the
+accepted reviewed pairs.
+
+```{r morphology-replay}
+morphology_objects <- read_supp("S18")
+morphology_species <- read_supp("S19")
+morphology_audit <- read_supp("S20")
+
+recomputed_morphology <- morphology_objects %>%
+  group_by(species) %>%
+  summarise(
+    n_size_cells = n(),
+    n_size_images = n_distinct(filename),
+    n_size_specimens = n_distinct(specimen_id),
+    cell_area_um2 = median(cell_area_um2),
+    nucleus_area_um2 = median(nuc_area_um2),
+    .groups = "drop"
+  ) %>%
+  arrange(species)
+
+observed_morphology <- morphology_species %>%
+  select(
+    species, n_size_cells, n_size_images, n_size_specimens,
+    cell_area_um2, nucleus_area_um2
+  ) %>%
+  arrange(species)
+
+stopifnot(
+  nrow(morphology_objects) == 1152L,
+  nrow(morphology_species) == 24L,
+  all(abs(morphology_objects$cell_area_um2 - morphology_objects$cell_area_px * 0.0144) < 1e-9),
+  all(abs(morphology_objects$nuc_area_um2 - morphology_objects$nuc_area_px * 0.0144) < 1e-9),
+  isTRUE(all.equal(recomputed_morphology, observed_morphology, tolerance = 1e-9))
+)
+
+morphology_species %>%
+  arrange(desc(cell_area_um2)) %>%
+  show_table(rows = 12, columns = 12)
+```
+
+Seven species are represented by one animal. Intervals are conditional
+paired-object intervals for the observed reviewed data; they are not
+population-level among-animal uncertainty intervals.
+
+```{r figure-5, eval=FALSE}
+```
+
+```{r show-figure-5, echo=FALSE, fig.cap="Figure 5. Reviewed upper-tail cell and nucleus morphology."}
+knitr::include_graphics(
+  figure_path("Figure_5_reviewed_cell_nucleus_morphology.png"),
+  rel_path = FALSE
+)
+```
+
+## Relative nuclear IOD
+
+Optical density is defined per nuclear-mask pixel from background and observed
+intensity; nuclear IOD is the sum of optical density over the mask, not mean
+optical density. The primary species estimator is the arithmetic mean of the
+within-image median IOD values. Dividing the 24 species estimates and their
+interval bounds by the Path24 median anchor produces the relative index:
+
+\[
+IOD_{relative,s} = \frac{\operatorname{mean}_{image}
+  (\operatorname{median}_{nucleus}(IOD))_s}
+  {\operatorname{median}_{species}(IOD_{equal-image})}
+\]
+
+A separate descriptive scale uses the published rounded pooled *D. fuscus*
+assembly estimate. The declared conversion is:
+
+\[
+G_{reference,1C} = \frac{16.1\ \mathrm{Gbp}}
+  {0.978\ \mathrm{Gbp\ pg}^{-1}} = 16.462167689\ \mathrm{pg}
+\]
+
+Process_413/specimen 32469 and Process_414/specimen 32470 were author-confirmed
+as the *D. fuscus* standards and were stained in the same experimental runs as
+the unknowns. Their exact standard-to-target run map has not been recovered,
+and their median IOD values differ by approximately 41%. The picogram fields
+are therefore an assembly-derived conditional sensitivity scale, not an
+independently validated absolute C-value; `relative_iod_index` remains the
+primary phenotype.
+
+```{r iod-replay}
+iod_objects <- read_supp("S21")
+iod_species <- read_supp("S22")
+iod_images <- read_supp("S23")
+iod_balance <- read_supp("S24")
+iod_diagnostics <- read_supp("S25")
+
+recomputed_iod <- iod_images %>%
+  group_by(species) %>%
+  summarise(
+    iod_equal_image_estimate = mean(image_median_iod),
+    n_images = n_distinct(filename),
+    n_specimens = n_distinct(specimen_id),
+    .groups = "drop"
+  )
+iod_anchor <- median(recomputed_iod$iod_equal_image_estimate)
+recomputed_iod <- recomputed_iod %>%
+  mutate(relative_iod_index = iod_equal_image_estimate / iod_anchor) %>%
+  arrange(species)
+
+observed_iod <- iod_species %>%
+  select(
+    species, iod_equal_image_estimate, n_images, n_specimens,
+    relative_iod_index
+  ) %>%
+  arrange(species)
+
+recomputed_balance <- with(
+  iod_balance,
+  max_abs_standardized_mean_difference <= 0.10 & max_ks_distance <= 0.25
+)
+
+stopifnot(
+  nrow(iod_objects) == 805L,
+  nrow(iod_images) == 51L,
+  nrow(iod_species) == 24L,
+  abs(iod_anchor - 950.176112815) < 1e-8,
+  isTRUE(all.equal(recomputed_iod, observed_iod, tolerance = 1e-8)),
+  identical(
+    recomputed_balance,
+    as.logical(iod_balance$passes_prespecified_balance_thresholds)
+  ),
+  sum(!recomputed_balance) == 4L
+)
+
+iod_species %>%
+  select(
+    species, n_nuclei, n_images, n_specimens,
+    relative_iod_index, relative_iod_ci_low, relative_iod_ci_high,
+    estimate_support, sample_size_support, quality_match_status
+  ) %>%
+  arrange(desc(relative_iod_index)) %>%
+  show_table(rows = 12, columns = 10)
+```
+
+The quality-balance rule is `max |SMD| <= 0.10` and `max KS <= 0.25`.
+The four failures remain visible in both the data and Figure 6; they are not
+silently removed.
+
+```{r iod-quality-table}
+iod_balance %>%
+  arrange(passes_prespecified_balance_thresholds, desc(max_ks_distance)) %>%
+  show_table(rows = 12, columns = 10)
+```
+
+<div class="callout warning">
+Figure 6 includes frozen pairwise Pagel-lambda PGLS sensitivities. It is not an
+absolute-genome-size analysis, and its fitted lines should not be read as
+causal relationships.
+</div>
+
+```{r figure-6, eval=FALSE}
+```
+
+```{r show-figure-6, echo=FALSE, fig.cap="Figure 6. Relative IOD, nucleus area, and cell area sensitivities."}
+knitr::include_graphics(
+  figure_path("Figure_6_relative_iod_pairwise_pgls.png"),
+  rel_path = FALSE
+)
+```
+
+## Integrated species views
+
+`S40` is the exact 21-species TE34-by-Path24 overlap. The join is at species
+level; genomic and microscopy measurements are not from the same animal.
+
+```{r integrated-data}
+te_iod_overlap <- read_supp("S40")
+organismal_traits <- read_csv(
+  file.path(
+    ROOT, "analyses", "03_phylogenetic_path", "data",
+    "organismal_traits.csv"
+  ),
+  show_col_types = FALSE
+)
+
+stopifnot(
+  nrow(te_iod_overlap) == 21L,
+  n_distinct(te_iod_overlap$species) == 21L,
+  nrow(organismal_traits) == 37L,
+  n_distinct(organismal_traits$species) == 37L
+)
+
+te_iod_overlap %>%
+  select(
+    species, scientific_name, shannon_entropy, gini_simpson,
+    relative_iod_index, relative_iod_ci_low, relative_iod_ci_high,
+    manual_review_inclusion
+  ) %>%
+  show_table(rows = 12, columns = 8)
+```
+
+The expert reproductive-strategy categories are retained as vetted organismal
+traits, but the interpretation was supplied after review of the initial PCA.
+Any overlay is therefore post hoc and descriptive, not a confirmatory test.
+
+```{r organismal-traits-table}
+organismal_traits %>%
+  select(
+    species, max_svl_mm, development_mode, reproductive_strategy,
+    aquaticity_index, microhabitat_class,
+    reproductive_strategy_source_id, organismal_source_ids
+  ) %>%
+  show_table(rows = 12, columns = 8)
+```
+
+```{r figure-s1, eval=FALSE}
+```
+
+```{r show-figure-s1, echo=FALSE, fig.cap="Supplementary Figure S1. Descriptive TE diversity and relative-IOD overlap."}
+knitr::include_graphics(
+  figure_path("Figure_S1_te_relative_iod_overlap21.png"),
+  rel_path = FALSE
+)
+```
+
+## Existing frozen statistical sensitivities
+
+<div class="callout warning">
+This tab exposes **existing frozen exploratory outputs** so collaborators can
+inspect them. It does not promote them to confirmatory manuscript claims. The
+report does not run the previously discussed ad hoc power, omnibus, or
+univariate phylogenetic-signal calculations. No final between-species LTR test
+or diversity-index group test is added here.
+</div>
+
+The Path24 traits are log10-transformed and sample-standardized for the current
+three-trait analysis. Pairwise PGLS estimates Pagel's lambda by maximum
+likelihood. The implemented model contains relative IOD, nucleus area, and cell
+area only; the possible integrated TE/SVL path model has not been specified or
+fitted.
+
+```{r frozen-statistical-tables}
+pairwise_pgls <- read_supp("S26")
+path_models <- read_supp("S30")
+path_stability <- read_supp("S32")
+path_simulation <- read_supp("S36")
+path_dsep <- read_supp("S37")
+
+pairwise_pgls %>%
+  select(
+    comparison, spearman_rho, p_value_descriptive_only,
+    pearson_r, pearson_p_value_descriptive_only,
+    pgls_standardized_beta, pgls_ci_low, pgls_ci_high,
+    pgls_p_value, pagel_lambda, n_species
+  ) %>%
+  show_table(rows = 3, columns = 11)
+
+path_models %>%
+  filter(analysis_type == "primary") %>%
+  arrange(delta_CICc) %>%
+  show_table(rows = 10, columns = 12)
+```
+
+The complete frozen outputs S26–S37 are linked in the Downloads tab. Their
+code authority is
+[`analyses/03_phylogenetic_path/run_path_analysis.R`](../analyses/03_phylogenetic_path/run_path_analysis.R).
+
+The formal TE-PCA audit remains separate from the descriptive S08–S11 tables:
+
+```{r te-formal-audit}
+te_audit_dir <- file.path(ROOT, "analyses", "01_transposable_elements", "data")
+te_cluster_diagnostics <- read_csv(
+  file.path(te_audit_dir, "te_pca_clustering_diagnostics.csv"),
+  show_col_types = FALSE
+)
+te_cluster_stability <- read_csv(
+  file.path(te_audit_dir, "te_pca_clustering_stability.csv"),
+  show_col_types = FALSE
+)
+te_trait_tests <- read_csv(
+  file.path(te_audit_dir, "te_pca_trait_association_tests.csv"),
+  show_col_types = FALSE
+)
+te_phylogenetic_tests <- read_csv(
+  file.path(te_audit_dir, "te_pca_phylogenetic_signal_tests.csv"),
+  show_col_types = FALSE
+)
+
+te_cluster_diagnostics %>%
+  select(any_of(c(
+    "candidate_id", "representation", "k", "cluster_sizes",
+    "mean_silhouette", "gap_primary_selected_k", "accepted"
+  ))) %>%
+  show_table(rows = 12, columns = 8)
+
+te_phylogenetic_tests %>% show_table(rows = 6, columns = 10)
+```
+
+No discrete PCA cluster is accepted. Tree-based results remain provisional
+until the collaborator tree's publication/calibration provenance is supplied.
+The exact replay command is `make te-pca`; it is intentionally not rerun while
+knitting this report.
+
+```{r figure-7, eval=FALSE}
+```
+
+```{r show-figure-7, echo=FALSE, fig.cap="Figure 7. Exploratory Path24 model and simulation sensitivities."}
+knitr::include_graphics(
+  figure_path("Figure_7_exploratory_phylogenetic_path_sensitivity.png"),
+  rel_path = FALSE
+)
+```
+
+Auxiliary DAG reference (unnumbered): the current Path24 analysis scores 10
+testable Markov-equivalence classes and the auxiliary image below shows one
+representative DAG for each class. The saturated 6-member class is omitted
+because it has no d-separation claim and was not scored. Relative nuclear IOD
+is an image-derived relative phenotype, not absolute genome size, and the
+arrows shown here are representative only, not uniquely oriented causal claims.
+
+```{r figure-7-dag-reference, echo=FALSE}
+knitr::include_graphics(
+  figure_path("Path_DAG_equivalence_class_reference.png"),
+  rel_path = FALSE
+)
+```
+
+## Downloads, provenance, and session
+
+### Controlled CSV downloads
+
+Share this HTML together with the `Publication/datasets/` directory if
+collaborators need the linked CSVs.
+
+```{r download-links, results='asis'}
+for (section in unique(manifest$analysis_section)) {
+  cat("#### ", section, "\n\n", sep = "")
+  rows <- manifest %>% filter(analysis_section == section)
+  for (index in seq_len(nrow(rows))) {
+    cat(
+      "- [", rows$supplement_id[[index]], ": ", rows$title[[index]],
+      "](datasets/", rows$filename[[index]], ") — ",
+      rows$release_status[[index]], "; ", rows$rows[[index]], " rows × ",
+      rows$columns[[index]], " columns\n",
+      sep = ""
+    )
+  }
+  cat("\n")
+}
+```
+
+The complete field dictionary is
+[COLUMN_INVENTORY.csv](datasets/COLUMN_INVENTORY.csv), and the hash-bound index
+is [DATASET_MANIFEST.csv](datasets/DATASET_MANIFEST.csv).
+
+### Report and input fingerprints
+
+```{r report-fingerprints}
+tibble(
+  artifact = c(
+    "Publication/Desmognathus_study_data.Rmd",
+    "Publication/datasets/DATASET_MANIFEST.csv",
+    "Publication/figures/FIGURE_MANIFEST.csv",
+    "scripts/publication/build_gbe_figures.R"
+  ),
+  sha256 = vapply(
+    c(
+      REPORT_SOURCE,
+      file.path(DATA, "DATASET_MANIFEST.csv"),
+      file.path(FIGURES, "FIGURE_MANIFEST.csv"),
+      file.path(ROOT, "scripts", "publication", "build_gbe_figures.R")
+    ),
+    sha256_file,
+    character(1)
+  )
+)
+```
+
+### Session information
+
+```{r session-information}
+sessionInfo()
+```

@@ -27,7 +27,7 @@ per-file working-data manifest.
 | `results/data/corrected/te34*` and TE review products | `analyses/01_transposable_elements/data/` |
 | microscopy releases spread across results/path workspaces | `analyses/02_morphology/data/` and `analyses/02_morphology/provenance/` |
 | mixed `path_analysis/` inputs, outputs, and viewers | `analyses/03_phylogenetic_path/` |
-| eight overlapping review notebooks | three component `explore.ipynb` notebooks |
+| eight overlapping review notebooks | one data/methods report plus one manifest-driven figure-review gallery under `Publication/` |
 | several publication builders | `make publication` |
 | `Dusky.yml` plus a figure-only Conda spec | `environment.yml` plus `scripts/setup_r.sh` |
 
@@ -82,14 +82,26 @@ analysis-data figure.
   workbook and its empty parent directories were removed. It was untracked,
   uncataloged, unreferenced, had no generator or unique result, duplicated the
   canonical PCA audit CSVs, and named a nonexistent CLR source file. The
-  canonical CSVs and interactive TE notebook preserve every result it exposed.
+  canonical CSVs and the shareable R Markdown report preserve every result it exposed.
+- The new `Publication/Desmognathus_figure_data.xlsx` does not restore that
+  one-off PCA workbook or create a parallel data authority. One reproducible
+  builder collects the exact non-tree direct ggplot inputs into labeled sheets.
+  The unusable Newick, tree-edge, and tree-node spreadsheet tabs were removed;
+  their manifest-bound CSV and Newick sources remain authoritative under
+  `Publication/datasets/`.
 - The PCA verifier's disposable `--write` path was removed. `make te-pca` now
   performs one read-only reconstruction and formal replay against the canonical
-  files, and `make te-pca-view` opens the single human-facing workbench.
+  files, while `make report` renders the data/methods workbench and
+  `make figure-review` renders the visual critique gallery.
 - The old `te-structure` Make target was replaced by `te-pca`; no compatibility
   alias or parallel workflow was retained. The verifier now reconstructs the
   complete order and superfamily prevalence/CLR trail rather than checking only
   the final superfamily scores.
+- The three generated `explore.ipynb` files and their Python notebook builder
+  were replaced by one shareable R Markdown/HTML report. The `notebooks` and
+  `te-pca-view` Make targets, JupyterLab, `nbformat`, and their lockfile-only
+  dependency tree were deleted; canonical CSVs and formal replay commands
+  remain the analysis authorities.
 - The redundant `zero_replaced_proportion` field was deleted from
   `te_pca_clr_matrix.csv`. It was byte-for-byte duplicate stage metadata even
   though the retained shared-positive matrix required no zero replacement;
@@ -110,11 +122,14 @@ analysis-data figure.
   `nuclear_iod_by_image.csv`, its animal field is `specimen_id`, and its
   metadata explicitly states that values are unnormalized rather than ratios.
 - Diversity replay was added to the existing PCA verifier instead of creating a
-  second diversity builder or output directory. The compact composition and
-  mass-accounting inputs now reproduce all 136 canonical rows across the four
-  declared strata. The active release retains observed richness only as an
-  audit/support count and limits paper-facing diversity indices to Shannon
-  entropy and the Gini-Simpson index; redundant Hill-number and Pielou fields
+  second diversity builder or output directory. The two compact composition
+  inputs now reproduce one 68-row, five-column classified-only table: 34 order
+  and 34 superfamily rows after classified categories are reclosed to one. The
+  order stratum is primary, the superfamily stratum is sensitivity/audit, and
+  observed richness remains only an audit/support count. The unresolved-bin
+  diversity mode, its redundant `composition_mode` column, and the resulting 68
+  rows were deleted; unresolved aligned-base mass remains only as S06-S07
+  dnaPipeTE quality-control evidence. Redundant Hill-number and Pielou fields
   and claims were removed rather than carried forward.
 - S19 was extended in place with animal count and concentration fields derived
   from S18. No parallel morphology summary was retained.
@@ -131,10 +146,18 @@ analysis-data figure.
 - The blank `GBE_methods_reference.docx` shell and the obsolete
   `Materials_and_Methods_GBE_draft.docx`/`.md` pair were removed from the
   active Methods directory. The old prose encoded superseded panel sizes and
-  object counts and competed with the factual scaffold; exact DOCX copies remain
-  in the checksum archive and every tracked version remains recoverable from Git
-  history. `METHODS_BULLET_SCAFFOLD.md` is now the sole active factual Methods
-  authority until approved submission prose is written.
+  object counts and competed with the factual scaffold; exact copies remain in
+  the checksum archive and every tracked version remains recoverable from Git
+  history. `METHODS_BULLET_SCAFFOLD.md` remains the sole active factual Methods
+  authority. The current Word-ready scaffold and narrative DOCX are synchronized
+  review exports and do not create a second factual authority.
+- The unsupported 16.36-pg *D. fuscus* convention was replaced in place by one
+  documented conditional reference: the Myers et al. pooled assembly estimate
+  (`16.1 Gbp / 0.978 Gbp per pg = 16.462167689 pg/1C`). No parallel absolute-
+  genome-size dataset was added. Process_413/specimen 32469 and
+  Process_414/specimen 32470 are confirmed same-run standards, but the exact
+  standard-to-target run map and standard-slide QC remain unresolved; relative
+  IOD therefore remains the primary phenotype.
 
 ## Known blockers preserved rather than hidden
 
@@ -142,6 +165,8 @@ analysis-data figure.
   upstream regeneration cannot be claimed;
 - focal 46-tip tree citation/calibration provenance remains unresolved;
 - wet-lab, specimen, and image-acquisition author inputs remain incomplete;
-- relative nuclear IOD is not an independently validated absolute C-value;
+- relative nuclear IOD is not an independently validated absolute C-value; the
+  selected 16.462167689-pg assembly-derived scale remains conditional pending
+  exact standard-to-target run mapping and standard QC;
 - archived HPC and microscopy outputs are evidence, not a promise of complete
   rerunnability.

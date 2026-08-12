@@ -16,7 +16,10 @@ analysis.
 - `data/path24_traits.csv`: exact 24-species model traits.
 - `data/measurement_bootstrap_traits.csv`: measurement-bootstrap traits using
   the relative-IOD scale.
-- `data/candidate_dags.csv`: candidate three-trait graph definitions.
+- `data/candidate_dags.csv`: candidate three-trait graph definitions. This file
+  enumerates 25 possible three-node DAG members that collapse to 10 testable
+  Markov-equivalence classes plus a 6-member saturated class that is unscored
+  because it has no d-separation claim.
 - `trees/source_time_tree_46.tre`: preserved dated source tree provided by Alex Pyron; its publication and calibration citation remains unresolved.
 - `trees/path24_time_tree.nwk`: exact pruned tree used for Path24.
 - `trees/published_*`: compact published-tree topology sensitivity inputs.
@@ -31,10 +34,10 @@ Run a fast refit into ignored disposable output:
 make path-quick
 ```
 
-Open the compact review surface with:
+Render the compact review surface with:
 
 ```bash
-uv run jupyter lab analyses/03_phylogenetic_path/explore.ipynb
+make report
 ```
 
 ## Interpretation and provenance
@@ -42,6 +45,13 @@ uv run jupyter lab analyses/03_phylogenetic_path/explore.ipynb
 These models are exploratory phylogenetic association/sensitivity analyses.
 Markov-equivalent or otherwise close graphs cannot be used to assert a unique
 causal arrow direction.
+
+The unnumbered auxiliary DAG image placed immediately after Figure 7 in the
+researcher-facing study report shows one representative DAG per scored
+equivalence class. That gallery is descriptive only: relative nuclear IOD is
+not absolute genome size, omitted members are Markov-equivalent
+reorientations, and the saturated 6-member class is excluded because it has no
+d-separation claim.
 
 Relative nuclear IOD is an image-derived phenotype, not an independently
 validated absolute C-value. Historical model files used a positive rescaling

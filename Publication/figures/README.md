@@ -27,3 +27,14 @@ make figures
 release status, dimensions, font, legend, alt text, and PDF/PNG/TIFF files.
 The current host does not include Arial itself, so the reproducible build uses
 Nimbus Sans, a Helvetica-compatible sans-serif font, and embeds it in every PDF.
+`Path_DAG_equivalence_class_reference.{pdf,png,tif}` is a separate review
+reference asset: it is intentionally outside `FIGURE_MANIFEST.csv`, is not a
+numbered manuscript figure, and shows representative DAGs for the 10 testable
+Path24 equivalence classes while leaving the saturated class unscored.
+
+The visual grammar follows the supplied salamander-genome reference where it is
+compatible with the journal contract: complete black panel boxes, no grids,
+parenthesized panel tags, compact gutters, italic scientific names, and a
+coherent coral/cyan/viridis-derived palette. Figure 1 includes the exact audited
+24-tip Path24 time tree; branch time is shown as supplied while its publication
+identifier, calibration method, and branch-length provenance remain pending.

@@ -5,11 +5,13 @@ SUPPLEMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
         "analyses/01_transposable_elements/data/ltr_resource_coverage.csv",
         "analyses/01_transposable_elements/recompute_ltr_release.py",
         "analyses/01_transposable_elements/provenance/ltr_terminal_internal_release.json",
+        "analyses/02_morphology/data/relative_nuclear_iod_species.csv",
+        "analyses/02_morphology/validate_release.py",
+        "analyses/02_morphology/provenance/iod_source_manifest.json",
     ),
     "S08": (
         "analyses/01_transposable_elements/data/te_order_composition.csv",
         "analyses/01_transposable_elements/data/te_superfamily_composition.csv",
-        "analyses/01_transposable_elements/data/dnapipete_mass_accounting.csv",
     ),
     "S14": (
         "analyses/01_transposable_elements/recompute_ltr_release.py",
@@ -35,6 +37,7 @@ SUPPLEMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "S22": (
         "analyses/02_morphology/data/nuclear_iod_objects.csv",
         "analyses/02_morphology/data/nuclear_iod_by_image.csv",
+        "analyses/02_morphology/validate_release.py",
         "analyses/02_morphology/provenance/iod_source_manifest.json",
         "analyses/02_morphology/provenance/review_finalization.json",
     ),
@@ -62,17 +65,30 @@ SUPPLEMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
 
 
 SUPPLEMENT_METADATA: dict[str, dict[str, str]] = {
-    "S08": {
+    "S01": {
         "description": (
-            "Order- and superfamily-level Shannon entropy and Gini-Simpson index values "
-            "under classified-conditional and unresolved-mass-aware compositions; "
-            "unresolved mass is an accounting bin."
+            "Species-level analysis availability, including the exact S22 projection of "
+            "the conditional D. fuscus scale derived from the author-selected rounded "
+            "16.1-Gbp pooled assembly span at 0.978 Gbp per pg."
         ),
         "manuscript_use": (
-            "Primary paper-facing diversity endpoints are classified-conditional "
-            "order-level Shannon entropy and the Gini-Simpson index. Observed richness "
-            "is an audit/support count; superfamily and mass-aware rows are sensitivity "
-            "or audit strata."
+            "Availability and audit table only; its projected picogram field is an "
+            "assembly-derived sensitivity, not a measured C-value or independently "
+            "calibrated absolute genome size."
+        ),
+    },
+    "S08": {
+        "description": (
+            "A 68-row, five-column classified-only diversity table: 34 order-level and "
+            "34 superfamily-level species summaries, each calculated after classified "
+            "categories were reclosed to one."
+        ),
+        "manuscript_use": (
+            "Order-level Shannon entropy and the Gini-Simpson index are the primary "
+            "paper-facing diversity endpoints. Superfamily rows are sensitivity/audit "
+            "summaries, and observed richness is an audit/support count. Unresolved "
+            "aligned-base mass is excluded from diversity and remains only in S06-S07 "
+            "dnaPipeTE quality-control tables."
         ),
     },
     "S14": {
@@ -114,8 +130,15 @@ SUPPLEMENT_METADATA: dict[str, dict[str, str]] = {
     },
     "S22": {
         "description": (
-            "Equal-image means of within-image median nuclear IOD, normalized to the Path24 "
-            "median, with conditional uncertainty and clearly separated fuscus scaling."
+            "Equal-image means of within-image median nuclear IOD, the primary Path24-median "
+            "relative index, and a clearly separated conditional D. fuscus scale derived "
+            "from the author-selected rounded 16.1-Gbp pooled assembly span at 0.978 Gbp "
+            "per pg."
+        ),
+        "manuscript_use": (
+            "Relative IOD is primary. Picogram fields are conditional assembly-derived "
+            "sensitivity values, not a measured C-value; their intervals exclude uncertainty "
+            "in the chosen assembly anchor and do not make the assay absolute."
         ),
     },
     "S23": {
@@ -166,6 +189,23 @@ COMMON_COLUMN_DEFINITIONS: dict[str, str] = {
 
 SUPPLEMENT_COLUMN_DEFINITIONS: dict[str, dict[str, str]] = {
     "S01": {
+        "step06_genome_size_estimation": (
+            "Whether the species has a reviewed nuclear-IOD estimate for the named "
+            "conditional S22 assembly-derived scaling; not validation of absolute genome size."
+        ),
+        "step06_genome_panel_status": (
+            "Release and image-quality support status for the conditional S22 scaling."
+        ),
+        "step06_genome_nuclei": (
+            "Number of finalized reviewed nuclei contributing to the conditional S22 estimate."
+        ),
+        "step06_genome_images": (
+            "Number of distinct source images contributing to the conditional S22 estimate."
+        ),
+        "step06_genome_size_pg_fuscus_anchored": (
+            "Exact S22 projection of the conditional D. fuscus-anchored pg sensitivity "
+            "derived from 16.1 Gbp / 0.978 Gbp per pg; not a measured C-value."
+        ),
         "step04_ltr_resource_status": (
             "Corrected LTR/Gypsy five-domain resource status projected from S16."
         ),
@@ -185,23 +225,17 @@ SUPPLEMENT_COLUMN_DEFINITIONS: dict[str, dict[str, str]] = {
             "TE classification level: order is primary for diversity; superfamily is a "
             "sensitivity/audit level."
         ),
-        "composition_mode": (
-            "classified_conditional closes classified categories to one and is the "
-            "primary diversity denominator; mass_aware_unresolved_bin adds unresolved "
-            "aligned-base mass as a sensitivity/audit accounting bin."
-        ),
         "observed_richness": (
-            "Audit/support count of strictly positive compositional bins, not a "
-            "paper-facing diversity endpoint; mass-aware rows include the non-biological "
-            "Unresolved accounting bin when positive."
+            "Audit/support count of strictly positive classified compositional bins, "
+            "not a paper-facing diversity endpoint."
         ),
         "shannon_entropy": (
             "Natural-log Shannon entropy, -sum(p_i * ln(p_i)), over positive bins; a "
-            "paper-facing diversity endpoint in the classified-conditional order stratum."
+            "paper-facing diversity endpoint in the order-level stratum."
         ),
         "gini_simpson": (
             "Gini-Simpson index, 1 - sum(p_i^2), over positive bins; a paper-facing "
-            "diversity endpoint in the classified-conditional order stratum."
+            "diversity endpoint in the order-level stratum."
         ),
     },
     "S14": {
@@ -419,10 +453,37 @@ SUPPLEMENT_COLUMN_DEFINITIONS: dict[str, dict[str, str]] = {
         "relative_iod_ci_low": "iod_equal_image_ci_low divided by relative_iod_anchor.",
         "relative_iod_ci_high": "iod_equal_image_ci_high divided by relative_iod_anchor.",
         "iod_ratio_to_fuscus": (
-            "Separate sensitivity ratio to the D. fuscus equal-image estimate; not the primary index."
+            "Target equal-image IOD divided by the D. fuscus equal-image IOD; a separate "
+            "conditional sensitivity ratio, not the primary Path24-median index."
         ),
         "genome_size_pg_fuscus_anchored": (
-            "Conditional historical fuscus-scaled sensitivity; not validated absolute genome size."
+            "Conditional equal-image IOD ratio to D. fuscus multiplied by the assembly-derived "
+            "1C-equivalent anchor (16.1 Gbp / 0.978 Gbp per pg); not a measured C-value or "
+            "independently calibrated absolute genome size."
+        ),
+        "genome_size_pg_ci_low": (
+            "2.5th percentile of the hierarchical species-to-fuscus ratio bootstrap on the "
+            "conditional pg scale; anchor-value uncertainty is excluded."
+        ),
+        "genome_size_pg_ci_high": (
+            "97.5th percentile of the hierarchical species-to-fuscus ratio bootstrap on the "
+            "conditional pg scale; anchor-value uncertainty is excluded."
+        ),
+        "genome_size_reference_species": (
+            "D. fuscus equal-image target estimate used as the conditional IOD denominator; "
+            "the recovered standard images are not yet the denominator."
+        ),
+        "genome_size_reference_pg": (
+            "Assembly-derived 1C-equivalent anchor computed as 16.1 Gbp / 0.978 Gbp per pg; "
+            "conditional and not a measured C-value."
+        ),
+        "genome_size_calibration_pg_per_iod": (
+            "Conditional assembly-derived reference pg divided by the D. fuscus equal-image "
+            "IOD estimate."
+        ),
+        "genome_size_rank": (
+            "Descending rank of the conditional fuscus-anchored pg sensitivity; identical in "
+            "order to the underlying equal-image IOD rank."
         ),
         "estimate_support": "Whether one or multiple observed images support the species estimate.",
         "sample_size_support": "Recorded nucleus-count support category.",

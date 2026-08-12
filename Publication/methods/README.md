@@ -7,11 +7,12 @@ paper-facing diversity indices to Shannon entropy and the Gini-Simpson index,
 designates classified-conditional order-level diversity as primary, and records
 the corrected 408-element LTR domain cohort and 380-element primary branch.
 
-No submission prose or DOCX is maintained in parallel with the scaffold. Once
-the remaining author inputs are resolved and the scientific wording is
-approved, create the manuscript prose through an explicit document-review
-workflow. This prevents obsolete denominators and methods from persisting as a
-second apparent authority.
+Two reviewed Word working exports accompany the scaffold:
+`METHODS_BULLET_SCAFFOLD_WORD_READY.docx` is the Word-ready scaffold and
+`MATERIALS_AND_METHODS_NARRATIVE_DRAFT.docx` is a readable narrative draft.
+They are synchronized review aids, not independent factual authorities or
+submission-final prose. When a factual decision changes, update the Markdown
+scaffold and evidence records first, then refresh and review both Word exports.
 
 ## Evidence and missing information
 
@@ -42,7 +43,8 @@ author-input rows are completed.
 
 ## Submission-prose boundary
 
-Historical prose, DOCX files, their builder, and their environment remain
-recoverable from Git history and the pre-cleanup archive, but are intentionally
-outside the active analysis surface. Generate a new submission document only
-after the scaffold and author-input checklist are complete and approved.
+Historical prose, obsolete DOCX files, their builder, and their environment
+remain recoverable from Git history and the pre-cleanup archive. The two
+current Word working exports remain subordinate to the Markdown scaffold and
+author-input checklist. Finalize submission prose only after those sources are
+complete and approved.

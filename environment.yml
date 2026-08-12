@@ -18,6 +18,7 @@ dependencies:
   - r-phylolm
   - r-purrr
   - r-readr
+  - r-rmarkdown=2.31
   - r-scales
   - r-systemfonts
   - r-tibble

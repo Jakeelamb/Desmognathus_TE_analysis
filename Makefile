@@ -1,4 +1,4 @@
-.PHONY: setup setup-python setup-r status catalog publication refresh identity validate test lint notebooks figures te-pca te-pca-view path path-quick
+.PHONY: setup setup-python setup-r status catalog publication refresh identity validate test lint report figure-review figure-data figures te-pca path path-quick
 
 setup: setup-python setup-r
 
@@ -32,8 +32,14 @@ test: validate
 lint:
 	uv run ruff check scripts tests analyses --exclude '*.ipynb'
 
-notebooks:
-	uv run jupyter lab analyses
+report: figures validate
+	scripts/run_r.sh Rscript scripts/publication/render_study_report.R
+
+figure-review: figures validate
+	scripts/run_r.sh Rscript scripts/publication/render_figure_review.R
+
+figure-data: validate
+	uv run --frozen --no-sync python scripts/publication/build_figure_data_workbook.py
 
 figures:
 	scripts/run_r.sh Rscript scripts/publication/build_gbe_figures.R
@@ -41,9 +47,6 @@ figures:
 te-pca:
 	uv run python analyses/01_transposable_elements/recompute_pca.py
 	scripts/run_r.sh Rscript analyses/01_transposable_elements/analyze_pca_structure.R
-
-te-pca-view:
-	uv run jupyter lab analyses/01_transposable_elements/explore.ipynb
 
 path:
 	scripts/run_r.sh Rscript analyses/03_phylogenetic_path/run_path_analysis.R

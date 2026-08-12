@@ -1,8 +1,8 @@
 # 01 — Transposable elements
 
 This directory is the active TE34 analysis surface. `data/` contains the compact
-species-level and element-level products used by the paper; `explore.ipynb`
-provides a small editable view over them.
+species-level and element-level products used by the paper; the shared R
+Markdown report provides the researcher-facing view over them.
 
 ## PCA: start here
 
@@ -10,8 +10,8 @@ provides a small editable view over them.
 # Read-only end-to-end verification; allow about three minutes.
 make te-pca
 
-# Open scores, loadings, variance, diagnostics, and formal test tables.
-make te-pca-view
+# Render scores, loadings, variance, diagnostics, and final ggplot figures.
+make report
 ```
 
 `make te-pca` is the sole public PCA check. It first derives feature prevalence,
@@ -38,9 +38,10 @@ competes with these CSVs.
   classified-conditional composition matrices after equal-weight averaging of
   the two *D. orestes* technical runs.
 - `te_diversity.csv`: natural-log Shannon entropy and explicitly named
-  Gini-Simpson index at order and superfamily levels under both the
-  classified-conditional and mass-aware unresolved-bin views. Observed
-  richness is retained only as an audit/support count.
+  Gini-Simpson index in one 68-row, five-column classified-only table: 34
+  order-level and 34 superfamily-level species summaries. Classified
+  categories are reclosed to one before calculation. Observed richness is
+  retained only as an audit/support count.
 - `te_feature_prevalence.csv`, `te_pca_clr_matrix.csv`, `te_pca_scores.csv`,
   `te_pca_variance.csv`, and `te_pca_loadings.csv`: the shared-feature
   compositional ordination audit trail.
@@ -64,18 +65,19 @@ competes with these CSVs.
 
 ## What is editable here
 
-Open `explore.ipynb` to filter species, inspect features, change descriptive
-summaries, or prototype plots. The canonical publication tables remain
-unchanged until deliberately replaced and `make publication` is run.
+Edit `Publication/Desmognathus_study_data.Rmd` to change display filters,
+inspect features, or prototype report plots. The report is read-only with
+respect to canonical data; publication tables remain unchanged until
+deliberately replaced and `make publication` is run.
 
 The PCA uses closure, features positive in every included TE34 species, CLR
 transformation, column centering, and SVD without post-CLR variance scaling.
 Axes are oriented deterministically so the largest absolute loading is
-positive. The classified-conditional order-level stratum is the primary
-paper-facing diversity analysis. Superfamily-level and mass-aware
-unresolved-bin estimates are sensitivity/audit strata. Rare features remain in
-all diversity summaries even when they are not eligible for the shared-feature
-PCA.
+positive. The order-level stratum is the primary paper-facing diversity
+analysis, and the superfamily-level stratum is a sensitivity/audit view. Rare
+features remain in both diversity summaries even when they are not eligible for
+the shared-feature PCA. Unresolved aligned-base mass is excluded from diversity
+and remains only in the S06-S07 dnaPipeTE quality-control tables.
 
 The two compact composition matrices reproduce the full released prevalence,
 CLR, scores, variance, and loadings trail without the archived hit-level/HPC
@@ -197,5 +199,5 @@ rate, solo-LTR rate, or DNA-loss rate. The planiceps-to-fuscus correction is
 restricted to `SRX20497025 / GCA_032353935.1` and does not define general
 synonymy; see the [shared identity-resolution contract](../../docs/IDENTITY_RESOLUTION.md).
 
-Run `make te-pca-view` for interactive inspection and `make validate` for the
+Run `make report` for researcher-facing inspection and `make validate` for the
 repository-wide hash and panel checks.
