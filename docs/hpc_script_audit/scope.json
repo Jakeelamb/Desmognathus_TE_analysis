@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-13T20:39:59.873079+00:00",
+  "locator": {
+    "utc": "2026-10-13T20:33:51.026112+00:00",
+    "searched_roots": [
+      "/home/jake/Projects",
+      "/home/jake/Documents",
+      "/home/jake/Downloads",
+      "/home/jake/Desktop",
+      "/home/jake/.local/share/Trash/files"
+    ],
+    "maximum_depth": 7,
+    "excluded_directory_names": [
+      ".cache",
+      ".git",
+      ".next",
+      ".nuxt",
+      ".pixi",
+      ".venv",
+      "__pycache__",
+      "anaconda3",
+      "miniconda3",
+      "node_modules",
+      "site-packages",
+      "target",
+      "venv"
+    ],
+    "visited_directories": 73242,
+    "matches": [
+      {
+        "path": "/home/jake/Projects/Desmognathus_RPC_Results",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/Desmognathus_Results",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/Desmognathus_TE",
+        "git_metadata": true
+      },
+      {
+        "path": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "git_metadata": true
+      },
+      {
+        "path": "/home/jake/Projects/misc_desmog_scripts",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/Desmognathus_TE_Backup_OMarchy_safekeeping",
+        "git_metadata": true
+      },
+      {
+        "path": "/home/jake/Projects/.cleanup_backups/Desmognathus_TE_20260630_095932",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/.cleanup_backups/Desmognathus_TE_generated_20260630_100600",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193217",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193306",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/Projects/Desmognathus_TE_archive",
+        "git_metadata": true
+      },
+      {
+        "path": "/home/jake/Documents/01-Projects/Desmognathus",
+        "git_metadata": false
+      },
+      {
+        "path": "/home/jake/.local/share/Trash/files/.gstack/projects/Jakeelamb-Desmognathus_TE_analysis",
+        "git_metadata": false
+      }
+    ],
+    "errors": [],
+    "not_scanned": [
+      "remote SSHFS research-unrelated mount",
+      "/mnt/bernd-knowledge research-unrelated encrypted mount",
+      "browser profiles and chat histories",
+      "package/environment internals"
+    ]
+  },
+  "archive_manifest_entries": 35731,
+  "archive_manifest_sha256_matches_snapshot_summary": true,
+  "additional_git_repositories": [
+    {
+      "root": "/home/jake/Projects/Desmognathus_TE_archive",
+      "head_log": "7c235b808efc08117ffda246890e425e464fdb74 2026-07-14T12:44:46-07:00 research: finalize publication audit and 24-species analysis",
+      "early_original_job_revision_available": true
+    },
+    {
+      "root": "/home/jake/Projects/Desmognathus_TE_Backup_OMarchy_safekeeping",
+      "head_log": "9e57f62dbda9a0e4b5c50a1e79b96060aa8aa92f 2026-01-12T20:01:16-08:00 Add LICENSE and DATA_README.md",
+      "early_original_job_revision_available": false
+    },
+    {
+      "root": "/home/jake/Projects/Desmognathus_TE_Backup_OMarchy_safekeeping/Desmognathus_TE",
+      "head_log": "9e57f62dbda9a0e4b5c50a1e79b96060aa8aa92f 2026-01-12T20:01:16-08:00 Add LICENSE and DATA_README.md",
+      "early_original_job_revision_available": false
+    }
+  ],
+  "result_files_by_root": {
+    "/home/jake/Projects/Desmognathus_Results": 53,
+    "/home/jake/Projects/Desmognathus_RPC_Results": 36
+  },
+  "non_environment_files_by_extended_root": {
+    "/home/jake/Documents/01-Projects/Desmognathus": 15,
+    "/home/jake/Projects/.cleanup_backups/Desmognathus_TE_20260630_095932": 5888,
+    "/home/jake/Projects/.cleanup_backups/Desmognathus_TE_generated_20260630_100600": 10755
+  },
+  "additional_root_inspection": [
+    {
+      "root": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193217",
+      "files": 26,
+      "extensions": {
+        ".tsv": 6,
+        ".parquet": 4,
+        ".stderr": 8,
+        ".stdout": 8
+      },
+      "producer_filename_candidates": [],
+      "examples": [
+        {
+          "path": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193217/ratio/GCA_030180145.1.convert.stderr",
+          "bytes": 54,
+          "sha256": "167d46f79faf7cbea0ae88eb7a1f72b1a627c1f383f78d13a9b0544dcd068257",
+          "text_excerpt": "gt-ltr-tabout-to-parquet: wrote 240 rows in 1 batches\n"
+        },
+        {
+          "path": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193217/ratio/GCA_030180145.1.ratio.stderr",
+          "bytes": 68,
+          "sha256": "0d7b7005889aab48d0445b04510cac369d00e817bdad5da0c6a01865d07af5d2",
+          "text_excerpt": "gt-ltr-ectopic-ratio: wrote 240 rows; depth_rows=114 ratio_rows=114\n"
+        }
+      ]
+    },
+    {
+      "root": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193306",
+      "files": 215,
+      "extensions": {
+        ".tsv": 39,
+        ".parquet": 35,
+        ".stderr": 70,
+        ".stdout": 70,
+        ".txt": 1
+      },
+      "producer_filename_candidates": [],
+      "examples": [
+        {
+          "path": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193306/ratio/GCA_030180145.1.convert.stderr",
+          "bytes": 54,
+          "sha256": "167d46f79faf7cbea0ae88eb7a1f72b1a627c1f383f78d13a9b0544dcd068257",
+          "text_excerpt": "gt-ltr-tabout-to-parquet: wrote 240 rows in 1 batches\n"
+        },
+        {
+          "path": "/home/jake/Projects/genometools-ltr-rs/artifacts/desmognathus_ectopic_ratios_20260703T193306/ratio/GCA_030180145.1.ratio.stderr",
+          "bytes": 68,
+          "sha256": "0d7b7005889aab48d0445b04510cac369d00e817bdad5da0c6a01865d07af5d2",
+          "text_excerpt": "gt-ltr-ectopic-ratio: wrote 240 rows; depth_rows=114 ratio_rows=114\n"
+        }
+      ]
+    },
+    {
+      "root": "/home/jake/.local/share/Trash/files/.gstack/projects/Jakeelamb-Desmognathus_TE_analysis",
+      "files": 4,
+      "extensions": {
+        ".md": 1,
+        ".jsonl": 3
+      },
+      "producer_filename_candidates": [],
+      "examples": [
+        {
+          "path": "/home/jake/.local/share/Trash/files/.gstack/projects/Jakeelamb-Desmognathus_TE_analysis/checkpoints/20260724-125639-desmognathus-methods-te34-pause.md",
+          "bytes": 25550,
+          "sha256": "dda5be3b0128a3dbebb1753789543d860d7d31a31213bf56c5ff02d241966f46",
+          "text_excerpt": "---\nstatus: in-progress\nbranch: codex/largest-100-cells-exploration\ntimestamp: 2026-07-24T12:56:39-07:00\nfiles_modified:\n  - \"Publication/datasets/COLUMN_INVENTORY.csv\"\n  - \"Publication/datasets/DATASET_MANIFEST.csv\"\n  - \"Publication/datasets/NON_CSV_FILES.json\"\n  - \"Publication/datasets/Supplementary_Data_S01_species_analysis_availability.csv\"\n  - \"Publication/datasets/Supplementary_Data_S02_te_resource_panel34.csv\"\n  - \"Publication/datasets/Supplementary_Data_S03_cell_linked_panel21.csv\"\n  - \"Publication/datasets/Supplementary_Data_S04_integrated_path_panel18.csv\"\n  - \"Publication/datasets/Supplementary_Data_S18_frozen_cell_nucleus_objects.csv\"\n  - \"Publication/datasets/Supplementary_Data_S19_cell_nucleus_species_estimates.csv\"\n  - \"Publication/datasets/Supplementary_Data_S20_cell_mask_freeze_audit.csv\"\n  - \"Publication/datasets/Supplementary_Data_S21_frozen_nuclear_iod_objects.csv\"\n  - \"Publication/datasets/Supplementary_Data_S22_relative_nuclear_iod_species.csv\"\n  - \"Publication/datasets/Supplementary_Data_S23_relative_nuclear_iod_by_image.csv\"\n  - \"Publication/datasets/Supplementary_Data_S24_nuclear_iod_quality_balance.csv\"\n  - \"Publication/datasets/Supplementary_Data_S25_nuclear_iod_quality_diagnostics.csv\"\n  - \"Publication/datasets/Supplementary_Data_S26_pairwise_pgls_sensitivity.csv\"\n  - \"Publication/datasets/Supplementary_Data_S27_phylogeny_tip_crosswalk.csv\"\n  - \"Publ"
+        }
+      ]
+    }
+  ],
+  "negative_search_qualification": "Not found in these bounded local inventories and inspected source/history. Remote HPC, cloud storage, and unrelated mounts were not searched. No global absence claim.",
+  "additional_filename_search": {
+    "utc": "2026-10-13T20:42:19.554919+00:00",
+    "search_roots": [
+      "/home/jake/Projects",
+      "/home/jake/Documents",
+      "/home/jake/Downloads",
+      "/home/jake/Desktop"
+    ],
+    "unavailable_roots": [],
+    "argv": [
+      "rg",
+      "--files",
+      "--hidden",
+      "--no-ignore",
+      "-g",
+      "!**/.git/**",
+      "-g",
+      "!**/.pixi/**",
+      "-g",
+      "!**/.venv/**",
+      "-g",
+      "!**/venv/**",
+      "-g",
+      "!**/envs/**",
+      "-g",
+      "!**/node_modules/**",
+      "-g",
+      "!**/target/**",
+      "-g",
+      "!**/.cache/**",
+      "-g",
+      "!**/__pycache__/**",
+      "-g",
+      "!**/miniconda3/**",
+      "-g",
+      "!**/anaconda3/**",
+      "-g",
+      "!**/miniconda/**",
+      "-g",
+      "!**/anaconda/**",
+      "-g",
+      "!**/site-packages/**",
+      "-g",
+      "!**/.codex/**",
+      "-g",
+      "!**/.gstack/**",
+      "-g",
+      "!**/OptMem/**",
+      "-g",
+      "!**/codex-transcripts/**",
+      "/home/jake/Projects",
+      "/home/jake/Documents",
+      "/home/jake/Downloads",
+      "/home/jake/Desktop"
+    ],
+    "rg_exit": 0,
+    "rg_stderr": "",
+    "listed_file_count": 3047138,
+    "per_root_counts": {
+      "/home/jake/Projects": 1781928,
+      "/home/jake/Documents": 1259135,
+      "/home/jake/Downloads": 6071,
+      "/home/jake/Desktop": 4
+    },
+    "filename_pattern": "(repeatmodeler.*\\.sh$|.*dnapipeTE.*\\.sh$|.*repeat_mask.*\\.sh$|.*repeatmasker.*\\.sh$|808080\\.sh$|index_and_map\\.srun$|remove_mito\\.srun$|.*dedupe_telib.*|.*\\.(sif|img)$|.*DeepTE.*\\.sh$|.*TEclass.*\\.sh$|.*TEsorter.*\\.sh$|.*\\.(sbatch|slurm|srun)$)",
+    "bounds": "Filename-only accessible files under four roots, excluded environments/build caches/Git metadata/chat-history directories; no symlink following, no remote mounts or unrelated home roots. No content search of data or containers.",
+    "matching_filenames": 15,
+    "novel_filenames_outside_known_roots": 8,
+    "interpretation": {
+      "observation": "Eight novel matches are .img files under QEMU pc-bios and iDroid/Linux drivers paths in omarchy-ipod and ipodtouch. No novel job/script/library/container filename hits under research roots.",
+      "inference": "These filenames and owners indicate unrelated emulator/device firmware images, not Desmognathus Singularity images. Contents were not opened.",
+      "not_claimed": "No whole-computer absence claim; scope and exclusions are recorded."
+    },
+    "extra_desmognathus_producer_candidates_found": 0,
+    "local_full_receipt": ".git/hpc_script_audit_20261013/results/broad-filename-check.json"
+  }
+}

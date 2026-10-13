@@ -130,6 +130,13 @@ setup does not rerun dnaPipeTE, RepeatModeler, RepeatMasker, segmentation, or
 image review. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for available
 inputs and gaps. Historical `Dusky` and figure-only environments are not used.
 
+The [HPC source audit](docs/HPC_SCRIPT_AUDIT.md) recovered 12 historical job
+files from local Git history, plus command notes for preprocessing and TE
+classification. Seven job files add to the five previously recovered sources.
+Exact copies and checksums are retained as evidence. The custom TE library,
+container images, and complete job-to-output records remain unresolved; these
+historical files are not active Pixi tasks.
+
 ## Evidence boundaries
 
 - Conditional *D. fuscus* assembly-anchored genome size in pg/1C is the default

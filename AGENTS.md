@@ -24,9 +24,12 @@ UV and Conda setup instructions for local work.
 - Preserve hash-bound scientific scripts and historical runners. Check their
   manifests before editing them. The new Pixi Bonsai runner lives in
   `scripts/run_bonsai.py`; the historical shell runners remain evidence.
-- Missing HPC scripts, the custom TE library, raw microscopy inputs, and
-  upstream run provenance remain explicit reproducibility gaps. Do not invent
-  replacements or execute HPC discovery workflows during local setup.
+- Historical HPC job sources and command notes are indexed in
+  `docs/HPC_SCRIPT_AUDIT.md`. Their exact copies are provenance evidence, not
+  maintained Pixi tasks or proof of execution. The custom TE library, container
+  images, raw microscopy inputs, and complete upstream run linkage remain
+  reproducibility gaps. Do not invent replacements or execute HPC discovery
+  workflows during local setup.
 
 The verified platform is Linux x86-64 with glibc 2.39 or newer. Arial remains
 an external font prerequisite checked by the actual project font resolver.

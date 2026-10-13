@@ -150,10 +150,20 @@ retired analysis18 branches, old environments, and every pre-cleanup script and
 document. A per-file checksum manifest distinguishes irreplaceable HPC evidence
 from regenerable intermediates and historical worktree content.
 
-The full genomic pipeline cannot currently be claimed reproducible because the
-historical custom TE library `dedupe_telib.fasta` and complete HPC software/run
-provenance are absent. The archive preserves observed outputs rather than
-fabricating a rerun path.
+The [13 October 2026 HPC source audit](HPC_SCRIPT_AUDIT.md) recovered 12
+historical job files from local Git history. Five were already retained during
+submission preparation; seven additional exact copies and a command notebook
+are now preserved with [source identities and checksums](hpc_script_audit/manifest.json).
+The notebook includes fastp, classifier, Dfam and BAM-to-FASTQ examples, with
+transcription errors and settings that require reconciliation. Historical
+sources are evidence of configured commands, not proof that each retained
+output came from those commands, and are not maintained Pixi tasks.
+
+The full genomic pipeline cannot currently be claimed reproducible. The
+historical custom TE library `dedupe_telib.fasta` and container images were not
+located in the audited local trees; complete HPC runtime and job-to-output
+records remain unresolved. The archive preserves observed outputs. Recovery
+does not regenerate or alter those outputs.
 
 The canonical diversity table itself can be promoted from the frozen
 superfamily composition matrix with

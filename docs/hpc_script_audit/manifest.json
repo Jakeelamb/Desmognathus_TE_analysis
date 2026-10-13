@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-13T20:39:59.873079+00:00",
+  "active_source_head": "25c87c471848c7f1ac40fb4857d6855459c3ef64",
+  "preservation": "Exact source bytes; no recovered code executed or scientific output regenerated. Existing recovered_commands files reused unchanged. New copies stored with non-executable permissions.",
+  "deletion_revision": "d900a09592318790b4e9e5e4bb2730c1d57fc77f",
+  "records": [
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Calculate_depth.sh",
+      "git_blob": "7bfe1f02eb5647a9c13940c0495ab28687fadb49",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "9f30308b0706ef3698f4b29a505cf7f4d1fca85c54786c22a8758e98fb67d954",
+      "bytes": 4524,
+      "lines": 96,
+      "stored_path": "docs/hpc_script_audit/Calculate_depth.sh",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "LTR_pipeline.sh",
+      "git_blob": "76a564d557f59c15db5e2c26a52f4fa7d6bb1c32",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "b4ad86aa37b327ff5cfdfd99eee56c495a9e94548062240d3bec73bf42655ed0",
+      "bytes": 2319,
+      "lines": 69,
+      "stored_path": "outputs/submission_preparation_20261013/recovered_commands/LTR_pipeline.sh",
+      "already_recovered_before_audit": true,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Mass_map.sh",
+      "git_blob": "97dfb20d021ea7b1b7ae29ffea7b6ee78af5553c",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "15b4f835518a3850c09d0aa647d1bf4e83a913ae1e73d48885f0f10aca1376eb",
+      "bytes": 1502,
+      "lines": 50,
+      "stored_path": "outputs/submission_preparation_20261013/recovered_commands/Mass_map.sh",
+      "already_recovered_before_audit": true,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Projects/01_data_acquisition/index_and_map.srun",
+      "git_blob": "7f0dbd3659eaf6b6511abc1fbc8b82165395fe15",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "08aee26d3f42a053ae3cacc8977ba7e6ab500f73b8e6a2da40dc41e040c32ab2",
+      "bytes": 633,
+      "lines": 27,
+      "stored_path": "docs/hpc_script_audit/index_and_map.srun",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Projects/01_data_acquisition/remove_mito.srun",
+      "git_blob": "725ace6ff8520a70ffb0fce24ac7bd31a82465de",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "2193cdae0c2a4757a32ba259f494de2d07b961234f61a1787b59003919efae95",
+      "bytes": 531,
+      "lines": 21,
+      "stored_path": "docs/hpc_script_audit/remove_mito.srun",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Projects/02_Repeatlib_construction/808080.sh",
+      "git_blob": "70f57d9cadf8f05598bfe3da8736b956f892a959",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "21572ecc2a6685baa78128db5d46b6718980a6dddc7fe7ecc9f1b97b3ca76250",
+      "bytes": 441,
+      "lines": 14,
+      "stored_path": "docs/hpc_script_audit/808080.sh",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Projects/02_Repeatlib_construction/RepeatModeler_auto.sh",
+      "git_blob": "2063e615a0a417a2f3e66ee3efe6a39d5e8ce032",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "b5aeb6e43d12ddd52bc6d1d38404d30ced19149e4d0fba00085381c3990ea526",
+      "bytes": 680,
+      "lines": 22,
+      "stored_path": "docs/hpc_script_audit/RepeatModeler_auto.sh",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "Projects/02_Repeatlib_construction/dnaPipeTE.sh",
+      "git_blob": "738c7cece113ce03b34f7523bf2139431646fac1",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "f3ed508c844c55c9fb1d1be49f641a70b3acefdde0e6ebf810357293d46d4189",
+      "bytes": 4320,
+      "lines": 82,
+      "stored_path": "outputs/submission_preparation_20261013/recovered_commands/dnaPipeTE.sh",
+      "already_recovered_before_audit": true,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "combined_pipeline.sh",
+      "git_blob": "bb9dab4fa2c992eea69c4d5551763ba5534b0bff",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "81902840de7c095c0cff000632dabcb9d54225c9a89494f232340d1a3dfa5767",
+      "bytes": 2616,
+      "lines": 94,
+      "stored_path": "docs/hpc_script_audit/combined_pipeline.sh",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "large_repeat_mask.sh",
+      "git_blob": "40bdc81912a5bc642330a8455a32448d780fe95b",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "41651823682148bc11bb5e997b262bd0a945ff57cd1916e6b70cb65abc542988",
+      "bytes": 573,
+      "lines": 25,
+      "stored_path": "outputs/submission_preparation_20261013/recovered_commands/large_repeat_mask.sh",
+      "already_recovered_before_audit": true,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "ltr_digest.sh",
+      "git_blob": "b14bd505ec4cc8a07fac153865c33168ae55a928",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "d74faf48d9c7119db5b122423a7e34950d17b7721759ddc3bf06908875a4e80b",
+      "bytes": 1603,
+      "lines": 51,
+      "stored_path": "docs/hpc_script_audit/ltr_digest.sh",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_job_source",
+      "source_repository": "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+      "revision": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a",
+      "git_path": "repeat_mask.sh",
+      "git_blob": "4a5517e42a2970630490c406dd0a16e4b9947dfc",
+      "available_in_repositories": [
+        "/home/jake/Projects/Desmognathus_TE",
+        "/home/jake/Projects/Desmognathus_TE_official_bk_4_12_25_2pm",
+        "/home/jake/Projects/Desmognathus_TE_archive"
+      ],
+      "sha256": "aedc039ab036fced09a6fdee3c53a42ea8dbc4d2ccf8388e256b47eaa14775fc",
+      "bytes": 571,
+      "lines": 25,
+      "stored_path": "outputs/submission_preparation_20261013/recovered_commands/repeat_mask.sh",
+      "already_recovered_before_audit": true,
+      "executed_during_audit": false
+    },
+    {
+      "kind": "historical_command_notebook",
+      "source_path": "/home/jake/Documents/01-Projects/Desmognathus/dnaPipeTE.md",
+      "source_mtime_utc": "2026-02-13T18:36:02.884850+00:00",
+      "sha256": "14c315608f67e2830155c1957ffb09f9ac8fd885132e5535d70c82e347d71b78",
+      "bytes": 11082,
+      "lines": 325,
+      "stored_path": "docs/hpc_script_audit/dnaPipeTE.md",
+      "already_recovered_before_audit": false,
+      "executed_during_audit": false,
+      "qualification": "Documentation with prototype/parameter-scan code; not a verified production job or execution receipt."
+    }
+  ]
+}

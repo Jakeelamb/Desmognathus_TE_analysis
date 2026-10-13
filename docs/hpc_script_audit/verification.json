@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "verified_utc": "2026-10-13T20:41:26.005049+00:00",
+  "independent_review": "PASS",
+  "source_records": 13,
+  "historical_jobs": 12,
+  "already_retained_jobs": 5,
+  "additional_jobs_recovered": 7,
+  "source_copy_integrity": "All 13 stored records match SHA-256, byte count and line count. All 12 historical job sources match Git blobs in current, official-backup and archive repositories. Five existing recovered copies match the pre-audit HEAD. New copies are non-executable.",
+  "protected_entries_checked": 12282,
+  "additional_protected_changes": [],
+  "missing_protected_entries": [],
+  "added_protected_entries": [],
+  "preservation_comparison": "Prior accepted Pixi-migration state; the two report-template changes accepted before this audit are not audit changes. Scientific outputs, Methods and data unchanged.",
+  "recovered_code_executed": false,
+  "checks": [
+    {
+      "command": "make validate",
+      "exit_code": 0,
+      "result": "PASS: 43 publication tables; TE34=34; Path24=24; overlap=21; identity=PASS"
+    },
+    {
+      "command": "git diff --cached --check -- <authored documentation and registries>",
+      "exit_code": 0
+    }
+  ],
+  "full_local_receipt": ".git/hpc_script_audit_20261013/verification.json",
+  "acceptance_pass": true,
+  "historical_whitespace_preserved": {
+    "unfiltered_staged_diff_check_exit_code": 2,
+    "affected_source_copies": [
+      "docs/hpc_script_audit/combined_pipeline.sh",
+      "docs/hpc_script_audit/dnaPipeTE.md",
+      "docs/hpc_script_audit/index_and_map.srun",
+      "docs/hpc_script_audit/remove_mito.srun"
+    ],
+    "reason": "Original whitespace and trailing blank lines retained for exact historical source hashes. No authored-documentation whitespace errors."
+  }
+}
