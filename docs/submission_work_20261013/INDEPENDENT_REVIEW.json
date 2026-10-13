@@ -1,0 +1,169 @@
+{
+  "verdict": {
+    "local_implementation": "PASS",
+    "preservation": "PASS",
+    "submission_and_absolute_calibration": "UNQUALIFIED"
+  },
+  "observed_utc": "2026-10-13T22:05:25.924019+00:00",
+  "revision": {
+    "base_head": "d64f5a13981e1ff0edc2e30d66940110ac04be06",
+    "candidate": "final staged pre-landing tree",
+    "staged_files": 334,
+    "staged_bytes": 3840580,
+    "staged_manifest_sha256": "6a80fc7f0b397edb1548682cbb9e13fbb7fc6cd141dbcacca474b902fc6fb144",
+    "all_staged_blobs_match_reviewed_files": true,
+    "final_report_pins": {
+      "docs/submission_work_20261013/VERIFICATION.md": "546abe893d5567464d8b56e7d049e475f7ca7175003f9d266bdc5b9e783e5e1d",
+      "docs/submission_work_20261013/verification_receipts.json": "81c43f159ba37a18c215a3ea26ee9ebd783bc202c46edf4b240fc1883a057475",
+      "docs/REPRODUCIBILITY.md": "92f2bf29038a293c25e7f67ca9f5d9a3737421feaf7fb70b778386e11e0d2be6"
+    },
+    "source_pins": [
+      {
+        "path": "scripts/check_environment.py",
+        "bytes": 10746,
+        "sha256": "bb34815e0685596e80a2e3791ef5d4378ba2b645033603486a472edd55f32834"
+      },
+      {
+        "path": "scripts/run_bonsai.py",
+        "bytes": 13598,
+        "sha256": "348aedc7eb2cba660763f4caa39d75dc8d22cb7c68df4423df8fc0db9fec1b11"
+      },
+      {
+        "path": "scripts/microscopy/standard_qc.py",
+        "bytes": 29433,
+        "sha256": "92929357f76cad67243b63a26156f22b50c37515826e5b723170678333a753bf"
+      },
+      {
+        "path": "scripts/microscopy/standard_qc_source_pins.json",
+        "bytes": 27900,
+        "sha256": "d3bfed24e791e61836818572879177ed6b93c203f4b11b344d0881da6c305bfc"
+      },
+      {
+        "path": "scripts/publication/reconcile_specimen_records.py",
+        "bytes": 15167,
+        "sha256": "840f510ecbece164d9deb7d4458c1757198343c555ddc71efe097e70c1e1b605"
+      }
+    ],
+    "docx_sha256": "b4d16d01f5faf58edebfbdc2d3f979dffb2e044b827b04e1aa07ca3334897dc7"
+  },
+  "must_fix": [],
+  "protected_count_definition": {
+    "unique_total": 12282,
+    "scope_entries": 12278,
+    "included_root_dependency_snapshots": 4,
+    "root_snapshots_are_subset_of_unique_total": true,
+    "separate_snapshot_rechecks_are_redundant_checks": true
+  },
+  "observed_results": {
+    "final_make_test": "365 passed,11 skipped; exit0",
+    "dedicated_native_tests": "23 passed; one SciPy KS fallback warning",
+    "independent_bonsai_tests": "32 passed",
+    "independent_specimen_tests": "10 passed",
+    "lint_word_parity_and_adverse_environment_check": "PASS",
+    "preservation": "Only six authorized Methods files changed; no missing/added protected entries",
+    "standards": "47 original identities31/16;9/6 strict matches; unchanged40template/scalars; both balance checks fail; zero accepted matches",
+    "specimens": "97MVZ+47RAP fields retained;41/42 morphology+49/50IOD unique numeric candidates;3463 remains unmatched and distinct from3462;3518 comment retained",
+    "word": "Only document.xml/paragraphs33,42 changed; source parityPASS; all nine rendered pages independently inspected"
+  },
+  "exact_commands_and_results": [
+    {
+      "command": "PYTHONHOME=/foreign PYTHONPATH=/foreign R_LIBS_USER=/foreign R_PROFILE=/foreign make check-env",
+      "observed": "exit0; actual default Python/R/Cairo/Arial/overlay/lock check PASS"
+    },
+    {
+      "command": "make lint",
+      "observed": "exit0; All checks passed"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml --locked --no-install --clean-env bash -n scripts/activate_pixi.sh",
+      "observed": "exit0"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml --locked --no-install --clean-env python -B -m pytest -q -p no:cacheprovider tests/test_python_environment.py tests/test_methods_release.py tests/test_specimen_records.py tests/test_standard_qc.py",
+      "observed": "61passed,11native skips; separately exercised all native cases"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml -e image-qc --locked --no-install --clean-env --executable env STANDARD_QC_NATIVE=1 STANDARD_QC_PAPER_ROOT=/home/jake/Projects/Desmognathus_TE STANDARD_QC_CELL_ROOT=/home/jake/Projects/cellprofiler_test STANDARD_QC_ARCHIVE_ROOT=/home/jake/Projects/Desmognathus_TE_archive MPLCONFIGDIR=/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/standard_qc_test_mpl python -B -m pytest -q -p no:cacheprovider tests/test_standard_qc.py",
+      "observed": "23passed, one SciPy KS asymptotic fallback warning"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml --locked --no-install --clean-env python -B -m pytest -q -p no:cacheprovider tests/test_specimen_records.py",
+      "observed": "Final parser10passed in0.40s; real CLI double-run, identity collision and refusal controls"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml --locked --no-install --clean-env python -B -m pytest -q -p no:cacheprovider tests/test_bonsai_runner.py",
+      "observed": "Final fix32passed in2.89s"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml -e bonsai --locked --no-install --clean-env python -B -c 'from scripts.run_bonsai import require_pixi_environment, local_helper; require_pixi_environment(); local_helper(\"compare_bonsai_to_pca.py\", \"check\")'",
+      "observed": "Equivalent here-doc executed independently: guardPASS, genuine retained comparison exactly reproduced, nested default helperPASS"
+    },
+    {
+      "command": "pixi run --manifest-path /home/jake/Projects/Desmognathus_TE/pixi.toml --locked --no-install --clean-env python -B scripts/publication/build_methods_document.py --check",
+      "observed": "exit0; Word visible prose equals Markdown"
+    },
+    {
+      "command": "git diff --cached --check",
+      "observed": "exit0; repeated in final receipt capture"
+    }
+  ],
+  "negative_case": "Actual existing standard destination refused exit2; native rejection controls detected corrupted identities/template/scalars/nonfinite evidence, missing mask labels and false manual acceptance. Real clean-env Bonsai guard failed before fix and passed afterward.",
+  "final_full_suite_boundary": "Final full suite read from pinned coordinator raw log; verifier independently ran the initial full suite and reran affected checks after fixes; duplicate expensive final suite was explicitly prohibited.",
+  "log_pins": {
+    "maintained_make_test": {
+      "path": ".git/submission_gap_work_20261013/final-maintained-tests.log",
+      "bytes": 1042,
+      "sha256": "bdfa573bdb5148be1a08cbd5b5e0c57119d291bb5f03636ee6437c43d9152dca"
+    },
+    "native_image_qc": {
+      "path": ".git/submission_gap_work_20261013/final-native-tests.log",
+      "bytes": 608,
+      "sha256": "743bc17a48ef57ada6496d647e20098eb97bedc1c43ed477ef5342e234527feb"
+    },
+    "lint": {
+      "path": ".git/submission_gap_work_20261013/final-lint.log",
+      "bytes": 202,
+      "sha256": "aff1ee4212af445f2dc4a4a063af015d2ede0e91e900dddb6e7c7576ba847bba"
+    },
+    "word_markdown_parity": {
+      "path": ".git/submission_gap_work_20261013/final-methods-word.log",
+      "bytes": 435,
+      "sha256": "78d9fb00d1aa5a30c885c763ccc83ad0743eda2931ea546d5108d5ec48102d2a"
+    },
+    "image_qc_installed_packages": {
+      "path": ".git/submission_gap_work_20261013/final-image-qc-env.log",
+      "bytes": 222,
+      "sha256": "804f71eb98255d99c29ab4ef60a948330a87ba9fa95ff1e83f41e866bc09b583"
+    },
+    "bonsai_installed_packages": {
+      "path": ".git/submission_gap_work_20261013/final-bonsai-env.log",
+      "bytes": 217,
+      "sha256": "423c0c5c814a3d2c8845e0282b32e2b14b7c8403d69557387cdf314add64d897"
+    }
+  },
+  "evidence_paths": [
+    ".git/submission_gap_work_20261013/protected-baseline.json",
+    ".git/submission_gap_work_20261013/final-preservation.json",
+    ".git/submission_gap_work_20261013/final-maintained-tests.log",
+    ".git/submission_gap_work_20261013/final-native-tests.log",
+    ".git/submission_gap_work_20261013/full-tests.log",
+    ".git/submission_gap_work_20261013/standards_existing_destination_refusal.receipt.json",
+    ".git/submission_gap_work_20261013/bonsai-clean-env-before.log",
+    ".git/submission_gap_work_20261013/bonsai-clean-env-native.log",
+    ".git/submission_gap_work_20261013/render-receipt.json",
+    ".git/submission_gap_work_20261013/rendered/",
+    ".git/submission_gap_work_20261013/gallery_ui/receipt.md",
+    "docs/submission_work_20261013/standard_qc/receipt.json",
+    "docs/submission_work_20261013/specimen_records/audit_final/receipt.json",
+    "docs/submission_work_20261013/verification_receipts.json"
+  ],
+  "unproven": [
+    "Manual standard acceptance, photometric linearity, absolute-reference validity, anchor uncertainty and historical41-percent slide difference.",
+    "Source namespaces, intended3463record and3518source flag; author suspected transcription does not relabel measurements.",
+    "Original acquisition settings, legacy checkpoint-to-mask attribution, focal-tree calibration and complete HPC/library execution lineage.",
+    "Full segmentation, mask repair, upstream Bonsai refit/bootstrap or HPC producer execution were outside this audit.",
+    "Verifier inspected emitted gallery assets/export CSV; live browser actions were performed in the separately retained isolated-browser audit."
+  ],
+  "failed_observation_disclosure": "Initial full-suite and genuine environment failures retained. PyYAML probe corrected with locked ruamel; Bash-to-Ruff probe corrected with maintained lint/bash-n. Scope enumeration omitted four already-hashed root snapshots; fixed exact set definition. Independent initial raw suite output remains in transcript; retained coordinator logs cover initial/final failures/results.",
+  "verifier_changes": "Only assigned private verdict receipt; no implementation or acceptance-check edits"
+}
