@@ -1,0 +1,52 @@
+{
+  "verified_browser_account": "jakelamb74@gmail.com",
+  "inspection_date": "2026-10-13",
+  "throughput_checkpoint": "n/a, read-only investigation",
+  "target_image_rows": 51,
+  "designated_standard_rows": 2,
+  "retained_nuclei": 805,
+  "images_with_glass_records": 22,
+  "mapping_sha256": "085cee6d6a35ee4b7a1db0bd4058fde8f6664ea741199f5621b0805c9aa2f34d",
+  "author_confirmation_sha256": "14c82b6d07e272d7ba120bf8cca62cdc2422b32f017e0a75f82878dfc192efd5",
+  "local_inputs_unchanged": {
+    "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/STAINING_RUN_MAP_TO_COMPLETE.csv": "1fbdafd20d983e9bd201b9a0c57472b8ffeb0e407caaf45740139c00ae6dcf53",
+    "/home/jake/Projects/Desmognathus_TE/analyses/02_morphology/data/nuclear_iod_by_image.csv": "577cc0d074715a91a2304320b134d474c75bdd2f4e04b5d93ce321b0c3e32033",
+    "/home/jake/Projects/cellprofiler_test/master_image_metadata.csv": "bb164b21dfd5226a5e35879c4095ceb78474837b1510b05354fd165de4593629",
+    "/home/jake/Projects/cellprofiler_test/slide_glass_mapping.csv": "aef95aa3cb3a964cb19ff86a6bc5112f1057c747466ee220397478b238617d99"
+  },
+  "read_only_source_snapshots": [
+    {
+      "path": "Desmognathus_dataset_source_snapshot.xlsx",
+      "source_url": "https://docs.google.com/spreadsheets/d/1CaMYntCP1eDSa1kX297Y36b6hhb9Jcps_1SQqnE2M6E/edit",
+      "sha256": "79793579f5175f51db8a1b57dc31a7f839c39472a937aab30d1d627b57ae750c",
+      "format": "xlsx"
+    },
+    {
+      "path": "Desmognathus_GBE_manuscript_source_snapshot.md",
+      "source_url": "https://docs.google.com/document/d/1IKIZmB_hmDO3XcjcJsQnZ_HNOGnx8SBy6rlRPuDXxVc/edit",
+      "sha256": "79befa465d40173832e76dbc56c98a49f9bae4051a106452cb032e025dbdd97d",
+      "format": "md"
+    },
+    {
+      "path": "Cell_Stain_and_image_methodology_source_snapshot.md",
+      "source_url": "https://docs.google.com/document/d/1uTvZyVQs7ZlLS_MY44zNUgSO0yTtLN1wliRnJw7lfI0/edit",
+      "sha256": "06e85261b15cd29ca42a7f472623e64c2b1ddcc5faa2699873143a709f50ddb1",
+      "format": "md"
+    },
+    {
+      "path": "Staining_Procedure_source_snapshot.md",
+      "source_url": "https://docs.google.com/document/d/1JYC3_nhW3JNp66Th7hJNtBI5jL3G54xA4pPLNIQMd3Y/edit",
+      "sha256": "dc75104f4659e42474d987f14fcafdf6df1789a7b731af4594d97b163cf6bd08",
+      "format": "md"
+    },
+    {
+      "path": "Salamander_slides_Lab_Work_source_snapshot.xlsx",
+      "source_url": "https://docs.google.com/spreadsheets/d/1qmsaXn9pffPq68fphp9Wz5Tcvup43oas2AN8DKQh8QY/edit",
+      "sha256": "d9bf5ad6699877fae79caff98564d6fd1c16e442e641864d490f57cc776423b2",
+      "format": "xlsx"
+    }
+  ],
+  "export_limit": "Browser exports do not independently establish complete native comments, notes, formatting, or revision history.",
+  "cloud_writes_performed": false,
+  "calibration_validated": false
+}

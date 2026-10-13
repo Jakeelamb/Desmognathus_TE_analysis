@@ -1,0 +1,10 @@
+PASS: only frozen inputs were read; all seven SHA256 digests are unchanged after rendering.
+PASS: 10 primary classes; 24 species; relative weights sum to 1; only cell bridge passes global fit.
+PASS: three DAG members exactly match the source cell-bridge equivalence class; each of six arrows uses its matching direction-specific single-parent S28 regression.
+PASS: all six arrow widths are proportional to absolute beta; intervals match beta +/- 1.96 SE. Shared class weight is distinct from coefficients.
+PASS: cell-bridge d-separation P equals primary global-fit P with one independence claim.
+PASS: stability counts are 246/250, 24/24, 4/4, 200/200; all 200 tree fits also support nucleus bridge.
+PASS: focal and published-main 18-species fits both retain cell and nucleus bridges within delta CICc <= 2.
+PASS: all eight simulation settings retained, with 100 simulations each and recovery rates in [0,100].
+PASS: four S28 coefficient contrasts retained with unchanged 1.96-SE normal intervals and 24-species sample size.
+No analysis was refitted and no source data or original figures were edited.

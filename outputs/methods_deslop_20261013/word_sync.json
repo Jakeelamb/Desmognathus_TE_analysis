@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "baseline_paragraphs": 61,
+  "baseline_source": "/home/jake/Projects/Desmognathus_TE/outputs/methods_deslop_20261013/baseline/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md",
+  "final_paragraphs": 61,
+  "unchanged_paragraphs_preserved": 16,
+  "changed_package_parts": [
+    "word/document.xml"
+  ],
+  "styles_headers_footers_and_page_settings": "preserved byte-for-byte"
+}

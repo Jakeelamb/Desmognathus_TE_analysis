@@ -18,7 +18,10 @@ make test
 # Inspect every source alias, exact tree representative, and accession exception
 make identity
 
-# Reconstruct and formally verify the final TE34 PCA
+# Verify the publication-facing TE34 Bonsai representation and validation
+make te-bonsai
+
+# Reconstruct the retained supplementary PCA geometry audit
 make te-pca
 
 # See the compact data inventory
@@ -29,14 +32,17 @@ make report
 
 # Build the single indexed workbook of exact ggplot figure inputs
 make figure-data
+
+# Verify the author-edited Methods Word draft matches its Markdown companion
+make methods-word
 ```
 
 The active scientific contract is:
 
 - **TE34** — 34 species with vetted accession-linked genomic resources.
-- **Path24** — 24 species with finalized cell, nucleus, and relative nuclear-IOD
-  measurements.
-- **overlap21** — the exact intersection used for the descriptive TE–IOD
+- **Path24** — 24 species with finalized cell, nucleus, and conditional
+  genome-size estimates derived from nuclear IOD.
+- **overlap21** — the exact intersection used for the descriptive TE–genome-size
   comparison. The three Path24-only species are *D. brimleyorum*, *D.
   folkertsi*, and *D. ochrophaeus*; their TE values are not imputed.
 
@@ -44,8 +50,8 @@ The active scientific contract is:
 
 ```text
 analyses/
-  01_transposable_elements/   TE34 summaries, LTR proxy, and formal PCA audit
-  02_morphology/              reviewed objects, relative IOD, and provenance
+  01_transposable_elements/   TE34 summaries, Bonsai representation, LTR proxy, and PCA audit
+  02_morphology/              reviewed objects, IOD calibration, genome size, and provenance
   03_phylogenetic_path/       Path24 traits, trees, sensitivities, and R model
 data/
   identity/                   shared panels, taxonomy, accessions, and sources
@@ -64,7 +70,7 @@ figures without becoming a second data authority. The companion
 `Publication/Desmognathus_figure_review.Rmd` is a manifest-driven gallery for
 critiquing every current figure, legend, alt text, and final-size layout.
 `Publication/Desmognathus_figure_data.xlsx` is the single indexed workbook of
-the 19 non-tree CSV tables directly consumed by those figures. Tree inputs stay
+the 20 non-tree CSV tables directly consumed by those figures. Tree inputs stay
 under `Publication/datasets/` in Newick and reviewer-readable CSV formats rather
 than being forced into spreadsheet tabs. The workbook is a generated
 convenience view; the manifest-bound release files remain authoritative.
@@ -85,7 +91,10 @@ make identity
 # Refit the Path24 analysis quickly, writing disposable output under analyses/.../output
 make path-quick
 
-# Reconstruct the complete CLR/PCA audit trail and replay the formal structure audit
+# Verify the publication-facing Bonsai tree and strategy-localization artifacts
+make te-bonsai
+
+# Reconstruct the complete retained CLR/PCA audit trail
 make te-pca
 
 # Render the shareable study-data report
@@ -96,6 +105,9 @@ make figure-review
 
 # Build and verify the labeled multi-sheet figure-data workbook
 make figure-data
+
+# Verify the researcher-facing Methods DOCX and Markdown remain synchronized
+make methods-word
 
 # Rebuild the current GBE ggplot figures
 make figures
@@ -110,26 +122,37 @@ CRAN 1.3.1 source after Conda resolves the rest of the environment.
 
 ## Evidence boundaries
 
-- Relative nuclear IOD is an image-derived relative phenotype. It is not an
-  independently validated absolute genome size or C-value.
+- Conditional *D. fuscus* assembly-anchored genome size in pg/1C is the default
+  Path24 analysis trait. It is derived from nuclear IOD using the selected
+  16.1-Gbp assembly anchor, not measured by an independent genome-size assay or
+  validated as an absolute C-value. S21–S25 retain the underlying IOD
+  measurement, image-quality, and calibration provenance.
 - The LTR terminal:internal statistic is a mapping/deletion-footprint proxy. It
   is not a direct rate of ectopic recombination, solo-LTR formation, or DNA loss.
 - The Path24 models are exploratory phylogenetic association and sensitivity
   analyses. They do not uniquely establish causal direction.
-- The implemented Path24 fit currently contains relative nuclear IOD, nucleus
-  area, and cell area only. A potential final model integrating TE composition
-  and SVL has not yet been designed or fitted.
+- The implemented Path24 fit currently contains conditional genome size,
+  nucleus area, and cell area only. Positive IOD-to-pg rescaling leaves its
+  standardized fit unchanged. A potential final model integrating TE
+  composition and SVL has not yet been designed or fitted.
 - The two *D. orestes* dnaPipeTE runs are technical retries and are averaged
   with equal weight before species-level summaries.
+- Canonical TE diversity uses each species' ten most abundant positive
+  superfamilies, reclosed to one before natural-log Shannon and Gini-Simpson
+  calculation. Bonsai and the retained PCA audit instead use the same 24
+  superfamilies detected in all 34 species and the same unscaled CLR geometry;
+  these feature rules are intentionally separate from diversity.
 - The three-level `reproductive_strategy` field in the curated SVL/organismal
   table is expert-vetted from Alex Pyron's interpretation of the initial PCA.
   It is a post hoc descriptive trait, not an a priori test of PCA clustering,
   and it is not interchangeable with adult aquaticity.
-- The final 24-superfamily CLR composition has significant continuous
-  phylogenetic and post-hoc reproductive-strategy structure, but no k-means
-  solution passes the gap, silhouette, cluster-size, and resampling gates.
-  Candidate labels are retained only as rejected audit evidence; there are no
-  accepted biological PCA clusters.
+- The publication-facing Bonsai tree is a representation of TE-composition
+  similarity, not a species phylogeny. Its fixed fitted tree strongly localizes
+  post-hoc reproductive-strategy labels, but the exact aquatic-egg and
+  direct-development edges recur in only 27.5% and 35.0% of 200 bounded
+  feature-resampling refits. PCA remains a supplementary geometry and rejected-
+  clustering audit; neither method establishes causal or phylogenetically
+  independent trait association.
 - Only the public resource `SRX20497025 / GCA_032353935.1`, labelled *D.
   planiceps* by its source, is treated as *D. fuscus*. This accession-specific
   decision, the independent SVL aliases, and exact tree-tip selection are
@@ -146,14 +169,15 @@ replacement and deletion audit is in
 
 ## Publication surface
 
-`Publication/datasets/DATASET_MANIFEST.csv` is the authoritative S01–S40 index.
+`Publication/datasets/DATASET_MANIFEST.csv` is the authoritative S01–S43 index.
 `make publication` copies one canonical source into each supplement and updates
 its SHA-256, dimensions, column inventory, tree inventory, and release summary.
-`Publication/methods/METHODS_BULLET_SCAFFOLD.md` is the sole active factual
-Methods authority. Its Word-ready scaffold and narrative DOCX are synchronized
-working exports for review, not independent authorities or submission-final
-prose. Remaining author inputs must be resolved before the narrative is
-finalized.
+`Publication/methods/METHODS_BULLET_SCAFFOLD.md` is the internal factual Methods
+authority. The author-edited `MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx` and
+its synchronized Markdown companion provide the collaborator-facing narrative
+without audit tags, internal paths, or action-item placeholders. The verification
+target does not overwrite Word edits. Remaining author inputs are
+tracked separately and must be resolved before submission.
 
 The focal 46-tip collaborator tree is preserved, but its final source and
 calibration citation is still unresolved. That is a publication blocker, not a

@@ -143,6 +143,35 @@ def test_tree_uses_exact_representatives_without_suffix_stripping() -> None:
     assert {"fuscus_A", "fuscus_E", "orestes_B", "planiceps"}.isdisjoint(released_tips)
 
 
+def test_identity_panels_use_genome_size_as_the_analysis_default() -> None:
+    path24 = pd.read_csv(ROOT / "data/identity/path24_panel.csv", dtype=str)
+    te34 = pd.read_csv(ROOT / "data/identity/te34_panel.csv", dtype=str)
+
+    for panel in (path24, te34):
+        assert "has_finalized_genome_size" in panel.columns
+        assert "has_finalized_genome_iod" not in panel.columns
+        assert not panel["decision_basis"].str.contains("IOD", case=False).any()
+
+    expected_role = "finalized_cell_nucleus_genome_phylogenetic_path"
+    assert set(path24["analysis_role"]) == {expected_role}
+    assert set(path24["has_finalized_genome_size"]) == {"True"}
+    assert te34["has_finalized_genome_size"].equals(te34["path_analysis_panel24_v1"])
+
+
+def test_identity_audit_rejects_restored_iod_panel_defaults(tmp_path: Path) -> None:
+    copy_identity_inputs(tmp_path)
+
+    path24_path = tmp_path / "data/identity/path24_panel.csv"
+    path24 = pd.read_csv(path24_path, dtype=str)
+    path24["analysis_role"] = "finalized_cell_nucleus_iod_phylogenetic_path"
+    path24.loc[0, "decision_basis"] = "legacy finalized microscopy/IOD record"
+    path24.to_csv(path24_path, index=False)
+
+    errors = audit_errors_for(tmp_path)
+    assert any(error.startswith("[PATH_PANEL_ROLE_MISMATCH]") for error in errors)
+    assert any(error.startswith("[PANEL_DEFAULT_IOD_LEAK]") for error in errors)
+
+
 def test_identity_audit_rejects_species_to_tip_swaps(tmp_path: Path) -> None:
     copy_identity_inputs(tmp_path)
 

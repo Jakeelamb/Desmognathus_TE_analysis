@@ -1,0 +1,24 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--no-sync",
+    "--python",
+    "3.13",
+    "python",
+    "-m",
+    "pytest",
+    "tests/test_methods_release.py",
+    "tests/test_repository.py",
+    "tests/test_path_dag_reference.py",
+    "-q"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:12:29.158509+00:00",
+  "completed_at": "2026-10-13T16:12:35.689850+00:00",
+  "elapsed_seconds": 6.531,
+  "exit_code": 1,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/methods-targeted.log",
+  "raw_log_sha256": "ceeea21e4337c550e6f023498df60ed28cdc42dcc7bc84437ee504b890a434d0"
+}

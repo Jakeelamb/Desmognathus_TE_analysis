@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "sheets": 5,
+  "rows": [
+    8,
+    19,
+    24,
+    37,
+    19
+  ],
+  "species_union": 37,
+  "integrated_overlap": 21,
+  "paired_objects": 1152,
+  "iod_objects": 805,
+  "no_statistics_refitted": true
+}

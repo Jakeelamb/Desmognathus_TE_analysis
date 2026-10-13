@@ -1,0 +1,54 @@
+[
+  {
+    "figure": 1,
+    "drawings": 4,
+    "all_three_formats": true,
+    "embedded_arial": true,
+    "source_files_byte_identical": 4,
+    "no_deprecated_genome_label": true,
+    "collage_width_mm": 180.0,
+    "collage_height_mm": 225.0,
+    "CMYK_300dpi_TIFFs": 4,
+    "visual_review": "All four collages inspected; isolated Figure 3 labels moved into two readable columns; isolated Figure 4 labels inspected.",
+    "minimum_pdf_text_size_pt_lower_bound_poppler_zoom3": 7.5
+  },
+  {
+    "figure": 2,
+    "drawings": 5,
+    "all_three_formats": true,
+    "embedded_arial": true,
+    "source_files_byte_identical": 13,
+    "no_deprecated_genome_label": true,
+    "collage_width_mm": 180.0,
+    "collage_height_mm": 245.0,
+    "CMYK_300dpi_TIFFs": 5,
+    "visual_review": "All four collages inspected; isolated Figure 3 labels moved into two readable columns; isolated Figure 4 labels inspected.",
+    "minimum_pdf_text_size_pt_lower_bound_poppler_zoom3": 7.5
+  },
+  {
+    "figure": 3,
+    "drawings": 3,
+    "all_three_formats": true,
+    "embedded_arial": true,
+    "source_files_byte_identical": 4,
+    "no_deprecated_genome_label": true,
+    "collage_width_mm": 180.0,
+    "collage_height_mm": 110.0,
+    "CMYK_300dpi_TIFFs": 3,
+    "visual_review": "All four collages inspected; isolated Figure 3 labels moved into two readable columns; isolated Figure 4 labels inspected.",
+    "minimum_pdf_text_size_pt_lower_bound_poppler_zoom3": 7.5
+  },
+  {
+    "figure": 4,
+    "drawings": 3,
+    "all_three_formats": true,
+    "embedded_arial": true,
+    "source_files_byte_identical": 7,
+    "no_deprecated_genome_label": true,
+    "collage_width_mm": 180.0,
+    "collage_height_mm": 245.0,
+    "CMYK_300dpi_TIFFs": 3,
+    "visual_review": "All four collages inspected; isolated Figure 3 labels moved into two readable columns; isolated Figure 4 labels inspected.",
+    "minimum_pdf_text_size_pt_lower_bound_poppler_zoom3": 7.5
+  }
+]

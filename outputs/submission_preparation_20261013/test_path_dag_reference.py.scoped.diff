@@ -1,0 +1,34 @@
+--- baseline/tests/test_path_dag_reference.py
++++ tests/test_path_dag_reference.py
+@@ -62,10 +62,6 @@
+     assert "record_auxiliary_figure(" in block
+     assert 'node_label = c("Genome\\nsize", "Nucleus\\narea", "Cell\\narea")' in block
+     assert '"Relative\\nIOD"' not in block
+-    assert "conditional D. fuscus assembly-anchored pg/1C estimate" in block
+-    assert "not a direct species C-value" in block
+-    assert "Arrows are not unique within classes" in block
+-    assert "saturated class (6 members) unscored" in block
+     for model in REPRESENTATIVES:
+         assert f'"{model}"' in block
+ 
+@@ -130,8 +126,18 @@
+             identical(sort(points$x), c(.15, .5, .85)),
+             identical(sort(points$y), c(.23, .23, .78)))
+ }
+-stopifnot(grepl("Arrows are not unique within classes", Path_DAG_reference$labels$caption,
+-               fixed=TRUE))
++caption <- tolower(Path_DAG_reference$labels$caption)
++stopifnot(grepl("d. fuscus", caption, fixed=TRUE),
++          grepl("assembly-anchored", caption, fixed=TRUE),
++          grepl("pg/1c", caption, fixed=TRUE),
++          grepl("not a direct species c-value", caption, fixed=TRUE),
++          grepl("arrows are not unique within classes", caption, fixed=TRUE),
++          grepl("saturated class (6 members) unscored", caption, fixed=TRUE))
++traits <- read_supp("Supplementary_Data_S04_path_analysis_traits24.csv")
++stopifnot(nrow(traits) == 24L,
++          all(grepl("derived from nuclear IOD", traits$genome_size_definition, fixed=TRUE)),
++          all(grepl("conditional D. fuscus assembly-anchored", traits$genome_size_definition,
++                    fixed=TRUE)))
+ '''
+     result = subprocess.run(
+         [str(ROOT / "scripts/run_r.sh"), "Rscript", "-e", code],

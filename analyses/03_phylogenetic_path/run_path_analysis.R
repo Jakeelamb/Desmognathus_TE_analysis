@@ -2,8 +2,9 @@
 
 # Exhaustive three-trait phylogenetic path analysis for the frozen microscopy panel.
 #
-# The analysis ranks all ten testable Markov-equivalence classes on relative
-# nuclear IOD, nucleus size, and cell size. The eleventh (saturated) class has no d-separation
+# The analysis ranks all ten testable Markov-equivalence classes on conditional
+# D. fuscus-assembly-anchored genome size, nucleus size, and cell size. The
+# eleventh (saturated) class has no d-separation
 # claim and therefore cannot be scored by confirmatory phylogenetic path analysis.
 
 prefer_active_conda_r_library <- function() {
@@ -113,18 +114,18 @@ dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
 alpha <- 0.05
 competitive_delta <- 2
-node_labels <- c(i = "relative_iod", n = "nucleus_size", c = "cell_size")
+node_labels <- c(g = "genome_size", n = "nucleus_size", c = "cell_size")
 model_order <- c(
   "independent",
-  "iod_nucleus_only",
+  "genome_nucleus_only",
   "nucleus_cell_only",
-  "iod_cell_only",
+  "genome_cell_only",
   "nucleus_bridge",
   "nucleus_collider",
   "cell_bridge",
   "cell_collider",
-  "iod_bridge",
-  "iod_collider"
+  "genome_bridge",
+  "genome_collider"
 )
 
 zscore <- function(values) {
@@ -156,12 +157,15 @@ prune_tree <- function(tree, tips) {
 
 validate_traits <- function(source, expected_species = NULL) {
   required <- c(
-    "species", "tree_tip", "relative_iod_index", "nucleus_area_um2", "cell_area_um2"
+    "species", "tree_tip", "genome_size_pg_fuscus_anchored",
+    "nucleus_area_um2", "cell_area_um2"
   )
   missing <- setdiff(required, colnames(source))
   if (length(missing)) stop("Trait input is missing columns: ", paste(missing, collapse = ", "))
   if (anyDuplicated(source$tree_tip)) stop("Trait input contains duplicate species")
-  numeric <- source[, c("relative_iod_index", "nucleus_area_um2", "cell_area_um2")]
+  numeric <- source[, c(
+    "genome_size_pg_fuscus_anchored", "nucleus_area_um2", "cell_area_um2"
+  )]
   if (any(!is.finite(as.matrix(numeric))) || any(as.matrix(numeric) <= 0)) {
     stop("All modeled trait values must be finite and positive")
   }
@@ -176,7 +180,7 @@ prepare_model_data <- function(source, tree) {
   validate_traits(source)
   current_tree <- prune_tree(tree, source$tree_tip)
   data <- data.frame(
-    i = zscore(log10(source$relative_iod_index)),
+    g = zscore(log10(source$genome_size_pg_fuscus_anchored)),
     n = zscore(log10(source$nucleus_area_um2)),
     c = zscore(log10(source$cell_area_um2)),
     row.names = source$tree_tip,
@@ -189,37 +193,37 @@ prepare_model_data <- function(source, tree) {
 exhaustive_model_set <- function() {
   define_model_set(
     independent = c(),
-    iod_nucleus_only = c(n ~ i),
+    genome_nucleus_only = c(n ~ g),
     nucleus_cell_only = c(c ~ n),
-    iod_cell_only = c(c ~ i),
-    nucleus_bridge = c(n ~ i, c ~ n),
-    nucleus_collider = c(n ~ i + c),
-    cell_bridge = c(c ~ i, n ~ c),
-    cell_collider = c(c ~ i + n),
-    iod_bridge = c(i ~ n, c ~ i),
-    iod_collider = c(i ~ n + c)
+    genome_cell_only = c(c ~ g),
+    nucleus_bridge = c(n ~ g, c ~ n),
+    nucleus_collider = c(n ~ g + c),
+    cell_bridge = c(c ~ g, n ~ c),
+    cell_collider = c(c ~ g + n),
+    genome_bridge = c(g ~ n, c ~ g),
+    genome_collider = c(g ~ n + c)
   )
 }
 
 user_mechanism_model_set <- function() {
   define_model_set(
-    iod_to_nucleus_to_cell = c(n ~ i, c ~ n),
-    cell_to_nucleus_to_iod = c(n ~ c, i ~ n),
-    nucleus_to_iod_and_cell = c(i ~ n, c ~ n)
+    genome_to_nucleus_to_cell = c(n ~ g, c ~ n),
+    cell_to_nucleus_to_genome = c(n ~ c, g ~ n),
+    nucleus_to_genome_and_cell = c(g ~ n, c ~ n)
   )
 }
 
 single_mechanism_model_set <- function(mechanism) {
   switch(
     mechanism,
-    iod_to_nucleus_to_cell = define_model_set(
-      iod_to_nucleus_to_cell = c(n ~ i, c ~ n)
+    genome_to_nucleus_to_cell = define_model_set(
+      genome_to_nucleus_to_cell = c(n ~ g, c ~ n)
     ),
-    cell_to_nucleus_to_iod = define_model_set(
-      cell_to_nucleus_to_iod = c(n ~ c, i ~ n)
+    cell_to_nucleus_to_genome = define_model_set(
+      cell_to_nucleus_to_genome = c(n ~ c, g ~ n)
     ),
-    nucleus_to_iod_and_cell = define_model_set(
-      nucleus_to_iod_and_cell = c(i ~ n, c ~ n)
+    nucleus_to_genome_and_cell = define_model_set(
+      nucleus_to_genome_and_cell = c(g ~ n, c ~ n)
     ),
     stop("Unknown user mechanism: ", mechanism)
   )
@@ -390,15 +394,15 @@ matrix_edges <- function(fitted_dag, mechanism) {
 fit_phylogenetic_regressions <- function(source, tree, evolutionary_model = "lambda") {
   prepared <- prepare_model_data(source, tree)
   specifications <- list(
-    iod_to_nucleus = n ~ i,
-    nucleus_to_iod = i ~ n,
-    iod_to_cell = c ~ i,
-    cell_to_iod = i ~ c,
+    genome_to_nucleus = n ~ g,
+    nucleus_to_genome = g ~ n,
+    genome_to_cell = c ~ g,
+    cell_to_genome = g ~ c,
     nucleus_to_cell = c ~ n,
     cell_to_nucleus = n ~ c,
-    iod_and_nucleus_to_cell = c ~ i + n,
-    iod_and_cell_to_nucleus = n ~ i + c,
-    nucleus_and_cell_to_iod = i ~ n + c
+    genome_and_nucleus_to_cell = c ~ g + n,
+    genome_and_cell_to_nucleus = n ~ g + c,
+    nucleus_and_cell_to_genome = g ~ n + c
   )
   rows <- list()
   for (relation_id in names(specifications)) {
@@ -437,8 +441,8 @@ fit_phylogenetic_regressions <- function(source, tree, evolutionary_model = "lam
 
 raw_correlations <- function(source) {
   specifications <- list(
-    iod_nucleus = c("relative_iod_index", "nucleus_area_um2"),
-    iod_cell = c("relative_iod_index", "cell_area_um2"),
+    genome_nucleus = c("genome_size_pg_fuscus_anchored", "nucleus_area_um2"),
+    genome_cell = c("genome_size_pg_fuscus_anchored", "cell_area_um2"),
     nucleus_cell = c("nucleus_area_um2", "cell_area_um2")
   )
   rows <- list()
@@ -540,28 +544,28 @@ simulate_traits <- function(tree, generating_class, residual_regime, coefficient
     zscore(beta * parent + sqrt(max(1 - beta^2, 0.05)) * error)
   }
   if (generating_class == "independent") {
-    iod <- first
+    genome <- first
     n <- second_error
     c <- third_error
   } else if (generating_class == "nucleus_bridge") {
-    iod <- first
-    n <- combine(iod, second_error, coefficients[["iod_to_nucleus"]])
+    genome <- first
+    n <- combine(genome, second_error, coefficients[["genome_to_nucleus"]])
     c <- combine(n, third_error, coefficients[["nucleus_to_cell"]])
   } else if (generating_class == "cell_bridge") {
-    iod <- first
-    c <- combine(iod, second_error, coefficients[["iod_to_cell"]])
+    genome <- first
+    c <- combine(genome, second_error, coefficients[["genome_to_cell"]])
     n <- combine(c, third_error, coefficients[["cell_to_nucleus"]])
-  } else if (generating_class == "iod_bridge") {
+  } else if (generating_class == "genome_bridge") {
     n <- first
-    iod <- combine(n, second_error, coefficients[["nucleus_to_iod"]])
-    c <- combine(iod, third_error, coefficients[["iod_to_cell"]])
+    genome <- combine(n, second_error, coefficients[["nucleus_to_genome"]])
+    c <- combine(genome, third_error, coefficients[["genome_to_cell"]])
   } else {
     stop("Unknown simulation generating class: ", generating_class)
   }
   tibble(
     species = paste0("D. ", tree$tip.label),
     tree_tip = tree$tip.label,
-    relative_iod_index = 10^iod,
+    genome_size_pg_fuscus_anchored = 10^genome,
     nucleus_area_um2 = 10^n,
     cell_area_um2 = 10^c
   )
@@ -599,7 +603,7 @@ standardized_traits <- primary$prepared$data %>%
   as.data.frame() %>%
   rownames_to_column("tree_tip") %>%
   rename(
-    relative_iod_log10_z = i,
+    genome_size_log10_z = g,
     nucleus_area_log10_z = n,
     cell_area_log10_z = c
   ) %>%
@@ -628,9 +632,9 @@ if (max(mechanism_comparison$ranking$CICc) - min(mechanism_comparison$ranking$CI
 mechanism_edges <- list()
 mechanism_failures <- list()
 for (mechanism in c(
-  "iod_to_nucleus_to_cell",
-  "cell_to_nucleus_to_iod",
-  "nucleus_to_iod_and_cell"
+  "genome_to_nucleus_to_cell",
+  "cell_to_nucleus_to_genome",
+  "nucleus_to_genome_and_cell"
 )) {
   result <- fit_path(
     traits,
@@ -753,9 +757,9 @@ tree_sensitivity <- fit_many(tree_specs, "Tree/species-set sensitivity")
 cat("Running actual-tree small-sample simulation calibration...\n")
 coefficient_lookup <- pairwise %>%
   filter(.data$relation_id %in% c(
-    "iod_to_nucleus",
-    "nucleus_to_iod",
-    "iod_to_cell",
+    "genome_to_nucleus",
+    "nucleus_to_genome",
+    "genome_to_cell",
     "nucleus_to_cell",
     "cell_to_nucleus"
   )) %>%
@@ -763,7 +767,7 @@ coefficient_lookup <- pairwise %>%
   summarize(value = .data$standardized_coefficient[[1]], .groups = "drop")
 coefficients <- setNames(coefficient_lookup$value, coefficient_lookup$relation_id)
 required_coefficients <- c(
-  "iod_to_nucleus", "nucleus_to_iod", "iod_to_cell",
+  "genome_to_nucleus", "nucleus_to_genome", "genome_to_cell",
   "nucleus_to_cell", "cell_to_nucleus"
 )
 if (!all(required_coefficients %in% names(coefficients))) {
@@ -772,7 +776,7 @@ if (!all(required_coefficients %in% names(coefficients))) {
 
 set.seed(options$seed)
 simulation_specs <- list()
-simulation_classes <- c("independent", "nucleus_bridge", "cell_bridge", "iod_bridge")
+simulation_classes <- c("independent", "nucleus_bridge", "cell_bridge", "genome_bridge")
 simulation_tree <- prune_tree(focal_tree, traits$tree_tip)
 for (regime in options$simulation_regimes) {
   for (generating_class in simulation_classes) {
@@ -838,7 +842,7 @@ write_csv(simulation_summary, file.path(output_dir, "simulation_summary.csv"))
 write_csv(all_failures, file.path(output_dir, "analysis_failures.csv"))
 
 manifest <- list(
-  analysis_id = "cell_nucleus_iod_phylogenetic_path_analysis_v1",
+  analysis_id = "cell_nucleus_genome_phylogenetic_path_analysis_v2",
   generated_at_utc = format(Sys.time(), tz = "UTC", usetz = TRUE),
   run_scope = if (quick_mode) "quick_validation" else "full_release",
   primary_species = nrow(traits),
@@ -851,10 +855,12 @@ manifest <- list(
   alpha = alpha,
   competitive_delta_cicc = competitive_delta,
   trait_transformation = "log10 then sample z-score within every fit",
-  relative_iod_units = "relative image-derived nuclear IOD index",
-  iod_calibration_note = paste(
+  genome_size_units = "conditional D. fuscus assembly-anchored pg/1C",
+  genome_size_calibration_note = paste(
+    "Genome-size estimates are derived from nuclear IOD using the 16.1-Gbp",
+    "D. fuscus assembly anchor (16.462167689 pg/1C), not measured C-values.",
     "A shared positive scale factor does not change standardized log-scale",
-    "path results; image-derived IOD measurement uncertainty does."
+    "path results; measurement uncertainty does."
   ),
   measurement_bootstrap_replicates = length(measurement_ids),
   leave_one_out_fits = length(loo_specs),
@@ -878,7 +884,9 @@ manifest <- list(
   path_results_are_exploratory = TRUE,
   causal_direction_identified = FALSE,
   user_mechanisms_markov_equivalent = TRUE,
-  common_user_mechanism_basis_claim = "relative_iod independent of cell_size conditional on nucleus_size"
+  common_user_mechanism_basis_claim = paste(
+    "genome_size independent of cell_size conditional on nucleus_size"
+  )
 )
 write_json(
   manifest,
@@ -888,7 +896,7 @@ write_json(
   digits = 12
 )
 
-cat("Completed exhaustive cell–nucleus–iod path analysis.\n")
+cat("Completed exhaustive cell–nucleus–genome-size path analysis.\n")
 cat("Primary top models:\n")
 print(select(head(primary$ranking, 3), model, p, CICc, delta_CICc, w))
 cat("Failures:", nrow(all_failures), "\n")

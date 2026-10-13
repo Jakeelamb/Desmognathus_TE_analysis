@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "n_te": 34,
+  "n_integration": 21,
+  "no_imputation": true,
+  "excluded_missing_te": ["brimleyorum", "folkertsi", "ochrophaeus"],
+  "source_snapshots_unchanged": true,
+  "canonical_landscape_matches_frozen": true,
+  "all_bins_in_ltr_denominator": true,
+  "no_pseudocount_needed": true,
+  "maximum_denominator_identity_error": 6.9389e-18,
+  "maximum_independent_GLS_coefficient_error": 1.1813e-13,
+  "all_coefficients_and_predictions_verified": true,
+  "group_n": {
+    "aquatic_eggs": 7,
+    "terrestrial_eggs_aquatic_larvae": 24,
+    "direct_development": 3
+  },
+  "configured_sample_bp": 1500000000,
+  "phylolm_version": "2.6.5",
+  "n_warning_occurrences": 8
+}

@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "pdf_count": 8,
+  "figures": [
+    {
+      "file": "figures/figure_11/Figure_11_manuscript_candidate.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 843
+    },
+    {
+      "file": "figures/figure_11/panels/Figure_11a_isolated.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 565
+    },
+    {
+      "file": "figures/figure_11/panels/Figure_11b_isolated.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 235
+    },
+    {
+      "file": "figures/figure_11/panels/Figure_11c_isolated.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 276
+    },
+    {
+      "file": "figures/figure_12/Figure_12_manuscript_candidate.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 1252
+    },
+    {
+      "file": "figures/figure_12/panels/Figure_12a_isolated.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 792
+    },
+    {
+      "file": "figures/figure_12/panels/Figure_12b_isolated.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 216
+    },
+    {
+      "file": "figures/figure_12/panels/Figure_12c_isolated.pdf",
+      "png_tif_present": true,
+      "Arial": true,
+      "text_length": 249
+    }
+  ]
+}

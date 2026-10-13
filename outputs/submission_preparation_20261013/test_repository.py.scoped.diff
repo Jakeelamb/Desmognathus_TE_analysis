@@ -1,0 +1,56 @@
+--- baseline/tests/test_repository.py
++++ tests/test_repository.py
+@@ -8,6 +8,8 @@
+ 
+ import numpy as np
+ import pandas as pd
++
++from scripts.project import SUPPLEMENT_SOURCES, TREE_SOURCES
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ 
+@@ -30,7 +32,6 @@
+         "results",
+         "path_analysis",
+         "notebooks",
+-        "outputs",
+         "plans",
+         "Dusky.yml",
+         "paths.yaml",
+@@ -38,6 +39,36 @@
+     assert all((ROOT / path).exists() for path in required)
+     assert not any((ROOT / path).exists() for path in forbidden)
+     assert not (ROOT / "analyses/01_transposable_elements/output").exists()
++
++
++def test_isolated_review_outputs_remain_separate_from_canonical_sources() -> None:
++    outputs = (ROOT / "outputs").resolve()
++    canonical_sources = [*SUPPLEMENT_SOURCES.values()]
++    canonical_sources.extend(record[0] for record in TREE_SOURCES.values())
++    manifest = pd.read_csv(ROOT / "Publication/datasets/DATASET_MANIFEST.csv")
++    canonical_sources.extend(manifest["source_path"])
++    for dependencies in manifest["additional_source_paths"]:
++        canonical_sources.extend(json.loads(dependencies))
++    canonical_sources.extend(pd.read_csv(ROOT / "data/DATA_CATALOG.csv")["path"])
++    for relative in canonical_sources:
++        source = (ROOT / relative).resolve()
++        assert source.is_file(), relative
++        assert not source.is_relative_to(outputs), relative
++
++    review = outputs / "manuscript_polished_20260924_01"
++    frozen_inputs = (review / "inputs/source_run").resolve()
++    assert frozen_inputs.is_dir()
++    assert frozen_inputs.is_relative_to(outputs)
++    figure_manifests = list((review / "figures").glob("*/FIGURE_MANIFEST.csv"))
++    assert len(figure_manifests) == 8
++    for figure_manifest in figure_manifests:
++        figures = pd.read_csv(figure_manifest)
++        assert len(figures) == 1
++        for field in ("pdf", "png", "tiff"):
++            artifact = (figure_manifest.parent / figures.iloc[0][field]).resolve()
++            assert artifact.is_file(), artifact
++            assert artifact.is_relative_to(outputs), artifact
++            assert not artifact.is_relative_to(frozen_inputs), artifact
+ 
+ 
+ def test_repository_validator() -> None:

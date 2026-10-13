@@ -1,0 +1,7 @@
+panel,relation_id,equation,outcome,response,term,predictor,standardized_coefficient,standard_error,ci_low,ci_high,t_value,p_value,fitted_phylogenetic_parameter,lambda_boundary,n_species,n_regression_coefficients,residual_df,r_squared,interval_method,standardization,y,row_label,includes_zero,beta_label
+full24,genome_to_cell_body_adjusted,c ~ g + b,cell_size,c,g,genome_size,0.5453794365491734,0.16992804124175268,0.1919947293753684,0.8987641437229785,3.2094728601812976,0.00420993000318994,9.999999999999994e-8,TRUE,24,3,21,0.5798141559556921,t: n minus regression coefficient count,full24 log10 mean and sample SD,3,"Genome → cell
++ body length",FALSE,0.55
+full24,genome_and_cell_to_nucleus_body_adjusted,n ~ g + c + b,nucleus_size,n,g,genome_size,0.05058352519534526,0.2634300005667812,-0.4989218269001862,0.6000888772908768,0.1920188478400812,0.8496636557165945,9.999999999999994e-8,TRUE,24,4,20,0.3547656577771875,t: n minus regression coefficient count,full24 log10 mean and sample SD,1,"Genome → nucleus
++ cell, body length",TRUE,0.05
+full24,genome_and_cell_to_nucleus_body_adjusted,n ~ g + c + b,nucleus_size,n,c,cell_size,0.6523756966402472,0.2770913988647417,0.07437316705662989,1.2303782262238645,2.354370071799649,0.02888585560137274,9.999999999999994e-8,TRUE,24,4,20,0.3547656577771875,t: n minus regression coefficient count,full24 log10 mean and sample SD,2,"Cell → nucleus
++ genome, body length",FALSE,0.65

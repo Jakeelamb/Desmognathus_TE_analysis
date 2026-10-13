@@ -1,0 +1,5 @@
+Display-only assertions passed:
+Three H5 edges and three explicitly conditioned regression checks retain all 24 species.
+All 16 primary-order candidate weights displayed; weights sum to one within each cohort.
+All four enumerated H5 orientations displayed; four distinct roots verified.
+No fitting or resampling functions called; all fitted quantities read from frozen inputs.

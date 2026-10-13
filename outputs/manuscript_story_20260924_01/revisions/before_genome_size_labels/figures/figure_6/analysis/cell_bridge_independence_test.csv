@@ -1,0 +1,2 @@
+analysis_type,replicate_id,tree_id,evolutionary_model,candidate_model,independence_claim,component_p,fitted_phylogenetic_parameter,path_trait_definition
+primary,point_estimate,focal_primary,lambda,cell_bridge,n ~ c + g,0.975509706887934,9.999999999999994e-8,conditional_fuscus_assembly_anchored_genome_size_pg_1c; iod_derived_not_measured_c_value

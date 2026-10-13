@@ -1,0 +1,35 @@
+species,y,display_species,reproductive_strategy,reproductive_strategy_label,strategy_assigned,annotation_timing,genome_size_pg_fuscus_anchored,genome_size_pg_ci_low,genome_size_pg_ci_high,n_nuclei,n_images,n_specimens,sample_size_support,quality_match_status,genome_size_available,genome_label
+wrighti,1,D. wrighti,direct_development,Direct development,TRUE,expert_post_hoc_after_initial_pca_review,14.79493124,12.86919872,17.67200838,9,3,3,below_prior_minimum_30,limited_overlap,TRUE,14.8
+organi,2,D. organi,direct_development,Direct development,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+amphileucus,3,D. amphileucus,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,17.4640436,15.02252021,20.43700175,33,2,2,meets_prior_minimum_30,common_support,TRUE,17.5
+gvnigeusgwotli,4,D. gvnigeusgwotli,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,15.54983565,13.61611228,17.95874728,37,1,1,meets_prior_minimum_30,common_support,TRUE,15.5
+aureatus,5,D. aureatus,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+aeneus,6,D. aeneus,direct_development,Direct development,TRUE,expert_post_hoc_after_initial_pca_review,9.62450057,8.31896797,11.79784571,21,2,1,below_prior_minimum_30,limited_overlap,TRUE,9.6
+mavrokoilius,7,D. mavrokoilius,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,15.5729803,13.0241414,18.90713626,38,2,2,meets_prior_minimum_30,common_support,TRUE,15.6
+kanawha,8,D. kanawha,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,17.17384282,14.28514617,22.1581594,34,2,2,meets_prior_minimum_30,common_support,TRUE,17.2
+marmoratus,9,D. marmoratus,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,17.98164897,15.76953141,20.93556711,37,2,2,meets_prior_minimum_30,common_support,TRUE,18.0
+intermedius,10,D. intermedius,aquatic_eggs,Aquatic eggs,TRUE,expert_post_hoc_after_initial_pca_review,18.11498489,15.80728703,21.1687036,35,2,2,meets_prior_minimum_30,common_support,TRUE,18.1
+orestes,11,D. orestes,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,14.15107926,11.88179677,17.43082497,22,3,3,below_prior_minimum_30,common_support,TRUE,14.2
+abditus,12,D. abditus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+welteri,13,D. welteri,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,15.05822603,12.9181949,17.65341224,38,2,2,meets_prior_minimum_30,common_support,TRUE,15.1
+auriculatus,14,D. auriculatus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,17.75430342,15.04324875,21.23025426,36,2,2,meets_prior_minimum_30,common_support,TRUE,17.8
+lycos,15,D. lycos,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+bairdi,16,D. bairdi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,18.79106722,16.72108823,21.94523802,37,1,1,meets_prior_minimum_30,common_support,TRUE,18.8
+valtos,17,D. valtos,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,22.70273273,20.00323433,26.35861165,37,2,2,meets_prior_minimum_30,common_support,TRUE,22.7
+fuscus,18,D. fuscus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,16.46216769,16.46216769,16.46216769,35,4,4,meets_prior_minimum_30,common_support,TRUE,16.5
+valentinei,19,D. valentinei,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+pascagoula,20,D. pascagoula,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+perlapsus,21,D. perlapsus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,14.44569121,12.3551003,17.48336463,33,3,3,meets_prior_minimum_30,common_support,TRUE,14.4
+ocoee,22,D. ocoee,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,16.79250338,14.65749305,19.97622976,35,3,3,meets_prior_minimum_30,common_support,TRUE,16.8
+apalachicolae,23,D. apalachicolae,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,15.73446808,13.5695808,18.78352818,37,2,2,meets_prior_minimum_30,common_support,TRUE,15.7
+monticola,24,D. monticola,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,16.90311075,14.78521938,20.46442701,36,2,2,meets_prior_minimum_30,common_support,TRUE,16.9
+cheaha,25,D. cheaha,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+balsameus,26,D. balsameus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+adatsihi,27,D. adatsihi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+campi,28,D. campi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,14.87418931,12.968345,17.07979159,36,2,2,meets_prior_minimum_30,common_support,TRUE,14.9
+santeetlah,29,D. santeetlah,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+tilleyi,30,D. tilleyi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,16.68146717,14.62607425,19.35484608,36,2,2,meets_prior_minimum_30,common_support,TRUE,16.7
+carolinensis,31,D. carolinensis,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+anicetus,32,D. anicetus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,15.45387409,13.59007641,17.8907338,39,1,1,meets_prior_minimum_30,common_support,TRUE,15.5
+catahoula,33,D. catahoula,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a
+conanti,34,D. conanti,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,TRUE,expert_post_hoc_after_initial_pca_review,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,n/a

@@ -1,0 +1,25 @@
+morphology_label,n_size_cells,n_size_images,n_size_specimens,largest_specimen_n,largest_specimen_fraction,cell_area_um2,cell_area_um2_ci_low,cell_area_um2_ci_high,nucleus_area_um2,nucleus_area_um2_ci_low,nucleus_area_um2_ci_high,species,development
+D. anicetus,50,1,1,50,1,244.1952,242.1936,248.5008,41.6952,40.284,43.9344,anicetus,Aquatic larvae
+D. tilleyi,50,2,2,35,0.7,264.4776,262.7568,267.2352,41.8536,41.4216,43.2936,tilleyi,Aquatic larvae
+D. campi,50,2,2,27,0.54,257.4504,248.9328,259.3656,37.0728,35.8128,38.2617,campi,Aquatic larvae
+D. ocoee,50,2,2,47,0.94,293.1552,291.4488,296.7552,43.4448,41.9904,44.5104,ocoee,Aquatic larvae
+D. apalachicolae,50,1,1,50,1,299.54880000000003,293.6592,301.4064,45.2016,43.7184,46.8288,apalachicolae,Aquatic larvae
+D. monticola,50,2,2,38,0.76,260.0784,256.5216,264.5712,39.6072,39.1248,40.968,monticola,Aquatic larvae
+D. perlapsus,50,1,1,50,1,293.5512,289.3248,299.8656,43.38,41.2992,45,perlapsus,Aquatic larvae
+D. brimleyorum,50,2,2,46,0.92,329.4,325.2672,332.1243,45.1656,43.8912,46.84428,brimleyorum,Aquatic larvae
+D. bairdi,50,1,1,50,1,306.1368,303.5232,309.7152,44.208,43.5528,45.432,bairdi,Aquatic larvae
+D. valtos,50,2,2,47,0.94,314.1936,307.0368,319.1688,49.968,48.7944,51.4368,valtos,Aquatic larvae
+D. auriculatus,50,1,1,50,1,315.1368,312.1488,318.6,49.176,47.8152,50.4288,auriculatus,Aquatic larvae
+D. fuscus,50,3,3,18,0.36,272.808,271.008,275.0112,46.944,45.19332,48.2112,fuscus,Aquatic larvae
+D. welteri,50,2,2,27,0.54,304.5456,301.536,310.9248,48.708,47.83644,50.292,welteri,Aquatic larvae
+D. orestes,50,2,2,49,0.98,255.4704,254.47662,257.1192,46.3176,45,47.5992,orestes,Aquatic larvae
+D. ochrophaeus,50,2,2,44,0.88,272.304,266.5872,277.7904,52.1352,50.40702,54.2592,ochrophaeus,Aquatic larvae
+D. intermedius,50,1,1,50,1,325.2456,321.48,328.0896,48.9384,46.6704,50.1696,intermedius,Aquatic larvae
+D. marmoratus,50,2,2,39,0.78,274.9032,273.6648,277.4304,47.6064,46.4958,49.4208,marmoratus,Aquatic larvae
+D. mavrokoilius,50,2,2,25,0.5,269.064,266.9184,272.1024,42.552,40.2048,44.67042,mavrokoilius,Aquatic larvae
+D. kanawha,50,2,2,40,0.8,288.5904,283.4568,291.8592,41.724,40.6728,43.08516,kanawha,Aquatic larvae
+D. aeneus,44,3,2,41,0.93181818,208.9872,205.4232,213.912,37.6632,35.676,39.1824,aeneus,Direct development
+D. amphileucus,50,2,2,26,0.52,318.78,316.4112,320.8752,44.4312,43.5744,45.6048,amphileucus,Aquatic larvae
+D. gvnigeusgwotli,50,1,1,50,1,272.4192,271.332,275.976,46.62,44.6328,47.2464,gvnigeusgwotli,Aquatic larvae
+D. folkertsi,50,2,2,29,0.58,268.8408,265.4064,270.6624,44.8704,43.5312,47.43432,folkertsi,Aquatic larvae
+D. wrighti,8,2,2,6,0.75,237.0312,191.7216,250.8912,42.9696,39.5784,48.6432,wrighti,Direct development

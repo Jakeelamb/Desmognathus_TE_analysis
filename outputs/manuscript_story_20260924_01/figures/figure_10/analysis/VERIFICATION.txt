@@ -1,0 +1,6 @@
+PASS: unique nucleus-cell pairs; positive nested areas; fraction/cytoplasm arithmetic.
+PASS: 1,152 objects / 42 animals / 24 species; seven one-animal species; frozen species medians reproduced.
+PASS: Figure5 standardized association and slope-zero P reproduced after reversing conditional axes.
+PASS: unstandardized slopes, n-2 df, t coefficient intervals and slope-one tests.
+PASS: 1,000 paired hierarchical draws preserve24 species; 1,000 PGLS fits succeeded.
+PASS: frozen snapshot/source SHA-256 agreement.

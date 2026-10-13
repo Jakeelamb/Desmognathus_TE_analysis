@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desmognathus — eight polished figures</title>
+<style>
+body{margin:0;background:#f3f4f5;color:#222;font:16px/1.5 Arial,sans-serif}
+header,main{max-width:1100px;margin:auto;padding:24px}
+h1{font-size:26px;margin:0 0 8px}a{color:#075b8b}
+.nav-group{display:flex;flex-wrap:wrap;gap:6px 20px;margin:12px 0}
+.nav-group strong{flex-basis:100%}
+section{background:white;padding:24px;margin:0 0 28px;scroll-margin-top:88px}
+h2{font-size:21px;margin:0}
+img{display:block;width:100%;height:auto;margin:16px auto;max-width:1000px}
+.caption{max-width:950px;white-space:pre-line}.downloads{margin:6px 0}
+a:focus-visible{outline:3px solid #0072b2}
+button,textarea{font:inherit}
+button{border:1px solid #9aadb9;border-radius:5px;background:white;color:#075b8b;
+padding:7px 12px;cursor:pointer;font-size:14px}
+button:hover{background:#eaf2f7}button:disabled{opacity:.55;cursor:default}
+button:focus-visible,textarea:focus-visible{outline:3px solid #0072b2;outline-offset:2px}
+.downloads button{margin-left:12px}
+.review-toolbar{position:sticky;top:0;z-index:2;background:#fff;border-block:1px solid #d6dfe5}
+.review-toolbar-inner{max-width:1100px;margin:auto;padding:10px 24px;display:flex;
+align-items:center;gap:10px;flex-wrap:wrap}
+#notes-summary{flex:1;min-width:180px;font-size:14px}
+.figure-notes{background:#f4f8fa;border:1px solid #d6e3eb;border-radius:6px;padding:16px;margin:18px 0}
+.figure-notes label{display:block;font-weight:bold;margin-bottom:8px}
+.note-input{display:block;box-sizing:border-box;width:100%;padding:12px;border:1px solid #92a9b8;
+border-radius:4px;background:white;color:#222;resize:vertical;line-height:1.5;scroll-margin-top:110px}
+.note-status{font-size:13px;margin:7px 0 0;color:#485d6c}
+.note-conflict{border-top:1px solid #b88228;margin-top:12px;padding-top:8px}
+.remote-note{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:white;padding:12px}
+[hidden]{display:none!important}
+@media(max-width:600px){header,main,section{padding:14px}}
+@media print{body{background:white}nav,.downloads,.review-toolbar,.figure-notes{display:none}
+section{break-before:page}}
+.eyebrow{color:#586674}.story,.finding{padding:16px 22px;border-left:3px solid #0072b2;background:#fff;margin:20px 0}.links{display:flex;gap:12px 22px;flex-wrap:wrap}.finding p{margin-bottom:0}.finding{max-width:1056px;margin:20px auto}.caption{font-size:15px}img{max-width:1000px}nav{border-top:1px solid #dce3e7;padding-top:12px}</style></head><body><header>
+<h1>Genome size, cellular architecture and repeat evolution</h1><p class="eyebrow">Eight-figure publication refinement · separate review version</p>
+<p><strong>8 main figures · 26 isolated panels.</strong> Arial throughout · fixed species order and biological colors · frozen numerical results.</p>
+
+<p>Each full collage is followed by its individual panels. Scroll to inspect every figure,
+or select an image for its full-size PNG.</p>
+<p>Use <strong>Add / edit note</strong> on any figure or panel. Notes save automatically
+to this eight-figure version. Earlier notes remain in their original galleries.</p>
+<noscript><p>Enable JavaScript to write and save figure notes.</p></noscript>
+<aside class="story"><p><strong>Central result:</strong> Genome-size estimates and erythrocyte dimensions covary beyond maximum body size. Nuclear and cellular dimensions are not uniformly proportional. Repeat-divergence profiles differ among reproductive groups, while the measured repeat summary does not account for the cellular association.</p>
+<p><strong>Reading the arrows:</strong> Figure 6 displays coefficients within a proposed causal orientation and the other directions compatible with its independence claims. Relative model support is not a probability that an arrow is causal.</p>
+<p>Every observation, fit and exclusion rule is preserved. The collages use selected species labels for legibility; named isolated panels and frozen source tables retain full inspection detail. No heatmap or outlier filtering has been added.</p>
+<p class="links"><a href="http://127.0.0.1:8767/">Earlier 13-figure gallery and notes</a><a href="http://127.0.0.1:8766/">Original gallery</a><a href="Manuscript_figures_1-8.zip">Download all eight collages</a><a href="FINDINGS_AND_CAPTIONS.md">Findings and captions</a><a href="NOTE_DECISIONS.md">How prior notes were applied</a><a href="README.md">Sources and rebuild</a></p>
+<p>Eight figures use GBE’s full main-text display allowance; the existing tables are retained as supporting material. <a href="http://127.0.0.1:8767/#table-1">Review all five tables</a>.</p></aside><nav aria-label="Figures and panels">
+<div class="nav-group"><strong>Figure 1 — Repeat architecture across Desmognathus</strong> <a href="#figure-1">Figure 1 — Repeat architecture across Desmognathus — full collage</a> <a href="#figure-1-a">Figure 1a — Species phylogeny</a> <a href="#figure-1-b">Figure 1b — Genome sizes</a> <a href="#figure-1-c">Figure 1c — Repeat composition</a></div>
+<div class="nav-group"><strong>Figure 2 — LTR divergence, body size and reproductive strategy</strong> <a href="#figure-2">Figure 2 — LTR divergence, body size and reproductive strategy — full collage</a> <a href="#figure-2-a">Figure 2a — Repeat-divergence profiles</a> <a href="#figure-2-b">Figure 2b — Within-LTR fraction by species</a> <a href="#figure-2-c">Figure 2c — Body size and reproductive strategy</a> <a href="#figure-2-d">Figure 2d — Phylogenetic strategy contrasts</a></div>
+<div class="nav-group"><strong>Figure 3 — Repeat diversity and genome size</strong> <a href="#figure-3">Figure 3 — Repeat diversity and genome size — full collage</a> <a href="#figure-3-a">Figure 3a — Shannon entropy and genome size</a> <a href="#figure-3-b">Figure 3b — Gini–Simpson index and genome size</a></div>
+<div class="nav-group"><strong>Figure 4 — LTR depth ratios and genome size</strong> <a href="#figure-4">Figure 4 — LTR depth ratios and genome size — full collage</a> <a href="#figure-4-a">Figure 4a — LTR depth distributions</a> <a href="#figure-4-b">Figure 4b — LTR ratio and genome size</a></div>
+<div class="nav-group"><strong>Figure 5 — Genome size and cellular architecture</strong> <a href="#figure-5">Figure 5 — Genome size and cellular architecture — full collage</a> <a href="#figure-5-a">Figure 5a — Genome size and cell area</a> <a href="#figure-5-b">Figure 5b — Genome size and nucleus area</a> <a href="#figure-5-c">Figure 5c — Conditional nuclear–cell area scaling</a> <a href="#figure-5-d">Figure 5d — Paired nuclear fractions across species and animals</a></div>
+<div class="nav-group"><strong>Figure 6 — Cellular associations and alternative causal hypotheses</strong> <a href="#figure-6">Figure 6 — Cellular associations and alternative causal hypotheses — full collage</a> <a href="#figure-6-a">Figure 6a — Representative genome-first hypothesis</a> <a href="#figure-6-b">Figure 6b — Conditional associations</a> <a href="#figure-6-c">Figure 6c — Support across eight candidate classes</a> <a href="#figure-6-d">Figure 6d — Equivalent directions within H5</a></div>
+<div class="nav-group"><strong>Figure 7 — Body size and sampling sensitivity</strong> <a href="#figure-7">Figure 7 — Body size and sampling sensitivity — full collage</a> <a href="#figure-7-a">Figure 7a — Body size and genome size</a> <a href="#figure-7-b">Figure 7b — Body size and cell area</a> <a href="#figure-7-c">Figure 7c — Body size and nucleus area</a> <a href="#figure-7-d">Figure 7d — Conditional coefficient sensitivity</a></div>
+<div class="nav-group"><strong>Figure 8 — Repeat divergence and cellular integration</strong> <a href="#figure-8">Figure 8 — Repeat divergence and cellular integration — full collage</a> <a href="#figure-8-a">Figure 8a — LTR divergence and genome size</a> <a href="#figure-8-b">Figure 8b — Conditional associations of the TE score</a> <a href="#figure-8-c">Figure 8c — Matched-species cellular coefficients</a></div>
+</nav></header>
+<div class="review-toolbar" aria-label="Figure notes controls"><div class="review-toolbar-inner"><span id="notes-summary" role="status">Loading this version’s notes…</span><button type="button" id="save-notes" disabled>Save now</button><button type="button" id="export-notes" disabled>Download notes</button></div></div><main>
+<aside class="finding"><strong>A shared repeat architecture</strong><p>LTRs dominate classified repeat alignments across all 34 species. These percentages describe classified aligned bases, not whole-genome occupancy.</p></aside><section id="figure-1" aria-labelledby="figure-1-title">
+<h2 id="figure-1-title">Figure 1 — Repeat architecture across Desmognathus — full collage</h2>
+<p class="downloads"><a href="figures/figure_1/Figure_1_polished.pdf?v=ac8eb2d0941a">PDF</a> · <a href="figures/figure_1/Figure_1_polished.png?v=788132058c05">Full-size PNG</a> · <a href="figures/figure_1/Figure_1_polished.tif?v=1db9c91fc414">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_1/Figure_1_polished.png?v=788132058c05"><img src="figures/figure_1/Figure_1_polished.png?v=788132058c05" alt="A fixed 34-species row order aligns phylogeny, genome sizes, and LTR-rich repeat composition." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-1">Notes for Figure 1</label>
+<textarea id="note-figure-1" class="note-input" data-note-id="figure-1" rows="4" maxlength="50000" aria-describedby="note-status-figure-1" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-1" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Classified repeat alignments share an LTR-dominated architecture across the 34 sampled species. (a) Topology-only source species tree for 34 Desmognathus species; branch lengths are omitted. Reproductive strategies are aquatic eggs (7 species), terrestrial eggs with aquatic larvae (24), and direct development (3). (b) Twenty-one species have genome sizes, numeric labels and conditional 95% measurement-bootstrap intervals; n/a marks 13 unavailable estimates. (c) dnaPipeTE classified aligned bases are grouped into LTR, LINE, TIR and remaining classified orders (Other). Each row sums to 100% of this denominator. Unresolved sequence is outside the denominator; these proportions are not whole-genome occupancy. All three panels share the same phylogenetic row order. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Source-tree publication and calibration provenance require resolution before submission. Abbreviations: LTR, long terminal repeat; LINE, long interspersed nuclear element; TIR, terminal inverted repeat.</p>
+</section>
+<section id="figure-1-a" aria-labelledby="figure-1-a-title">
+<h2 id="figure-1-a-title">Figure 1a — Species phylogeny</h2>
+<p class="downloads"><a href="figures/figure_1/panels/Figure_1a_isolated.pdf?v=c224b3f922bb">PDF</a> · <a href="figures/figure_1/panels/Figure_1a_isolated.png?v=0ad7fdf0b643">Full-size PNG</a> · <a href="figures/figure_1/panels/Figure_1a_isolated.tif?v=ce39df0b6e89">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_1/panels/Figure_1a_isolated.png?v=0ad7fdf0b643"><img src="figures/figure_1/panels/Figure_1a_isolated.png?v=0ad7fdf0b643" alt="Topology-only tree with 34 named species and reproductive strategies." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-1-a">Notes for Figure 1a</label>
+<textarea id="note-figure-1-a" class="note-input" data-note-id="figure-1-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-1-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-1-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Classified repeat alignments share an LTR-dominated architecture across the 34 sampled species. (a) Topology-only source species tree for 34 Desmognathus species; branch lengths are omitted. Reproductive strategies are aquatic eggs (7 species), terrestrial eggs with aquatic larvae (24), and direct development (3). (b) Twenty-one species have genome sizes, numeric labels and conditional 95% measurement-bootstrap intervals; n/a marks 13 unavailable estimates. (c) dnaPipeTE classified aligned bases are grouped into LTR, LINE, TIR and remaining classified orders (Other). Each row sums to 100% of this denominator. Unresolved sequence is outside the denominator; these proportions are not whole-genome occupancy. All three panels share the same phylogenetic row order. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Source-tree publication and calibration provenance require resolution before submission. Abbreviations: LTR, long terminal repeat; LINE, long interspersed nuclear element; TIR, terminal inverted repeat.</p>
+</section>
+<section id="figure-1-b" aria-labelledby="figure-1-b-title">
+<h2 id="figure-1-b-title">Figure 1b — Genome sizes</h2>
+<p class="downloads"><a href="figures/figure_1/panels/Figure_1b_isolated.pdf?v=a601968352f2">PDF</a> · <a href="figures/figure_1/panels/Figure_1b_isolated.png?v=1bd948f3487a">Full-size PNG</a> · <a href="figures/figure_1/panels/Figure_1b_isolated.tif?v=bfb8db4783f2">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_1/panels/Figure_1b_isolated.png?v=1bd948f3487a"><img src="figures/figure_1/panels/Figure_1b_isolated.png?v=1bd948f3487a" alt="Twenty-one species genome sizes, numeric labels, intervals, and 13 missing values." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-1-b">Notes for Figure 1b</label>
+<textarea id="note-figure-1-b" class="note-input" data-note-id="figure-1-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-1-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-1-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Classified repeat alignments share an LTR-dominated architecture across the 34 sampled species. (a) Topology-only source species tree for 34 Desmognathus species; branch lengths are omitted. Reproductive strategies are aquatic eggs (7 species), terrestrial eggs with aquatic larvae (24), and direct development (3). (b) Twenty-one species have genome sizes, numeric labels and conditional 95% measurement-bootstrap intervals; n/a marks 13 unavailable estimates. (c) dnaPipeTE classified aligned bases are grouped into LTR, LINE, TIR and remaining classified orders (Other). Each row sums to 100% of this denominator. Unresolved sequence is outside the denominator; these proportions are not whole-genome occupancy. All three panels share the same phylogenetic row order. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Source-tree publication and calibration provenance require resolution before submission. Abbreviations: LTR, long terminal repeat; LINE, long interspersed nuclear element; TIR, terminal inverted repeat.</p>
+</section>
+<section id="figure-1-c" aria-labelledby="figure-1-c-title">
+<h2 id="figure-1-c-title">Figure 1c — Repeat composition</h2>
+<p class="downloads"><a href="figures/figure_1/panels/Figure_1c_isolated.pdf?v=e6f50aaf300b">PDF</a> · <a href="figures/figure_1/panels/Figure_1c_isolated.png?v=822bf12d626c">Full-size PNG</a> · <a href="figures/figure_1/panels/Figure_1c_isolated.tif?v=eec7604d4a99">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_1/panels/Figure_1c_isolated.png?v=822bf12d626c"><img src="figures/figure_1/panels/Figure_1c_isolated.png?v=822bf12d626c" alt="Classified LTR, LINE, TIR and other repeat shares for all 34 species." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-1-c">Notes for Figure 1c</label>
+<textarea id="note-figure-1-c" class="note-input" data-note-id="figure-1-c" rows="4" maxlength="50000" aria-describedby="note-status-figure-1-c" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-1-c" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Classified repeat alignments share an LTR-dominated architecture across the 34 sampled species. (a) Topology-only source species tree for 34 Desmognathus species; branch lengths are omitted. Reproductive strategies are aquatic eggs (7 species), terrestrial eggs with aquatic larvae (24), and direct development (3). (b) Twenty-one species have genome sizes, numeric labels and conditional 95% measurement-bootstrap intervals; n/a marks 13 unavailable estimates. (c) dnaPipeTE classified aligned bases are grouped into LTR, LINE, TIR and remaining classified orders (Other). Each row sums to 100% of this denominator. Unresolved sequence is outside the denominator; these proportions are not whole-genome occupancy. All three panels share the same phylogenetic row order. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Source-tree publication and calibration provenance require resolution before submission. Abbreviations: LTR, long terminal repeat; LINE, long interspersed nuclear element; TIR, terminal inverted repeat.</p>
+</section>
+<aside class="finding"><strong>Reproductive groups differ in LTR profiles</strong><p>Within-LTR normalization separates the low-divergence signature from total LTR representation. Strategy association remains exploratory; the adjusted direct-development contrast is uncertain.</p></aside><section id="figure-2" aria-labelledby="figure-2-title">
+<h2 id="figure-2-title">Figure 2 — LTR divergence, body size and reproductive strategy — full collage</h2>
+<p class="downloads"><a href="figures/figure_2/Figure_2_polished.pdf?v=3eb95428a604">PDF</a> · <a href="figures/figure_2/Figure_2_polished.png?v=efe0622bedb2">Full-size PNG</a> · <a href="figures/figure_2/Figure_2_polished.tif?v=3eeb152e96ef">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_2/Figure_2_polished.png?v=efe0622bedb2"><img src="figures/figure_2/Figure_2_polished.png?v=efe0622bedb2" alt="All-species repeat profiles and named within-LTR fractions accompany body-size predictions and phylogenetic strategy contrasts." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-2">Notes for Figure 2</label>
+<textarea id="note-figure-2" class="note-input" data-note-id="figure-2" rows="4" maxlength="50000" aria-describedby="note-status-figure-2" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-2" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Within-LTR low-divergence representation differs among reproductive groups in an exploratory phylogenetic comparison. (a) All 34 species are shown as gray divergence profiles; colored curves are equal-weight reproductive-group means. Each 1-percentage-point bin contains its percentage of all RepeatMasker-aligned hit bp; bins 0–49 are displayed with missing order/bin combinations zero-filled. (b) All 34 named species retain the shared phylogenetic order. The within-LTR fraction is LTR hit bp in bins 0–4 divided by all LTR hit bp across all divergence bins. It separates relative profile shape from total LTR representation; it is not genome occupancy, insertion age, or transposition rate. (c) Stored Pagel-lambda PGLS predictions from logit(within-LTR fraction) ~ strategy + log10(maximum SVL), restricted to each group&#x27;s observed SVL range; bands are conditional 95% intervals. (d) Stored raw-logit contrasts and 95% t intervals compare each group with aquatic eggs, before and after SVL adjustment. The adjusted omnibus likelihood-ratio P is 0.000568 (2 df). The adjusted terrestrial-versus-aquatic contrast is 0.439 (95% CI 0.061–0.818); the direct-development contrast is −0.448 (−1.037–0.142). Strategies were expert-coded after PCA inspection; group sizes are not counts of independent evolutionary transitions. Contrasts remain exploratory and conditional on the source tree and fitted lambda. The within-LTR fraction covaries with dnaPipeTE unresolved fraction (unadjusted Spearman rho = −0.452, P = 0.0072), but not clearly with aligned sample fraction (rho = −0.161, P = 0.362). These cross-pipeline quality associations do not establish the origin of the group pattern. Abbreviations: LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<section id="figure-2-a" aria-labelledby="figure-2-a-title">
+<h2 id="figure-2-a-title">Figure 2a — Repeat-divergence profiles</h2>
+<p class="downloads"><a href="figures/figure_2/panels/Figure_2a_isolated.pdf?v=26a5c4dbf2db">PDF</a> · <a href="figures/figure_2/panels/Figure_2a_isolated.png?v=84a5fb2b7225">Full-size PNG</a> · <a href="figures/figure_2/panels/Figure_2a_isolated.tif?v=78ad93d3f135">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_2/panels/Figure_2a_isolated.png?v=84a5fb2b7225"><img src="figures/figure_2/panels/Figure_2a_isolated.png?v=84a5fb2b7225" alt="Gray curves show all 34 species; colored means compare three strategies across LTR, LINE and TIR." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-2-a">Notes for Figure 2a</label>
+<textarea id="note-figure-2-a" class="note-input" data-note-id="figure-2-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-2-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-2-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Within-LTR low-divergence representation differs among reproductive groups in an exploratory phylogenetic comparison. (a) All 34 species are shown as gray divergence profiles; colored curves are equal-weight reproductive-group means. Each 1-percentage-point bin contains its percentage of all RepeatMasker-aligned hit bp; bins 0–49 are displayed with missing order/bin combinations zero-filled. (b) All 34 named species retain the shared phylogenetic order. The within-LTR fraction is LTR hit bp in bins 0–4 divided by all LTR hit bp across all divergence bins. It separates relative profile shape from total LTR representation; it is not genome occupancy, insertion age, or transposition rate. (c) Stored Pagel-lambda PGLS predictions from logit(within-LTR fraction) ~ strategy + log10(maximum SVL), restricted to each group&#x27;s observed SVL range; bands are conditional 95% intervals. (d) Stored raw-logit contrasts and 95% t intervals compare each group with aquatic eggs, before and after SVL adjustment. The adjusted omnibus likelihood-ratio P is 0.000568 (2 df). The adjusted terrestrial-versus-aquatic contrast is 0.439 (95% CI 0.061–0.818); the direct-development contrast is −0.448 (−1.037–0.142). Strategies were expert-coded after PCA inspection; group sizes are not counts of independent evolutionary transitions. Contrasts remain exploratory and conditional on the source tree and fitted lambda. The within-LTR fraction covaries with dnaPipeTE unresolved fraction (unadjusted Spearman rho = −0.452, P = 0.0072), but not clearly with aligned sample fraction (rho = −0.161, P = 0.362). These cross-pipeline quality associations do not establish the origin of the group pattern. Abbreviations: LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<section id="figure-2-b" aria-labelledby="figure-2-b-title">
+<h2 id="figure-2-b-title">Figure 2b — Within-LTR fraction by species</h2>
+<p class="downloads"><a href="figures/figure_2/panels/Figure_2b_isolated.pdf?v=78798456c8a6">PDF</a> · <a href="figures/figure_2/panels/Figure_2b_isolated.png?v=d0ee0cb8955f">Full-size PNG</a> · <a href="figures/figure_2/panels/Figure_2b_isolated.tif?v=c58eef521f59">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_2/panels/Figure_2b_isolated.png?v=d0ee0cb8955f"><img src="figures/figure_2/panels/Figure_2b_isolated.png?v=d0ee0cb8955f" alt="All 34 species are labelled in a dot plot of low-divergence hit bp within LTRs." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-2-b">Notes for Figure 2b</label>
+<textarea id="note-figure-2-b" class="note-input" data-note-id="figure-2-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-2-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-2-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Within-LTR low-divergence representation differs among reproductive groups in an exploratory phylogenetic comparison. (a) All 34 species are shown as gray divergence profiles; colored curves are equal-weight reproductive-group means. Each 1-percentage-point bin contains its percentage of all RepeatMasker-aligned hit bp; bins 0–49 are displayed with missing order/bin combinations zero-filled. (b) All 34 named species retain the shared phylogenetic order. The within-LTR fraction is LTR hit bp in bins 0–4 divided by all LTR hit bp across all divergence bins. It separates relative profile shape from total LTR representation; it is not genome occupancy, insertion age, or transposition rate. (c) Stored Pagel-lambda PGLS predictions from logit(within-LTR fraction) ~ strategy + log10(maximum SVL), restricted to each group&#x27;s observed SVL range; bands are conditional 95% intervals. (d) Stored raw-logit contrasts and 95% t intervals compare each group with aquatic eggs, before and after SVL adjustment. The adjusted omnibus likelihood-ratio P is 0.000568 (2 df). The adjusted terrestrial-versus-aquatic contrast is 0.439 (95% CI 0.061–0.818); the direct-development contrast is −0.448 (−1.037–0.142). Strategies were expert-coded after PCA inspection; group sizes are not counts of independent evolutionary transitions. Contrasts remain exploratory and conditional on the source tree and fitted lambda. The within-LTR fraction covaries with dnaPipeTE unresolved fraction (unadjusted Spearman rho = −0.452, P = 0.0072), but not clearly with aligned sample fraction (rho = −0.161, P = 0.362). These cross-pipeline quality associations do not establish the origin of the group pattern. Abbreviations: LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<section id="figure-2-c" aria-labelledby="figure-2-c-title">
+<h2 id="figure-2-c-title">Figure 2c — Body size and reproductive strategy</h2>
+<p class="downloads"><a href="figures/figure_2/panels/Figure_2c_isolated.pdf?v=b0465723321d">PDF</a> · <a href="figures/figure_2/panels/Figure_2c_isolated.png?v=8b4725b98471">Full-size PNG</a> · <a href="figures/figure_2/panels/Figure_2c_isolated.tif?v=9fa6bf543bfb">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_2/panels/Figure_2c_isolated.png?v=8b4725b98471"><img src="figures/figure_2/panels/Figure_2c_isolated.png?v=8b4725b98471" alt="Thirty-four species and frozen group PGLS curves on maximum body length." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-2-c">Notes for Figure 2c</label>
+<textarea id="note-figure-2-c" class="note-input" data-note-id="figure-2-c" rows="4" maxlength="50000" aria-describedby="note-status-figure-2-c" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-2-c" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Within-LTR low-divergence representation differs among reproductive groups in an exploratory phylogenetic comparison. (a) All 34 species are shown as gray divergence profiles; colored curves are equal-weight reproductive-group means. Each 1-percentage-point bin contains its percentage of all RepeatMasker-aligned hit bp; bins 0–49 are displayed with missing order/bin combinations zero-filled. (b) All 34 named species retain the shared phylogenetic order. The within-LTR fraction is LTR hit bp in bins 0–4 divided by all LTR hit bp across all divergence bins. It separates relative profile shape from total LTR representation; it is not genome occupancy, insertion age, or transposition rate. (c) Stored Pagel-lambda PGLS predictions from logit(within-LTR fraction) ~ strategy + log10(maximum SVL), restricted to each group&#x27;s observed SVL range; bands are conditional 95% intervals. (d) Stored raw-logit contrasts and 95% t intervals compare each group with aquatic eggs, before and after SVL adjustment. The adjusted omnibus likelihood-ratio P is 0.000568 (2 df). The adjusted terrestrial-versus-aquatic contrast is 0.439 (95% CI 0.061–0.818); the direct-development contrast is −0.448 (−1.037–0.142). Strategies were expert-coded after PCA inspection; group sizes are not counts of independent evolutionary transitions. Contrasts remain exploratory and conditional on the source tree and fitted lambda. The within-LTR fraction covaries with dnaPipeTE unresolved fraction (unadjusted Spearman rho = −0.452, P = 0.0072), but not clearly with aligned sample fraction (rho = −0.161, P = 0.362). These cross-pipeline quality associations do not establish the origin of the group pattern. Abbreviations: LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<section id="figure-2-d" aria-labelledby="figure-2-d-title">
+<h2 id="figure-2-d-title">Figure 2d — Phylogenetic strategy contrasts</h2>
+<p class="downloads"><a href="figures/figure_2/panels/Figure_2d_isolated.pdf?v=ab8453b86a1f">PDF</a> · <a href="figures/figure_2/panels/Figure_2d_isolated.png?v=9eb9059c9930">Full-size PNG</a> · <a href="figures/figure_2/panels/Figure_2d_isolated.tif?v=bcc36930efa5">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_2/panels/Figure_2d_isolated.png?v=9eb9059c9930"><img src="figures/figure_2/panels/Figure_2d_isolated.png?v=9eb9059c9930" alt="Unadjusted and body-adjusted contrasts and intervals relative to aquatic eggs." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-2-d">Notes for Figure 2d</label>
+<textarea id="note-figure-2-d" class="note-input" data-note-id="figure-2-d" rows="4" maxlength="50000" aria-describedby="note-status-figure-2-d" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-2-d" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Within-LTR low-divergence representation differs among reproductive groups in an exploratory phylogenetic comparison. (a) All 34 species are shown as gray divergence profiles; colored curves are equal-weight reproductive-group means. Each 1-percentage-point bin contains its percentage of all RepeatMasker-aligned hit bp; bins 0–49 are displayed with missing order/bin combinations zero-filled. (b) All 34 named species retain the shared phylogenetic order. The within-LTR fraction is LTR hit bp in bins 0–4 divided by all LTR hit bp across all divergence bins. It separates relative profile shape from total LTR representation; it is not genome occupancy, insertion age, or transposition rate. (c) Stored Pagel-lambda PGLS predictions from logit(within-LTR fraction) ~ strategy + log10(maximum SVL), restricted to each group&#x27;s observed SVL range; bands are conditional 95% intervals. (d) Stored raw-logit contrasts and 95% t intervals compare each group with aquatic eggs, before and after SVL adjustment. The adjusted omnibus likelihood-ratio P is 0.000568 (2 df). The adjusted terrestrial-versus-aquatic contrast is 0.439 (95% CI 0.061–0.818); the direct-development contrast is −0.448 (−1.037–0.142). Strategies were expert-coded after PCA inspection; group sizes are not counts of independent evolutionary transitions. Contrasts remain exploratory and conditional on the source tree and fitted lambda. The within-LTR fraction covaries with dnaPipeTE unresolved fraction (unadjusted Spearman rho = −0.452, P = 0.0072), but not clearly with aligned sample fraction (rho = −0.161, P = 0.362). These cross-pipeline quality associations do not establish the origin of the group pattern. Abbreviations: LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<aside class="finding"><strong>A tendency toward lower dominant-family evenness</strong><p>Both indices describe the same ten-superfamily composition. Their agreement is not independent replication; the Shannon interval crosses zero.</p></aside><section id="figure-3" aria-labelledby="figure-3-title">
+<h2 id="figure-3-title">Figure 3 — Repeat diversity and genome size — full collage</h2>
+<p class="downloads"><a href="figures/figure_3/Figure_3_polished.pdf?v=7b3e44f25531">PDF</a> · <a href="figures/figure_3/Figure_3_polished.png?v=12ccc50affdb">Full-size PNG</a> · <a href="figures/figure_3/Figure_3_polished.tif?v=fe26926fe427">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_3/Figure_3_polished.png?v=12ccc50affdb"><img src="figures/figure_3/Figure_3_polished.png?v=12ccc50affdb" alt="Two compact 21-species plots show repeat diversity against genome size with unchanged full-sample PGLS fits and intervals." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-3">Notes for Figure 3</label>
+<textarea id="note-figure-3" class="note-input" data-note-id="figure-3" rows="4" maxlength="50000" aria-describedby="note-status-figure-3" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-3" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Dominant-superfamily evenness tends to decline with genome size across the 21 overlapping species. Twenty-one species with both genome-size and repeat-diversity data are shown in each panel. (a) Shannon entropy and (b) Gini–Simpson index summarize each species&#x27; ten most abundant positive classified dnaPipeTE superfamilies, reclosed to sum to one. These related measures represent diversity/evenness of the selected superfamily distribution, not total TE burden or independent replications. Points identify reproductive strategy; horizontal bars show genome-size measurement intervals. All observations contribute to the same full-sample fit per panel. Lines and bands reuse stored Pagel-lambda PGLS fitted means and 95% coefficient intervals without refitting. The Shannon slope is −0.007558 per pg/1C (95% CI −0.015234–0.000118; P = 0.0533), and the Gini–Simpson slope is −0.003623 (−0.006964–−0.000283; P = 0.0350). Both fitted lambdas are 1. P values are unadjusted. Predictor measurement error and tree uncertainty are not propagated. D. aeneus, D. wrighti and D. valtos are labelled in the collage to identify the genome-size extremes and the high-diversity direct developer; label selection does not change the 21-species sample. All 21 species are individually named in isolated panels. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Abbreviations: TE, transposable element; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<section id="figure-3-a" aria-labelledby="figure-3-a-title">
+<h2 id="figure-3-a-title">Figure 3a — Shannon entropy and genome size</h2>
+<p class="downloads"><a href="figures/figure_3/panels/Figure_3a_isolated.pdf?v=922ea88d2e16">PDF</a> · <a href="figures/figure_3/panels/Figure_3a_isolated.png?v=e2988463babb">Full-size PNG</a> · <a href="figures/figure_3/panels/Figure_3a_isolated.tif?v=f9a132577dcf">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_3/panels/Figure_3a_isolated.png?v=e2988463babb"><img src="figures/figure_3/panels/Figure_3a_isolated.png?v=e2988463babb" alt="Twenty-one named species with genome-size intervals and a negative fitted Shannon relationship." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-3-a">Notes for Figure 3a</label>
+<textarea id="note-figure-3-a" class="note-input" data-note-id="figure-3-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-3-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-3-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Dominant-superfamily evenness tends to decline with genome size across the 21 overlapping species. Twenty-one species with both genome-size and repeat-diversity data are shown in each panel. (a) Shannon entropy and (b) Gini–Simpson index summarize each species&#x27; ten most abundant positive classified dnaPipeTE superfamilies, reclosed to sum to one. These related measures represent diversity/evenness of the selected superfamily distribution, not total TE burden or independent replications. Points identify reproductive strategy; horizontal bars show genome-size measurement intervals. All observations contribute to the same full-sample fit per panel. Lines and bands reuse stored Pagel-lambda PGLS fitted means and 95% coefficient intervals without refitting. The Shannon slope is −0.007558 per pg/1C (95% CI −0.015234–0.000118; P = 0.0533), and the Gini–Simpson slope is −0.003623 (−0.006964–−0.000283; P = 0.0350). Both fitted lambdas are 1. P values are unadjusted. Predictor measurement error and tree uncertainty are not propagated. D. aeneus, D. wrighti and D. valtos are labelled in the collage to identify the genome-size extremes and the high-diversity direct developer; label selection does not change the 21-species sample. All 21 species are individually named in isolated panels. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Abbreviations: TE, transposable element; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<section id="figure-3-b" aria-labelledby="figure-3-b-title">
+<h2 id="figure-3-b-title">Figure 3b — Gini–Simpson index and genome size</h2>
+<p class="downloads"><a href="figures/figure_3/panels/Figure_3b_isolated.pdf?v=5466ff6d7ab4">PDF</a> · <a href="figures/figure_3/panels/Figure_3b_isolated.png?v=5738ff32f469">Full-size PNG</a> · <a href="figures/figure_3/panels/Figure_3b_isolated.tif?v=d4bc72628fe4">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_3/panels/Figure_3b_isolated.png?v=5738ff32f469"><img src="figures/figure_3/panels/Figure_3b_isolated.png?v=5738ff32f469" alt="The same 21 named species and intervals around a negative fitted Gini–Simpson relationship." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-3-b">Notes for Figure 3b</label>
+<textarea id="note-figure-3-b" class="note-input" data-note-id="figure-3-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-3-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-3-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Dominant-superfamily evenness tends to decline with genome size across the 21 overlapping species. Twenty-one species with both genome-size and repeat-diversity data are shown in each panel. (a) Shannon entropy and (b) Gini–Simpson index summarize each species&#x27; ten most abundant positive classified dnaPipeTE superfamilies, reclosed to sum to one. These related measures represent diversity/evenness of the selected superfamily distribution, not total TE burden or independent replications. Points identify reproductive strategy; horizontal bars show genome-size measurement intervals. All observations contribute to the same full-sample fit per panel. Lines and bands reuse stored Pagel-lambda PGLS fitted means and 95% coefficient intervals without refitting. The Shannon slope is −0.007558 per pg/1C (95% CI −0.015234–0.000118; P = 0.0533), and the Gini–Simpson slope is −0.003623 (−0.006964–−0.000283; P = 0.0350). Both fitted lambdas are 1. P values are unadjusted. Predictor measurement error and tree uncertainty are not propagated. D. aeneus, D. wrighti and D. valtos are labelled in the collage to identify the genome-size extremes and the high-diversity direct developer; label selection does not change the 21-species sample. All 21 species are individually named in isolated panels. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Abbreviations: TE, transposable element; PGLS, phylogenetic generalized least squares; CI, confidence interval.</p>
+</section>
+<aside class="finding"><strong>The terminal/internal proxy does not resolve a genome-size relationship</strong><p>All selected elements are retained, including extremes. The internal-region definition and mapping limitations prevent interpreting this as a calibrated deletion rate.</p></aside><section id="figure-4" aria-labelledby="figure-4-title">
+<h2 id="figure-4-title">Figure 4 — LTR depth ratios and genome size — full collage</h2>
+<p class="downloads"><a href="figures/figure_4/Figure_4_polished.pdf?v=3d91fbf8a6de">PDF</a> · <a href="figures/figure_4/Figure_4_polished.png?v=2cb987b9068a">Full-size PNG</a> · <a href="figures/figure_4/Figure_4_polished.tif?v=5d97dfa5058e">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_4/Figure_4_polished.png?v=2cb987b9068a"><img src="figures/figure_4/Figure_4_polished.png?v=2cb987b9068a" alt="Horizontal violins show all retained elements above a 19-species PGLS comparison with genome size." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-4">Notes for Figure 4</label>
+<textarea id="note-figure-4" class="note-input" data-note-id="figure-4" rows="4" maxlength="50000" aria-describedby="note-status-figure-4" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-4" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The selected LTR terminal/internal depth proxy does not resolve a relationship with genome size. (a) All 380 retained LTR/Gypsy elements from 30 species are shown in the fixed phylogenetic row order; no extra outliers were removed for this refinement. Gray density outlines use a pooled bandwidth in log2-ratio space, equal maximum widths and observed-range trimming. Hollow points show every retained element, jittered vertically only. Blue marks show species medians of raw ratios and released 95% intervals from 2,000 element bootstraps. Right labels give genome size and element count; n/a marks unavailable genome size. The ratio is length-weighted mean per-base depth across both terminal LTRs divided by mean depth across the entire intervening sequence, including zero-depth bases. The frozen primary filter requires elements at least 3,000 bp long, at least five parsed TEsorter domains, inclusive within-species 1.5-IQR fences, and at least 80% positive-depth coverage in each of the three regions. Ratio 1 indicates equal mapped depth; it is not a calibrated no-deletion baseline. This statistic is a mapping-depth proxy, not an ectopic-recombination or DNA-loss rate. Elements are not independent biological replicates. (b) Nineteen overlapping species (239 elements) contribute one median each. Stored log10–log10 Pagel-lambda PGLS predictions are reused unchanged, with slope 0.024196 (95% t interval −0.560865–0.609257; P = 0.931489), lambda approximately zero. The band is a 95% coefficient interval, not a species prediction interval. Gray bars show released measurement intervals, which are not propagated into the regression. The broad slope interval allows associations in either direction. All 19 species are named in the isolated regression panel. Stored Gbp coordinates are divided by 0.978 to display pg/1C; this unit conversion leaves the log–log slope and inference unchanged. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Abbreviations: LTR, long terminal repeat; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-4-a" aria-labelledby="figure-4-a-title">
+<h2 id="figure-4-a-title">Figure 4a — LTR depth distributions</h2>
+<p class="downloads"><a href="figures/figure_4/panels/Figure_4a_isolated.pdf?v=8b4d329be7fc">PDF</a> · <a href="figures/figure_4/panels/Figure_4a_isolated.png?v=293b765b3b15">Full-size PNG</a> · <a href="figures/figure_4/panels/Figure_4a_isolated.tif?v=a1d83c209a7e">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_4/panels/Figure_4a_isolated.png?v=293b765b3b15"><img src="figures/figure_4/panels/Figure_4a_isolated.png?v=293b765b3b15" alt="Thirty named species, all 380 element ratios, blue medians and intervals, and genome-size/count annotations." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-4-a">Notes for Figure 4a</label>
+<textarea id="note-figure-4-a" class="note-input" data-note-id="figure-4-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-4-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-4-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The selected LTR terminal/internal depth proxy does not resolve a relationship with genome size. (a) All 380 retained LTR/Gypsy elements from 30 species are shown in the fixed phylogenetic row order; no extra outliers were removed for this refinement. Gray density outlines use a pooled bandwidth in log2-ratio space, equal maximum widths and observed-range trimming. Hollow points show every retained element, jittered vertically only. Blue marks show species medians of raw ratios and released 95% intervals from 2,000 element bootstraps. Right labels give genome size and element count; n/a marks unavailable genome size. The ratio is length-weighted mean per-base depth across both terminal LTRs divided by mean depth across the entire intervening sequence, including zero-depth bases. The frozen primary filter requires elements at least 3,000 bp long, at least five parsed TEsorter domains, inclusive within-species 1.5-IQR fences, and at least 80% positive-depth coverage in each of the three regions. Ratio 1 indicates equal mapped depth; it is not a calibrated no-deletion baseline. This statistic is a mapping-depth proxy, not an ectopic-recombination or DNA-loss rate. Elements are not independent biological replicates. (b) Nineteen overlapping species (239 elements) contribute one median each. Stored log10–log10 Pagel-lambda PGLS predictions are reused unchanged, with slope 0.024196 (95% t interval −0.560865–0.609257; P = 0.931489), lambda approximately zero. The band is a 95% coefficient interval, not a species prediction interval. Gray bars show released measurement intervals, which are not propagated into the regression. The broad slope interval allows associations in either direction. All 19 species are named in the isolated regression panel. Stored Gbp coordinates are divided by 0.978 to display pg/1C; this unit conversion leaves the log–log slope and inference unchanged. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Abbreviations: LTR, long terminal repeat; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-4-b" aria-labelledby="figure-4-b-title">
+<h2 id="figure-4-b-title">Figure 4b — LTR ratio and genome size</h2>
+<p class="downloads"><a href="figures/figure_4/panels/Figure_4b_isolated.pdf?v=6e864d1a1667">PDF</a> · <a href="figures/figure_4/panels/Figure_4b_isolated.png?v=1c3f68da312a">Full-size PNG</a> · <a href="figures/figure_4/panels/Figure_4b_isolated.tif?v=ef1e57f9e313">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_4/panels/Figure_4b_isolated.png?v=1c3f68da312a"><img src="figures/figure_4/panels/Figure_4b_isolated.png?v=1c3f68da312a" alt="Nineteen named species and measurement intervals around a nearly flat stored PGLS line with a broad band." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-4-b">Notes for Figure 4b</label>
+<textarea id="note-figure-4-b" class="note-input" data-note-id="figure-4-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-4-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-4-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The selected LTR terminal/internal depth proxy does not resolve a relationship with genome size. (a) All 380 retained LTR/Gypsy elements from 30 species are shown in the fixed phylogenetic row order; no extra outliers were removed for this refinement. Gray density outlines use a pooled bandwidth in log2-ratio space, equal maximum widths and observed-range trimming. Hollow points show every retained element, jittered vertically only. Blue marks show species medians of raw ratios and released 95% intervals from 2,000 element bootstraps. Right labels give genome size and element count; n/a marks unavailable genome size. The ratio is length-weighted mean per-base depth across both terminal LTRs divided by mean depth across the entire intervening sequence, including zero-depth bases. The frozen primary filter requires elements at least 3,000 bp long, at least five parsed TEsorter domains, inclusive within-species 1.5-IQR fences, and at least 80% positive-depth coverage in each of the three regions. Ratio 1 indicates equal mapped depth; it is not a calibrated no-deletion baseline. This statistic is a mapping-depth proxy, not an ectopic-recombination or DNA-loss rate. Elements are not independent biological replicates. (b) Nineteen overlapping species (239 elements) contribute one median each. Stored log10–log10 Pagel-lambda PGLS predictions are reused unchanged, with slope 0.024196 (95% t interval −0.560865–0.609257; P = 0.931489), lambda approximately zero. The band is a 95% coefficient interval, not a species prediction interval. Gray bars show released measurement intervals, which are not propagated into the regression. The broad slope interval allows associations in either direction. All 19 species are named in the isolated regression panel. Stored Gbp coordinates are divided by 0.978 to display pg/1C; this unit conversion leaves the log–log slope and inference unchanged. Genome size is based on nuclear integrated optical density (IOD), anchored to the D. fuscus assembly scale. Measurement intervals exclude anchor uncertainty; run-specific calibration remains unresolved. Sizes are species summaries, not independently validated C-values. Abbreviations: LTR, long terminal repeat; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<aside class="finding"><strong>Cellular covariation without fixed proportionality</strong><p>Genome–cell association is the clearest pairwise pattern. Nuclear area increases less steeply in the displayed conditional regression; paired nuclear fractions vary among species.</p></aside><section id="figure-5" aria-labelledby="figure-5-title">
+<h2 id="figure-5-title">Figure 5 — Genome size and cellular architecture — full collage</h2>
+<p class="downloads"><a href="figures/figure_5/Figure_5_polished.pdf?v=a4a3bf54b243">PDF</a> · <a href="figures/figure_5/Figure_5_polished.png?v=251e6308ce78">Full-size PNG</a> · <a href="figures/figure_5/Figure_5_polished.tif?v=1a7857cc644f">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_5/Figure_5_polished.png?v=251e6308ce78"><img src="figures/figure_5/Figure_5_polished.png?v=251e6308ce78" alt="Four panels integrate genome–cell and genome–nucleus relationships, conditional nuclear–cell scaling and paired nuclear fractions, retaining all 24 species." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-5">Notes for Figure 5</label>
+<textarea id="note-figure-5" class="note-input" data-note-id="figure-5" rows="4" maxlength="50000" aria-describedby="note-status-figure-5" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-5" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome size covaries with erythrocyte area, while nuclear and cellular dimensions are not uniformly proportional. Genome size and cellular architecture in all 24 sampled species. (a,b) Cell area and nucleus area versus genome size, with log10-standardized Pagel-lambda PGLS fits. β denotes a standardized coefficient; brackets give 95% t intervals; P values are unadjusted. (c) Conditional PGLS of log10 nucleus area on log10 cell area. Its unstandardized slope is compared with slope one; the dashed proportional reference passes through the log-scale species centroid. This regression does not identify an errors-in-variables structural exponent. Solid lines and gray bands in a–c show back-transformed fitted log-scale means and 95% coefficient bands; point bars show released measurement intervals. Measurement errors are displayed but not propagated into these regressions. (d) Fractions are first computed within each actual paired cell and nucleus, then summarized as animal medians (open circles) and the species arithmetic mean of animal medians (diamonds). Bars are the central 95% range of 1,000 animal-then-paired-cell resamples. All 42 animals and 1,152 pairs remain. Species follow the fixed phylogenetic display order. Seven morphology species have only one animal; their intervals omit among-animal uncertainty. All cellular traits describe selected large erythrocytes and two-dimensional nuclear and cell areas. Genome size is IOD-derived and D. fuscus assembly-anchored; calibration and staining-run uncertainty are not represented by the plotted intervals. Shared colors and shapes identify recorded reproductive strategy in a–c. Gray diamonds mark the three species with no frozen egg-placement assignment (D. brimleyorum, D. folkertsi, D. ochrophaeus); their aquatic-larval development is known and they remain in every fit. The overview labels a few fixed reference species; isolated scatterplots label all 24. Label choice changes no data or fits. The association results do not determine causal direction. Abbreviations: PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-5-a" aria-labelledby="figure-5-a-title">
+<h2 id="figure-5-a-title">Figure 5a — Genome size and cell area</h2>
+<p class="downloads"><a href="figures/figure_5/panels/Figure_5a_isolated.pdf?v=3d1fda183348">PDF</a> · <a href="figures/figure_5/panels/Figure_5a_isolated.png?v=d64554f932a0">Full-size PNG</a> · <a href="figures/figure_5/panels/Figure_5a_isolated.tif?v=826cceb3d796">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_5/panels/Figure_5a_isolated.png?v=d64554f932a0"><img src="figures/figure_5/panels/Figure_5a_isolated.png?v=d64554f932a0" alt="All 24 species labelled; cell area rises with genome size under the stored PGLS fit." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-5-a">Notes for Figure 5a</label>
+<textarea id="note-figure-5-a" class="note-input" data-note-id="figure-5-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-5-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-5-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome size covaries with erythrocyte area, while nuclear and cellular dimensions are not uniformly proportional. Genome size and cellular architecture in all 24 sampled species. (a,b) Cell area and nucleus area versus genome size, with log10-standardized Pagel-lambda PGLS fits. β denotes a standardized coefficient; brackets give 95% t intervals; P values are unadjusted. (c) Conditional PGLS of log10 nucleus area on log10 cell area. Its unstandardized slope is compared with slope one; the dashed proportional reference passes through the log-scale species centroid. This regression does not identify an errors-in-variables structural exponent. Solid lines and gray bands in a–c show back-transformed fitted log-scale means and 95% coefficient bands; point bars show released measurement intervals. Measurement errors are displayed but not propagated into these regressions. (d) Fractions are first computed within each actual paired cell and nucleus, then summarized as animal medians (open circles) and the species arithmetic mean of animal medians (diamonds). Bars are the central 95% range of 1,000 animal-then-paired-cell resamples. All 42 animals and 1,152 pairs remain. Species follow the fixed phylogenetic display order. Seven morphology species have only one animal; their intervals omit among-animal uncertainty. All cellular traits describe selected large erythrocytes and two-dimensional nuclear and cell areas. Genome size is IOD-derived and D. fuscus assembly-anchored; calibration and staining-run uncertainty are not represented by the plotted intervals. Shared colors and shapes identify recorded reproductive strategy in a–c. Gray diamonds mark the three species with no frozen egg-placement assignment (D. brimleyorum, D. folkertsi, D. ochrophaeus); their aquatic-larval development is known and they remain in every fit. The overview labels a few fixed reference species; isolated scatterplots label all 24. Label choice changes no data or fits. The association results do not determine causal direction. Abbreviations: PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-5-b" aria-labelledby="figure-5-b-title">
+<h2 id="figure-5-b-title">Figure 5b — Genome size and nucleus area</h2>
+<p class="downloads"><a href="figures/figure_5/panels/Figure_5b_isolated.pdf?v=a5b8ccbbbf14">PDF</a> · <a href="figures/figure_5/panels/Figure_5b_isolated.png?v=970f17248f99">Full-size PNG</a> · <a href="figures/figure_5/panels/Figure_5b_isolated.tif?v=b037c76fc5e4">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_5/panels/Figure_5b_isolated.png?v=970f17248f99"><img src="figures/figure_5/panels/Figure_5b_isolated.png?v=970f17248f99" alt="All 24 species labelled; nucleus area has a weaker positive genome-size association." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-5-b">Notes for Figure 5b</label>
+<textarea id="note-figure-5-b" class="note-input" data-note-id="figure-5-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-5-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-5-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome size covaries with erythrocyte area, while nuclear and cellular dimensions are not uniformly proportional. Genome size and cellular architecture in all 24 sampled species. (a,b) Cell area and nucleus area versus genome size, with log10-standardized Pagel-lambda PGLS fits. β denotes a standardized coefficient; brackets give 95% t intervals; P values are unadjusted. (c) Conditional PGLS of log10 nucleus area on log10 cell area. Its unstandardized slope is compared with slope one; the dashed proportional reference passes through the log-scale species centroid. This regression does not identify an errors-in-variables structural exponent. Solid lines and gray bands in a–c show back-transformed fitted log-scale means and 95% coefficient bands; point bars show released measurement intervals. Measurement errors are displayed but not propagated into these regressions. (d) Fractions are first computed within each actual paired cell and nucleus, then summarized as animal medians (open circles) and the species arithmetic mean of animal medians (diamonds). Bars are the central 95% range of 1,000 animal-then-paired-cell resamples. All 42 animals and 1,152 pairs remain. Species follow the fixed phylogenetic display order. Seven morphology species have only one animal; their intervals omit among-animal uncertainty. All cellular traits describe selected large erythrocytes and two-dimensional nuclear and cell areas. Genome size is IOD-derived and D. fuscus assembly-anchored; calibration and staining-run uncertainty are not represented by the plotted intervals. Shared colors and shapes identify recorded reproductive strategy in a–c. Gray diamonds mark the three species with no frozen egg-placement assignment (D. brimleyorum, D. folkertsi, D. ochrophaeus); their aquatic-larval development is known and they remain in every fit. The overview labels a few fixed reference species; isolated scatterplots label all 24. Label choice changes no data or fits. The association results do not determine causal direction. Abbreviations: PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-5-c" aria-labelledby="figure-5-c-title">
+<h2 id="figure-5-c-title">Figure 5c — Conditional nuclear–cell area scaling</h2>
+<p class="downloads"><a href="figures/figure_5/panels/Figure_5c_isolated.pdf?v=093ea28d96e9">PDF</a> · <a href="figures/figure_5/panels/Figure_5c_isolated.png?v=30b63c1fe348">Full-size PNG</a> · <a href="figures/figure_5/panels/Figure_5c_isolated.tif?v=24ebee19600c">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_5/panels/Figure_5c_isolated.png?v=30b63c1fe348"><img src="figures/figure_5/panels/Figure_5c_isolated.png?v=30b63c1fe348" alt="All 24 species labelled on logarithmic area axes with fitted slope 0.45 and a slope-one reference." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-5-c">Notes for Figure 5c</label>
+<textarea id="note-figure-5-c" class="note-input" data-note-id="figure-5-c" rows="4" maxlength="50000" aria-describedby="note-status-figure-5-c" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-5-c" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome size covaries with erythrocyte area, while nuclear and cellular dimensions are not uniformly proportional. Genome size and cellular architecture in all 24 sampled species. (a,b) Cell area and nucleus area versus genome size, with log10-standardized Pagel-lambda PGLS fits. β denotes a standardized coefficient; brackets give 95% t intervals; P values are unadjusted. (c) Conditional PGLS of log10 nucleus area on log10 cell area. Its unstandardized slope is compared with slope one; the dashed proportional reference passes through the log-scale species centroid. This regression does not identify an errors-in-variables structural exponent. Solid lines and gray bands in a–c show back-transformed fitted log-scale means and 95% coefficient bands; point bars show released measurement intervals. Measurement errors are displayed but not propagated into these regressions. (d) Fractions are first computed within each actual paired cell and nucleus, then summarized as animal medians (open circles) and the species arithmetic mean of animal medians (diamonds). Bars are the central 95% range of 1,000 animal-then-paired-cell resamples. All 42 animals and 1,152 pairs remain. Species follow the fixed phylogenetic display order. Seven morphology species have only one animal; their intervals omit among-animal uncertainty. All cellular traits describe selected large erythrocytes and two-dimensional nuclear and cell areas. Genome size is IOD-derived and D. fuscus assembly-anchored; calibration and staining-run uncertainty are not represented by the plotted intervals. Shared colors and shapes identify recorded reproductive strategy in a–c. Gray diamonds mark the three species with no frozen egg-placement assignment (D. brimleyorum, D. folkertsi, D. ochrophaeus); their aquatic-larval development is known and they remain in every fit. The overview labels a few fixed reference species; isolated scatterplots label all 24. Label choice changes no data or fits. The association results do not determine causal direction. Abbreviations: PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-5-d" aria-labelledby="figure-5-d-title">
+<h2 id="figure-5-d-title">Figure 5d — Paired nuclear fractions across species and animals</h2>
+<p class="downloads"><a href="figures/figure_5/panels/Figure_5d_isolated.pdf?v=e9e88ff72bb8">PDF</a> · <a href="figures/figure_5/panels/Figure_5d_isolated.png?v=92ca5b626f2c">Full-size PNG</a> · <a href="figures/figure_5/panels/Figure_5d_isolated.tif?v=c6cb523cad83">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_5/panels/Figure_5d_isolated.png?v=92ca5b626f2c"><img src="figures/figure_5/panels/Figure_5d_isolated.png?v=92ca5b626f2c" alt="All 24 species in phylogenetic order show animal medians, species means, uncertainty intervals and animal/cell counts." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-5-d">Notes for Figure 5d</label>
+<textarea id="note-figure-5-d" class="note-input" data-note-id="figure-5-d" rows="4" maxlength="50000" aria-describedby="note-status-figure-5-d" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-5-d" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome size covaries with erythrocyte area, while nuclear and cellular dimensions are not uniformly proportional. Genome size and cellular architecture in all 24 sampled species. (a,b) Cell area and nucleus area versus genome size, with log10-standardized Pagel-lambda PGLS fits. β denotes a standardized coefficient; brackets give 95% t intervals; P values are unadjusted. (c) Conditional PGLS of log10 nucleus area on log10 cell area. Its unstandardized slope is compared with slope one; the dashed proportional reference passes through the log-scale species centroid. This regression does not identify an errors-in-variables structural exponent. Solid lines and gray bands in a–c show back-transformed fitted log-scale means and 95% coefficient bands; point bars show released measurement intervals. Measurement errors are displayed but not propagated into these regressions. (d) Fractions are first computed within each actual paired cell and nucleus, then summarized as animal medians (open circles) and the species arithmetic mean of animal medians (diamonds). Bars are the central 95% range of 1,000 animal-then-paired-cell resamples. All 42 animals and 1,152 pairs remain. Species follow the fixed phylogenetic display order. Seven morphology species have only one animal; their intervals omit among-animal uncertainty. All cellular traits describe selected large erythrocytes and two-dimensional nuclear and cell areas. Genome size is IOD-derived and D. fuscus assembly-anchored; calibration and staining-run uncertainty are not represented by the plotted intervals. Shared colors and shapes identify recorded reproductive strategy in a–c. Gray diamonds mark the three species with no frozen egg-placement assignment (D. brimleyorum, D. folkertsi, D. ochrophaeus); their aquatic-larval development is known and they remain in every fit. The overview labels a few fixed reference species; isolated scatterplots label all 24. Label choice changes no data or fits. The association results do not determine causal direction. Abbreviations: PGLS, phylogenetic generalized least squares.</p>
+</section>
+<aside class="finding"><strong>Causal models constrain explanations, while direction remains unresolved</strong><p>The leading expanded classes preserve the cellular connection but differ in body-size placement. Weighted arrows express a specified hypothesis; equivalent orientations remain possible.</p></aside><section id="figure-6" aria-labelledby="figure-6-title">
+<h2 id="figure-6-title">Figure 6 — Cellular associations and alternative causal hypotheses — full collage</h2>
+<p class="downloads"><a href="figures/figure_6/Figure_6_polished.pdf?v=0d425f2877e2">PDF</a> · <a href="figures/figure_6/Figure_6_polished.png?v=d15109e3954d">Full-size PNG</a> · <a href="figures/figure_6/Figure_6_polished.tif?v=69c8c272851f">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_6/Figure_6_polished.png?v=d15109e3954d"><img src="figures/figure_6/Figure_6_polished.png?v=d15109e3954d" alt="Four panels show a weighted genome-first hypothesis, three body-adjusted regression coefficients, support for eight candidate classes in 24 and 22 species, and four equivalent causal orientations. Genome–cell and cell–nucleus coefficients are positive after body adjustment; the additional genome–nucleus interval spans zero. H5 and H7 lead in 24 species, whereas H8, H7 and H5 are close in 22. The four H5 orientations cannot be distinguished by graphical conditional independences." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-6">Notes for Figure 6</label>
+<textarea id="note-figure-6" class="note-input" data-note-id="figure-6" rows="4" maxlength="50000" aria-describedby="note-status-figure-6" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-6" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Compatible models preserve a genome–cell–nucleus connection while leaving causal direction and body-size placement unresolved. (a) One genome-first orientation of H5 for 24 species. Arrow widths and labels encode absolute standardized coefficients from cell area ~ genome size, nuclear area ~ cell area, and body length ~ cell area. Directions are hypotheses. (b) Separate conditional checks: cell area ~ genome size + body length and nuclear area ~ cell area + genome size + body length. Points and segments show coefficients and 95% t intervals; grey intervals include zero. These are different equations from panel a. (c) CICc weights across eight candidate classes for 24 species and after excluding D. aeneus and D. wrighti (22 species). Both excluded species are small direct developers; the comparison changes body-size range, development and taxon composition together. Weights sum to one within each cohort and candidate set; they are not probabilities of causal truth. H5 and H7 differ by only 0.624 CICc in full24. Skeletons show adjacency, not arrow direction. The primary independence-test order is b,g,c,n; reversing it changes support, with the leading subset22 classes closely ranked. (d) All four acyclic H5 orientations share a skeleton and no unshielded colliders, hence the same graphical conditional independences. These schematic arrows do not encode effect size. Re-estimated residual covariance can yield numerical differences between reversed regressions. G = genome size; C = erythrocyte area; N = nuclear area; B = species maximum snout–vent length. All log10 traits use fixed full24 means and sample SDs. Regressions use Pagel-lambda covariance; intervals condition on fitted lambda and omit tree and measurement uncertainty. The expanded eight-class comparison has not undergone measurement or tree resampling. Genome-size calibration and selection of large eligible erythrocytes limit biological interpretation. Abbreviations: CICc, C-statistic information criterion with small-sample correction.</p>
+</section>
+<section id="figure-6-a" aria-labelledby="figure-6-a-title">
+<h2 id="figure-6-a-title">Figure 6a — Representative genome-first hypothesis</h2>
+<p class="downloads"><a href="figures/figure_6/panels/Figure_6a_isolated.pdf?v=c25b8d7e60a0">PDF</a> · <a href="figures/figure_6/panels/Figure_6a_isolated.png?v=e0d23f2d7c46">Full-size PNG</a> · <a href="figures/figure_6/panels/Figure_6a_isolated.tif?v=eed776da2b7f">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_6/panels/Figure_6a_isolated.png?v=e0d23f2d7c46"><img src="figures/figure_6/panels/Figure_6a_isolated.png?v=e0d23f2d7c46" alt="Genome size points to cell area with coefficient 0.72, cell area points to nuclear area with 0.58, and cell area points to maximum body length with 0.36. These directions are assumed." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-6-a">Notes for Figure 6a</label>
+<textarea id="note-figure-6-a" class="note-input" data-note-id="figure-6-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-6-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-6-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Compatible models preserve a genome–cell–nucleus connection while leaving causal direction and body-size placement unresolved. One genome-first representative of H5, the cell-linked body-size class, for all 24 species. Equations are standardized log10 cell area ~ genome size; nuclear area ~ cell area; maximum body length ~ cell area. Arrow width is proportional to the absolute standardized regression coefficient; labels are rounded to two decimals. These are the Figure 13 structural coefficients, not the body-adjusted coefficients in panel b. Directions are model assumptions. H5 and H7 have similar relative support, and H5 contains four observationally equivalent orientations.</p>
+</section>
+<section id="figure-6-b" aria-labelledby="figure-6-b-title">
+<h2 id="figure-6-b-title">Figure 6b — Conditional associations</h2>
+<p class="downloads"><a href="figures/figure_6/panels/Figure_6b_isolated.pdf?v=6349dd8072bf">PDF</a> · <a href="figures/figure_6/panels/Figure_6b_isolated.png?v=1ed7499ca3ce">Full-size PNG</a> · <a href="figures/figure_6/panels/Figure_6b_isolated.tif?v=684034cc9647">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_6/panels/Figure_6b_isolated.png?v=1ed7499ca3ce"><img src="figures/figure_6/panels/Figure_6b_isolated.png?v=1ed7499ca3ce" alt="Body-adjusted genome–cell coefficient is 0.55; the cell–nucleus coefficient adjusted for genome and body is 0.65; the additional genome–nucleus coefficient is 0.05 with a wide interval spanning zero." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-6-b">Notes for Figure 6b</label>
+<textarea id="note-figure-6-b" class="note-input" data-note-id="figure-6-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-6-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-6-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Compatible models preserve a genome–cell–nucleus connection while leaving causal direction and body-size placement unresolved. Separate conditional-regression checks on all 24 species, using the Figure 8 exports: cell area ~ genome size + body length; nuclear area ~ cell area + genome size + body length. Points give standardized coefficients and segments the 95% t intervals, with n minus regression coefficient count degrees of freedom. Plus signs in row labels identify included covariates. Blue intervals exclude zero; grey intervals include zero. These checks are distinct from the representative equations in panel a and do not identify causal effects.</p>
+</section>
+<section id="figure-6-c" aria-labelledby="figure-6-c-title">
+<h2 id="figure-6-c-title">Figure 6c — Support across eight candidate classes</h2>
+<p class="downloads"><a href="figures/figure_6/panels/Figure_6c_isolated.pdf?v=e577aca76c63">PDF</a> · <a href="figures/figure_6/panels/Figure_6c_isolated.png?v=411c17c9044e">Full-size PNG</a> · <a href="figures/figure_6/panels/Figure_6c_isolated.tif?v=17eeb865b1bd">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_6/panels/Figure_6c_isolated.png?v=411c17c9044e"><img src="figures/figure_6/panels/Figure_6c_isolated.png?v=411c17c9044e" alt="Eight candidate skeletons and their model weights are displayed. Full24 weights for H5 and H7 are 0.524 and 0.384. Subset22 weights for H8, H7 and H5 are 0.387, 0.295 and 0.283." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-6-c">Notes for Figure 6c</label>
+<textarea id="note-figure-6-c" class="note-input" data-note-id="figure-6-c" rows="4" maxlength="50000" aria-describedby="note-status-figure-6-c" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-6-c" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Compatible models preserve a genome–cell–nucleus connection while leaving causal direction and body-size placement unresolved. Relative CICc weights for the expanded eight-class candidate set, using primary independence-test order b,g,c,n. Full24 and the subset excluding D. aeneus and D. wrighti (22 species) are fitted and normalized separately. Rows are ordered by full24 support. Miniature undirected graphs show class skeletons; they do not assert that every orientation belongs to that class. No class contains an unshielded collider. H1–H4 correspond to the former body-upstream representatives. H5 links genome, nucleus and body through cell; H6 links genome–nucleus–cell–body; H7 links body–genome–cell–nucleus; H8 disconnects body. Weights are support relative to this candidate set, not probabilities of causal truth. H5 and H7 are separated by only 0.624 CICc in full24. Reversing the independence-test order changes relative support, and the three leading subset22 classes are closely ranked. Abbreviations: CICc, C-statistic information criterion with small-sample correction.</p>
+</section>
+<section id="figure-6-d" aria-labelledby="figure-6-d-title">
+<h2 id="figure-6-d-title">Figure 6d — Equivalent directions within H5</h2>
+<p class="downloads"><a href="figures/figure_6/panels/Figure_6d_isolated.pdf?v=ad698a04ade5">PDF</a> · <a href="figures/figure_6/panels/Figure_6d_isolated.png?v=e408881be60d">Full-size PNG</a> · <a href="figures/figure_6/panels/Figure_6d_isolated.tif?v=137c86303127">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_6/panels/Figure_6d_isolated.png?v=e408881be60d"><img src="figures/figure_6/panels/Figure_6d_isolated.png?v=e408881be60d" alt="Four H5 star diagrams have genome, cell, nucleus or body at the root. All retain a cell-centered skeleton without a collider and share the same graphical conditional independences." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-6-d">Notes for Figure 6d</label>
+<textarea id="note-figure-6-d" class="note-input" data-note-id="figure-6-d" rows="4" maxlength="50000" aria-describedby="note-status-figure-6-d" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-6-d" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Compatible models preserve a genome–cell–nucleus connection while leaving causal direction and body-size placement unresolved. The four enumerated acyclic orientations of H5 share the same skeleton and have no unshielded colliders. They therefore encode the same graphical conditional-independence claims. Arrow widths in this panel have no effect-size meaning. Graphical equivalence does not require separately fitted reversed phylogenetic regressions to return identical numerical scores when covariance parameters are re-estimated.</p>
+</section>
+<aside class="finding"><strong>Body context and animal sampling</strong><p>The two smallest direct developers influence organismal associations. Positive genome–cell and cell–nucleus coefficients persist in the stated body-adjusted sensitivities.</p></aside><section id="figure-7" aria-labelledby="figure-7-title">
+<h2 id="figure-7-title">Figure 7 — Body size and sampling sensitivity — full collage</h2>
+<p class="downloads"><a href="figures/figure_7/Figure_7_polished.pdf?v=196022739b35">PDF</a> · <a href="figures/figure_7/Figure_7_polished.png?v=d1da126dd544">Full-size PNG</a> · <a href="figures/figure_7/Figure_7_polished.tif?v=b829a8c8082e">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_7/Figure_7_polished.png?v=d1da126dd544"><img src="figures/figure_7/Figure_7_polished.png?v=d1da126dd544" alt="Three body-size scatterplots retain every species and compare 24-species with 22-species fits; a coefficient forest adds animal-weighting and species-panel sensitivity." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-7">Notes for Figure 7</label>
+<textarea id="note-figure-7" class="note-input" data-note-id="figure-7" rows="4" maxlength="50000" aria-describedby="note-status-figure-7" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-7" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome–cell associations persist across body-size adjustment, animal weighting and the specified species sensitivity. Body size and sampling sensitivity of the 24-species cellular panel. (a–c) Genome size, cell area and nucleus area versus species maximum snout–vent length (SVL). SVL values are species maxima supplied by the collaborator, not body lengths of the microscopy animals. Both axes are logarithmic with original-unit tick labels. Solid lines are the full 24-species Pagel-lambda PGLS fits; dashed lines are fits excluding D. aeneus and D. wrighti (22 species), restricted to the observed body-size range of each fitted panel. The gray band is the full 24-species 95% confidence band for the log-scale fitted mean, back-transformed; it is not a prediction interval. Vertical bars are released trait measurement intervals. β values and the conditional coefficients in d use identical full 24-species log10 means and SDs. Species, not cells, are the model observations. Displayed P values are unadjusted. Neither SVL uncertainty nor predictor measurement error is propagated. (d) Three conditional regressions show the coefficient on genome size in cell ~ genome + SVL, cell area in nucleus ~ cell + SVL, and genome size in nucleus ~ genome + cell + SVL. Four rows compare released summaries and equal-animal summaries in 24 and 22 species. Whiskers are 95% t coefficient intervals conditional on the fitted phylogenetic parameter. Released morphology pools selected paired objects within species before taking the median. The equal-animal sensitivity takes the median of within-animal medians for morphology; IOD first averages image medians within animal, then averages animals. This median-of-medians morphology definition differs from the arithmetic mean-of-animal-medians nuclear-fraction summaries in Figure5d. The 22-species sensitivity removes exactly the two smallest species and only direct developers; their body size, developmental mode and lineage identity are confounded, so altered significance does not identify a causal mechanism or test differences between slopes. Shared strategy colors retain all 24 points, with three unassigned egg-placement records shown gray. Isolated scatterplots label all species. Cell and nuclear areas refer to selected large erythrocytes; genome size is IOD-derived and D. fuscus assembly-anchored. Seven morphology species and four IOD species have one animal. These sensitivity analyses do not resolve staining calibration, causal direction, or population representativeness. Abbreviations: SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-7-a" aria-labelledby="figure-7-a-title">
+<h2 id="figure-7-a-title">Figure 7a — Body size and genome size</h2>
+<p class="downloads"><a href="figures/figure_7/panels/Figure_7a_isolated.pdf?v=5bc3c58170ed">PDF</a> · <a href="figures/figure_7/panels/Figure_7a_isolated.png?v=c0752c9e7565">Full-size PNG</a> · <a href="figures/figure_7/panels/Figure_7a_isolated.tif?v=7ee50a2b49d9">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_7/panels/Figure_7a_isolated.png?v=c0752c9e7565"><img src="figures/figure_7/panels/Figure_7a_isolated.png?v=c0752c9e7565" alt="All 24 species labeled by species maximum SVL and genome size, with full 24-species and subset 22-species fitted lines." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-7-a">Notes for Figure 7a</label>
+<textarea id="note-figure-7-a" class="note-input" data-note-id="figure-7-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-7-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-7-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome–cell associations persist across body-size adjustment, animal weighting and the specified species sensitivity. Body size and sampling sensitivity of the 24-species cellular panel. (a–c) Genome size, cell area and nucleus area versus species maximum snout–vent length (SVL). SVL values are species maxima supplied by the collaborator, not body lengths of the microscopy animals. Both axes are logarithmic with original-unit tick labels. Solid lines are the full 24-species Pagel-lambda PGLS fits; dashed lines are fits excluding D. aeneus and D. wrighti (22 species), restricted to the observed body-size range of each fitted panel. The gray band is the full 24-species 95% confidence band for the log-scale fitted mean, back-transformed; it is not a prediction interval. Vertical bars are released trait measurement intervals. β values and the conditional coefficients in d use identical full 24-species log10 means and SDs. Species, not cells, are the model observations. Displayed P values are unadjusted. Neither SVL uncertainty nor predictor measurement error is propagated. (d) Three conditional regressions show the coefficient on genome size in cell ~ genome + SVL, cell area in nucleus ~ cell + SVL, and genome size in nucleus ~ genome + cell + SVL. Four rows compare released summaries and equal-animal summaries in 24 and 22 species. Whiskers are 95% t coefficient intervals conditional on the fitted phylogenetic parameter. Released morphology pools selected paired objects within species before taking the median. The equal-animal sensitivity takes the median of within-animal medians for morphology; IOD first averages image medians within animal, then averages animals. This median-of-medians morphology definition differs from the arithmetic mean-of-animal-medians nuclear-fraction summaries in Figure5d. The 22-species sensitivity removes exactly the two smallest species and only direct developers; their body size, developmental mode and lineage identity are confounded, so altered significance does not identify a causal mechanism or test differences between slopes. Shared strategy colors retain all 24 points, with three unassigned egg-placement records shown gray. Isolated scatterplots label all species. Cell and nuclear areas refer to selected large erythrocytes; genome size is IOD-derived and D. fuscus assembly-anchored. Seven morphology species and four IOD species have one animal. These sensitivity analyses do not resolve staining calibration, causal direction, or population representativeness. Abbreviations: SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-7-b" aria-labelledby="figure-7-b-title">
+<h2 id="figure-7-b-title">Figure 7b — Body size and cell area</h2>
+<p class="downloads"><a href="figures/figure_7/panels/Figure_7b_isolated.pdf?v=00a61ff8af42">PDF</a> · <a href="figures/figure_7/panels/Figure_7b_isolated.png?v=add5d4ff350b">Full-size PNG</a> · <a href="figures/figure_7/panels/Figure_7b_isolated.tif?v=983000c6bb00">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_7/panels/Figure_7b_isolated.png?v=add5d4ff350b"><img src="figures/figure_7/panels/Figure_7b_isolated.png?v=add5d4ff350b" alt="All 24 species labeled by maximum SVL and selected cell area, with two fitted lines." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-7-b">Notes for Figure 7b</label>
+<textarea id="note-figure-7-b" class="note-input" data-note-id="figure-7-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-7-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-7-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome–cell associations persist across body-size adjustment, animal weighting and the specified species sensitivity. Body size and sampling sensitivity of the 24-species cellular panel. (a–c) Genome size, cell area and nucleus area versus species maximum snout–vent length (SVL). SVL values are species maxima supplied by the collaborator, not body lengths of the microscopy animals. Both axes are logarithmic with original-unit tick labels. Solid lines are the full 24-species Pagel-lambda PGLS fits; dashed lines are fits excluding D. aeneus and D. wrighti (22 species), restricted to the observed body-size range of each fitted panel. The gray band is the full 24-species 95% confidence band for the log-scale fitted mean, back-transformed; it is not a prediction interval. Vertical bars are released trait measurement intervals. β values and the conditional coefficients in d use identical full 24-species log10 means and SDs. Species, not cells, are the model observations. Displayed P values are unadjusted. Neither SVL uncertainty nor predictor measurement error is propagated. (d) Three conditional regressions show the coefficient on genome size in cell ~ genome + SVL, cell area in nucleus ~ cell + SVL, and genome size in nucleus ~ genome + cell + SVL. Four rows compare released summaries and equal-animal summaries in 24 and 22 species. Whiskers are 95% t coefficient intervals conditional on the fitted phylogenetic parameter. Released morphology pools selected paired objects within species before taking the median. The equal-animal sensitivity takes the median of within-animal medians for morphology; IOD first averages image medians within animal, then averages animals. This median-of-medians morphology definition differs from the arithmetic mean-of-animal-medians nuclear-fraction summaries in Figure5d. The 22-species sensitivity removes exactly the two smallest species and only direct developers; their body size, developmental mode and lineage identity are confounded, so altered significance does not identify a causal mechanism or test differences between slopes. Shared strategy colors retain all 24 points, with three unassigned egg-placement records shown gray. Isolated scatterplots label all species. Cell and nuclear areas refer to selected large erythrocytes; genome size is IOD-derived and D. fuscus assembly-anchored. Seven morphology species and four IOD species have one animal. These sensitivity analyses do not resolve staining calibration, causal direction, or population representativeness. Abbreviations: SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-7-c" aria-labelledby="figure-7-c-title">
+<h2 id="figure-7-c-title">Figure 7c — Body size and nucleus area</h2>
+<p class="downloads"><a href="figures/figure_7/panels/Figure_7c_isolated.pdf?v=40279f9eb944">PDF</a> · <a href="figures/figure_7/panels/Figure_7c_isolated.png?v=50166e75660b">Full-size PNG</a> · <a href="figures/figure_7/panels/Figure_7c_isolated.tif?v=3052c0e06604">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_7/panels/Figure_7c_isolated.png?v=50166e75660b"><img src="figures/figure_7/panels/Figure_7c_isolated.png?v=50166e75660b" alt="All 24 species labeled by maximum SVL and selected nucleus area, with full 24-species and subset 22-species fits." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-7-c">Notes for Figure 7c</label>
+<textarea id="note-figure-7-c" class="note-input" data-note-id="figure-7-c" rows="4" maxlength="50000" aria-describedby="note-status-figure-7-c" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-7-c" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome–cell associations persist across body-size adjustment, animal weighting and the specified species sensitivity. Body size and sampling sensitivity of the 24-species cellular panel. (a–c) Genome size, cell area and nucleus area versus species maximum snout–vent length (SVL). SVL values are species maxima supplied by the collaborator, not body lengths of the microscopy animals. Both axes are logarithmic with original-unit tick labels. Solid lines are the full 24-species Pagel-lambda PGLS fits; dashed lines are fits excluding D. aeneus and D. wrighti (22 species), restricted to the observed body-size range of each fitted panel. The gray band is the full 24-species 95% confidence band for the log-scale fitted mean, back-transformed; it is not a prediction interval. Vertical bars are released trait measurement intervals. β values and the conditional coefficients in d use identical full 24-species log10 means and SDs. Species, not cells, are the model observations. Displayed P values are unadjusted. Neither SVL uncertainty nor predictor measurement error is propagated. (d) Three conditional regressions show the coefficient on genome size in cell ~ genome + SVL, cell area in nucleus ~ cell + SVL, and genome size in nucleus ~ genome + cell + SVL. Four rows compare released summaries and equal-animal summaries in 24 and 22 species. Whiskers are 95% t coefficient intervals conditional on the fitted phylogenetic parameter. Released morphology pools selected paired objects within species before taking the median. The equal-animal sensitivity takes the median of within-animal medians for morphology; IOD first averages image medians within animal, then averages animals. This median-of-medians morphology definition differs from the arithmetic mean-of-animal-medians nuclear-fraction summaries in Figure5d. The 22-species sensitivity removes exactly the two smallest species and only direct developers; their body size, developmental mode and lineage identity are confounded, so altered significance does not identify a causal mechanism or test differences between slopes. Shared strategy colors retain all 24 points, with three unassigned egg-placement records shown gray. Isolated scatterplots label all species. Cell and nuclear areas refer to selected large erythrocytes; genome size is IOD-derived and D. fuscus assembly-anchored. Seven morphology species and four IOD species have one animal. These sensitivity analyses do not resolve staining calibration, causal direction, or population representativeness. Abbreviations: SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-7-d" aria-labelledby="figure-7-d-title">
+<h2 id="figure-7-d-title">Figure 7d — Conditional coefficient sensitivity</h2>
+<p class="downloads"><a href="figures/figure_7/panels/Figure_7d_isolated.pdf?v=0366bff4268f">PDF</a> · <a href="figures/figure_7/panels/Figure_7d_isolated.png?v=d3e29cdfaaf9">Full-size PNG</a> · <a href="figures/figure_7/panels/Figure_7d_isolated.tif?v=fb58fb4e0b86">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_7/panels/Figure_7d_isolated.png?v=d3e29cdfaaf9"><img src="figures/figure_7/panels/Figure_7d_isolated.png?v=d3e29cdfaaf9" alt="Twelve coefficients compare three conditional relationships under released or equal-animal summaries and 24 or 22 species." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-7-d">Notes for Figure 7d</label>
+<textarea id="note-figure-7-d" class="note-input" data-note-id="figure-7-d" rows="4" maxlength="50000" aria-describedby="note-status-figure-7-d" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-7-d" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">Genome–cell associations persist across body-size adjustment, animal weighting and the specified species sensitivity. Body size and sampling sensitivity of the 24-species cellular panel. (a–c) Genome size, cell area and nucleus area versus species maximum snout–vent length (SVL). SVL values are species maxima supplied by the collaborator, not body lengths of the microscopy animals. Both axes are logarithmic with original-unit tick labels. Solid lines are the full 24-species Pagel-lambda PGLS fits; dashed lines are fits excluding D. aeneus and D. wrighti (22 species), restricted to the observed body-size range of each fitted panel. The gray band is the full 24-species 95% confidence band for the log-scale fitted mean, back-transformed; it is not a prediction interval. Vertical bars are released trait measurement intervals. β values and the conditional coefficients in d use identical full 24-species log10 means and SDs. Species, not cells, are the model observations. Displayed P values are unadjusted. Neither SVL uncertainty nor predictor measurement error is propagated. (d) Three conditional regressions show the coefficient on genome size in cell ~ genome + SVL, cell area in nucleus ~ cell + SVL, and genome size in nucleus ~ genome + cell + SVL. Four rows compare released summaries and equal-animal summaries in 24 and 22 species. Whiskers are 95% t coefficient intervals conditional on the fitted phylogenetic parameter. Released morphology pools selected paired objects within species before taking the median. The equal-animal sensitivity takes the median of within-animal medians for morphology; IOD first averages image medians within animal, then averages animals. This median-of-medians morphology definition differs from the arithmetic mean-of-animal-medians nuclear-fraction summaries in Figure5d. The 22-species sensitivity removes exactly the two smallest species and only direct developers; their body size, developmental mode and lineage identity are confounded, so altered significance does not identify a causal mechanism or test differences between slopes. Shared strategy colors retain all 24 points, with three unassigned egg-placement records shown gray. Isolated scatterplots label all species. Cell and nuclear areas refer to selected large erythrocytes; genome size is IOD-derived and D. fuscus assembly-anchored. Seven morphology species and four IOD species have one animal. These sensitivity analyses do not resolve staining calibration, causal direction, or population representativeness. Abbreviations: SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<aside class="finding"><strong>The measured TE signature does not explain the cellular relationship</strong><p>The exact 21-species comparison retains the genome–cell coefficient after TE adjustment. Wide TE intervals leave historical insertion and deletion mechanisms unresolved.</p></aside><section id="figure-8" aria-labelledby="figure-8-title">
+<h2 id="figure-8-title">Figure 8 — Repeat divergence and cellular integration — full collage</h2>
+<p class="downloads"><a href="figures/figure_8/Figure_8_polished.pdf?v=80d34dc485d6">PDF</a> · <a href="figures/figure_8/Figure_8_polished.png?v=e15cfc8f039d">Full-size PNG</a> · <a href="figures/figure_8/Figure_8_polished.tif?v=3b366570afee">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_8/Figure_8_polished.png?v=e15cfc8f039d"><img src="figures/figure_8/Figure_8_polished.png?v=e15cfc8f039d" alt="A 21-species scatterplot and conditional-coefficient panels show uncertain TE associations and a persistent genome–cell relationship after TE adjustment." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-8">Notes for Figure 8</label>
+<textarea id="note-figure-8" class="note-input" data-note-id="figure-8" rows="4" maxlength="50000" aria-describedby="note-status-figure-8" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-8" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The measured LTR divergence signature does not account for the genome–cell association in the fitted models. (a) All 21 species with complete repeat, cellular and maximum-SVL data are shown. Five species are labelled in the collage; all 21 are named in the isolated panel. The LTR score is aligned-hit bp in divergence bins 0–4 divided by all LTR aligned-hit bp; it is not genomic TE load, an insertion rate or calibrated age. Solid and dashed lines are the frozen SVL-adjusted and marginal Pagel-lambda PGLS predictions. The adjusted line holds SVL at the 21-species geometric mean (62.13 mm); its gray band is a conditional 95% coefficient interval. Vertical bars show genome-size measurement intervals, which are not propagated into these fits. (b) TE-score coefficients for genome, cell and nuclear outcomes. The vertical bar means adjusted for the listed covariates. The genome coefficient is 0.311 [−0.381, 1.003], P = 0.358. (c) Existing 24-species, matched 21-species and TE-adjusted 21-species coefficients use the same original cellular scaling. Both nuclear equations include genome and cell area; SVL appears in every model and TE is added only to the indicated series. The matched genome–cell coefficient changes from 0.549 to 0.527 with TE adjustment. Wider intervals do not establish absent effects or mechanistic independence. Intervals are t intervals conditional on fitted lambda. Cellular traits are standardized log10 values using the full24 means and SDs; the logit TE fraction uses full34 scaling. D. brimleyorum, D. folkertsi and D. ochrophaeus lack the TE endpoint and are not imputed. Genome sizes are nuclear-IOD-derived and D. fuscus anchored; unresolved staining calibration, selected large-cell sampling and tree provenance remain limitations. Shapes and colors identify reproductive strategy in (a), and species-set/model adjustment in (c). This exploratory comparison does not identify a TE-to-genome-to-cell causal sequence. Abbreviations: TE, transposable element; LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-8-a" aria-labelledby="figure-8-a-title">
+<h2 id="figure-8-a-title">Figure 8a — LTR divergence and genome size</h2>
+<p class="downloads"><a href="figures/figure_8/panels/Figure_8a_isolated.pdf?v=c3a81046ed2d">PDF</a> · <a href="figures/figure_8/panels/Figure_8a_isolated.png?v=b0972fd61084">Full-size PNG</a> · <a href="figures/figure_8/panels/Figure_8a_isolated.tif?v=f3d4c428461b">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_8/panels/Figure_8a_isolated.png?v=b0972fd61084"><img src="figures/figure_8/panels/Figure_8a_isolated.png?v=b0972fd61084" alt="All 21 species are labelled around marginal and body-adjusted genome-size regressions on within-LTR low-divergence fraction." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-8-a">Notes for Figure 8a</label>
+<textarea id="note-figure-8-a" class="note-input" data-note-id="figure-8-a" rows="4" maxlength="50000" aria-describedby="note-status-figure-8-a" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-8-a" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The measured LTR divergence signature does not account for the genome–cell association in the fitted models. (a) All 21 species with complete repeat, cellular and maximum-SVL data are shown. Five species are labelled in the collage; all 21 are named in the isolated panel. The LTR score is aligned-hit bp in divergence bins 0–4 divided by all LTR aligned-hit bp; it is not genomic TE load, an insertion rate or calibrated age. Solid and dashed lines are the frozen SVL-adjusted and marginal Pagel-lambda PGLS predictions. The adjusted line holds SVL at the 21-species geometric mean (62.13 mm); its gray band is a conditional 95% coefficient interval. Vertical bars show genome-size measurement intervals, which are not propagated into these fits. (b) TE-score coefficients for genome, cell and nuclear outcomes. The vertical bar means adjusted for the listed covariates. The genome coefficient is 0.311 [−0.381, 1.003], P = 0.358. (c) Existing 24-species, matched 21-species and TE-adjusted 21-species coefficients use the same original cellular scaling. Both nuclear equations include genome and cell area; SVL appears in every model and TE is added only to the indicated series. The matched genome–cell coefficient changes from 0.549 to 0.527 with TE adjustment. Wider intervals do not establish absent effects or mechanistic independence. Intervals are t intervals conditional on fitted lambda. Cellular traits are standardized log10 values using the full24 means and SDs; the logit TE fraction uses full34 scaling. D. brimleyorum, D. folkertsi and D. ochrophaeus lack the TE endpoint and are not imputed. Genome sizes are nuclear-IOD-derived and D. fuscus anchored; unresolved staining calibration, selected large-cell sampling and tree provenance remain limitations. Shapes and colors identify reproductive strategy in (a), and species-set/model adjustment in (c). This exploratory comparison does not identify a TE-to-genome-to-cell causal sequence. Abbreviations: TE, transposable element; LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-8-b" aria-labelledby="figure-8-b-title">
+<h2 id="figure-8-b-title">Figure 8b — Conditional associations of the TE score</h2>
+<p class="downloads"><a href="figures/figure_8/panels/Figure_8b_isolated.pdf?v=cb2d3606658c">PDF</a> · <a href="figures/figure_8/panels/Figure_8b_isolated.png?v=df0ff2113c46">Full-size PNG</a> · <a href="figures/figure_8/panels/Figure_8b_isolated.tif?v=ba4ac1f59200">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_8/panels/Figure_8b_isolated.png?v=df0ff2113c46"><img src="figures/figure_8/panels/Figure_8b_isolated.png?v=df0ff2113c46" alt="Three TE coefficients have broad intervals crossing zero for genome, cell and nuclear outcomes." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-8-b">Notes for Figure 8b</label>
+<textarea id="note-figure-8-b" class="note-input" data-note-id="figure-8-b" rows="4" maxlength="50000" aria-describedby="note-status-figure-8-b" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-8-b" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The measured LTR divergence signature does not account for the genome–cell association in the fitted models. (a) All 21 species with complete repeat, cellular and maximum-SVL data are shown. Five species are labelled in the collage; all 21 are named in the isolated panel. The LTR score is aligned-hit bp in divergence bins 0–4 divided by all LTR aligned-hit bp; it is not genomic TE load, an insertion rate or calibrated age. Solid and dashed lines are the frozen SVL-adjusted and marginal Pagel-lambda PGLS predictions. The adjusted line holds SVL at the 21-species geometric mean (62.13 mm); its gray band is a conditional 95% coefficient interval. Vertical bars show genome-size measurement intervals, which are not propagated into these fits. (b) TE-score coefficients for genome, cell and nuclear outcomes. The vertical bar means adjusted for the listed covariates. The genome coefficient is 0.311 [−0.381, 1.003], P = 0.358. (c) Existing 24-species, matched 21-species and TE-adjusted 21-species coefficients use the same original cellular scaling. Both nuclear equations include genome and cell area; SVL appears in every model and TE is added only to the indicated series. The matched genome–cell coefficient changes from 0.549 to 0.527 with TE adjustment. Wider intervals do not establish absent effects or mechanistic independence. Intervals are t intervals conditional on fitted lambda. Cellular traits are standardized log10 values using the full24 means and SDs; the logit TE fraction uses full34 scaling. D. brimleyorum, D. folkertsi and D. ochrophaeus lack the TE endpoint and are not imputed. Genome sizes are nuclear-IOD-derived and D. fuscus anchored; unresolved staining calibration, selected large-cell sampling and tree provenance remain limitations. Shapes and colors identify reproductive strategy in (a), and species-set/model adjustment in (c). This exploratory comparison does not identify a TE-to-genome-to-cell causal sequence. Abbreviations: TE, transposable element; LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+<section id="figure-8-c" aria-labelledby="figure-8-c-title">
+<h2 id="figure-8-c-title">Figure 8c — Matched-species cellular coefficients</h2>
+<p class="downloads"><a href="figures/figure_8/panels/Figure_8c_isolated.pdf?v=8ba4f99f6714">PDF</a> · <a href="figures/figure_8/panels/Figure_8c_isolated.png?v=e3394ac5a192">Full-size PNG</a> · <a href="figures/figure_8/panels/Figure_8c_isolated.tif?v=c86fc91abd92">CMYK TIFF</a> <button type="button" data-note-action="focus">Add / edit note</button></p>
+<a href="figures/figure_8/panels/Figure_8c_isolated.png?v=e3394ac5a192"><img src="figures/figure_8/panels/Figure_8c_isolated.png?v=e3394ac5a192" alt="Three sets of coefficients show little change in the genome–cell association when the measured TE score is included." loading="lazy"></a>
+<div class="figure-notes">
+<label for="note-figure-8-c">Notes for Figure 8c</label>
+<textarea id="note-figure-8-c" class="note-input" data-note-id="figure-8-c" rows="4" maxlength="50000" aria-describedby="note-status-figure-8-c" disabled placeholder="What should change? Include panel letters or labels where useful."></textarea>
+<p class="note-status" id="note-status-figure-8-c" role="status">Loading saved notes…</p>
+<div class="note-conflict" hidden><p>A newer note was saved elsewhere. Your draft is still in the box above. The saved version is:</p><pre class="remote-note"></pre><div class="note-actions"><button type="button" data-note-action="use-saved">Use saved version</button> <button type="button" data-note-action="keep-draft">Save my draft instead</button></div></div>
+</div>
+<p class="caption">The measured LTR divergence signature does not account for the genome–cell association in the fitted models. (a) All 21 species with complete repeat, cellular and maximum-SVL data are shown. Five species are labelled in the collage; all 21 are named in the isolated panel. The LTR score is aligned-hit bp in divergence bins 0–4 divided by all LTR aligned-hit bp; it is not genomic TE load, an insertion rate or calibrated age. Solid and dashed lines are the frozen SVL-adjusted and marginal Pagel-lambda PGLS predictions. The adjusted line holds SVL at the 21-species geometric mean (62.13 mm); its gray band is a conditional 95% coefficient interval. Vertical bars show genome-size measurement intervals, which are not propagated into these fits. (b) TE-score coefficients for genome, cell and nuclear outcomes. The vertical bar means adjusted for the listed covariates. The genome coefficient is 0.311 [−0.381, 1.003], P = 0.358. (c) Existing 24-species, matched 21-species and TE-adjusted 21-species coefficients use the same original cellular scaling. Both nuclear equations include genome and cell area; SVL appears in every model and TE is added only to the indicated series. The matched genome–cell coefficient changes from 0.549 to 0.527 with TE adjustment. Wider intervals do not establish absent effects or mechanistic independence. Intervals are t intervals conditional on fitted lambda. Cellular traits are standardized log10 values using the full24 means and SDs; the logit TE fraction uses full34 scaling. D. brimleyorum, D. folkertsi and D. ochrophaeus lack the TE endpoint and are not imputed. Genome sizes are nuclear-IOD-derived and D. fuscus anchored; unresolved staining calibration, selected large-cell sampling and tree provenance remain limitations. Shapes and colors identify reproductive strategy in (a), and species-set/model adjustment in (c). This exploratory comparison does not identify a TE-to-genome-to-cell causal sequence. Abbreviations: TE, transposable element; LTR, long terminal repeat; SVL, snout–vent length; PGLS, phylogenetic generalized least squares.</p>
+</section>
+</main><script>
+/* Figure review notes: project saves with revision checks and local draft backups. */
+(() => {
+  "use strict";
+
+  function start() {
+    const summary = document.querySelector("#notes-summary");
+    const saveButton = document.querySelector("#save-notes");
+    const exportButton = document.querySelector("#export-notes");
+    if (!summary || !saveButton || !exportButton) return;
+
+    const prefix = `desmognathus.polished-eight.20260924.notes.v1:${location.pathname}:`;
+    const states = [];
+    let removedNotes = [];
+    let ready = false;
+    let loading = false;
+    let loadFailed = false;
+
+    function entry(value) {
+      if (!value || typeof value.text !== "string" || value.text.length > 50000 ||
+          !Number.isSafeInteger(value.revision) || value.revision < 0) {
+        throw new Error("Invalid notes response");
+      }
+      return value;
+    }
+
+    function backup(state) {
+      try {
+        if (state.dirty || state.saving || state.conflict) {
+          localStorage.setItem(prefix + state.id, JSON.stringify({
+            text: state.input.value,
+            title: state.title,
+            base_revision: state.baseRevision,
+          }));
+        } else {
+          localStorage.removeItem(prefix + state.id);
+        }
+        state.backupOk = true;
+      } catch (_) {
+        state.backupOk = false;
+      }
+    }
+
+    function render() {
+      const removedCount = removedNotes.filter(note => note.text.trim()).length;
+      let count = removedCount;
+      let pending = 0;
+      let conflicts = 0;
+      let failures = 0;
+      for (const state of states) {
+        if (state.input.value.trim()) count += 1;
+        if (state.dirty || state.saving) pending += 1;
+        if (state.conflict) conflicts += 1;
+        if (state.error) failures += 1;
+        const local = state.backupOk
+          ? "Draft saved in this browser."
+          : "Browser backup unavailable; keep this page open or export your notes.";
+        let message;
+        if (state.conflict) {
+          message = `A different version is saved in the project. ${local}`;
+        } else if (state.saving) {
+          message = `Saving to project… ${local}`;
+        } else if (state.dirty) {
+          message = `${state.error || !ready ? "Project save unavailable. " : ""}${local}`;
+        } else if (!ready) {
+          message = loading ? "Loading this version’s notes…" : "Project notes unavailable. You can write a browser draft.";
+        } else {
+          message = state.saved.revision > 0 ? "Saved to project" : "No notes yet";
+        }
+        state.status.textContent = message;
+        state.conflictBox.hidden = !state.conflict;
+        state.remote.textContent = state.conflict
+          ? state.saved.text || "(The project note is empty.)" : "";
+      }
+      const pieces = [`${count} ${count === 1 ? "figure/panel has" : "figures/panels have"} notes`];
+      if (removedCount) pieces.push(`${removedCount} ${removedCount === 1 ? "note on a removed panel" : "notes on removed panels"}`);
+      if (pending) pieces.push(`${pending} unsaved`);
+      if (conflicts) pieces.push(`${conflicts} ${conflicts === 1 ? "conflict" : "conflicts"} to resolve`);
+      if (loading) pieces.push("loading project notes…");
+      else if (loadFailed || failures) pieces.push("project save unavailable; use Save now to retry");
+      else if (ready && !pending) pieces.push("all notes saved to project");
+      summary.textContent = pieces.join(" · ");
+      saveButton.disabled = loading || (!pending && ready);
+      exportButton.disabled = count === 0;
+    }
+
+    async function request(url, options = {}) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal, cache: "no-store" });
+        const body = await response.json();
+        if (!response.ok && response.status !== 409) throw new Error("Project request failed");
+        return { response, body };
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    function queue(state) {
+      clearTimeout(state.timer);
+      if (ready && state.dirty && !state.conflict) {
+        state.timer = setTimeout(() => save(state), 600);
+      }
+    }
+
+    function save(state) {
+      clearTimeout(state.timer);
+      if (state.flight) return state.flight;
+      if (!ready || !state.dirty || state.conflict) return Promise.resolve();
+      state.error = false;
+      state.flight = (async () => {
+        try {
+          // Drain edits made during a request only after its revision is acknowledged.
+          while (state.dirty && !state.conflict) {
+            const text = state.input.value;
+            state.saving = true;
+            backup(state);
+            render();
+            const { response, body } = await request(`/api/notes/${encodeURIComponent(state.id)}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text, title: state.title, base_revision: state.baseRevision }),
+            });
+            const saved = entry(response.status === 409 && body.entry === null
+              ? { text: "", revision: 0 } : body.entry);
+            if (response.status !== 409 && saved.text !== text) {
+              throw new Error("Project returned a different note");
+            }
+            state.saved = saved;
+            state.uncertain = false;
+            state.saving = false;
+            state.dirty = state.input.value !== saved.text;
+            state.conflict = response.status === 409 && state.dirty;
+            if (!state.conflict) state.baseRevision = saved.revision;
+            backup(state);
+          }
+        } catch (_) {
+          state.error = true;
+          // A lost acknowledgement may still mean the server committed the write.
+          state.uncertain = true;
+          state.dirty = true;
+        } finally {
+          state.saving = false;
+          state.flight = null;
+          backup(state);
+          render();
+        }
+      })();
+      return state.flight;
+    }
+
+    async function load() {
+      if (loading) return;
+      loading = true;
+      render();
+      try {
+        const { response, body } = await request("/api/notes");
+        if (!response.ok || body.schema_version !== 1 || !body.notes ||
+            typeof body.notes !== "object" || Array.isArray(body.notes)) {
+          throw new Error("Invalid notes response");
+        }
+        // Validate the entire response before applying any entries.
+        const savedById = new Map(Object.entries(body.notes).map(([id, value]) => [id, entry(value)]));
+        const saved = states.map(state => savedById.get(state.id) || { text: "", revision: 0 });
+        const currentIds = new Set(states.map(state => state.id));
+        removedNotes = [...savedById].filter(([id]) => !currentIds.has(id))
+          .map(([id, note]) => ({ ...note, id }));
+        states.forEach((state, index) => {
+          state.saved = saved[index];
+          state.error = false;
+          state.uncertain = false;
+          if (!state.dirty) state.input.value = state.saved.text;
+          state.dirty = state.input.value !== state.saved.text;
+          state.conflict = state.dirty && state.baseRevision !== state.saved.revision;
+          if (!state.conflict) state.baseRevision = state.saved.revision;
+          backup(state);
+        });
+        ready = true;
+        loadFailed = false;
+      } catch (_) {
+        loadFailed = true;
+      } finally {
+        loading = false;
+        for (const state of states) {
+          state.input.disabled = false;
+          queue(state);
+        }
+        render();
+      }
+    }
+
+    for (const input of document.querySelectorAll(".note-input[data-note-id]")) {
+      const section = input.closest("section[id]");
+      const state = {
+        id: input.dataset.noteId,
+        title: section.querySelector("h2").textContent.trim(),
+        input,
+        status: section.querySelector(".note-status"),
+        conflictBox: section.querySelector(".note-conflict"),
+        remote: section.querySelector(".remote-note"),
+        saved: { text: "", revision: 0 },
+        baseRevision: 0,
+        dirty: false,
+        saving: false,
+        conflict: false,
+        error: false,
+        uncertain: false,
+        backupOk: true,
+        flight: null,
+        timer: null,
+      };
+      try {
+        const draft = JSON.parse(localStorage.getItem(prefix + state.id));
+        if (draft && typeof draft.text === "string" && draft.text.length <= 50000 &&
+            Number.isSafeInteger(draft.base_revision) && draft.base_revision >= 0) {
+          input.value = draft.text;
+          state.baseRevision = draft.base_revision;
+          state.dirty = true;
+        }
+      } catch (_) {
+        state.backupOk = false;
+      }
+      states.push(state);
+      input.addEventListener("input", () => {
+        state.dirty = state.saving || state.uncertain || input.value !== state.saved.text;
+        if (!state.dirty) {
+          state.conflict = false;
+          state.baseRevision = state.saved.revision;
+        }
+        state.error = false;
+        backup(state);
+        render();
+        queue(state);
+      });
+      input.addEventListener("blur", () => save(state));
+      section.querySelector('[data-note-action="focus"]').addEventListener("click", () => input.focus());
+      section.querySelector('[data-note-action="use-saved"]').addEventListener("click", () => {
+        input.value = state.saved.text;
+        state.baseRevision = state.saved.revision;
+        state.conflict = false;
+        state.dirty = false;
+        state.error = false;
+        backup(state);
+        render();
+      });
+      section.querySelector('[data-note-action="keep-draft"]').addEventListener("click", () => {
+        state.baseRevision = state.saved.revision;
+        state.conflict = false;
+        state.dirty = input.value !== state.saved.text;
+        backup(state);
+        save(state);
+        render();
+      });
+    }
+
+    saveButton.addEventListener("click", async () => {
+      if (!ready) await load();
+      await Promise.all(states.map(save));
+    });
+    exportButton.addEventListener("click", () => {
+      const lines = ["# Figure review notes", "", `Exported ${new Date().toISOString()}`, ""];
+      for (const state of states) {
+        if (!state.input.value.trim()) continue;
+        const url = new URL(location.href);
+        url.hash = state.id;
+        lines.push(`## ${state.title}`, "", `[View figure or panel](${url.href})`, "");
+        if (state.dirty || state.saving || state.conflict) {
+          lines.push("*This note includes a draft that has not been saved to the project.*", "");
+        }
+        lines.push(state.input.value, "");
+      }
+      for (const note of removedNotes) {
+        if (!note.text.trim()) continue;
+        const title = typeof note.title === "string" && note.title.trim() ? note.title : note.id;
+        lines.push(`## ${title}`, "", "*Saved note. Panel removed from current gallery.*", "", note.text, "");
+      }
+      const url = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `figure-review-notes-${new Date().toISOString().slice(0, 10)}.md`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    window.addEventListener("beforeunload", event => {
+      if (states.some(state => state.dirty || state.saving || state.conflict)) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    });
+    load();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+
+</script></body></html>

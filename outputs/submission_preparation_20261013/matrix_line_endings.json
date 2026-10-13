@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "file": "Publication/methods/METHODS_EVIDENCE_MATRIX.csv",
+  "change": "CRLF to LF only",
+  "before_sha256": "92b7a856b8c6a27a8bbbb94f5801fc5e9fae3bf28dc2376784ac1667af57f46b",
+  "final_sha256": "d6c18ce6da8326e80105a0928ed0d177fea8bc741c1bb91f42080b0e9357d8a0",
+  "rows_preserved": 27
+}

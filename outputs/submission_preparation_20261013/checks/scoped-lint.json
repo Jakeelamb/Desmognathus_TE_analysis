@@ -1,0 +1,23 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--no-sync",
+    "--python",
+    "3.13",
+    "ruff",
+    "check",
+    "tests/test_methods_release.py",
+    "tests/test_repository.py",
+    "tests/test_path_dag_reference.py",
+    "scripts/publication/build_methods_document.py"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:14:13.682282+00:00",
+  "completed_at": "2026-10-13T16:14:13.712563+00:00",
+  "elapsed_seconds": 0.03,
+  "exit_code": 1,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/scoped-lint.log",
+  "raw_log_sha256": "7f6a8597a35a87aa28ed1b3311e12170a5809fa545b58d39ff3c4d72b4cba74f"
+}

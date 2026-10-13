@@ -1,0 +1,44 @@
+# Online Lab Work inventory review, 2026-10-13
+
+The inspected workbook supplies specimen inventory records, but no physical-slide → Feulgen staining event → designated standard mapping. It adds a verified online source locator and records for the four target specimens. Separately, the user has now explicitly confirmed that all retained brightfield slides were stained in **one staining run with both standards**. That resolves run membership by author attestation; it was not recovered from workbook cells.
+
+## Source and evidence pins
+
+- Root verified the signed-in Google Sheet: https://docs.google.com/spreadsheets/d/1qmsaXn9pffPq68fphp9Wz5Tcvup43oas2AN8DKQh8QY/edit . Root reports downloading through the documented CUA `Browser Tab.content.exportGsuite('xlsx')` method. This investigator used only that local export and did not operate a browser or cloud tools.
+- Original export: `/tmp/browser-use/exports/Salamander slides Lab Work-fa268342-88bc-4753-be8a-3d71dc12961a.xlsx`.
+- Byte-identical retained snapshot: `Salamander_slides_Lab_Work_source_snapshot.xlsx` beside this report. SHA256: `d9bf5ad6699877fae79caff98564d6fd1c16e442e641864d490f57cc776423b2`.
+- `online_lab_work_extraction.json` retains exact selected cells, number formats, style IDs, colored markers, exported hyperlinks, all 51 retained-image joins, source ranges and local-input SHA256 pins. Inventories are joined by specimen identifier, with `RAP` prefix removed only for the explicit field-series join; these joins do not establish physical-slide identity.
+- Source revision, authored date and modification date were not established. The XLSX has no `docProps/core.xml`; the values returned as openpyxl document properties are synthesized defaults and must not be used as source timestamps. Digital inspection date is 2026-10-13.
+
+## Exact relevant records
+
+| Exported tab/range | Observed values | Interpretation and limit |
+|---|---|---|
+| `Sheet1!A1:K1` | `Date`, `Species`, `Suggested Species`, `MVZ:ID`, `Asserted Country`, `Asserted State`, `Specific Locality`, `Verbatim Date`, `Decimal Latitude`, `Decimal Longitude`, `Coordinate Error (m)` | Museum specimen inventory. `Date` has no defined experimental meaning. |
+| `Sheet1!A84:K85` | A84:A85=`2023-01-12`; B84:C85=`D. fuscus`; D84=32469, D85=32470; E84:E85=`United States`; F84:F85=`Tennessee`; G84:G85=`6 mi E Calderwood`; H84:H85=`1937-04-07`; I84:I85=35.5092; J84:J85=-83.894; K84:K85=8653 | Both designated standard specimens occur. January 2023 `Date` remains undefined. `Verbatim Date` lies in locality/specimen collection metadata; it does not identify staining. No preservation field appears here. |
+| `Sheet1 (1)!A1:P1` | `Field Series`, `Genus`, `Species`, `Clade`, `State/Country`, `County/Parish`, `Detailed Locality `, `LatDD`, `LongDD`, `Elevation`, `Day`, `Month`, `Year`, `Collector`, `Permit`, `Specimen` | Field collection inventory; no glass, image, stain, batch or standard column. |
+| `Sheet1 (1)!A4:P5` | A4=`RAP3372`, A5=`RAP3373`; B=`Desmognathus`, C=`fuscus`, D=`fuscus B`; E=`West Virginia`, F=`Randolph`; G4=`Mill Creek Tributary`, G5=`Meatbox Run`; K=24, L=`September`, M=2023; N=`RAP, MAS, JMH`; O=`WVDNR 2023.001`; P=`Whole + Tissue` | Collection records for target Processes 314/315 through the existing local image/specimen join. Does not identify preparation, staining or physical glass. |
+| `Sheet1 (1)!A10:P11` | A10=`RAP3401`, A11=`RAP3402`; B=`Desmognathus`, C=`fuscus`, D=`fuscus A`; E=`Kentucky`, F=`Clay`, G=`Beech Creek`; K=12, L=`October`, M=2023; N=`RAP, MAS, JMH`; O=`KDFWR SC2311207`; P=`Whole + Tissue` | Collection records for target Processes 320/321 through the existing local image/specimen join. Collection dates are not staining dates. |
+| `Sheet2!A1:C42` | A1=`Species List`, B1=`Range`, C1=`Link`; species list, geographic descriptions, taxonomic-publication links | No experimental run records. The 11 exported hyperlinks point to UT Austin / Mapress publications; they were inspected as link targets, not opened as scientific evidence. |
+
+All nonempty cell values were scanned across all three exported sheets. Populated values fit `Sheet1!A1:K98` (1,071 cells), `Sheet2!A1:C42` (64 cells), and `Sheet1 (1)!A1:P48` (769 cells). Exported worksheet dimensions extend beyond these data to Y98, Z1025 and AK48 because of formatting. No cell value names Feulgen, staining, batch, standard, hydrolysis, fixation, formalin, glass or Process. Occurrences of `Run` are locality names such as `Meatbox Run`; they are not experimental events. No formulas supply a hidden mapping.
+
+## Retained-image coverage and formatting
+
+The current `analyses/02_morphology/data/nuclear_iod_by_image.csv` contains 51 image rows / 50 distinct specimen identifiers. An exact inventory-ID join finds records for 50 images / 49 specimens. The missing specimen is 3463, corresponding to `Process_331_raw_green.ome.tiff`. The extraction records every image's inventory range, existing master-image metadata joined by the exact retained filename, and available glass-map rows, with workbook-derived staining-event and paired-standard fields explicitly null. Each of the 51 retained filenames uniquely matches one master metadata row, with matching specimen ID. Twelve different filenames sharing process identifiers 354–359 or 362–367 are retained separately as alternate acquisitions; they are not metadata for the retained brightfield images. Metadata records include filenames to make that distinction inspectable. These nulls describe missing workbook fields, not the experiment's membership. The separate author attestation supplies the one-run/both-standards assignment for root's new run map.
+
+Green `FF92D050` fills occur only on 29 field-series cells: `Sheet1 (1)!A8:A9`, `A13:A15`, `A17:A21`, `A23:A26`, `A28`, `A30`, `A34:A38`, `A40:A44`, `A46:A48`. The four target field-series cells A4:A5 and A10:A11 are unfilled. Yellow `FFFFFF00` occurs at `Sheet2!A6` (`D.anicetus`). No text legend explains these colors. Their meaning is unknown; they do not establish staining groups. Museum data have no nonwhite fills. Exported conditional-formatting counts are zero on all tabs.
+
+No comments were observed in openpyxl or XLSX comment/threaded-comment package members. The persons list is empty; each of the three drawing XMLs is empty. This is an observation about the exported package. Native Google Sheets comment, note and formatting completeness was not independently verified and cannot be claimed from this export alone.
+
+## Comparison with prior evidence and remaining gaps
+
+The prior `LOCAL_SEARCH.md`, `SOURCE_LINKS.md` and `REVIEW.md` were read, along with the current `iod_source_manifest.json`. Original local ODS/XLSX files described in `LOCAL_SEARCH.md` were not reopened here. Their older identity/preservation concerns remain separately unresolved. The online inventory's B/C=`D. fuscus` labels and lack of a preparation field neither override those historical notes nor prove any fixative or uniform preservation history.
+
+The manifest's `conditional_genome_size_anchor` retains the author decision dated 2026-08-12: standards Processes 413/414, specimens 32469/32470, author confirmation of same staining runs, and current denominator Processes 314/315/320/321. This review leaves that decision intact. It adds no per-slide run membership to it.
+
+After this workbook extraction, root relayed the user's direct response to the precise one-run-versus-several question on 2026-10-13: **“One staining run with both standards”** The question explicitly referred to all retained brightfield slides and reference specimens 32469/32470. This is author-attested membership evidence, distinct from contemporaneous workbook run records. Root owns the separately populated author-confirmed run map. No actual staining date or original experimental run identifier was supplied; an internal label must be marked as such.
+
+The workbook still lacks physical glass/slide and experimental-event fields. Existing local glass mappings can support the physical-slide join, with repeat imaging distinguished from different slides of one specimen. Green/yellow marker meanings remain unknown. Standard identity/preservation reconciliation, standards QC, acquisition comparability, replacement of the current target denominator with standards, the reported standard IOD discrepancy and the conditional assembly anchor remain separate validation questions. The author answer resolves one-run membership; it does not resolve these other issues.
+
+No source, cloud record, Methods, figure or prior pinned preparation was modified. The export hash was rechecked after extraction and was unchanged. Work consisted of openpyxl/package extraction and CSV/JSON reads through the authorized project UV environment; no computation pipeline was rerun.

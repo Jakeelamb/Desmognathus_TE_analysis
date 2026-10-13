@@ -1,0 +1,9 @@
+mode,model,label
+250 animal/image/object resamples,SVL alone,1/250 first
+250 animal/image/object resamples,Nucleus bridge,21/250 first
+250 animal/image/object resamples,Genome bridge,12/250 first
+250 animal/image/object resamples,Cell bridge,216/250 first
+24 species-removal fits,SVL alone,0/24 first
+24 species-removal fits,Nucleus bridge,0/24 first
+24 species-removal fits,Genome bridge,0/24 first
+24 species-removal fits,Cell bridge,24/24 first

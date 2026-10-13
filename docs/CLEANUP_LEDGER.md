@@ -121,16 +121,17 @@ analysis-data figure.
   publication filename were removed. The one canonical image-level table is now
   `nuclear_iod_by_image.csv`, its animal field is `specimen_id`, and its
   metadata explicitly states that values are unnormalized rather than ratios.
-- Diversity replay was added to the existing PCA verifier instead of creating a
-  second diversity builder or output directory. The two compact composition
-  inputs now reproduce one 68-row, five-column classified-only table: 34 order
-  and 34 superfamily rows after classified categories are reclosed to one. The
-  order stratum is primary, the superfamily stratum is sensitivity/audit, and
-  observed richness remains only an audit/support count. The unresolved-bin
-  diversity mode, its redundant `composition_mode` column, and the resulting 68
-  rows were deleted; unresolved aligned-base mass remains only as S06-S07
-  dnaPipeTE quality-control evidence. Redundant Hill-number and Pielou fields
-  and claims were removed rather than carried forward.
+- Diversity replay remains in the existing PCA verifier rather than a second
+  builder or output directory. The former 68-row order/superfamily table was
+  replaced by one canonical 34-row, four-column Wang-style table. For each
+  species, the ten most abundant positive superfamilies are selected
+  independently with a deterministic feature-name tie break and reclosed to one
+  before natural-log Shannon and Gini-Simpson calculation. The obsolete
+  order-primary stratum, all-positive superfamily sensitivity stratum,
+  `te_level`, and observed-richness field were removed. PCA retains its separate
+  24-shared-superfamily rule. Unresolved aligned-base mass remains only as
+  S06-S07 dnaPipeTE quality-control evidence; redundant unresolved-bin,
+  composition-mode, Hill-number, and Pielou branches remain deleted.
 - S19 was extended in place with animal count and concentration fields derived
   from S18. No parallel morphology summary was retained.
 - One compact LTR release record now binds S14-S17 and the sibling archive
@@ -143,21 +144,42 @@ analysis-data figure.
   copy was added. S16 now separates historical and corrected counts, S17 keeps
   the two four-domain corrupt historical rows as audit evidence, and the later
   compound one-element reconstruction remains explicitly retired.
-- The blank `GBE_methods_reference.docx` shell and the obsolete
-  `Materials_and_Methods_GBE_draft.docx`/`.md` pair were removed from the
-  active Methods directory. The old prose encoded superseded panel sizes and
-  object counts and competed with the factual scaffold; exact copies remain in
-  the checksum archive and every tracked version remains recoverable from Git
-  history. `METHODS_BULLET_SCAFFOLD.md` remains the sole active factual Methods
-  authority. The current Word-ready scaffold and narrative DOCX are synchronized
-  review exports and do not create a second factual authority.
+- The blank `GBE_methods_reference.docx` shell, obsolete
+  `Materials_and_Methods_GBE_draft.docx`/`.md` pair, tagged
+  `METHODS_BULLET_SCAFFOLD_WORD_READY.docx`, and superseded
+  `MATERIALS_AND_METHODS_NARRATIVE_DRAFT.docx` were removed from the active
+  Methods directory. The tagged Word export duplicated the internal evidence
+  ledger and exposed 120 audit labels in a document misleadingly named
+  Word-ready; the old narrative contained unsupported claims and action-item
+  placeholders. Git history and the checksum archive retain those versions.
+  `METHODS_BULLET_SCAFFOLD.md` remains the internal factual authority, while one
+  author-edited `MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx` and its synchronized
+  Markdown mirror provide the sole collaborator-facing narrative. `make
+  methods-word` now verifies synchronization and cannot erase Word edits.
 - The unsupported 16.36-pg *D. fuscus* convention was replaced in place by one
   documented conditional reference: the Myers et al. pooled assembly estimate
   (`16.1 Gbp / 0.978 Gbp per pg = 16.462167689 pg/1C`). No parallel absolute-
   genome-size dataset was added. Process_413/specimen 32469 and
-  Process_414/specimen 32470 are confirmed same-run standards, but the exact
-  standard-to-target run map and standard-slide QC remain unresolved; relative
-  IOD therefore remains the primary phenotype.
+  Process_414/specimen 32470 are confirmed same-run standards. The author later
+  confirmed one Feulgen run containing both standards and all retained unknowns;
+  standard-slide acceptance and QC remain unresolved. The
+  conditional pg/1C estimate is now the default Path24 analysis trait; nuclear
+  IOD remains its explicit measurement and calibration provenance rather than a
+  second analytical branch.
+- The former relative-IOD analytical interface was retired rather than retained
+  as a compatibility layer. S04, S26-S37, and S40 now use conditional
+  genome-size names and values, while S21-S25 remain the sole IOD measurement, quality, and
+  calibration audit. The obsolete paths
+  `analyses/03_phylogenetic_path/data/te_relative_iod_overlap.csv`,
+  `Publication/datasets/Supplementary_Data_S40_te_relative_iod_overlap21.csv`,
+  `Publication/figures/Figure_6_relative_iod_pairwise_pgls.{pdf,png,tif}`, and
+  `Publication/figures/Figure_S1_te_relative_iod_overlap21.{pdf,png,tif}` were
+  removed after the genome-size replacements passed their release and figure
+  checks.
+- The later exploratory genome-size replacement for Figure S1 was also removed
+  from the paper-facing figure set after author review. S40 remains available as
+  the exact integrated TE34-by-Path24 sensitivity table, but it is no longer
+  emitted as a figure or included in the figure-data workbook.
 
 ## Known blockers preserved rather than hidden
 
@@ -165,8 +187,8 @@ analysis-data figure.
   upstream regeneration cannot be claimed;
 - focal 46-tip tree citation/calibration provenance remains unresolved;
 - wet-lab, specimen, and image-acquisition author inputs remain incomplete;
-- relative nuclear IOD is not an independently validated absolute C-value; the
-  selected 16.462167689-pg assembly-derived scale remains conditional pending
-  exact standard-to-target run mapping and standard QC;
+- the default genome-size trait is not an independently validated absolute
+  C-value; the selected 16.462167689-pg assembly-derived scale remains
+  conditional pending standard-slide acceptance, QC, and absolute calibration;
 - archived HPC and microscopy outputs are evidence, not a promise of complete
   rerunnability.

@@ -36,58 +36,37 @@ class FigureInput:
     figure: str
     panel: str
     figure_use: str
+    input_role: str = "direct_plot_input"
 
 
 FIGURE_INPUTS = (
-    FigureInput("S02", "S02_TE_Panel", "Figure 1", "B", "Counts the 34-species genomic TE panel."),
-    FigureInput(
-        "S03",
-        "S03_Path_Panel",
-        "Figure 1",
-        "B",
-        "Counts the 24-species phenotype/path panel and its TE34 overlap.",
-    ),
     FigureInput(
         "S04",
         "S04_Path_Traits",
-        "Figure 1",
-        "A",
-        "Supplies the species labels and morphology traits displayed beside the Path24 phylogeny.",
-    ),
-    FigureInput(
-        "S05",
-        "S05_Assembly_QC",
-        "Figure 1",
-        "C",
-        "Plots assembly span against contig N50; labels the largest spans and highest N50.",
-    ),
-    FigureInput(
-        "S06",
-        "S06_dnaPipeTE_QC",
-        "Figure 1",
-        "D",
-        "Plots repeat-aligned fraction against unresolved order mass and marks retry runs.",
+        "Figures 1, 5, and 6",
+        "1B; 5B-D; 6A-B",
+        "Supplies conditional genome-size estimates and intervals plus the Path24 morphology traits used by the aligned phylogeny and pairwise panels.",
     ),
     FigureInput(
         "S08",
         "S08_TE_Diversity",
-        "Figure 2",
-        "A",
-        "Filters the classified-only table to te_level=order; plots Shannon entropy and Gini-Simpson across 34 species. Unresolved aligned-base mass remains separate S07 QC and is not a diversity category.",
+        "Auxiliary Wang-style diversity candidate",
+        "A-B",
+        "Plots Wang-style Shannon entropy and Gini-Simpson across 34 species after each species' ten most abundant positive superfamilies are reclosed to one. Unresolved aligned-base mass remains separate S07 QC and is not a diversity category.",
     ),
     FigureInput(
-        "S09",
-        "S09_PCA_Scores",
+        "S42",
+        "S42_Bonsai_Tips",
         "Figure 2",
         "B",
-        "Filters to superfamily/classified_conditional; plots PC1 versus PC2 and labels the ten most distant scores.",
+        "Supplies all 34 Bonsai tip labels and post-hoc expert reproductive-strategy annotations; every species is explicitly assigned.",
     ),
     FigureInput(
-        "S10",
-        "S10_PCA_Variance",
+        "S43",
+        "S43_Bonsai_Validation",
         "Figure 2",
         "B-C",
-        "Supplies PC1/PC2 axis variance and plots the first ten scree values.",
+        "Supplies fixed-tree label-localization statistics and exact-edge recovery across 200 bounded feature-resampling refits. Coordinate resampling is not a biological-specimen bootstrap.",
     ),
     FigureInput(
         "S12",
@@ -115,7 +94,16 @@ FIGURE_INPUTS = (
         "S16_LTR_Coverage",
         "Figure 4",
         "B",
-        "Supplies the exact retained-element support count for each species.",
+        "Validates the exact retained-element support count for each species.",
+        "validation_input",
+    ),
+    FigureInput(
+        "S18",
+        "S18_Frozen_Objects",
+        "Figure 5",
+        "B-D",
+        "Validates the 1,152 reviewed cell-nucleus object pairs underlying the displayed species medians and intervals.",
+        "validation_input",
     ),
     FigureInput(
         "S19",
@@ -126,17 +114,18 @@ FIGURE_INPUTS = (
     ),
     FigureInput(
         "S22",
-        "S22_IOD_Species",
-        "Figure 6",
-        "A-B",
-        "Plots relative nuclear-IOD estimates and conditional intervals.",
+        "S22_IOD_Calibration",
+        "Calibration proof",
+        "S04 provenance",
+        "Preserves the nuclear-IOD measurements, relative audit index, D. fuscus calibration ratio, and conversion fields that derive the default conditional genome-size trait.",
+        "calibration_proof",
     ),
     FigureInput(
         "S24",
         "S24_IOD_QC",
         "Figure 6",
         "A-B",
-        "Marks species that fail the prespecified IOD quality-balance thresholds.",
+        "Marks species whose underlying IOD measurement stream fails the prespecified quality-balance thresholds; retained as calibration evidence.",
     ),
     FigureInput(
         "S26",
@@ -160,11 +149,14 @@ FIGURE_INPUTS = (
         "Plots true-class top-model recovery by generating class and residual regime.",
     ),
     FigureInput(
-        "S40",
-        "S40_TE_IOD_Overlap",
-        "Figure S1",
-        "A",
-        "Plots the exact 21-species TE-diversity and relative-IOD overlap without imputation.",
+        "S41",
+        "S41_Cross_Study_Diversity",
+        "Auxiliary cross-study TE-diversity reference",
+        "A-D",
+        "Plots exact Wang et al. 2025 CC0 Dryad Figure 2 values beside current "
+        "top-10-superfamily Desmognathus summaries. The genomic inputs and TE pipelines "
+        "differ, current genome sizes are conditional IOD-derived sensitivities, and no "
+        "pooled regression or hypothesis test is performed.",
     ),
 )
 
@@ -292,13 +284,13 @@ def _add_readme(workbook: Workbook, manifest_sha: str) -> None:
             "Navigation",
             "Use Figure_Index for the exact sheet, panel, filter, and transformation; use Column_Dictionary for source field definitions.",
         ),
-        ("Direct figure-input tables", str(len(FIGURE_INPUTS))),
+        ("Figure input and validation tables", str(len(FIGURE_INPUTS))),
         ("Rebuild command", "make figure-data"),
         ("Figure source", "scripts/publication/build_gbe_figures.R"),
         ("Dataset-manifest SHA-256", manifest_sha),
         (
-            "Relative IOD boundary",
-            "Image-derived relative phenotype; not an independently calibrated absolute genome size or C-value.",
+            "Genome-size boundary",
+            "The default Path24 trait is a conditional D. fuscus assembly-anchored pg/1C estimate, not an independently measured species C-value. S22 preserves the underlying IOD measurement and conversion proof.",
         ),
         (
             "LTR boundary",
@@ -307,6 +299,10 @@ def _add_readme(workbook: Workbook, manifest_sha: str) -> None:
         (
             "Path-analysis boundary",
             "PGLS and path-model outputs are exploratory sensitivity analyses and do not establish a unique causal direction.",
+        ),
+        (
+            "Cross-study diversity boundary",
+            "Wang et al. 2025 and current values both summarize ten superfamilies, but their genomic inputs and TE pipelines differ. The auxiliary display is descriptive only and contains no pooled fit or hypothesis test.",
         ),
         (
             "Tree provenance boundary",
@@ -375,6 +371,7 @@ def _add_figure_index(workbook: Workbook, manifest: pd.DataFrame) -> None:
                 "columns": int(source["columns"]),
                 "release_status": source["release_status"],
                 "figure_use_or_filter": item.figure_use,
+                "input_role": item.input_role,
                 "dataset_description": source["description"],
             }
         )
@@ -449,7 +446,12 @@ def _normalize_xlsx_archive(source: Path, destination: Path) -> None:
             if name == "docProps/core.xml":
                 payload = re.sub(
                     rb"<dcterms:modified[^>]*>.*?</dcterms:modified>",
-                    b'<dcterms:modified xsi:type="dcterms:W3CDTF">1980-01-01T00:00:00Z</dcterms:modified>',
+                    (
+                        b'<dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" '
+                        b'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                        b'xsi:type="dcterms:W3CDTF">1980-01-01T00:00:00Z'
+                        b"</dcterms:modified>"
+                    ),
                     payload,
                 )
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))

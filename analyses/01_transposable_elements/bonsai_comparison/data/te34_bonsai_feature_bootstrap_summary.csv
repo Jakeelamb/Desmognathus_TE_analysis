@@ -1,0 +1,6 @@
+metric_id,n,value,q05,median,q95,detail
+matched_calibration_vs_full_fit_normalized_rf,1,0.22580645161290322,0.22580645161290322,0.22580645161290322,0.22580645161290322,shared=24; RF=14; splits=31+31
+bootstrap_normalized_rf_to_full_fit,200,0.76901172682891061,0.60655737704918034,0.77419354838709675,0.90163934426229508,value is mean; quantiles are across feature-bootstrap trees
+bootstrap_normalized_rf_to_matched_calibration,200,0.77393046471010207,0.61290322580645162,0.77419354838709675,0.90163934426229508,value is mean; matched bounded-search calibration uses all features once
+bootstrap_reference_split_support,31,0.22774193548387095,0,0.17000000000000001,0.62,value is mean support across the 31 full-fit internal splits
+bootstrap_reconstruction_seconds,200,9.4256962788105003,7.0494200110435488,9.3681957721710205,12.465211892127989,Bonsai-reported reconstruction time per replicate

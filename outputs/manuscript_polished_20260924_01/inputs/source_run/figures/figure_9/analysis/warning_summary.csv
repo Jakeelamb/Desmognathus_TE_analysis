@@ -1,0 +1,48 @@
+warning,n
+"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+",757
+"Some models produced warnings. Use `show_warnings()` to view them.
+",274
+"Fitting the following model:
+    c ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+",264
+"Fitting the following model:
+    c ~ b + g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+",262
+"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+",262
+"Fitting the following model:
+    n ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+",254
+"Fitting the following model:
+    n ~ b + c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+",245
+"Fitting the following model:
+    c ~ b + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+",188

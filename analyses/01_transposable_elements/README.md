@@ -4,21 +4,87 @@ This directory is the active TE34 analysis surface. `data/` contains the compact
 species-level and element-level products used by the paper; the shared R
 Markdown report provides the researcher-facing view over them.
 
-## PCA: start here
+## Bonsai publication representation: start here
 
 ```bash
-# Read-only end-to-end verification; allow about three minutes.
+# Exact replay of the pinned full fit, label permutations, and 200-refit archive.
+make te-bonsai
+
+# Render the complete publication figure system, including Bonsai Figure 2.
+make figures
+```
+
+`bonsai_comparison/` is the canonical publication-facing compositional
+representation. It uses the same 34 species and 24 ubiquitous-superfamily CLR
+coordinates as the retained PCA audit, pins the upstream Bonsai implementation,
+and records the full fitted tree, fixed-tree label permutations, 200 bounded
+feature-resampling refits, publication tip annotations, compact validation
+summary, figures, and self-hash manifests. The tree represents TE-composition
+similarity; it is not a species phylogeny.
+
+## Exploratory LTR ratio and genome-size PGLS
+
+`ltr_genome_pgls.R` fits a downstream species-level comparison from released
+S15 primary medians and S04 genome-size estimates. It does not rerun LTR
+mapping or modify canonical tables. The primary model is
+`log10(ratio_median) ~ log10(genome_size_gbp)`, with ML Pagel's lambda in [0,1]
+on the shared source tree pruned to the 19 complete species. Retain the
+original branch lengths, whose publication/calibration provenance is unresolved.
+Sensitivity fits use Brownian covariance, ordinary regression, untransformed
+variables, and 19 leave-one-species-out refits. Species count, rather than
+element count, determines regression degrees of freedom. Interval estimates
+condition on fitted lambda and do not propagate trait measurement uncertainty.
+
+Build the review figures and traceable analysis outputs with
+`scripts/run_r.sh Rscript scripts/publication/build_ltr_genome_pgls.R`.
+Outputs are under `Publication/figures/candidates/figure_4_pgls/`, separate from
+the released data and Figure 4a/b. Test the numerical fit and joins with
+`uv run --frozen --no-sync pytest -q tests/test_ltr_genome_pgls.py`.
+
+`ltr_filter_comparison.R` prepares a separate downstream four-domain
+sensitivity from the usable S14 audit rows. It preserves the exact primary
+380-element membership and S15 summaries, then applies corrected >=4-domain
+eligibility with unchanged length, LTR/Gypsy, exact-annotation and regional
+coverage requirements. Fresh within-species IQR fences are calculated before
+coverage is intersected, retaining 989 elements in the same 30 species.
+The new branch includes 611 additional elements and excludes two primary
+elements; it is not a strict superset. New median intervals use 2,000
+deterministic R element-bootstrap replicates, with the method and seeds
+recorded separately from the released NumPy intervals.
+
+Build matched violin and PGLS comparisons with
+`scripts/run_r.sh Rscript scripts/publication/build_ltr_filter_comparison.R`.
+The two new candidate directories and their analysis records stay separate
+from the canonical release. Tests in `tests/test_ltr_filter_comparison.py`
+independently reconstruct the gate decisions, summaries and GLS results, and
+check common plot scales and retention of every displayed observation.
+
+## PCA supplementary audit
+
+```bash
+# Read-only end-to-end geometry and rejected-clustering audit.
 make te-pca
 
 # Render scores, loadings, variance, diagnostics, and final ggplot figures.
 make report
 ```
 
-`make te-pca` is the sole public PCA check. It first derives feature prevalence,
-the complete order- and superfamily-level CLR table, and the final superfamily
-ordination from the two compact composition inputs. It then replays the formal
-clustering, trait-association, and phylogenetic-signal audit. It compares every
-result with the canonical files in `data/` and does not write scratch output.
+`make te-pca` reconstructs the retained TE-diversity and PCA audit. It rebuilds
+the canonical top-ten-superfamily diversity table, derives feature prevalence and
+the complete order- and superfamily-level CLR table, and rebuilds the final
+superfamily ordination from the compact composition inputs. It then replays the
+formal clustering, trait-association, and phylogenetic-signal audit. It compares
+every result with the canonical files in `data/` and does not write scratch
+output.
+
+When the declared diversity method changes, maintainers promote the one
+canonical S08 table through the same authority and immediately replay the full
+read-only audit:
+
+```bash
+uv run --frozen --no-sync python analyses/01_transposable_elements/recompute_pca.py --write
+make te-pca
+```
 
 | Stage | Canonical files under `data/` |
 | --- | --- |
@@ -29,19 +95,19 @@ result with the canonical files in `data/` and does not write scratch output.
 | Reproducibility record | `te_pca_clustering_analysis_manifest.json` |
 
 The candidate-assignment table is rejected audit evidence, not a set of final
-biological cluster labels. There is no second workbook or output directory that
-competes with these CSVs.
+biological cluster labels. PCA scores, variance, and loadings remain controlled
+supplements S09-S11, but they no longer supply a publication figure panel.
 
 ## Canonical products
 
 - `te_order_composition.csv` and `te_superfamily_composition.csv`: closed,
   classified-conditional composition matrices after equal-weight averaging of
   the two *D. orestes* technical runs.
-- `te_diversity.csv`: natural-log Shannon entropy and explicitly named
-  Gini-Simpson index in one 68-row, five-column classified-only table: 34
-  order-level and 34 superfamily-level species summaries. Classified
-  categories are reclosed to one before calculation. Observed richness is
-  retained only as an audit/support count.
+- `te_diversity.csv`: one 34-row, four-column table containing the canonical
+  natural-log Shannon and Gini-Simpson estimates. For each species, the ten most
+  abundant strictly positive superfamilies are selected independently, with
+  abundance ties resolved by feature name, and reclosed to sum to one before
+  calculation. `n_superfamilies_included` is therefore ten for every species.
 - `te_feature_prevalence.csv`, `te_pca_clr_matrix.csv`, `te_pca_scores.csv`,
   `te_pca_variance.csv`, and `te_pca_loadings.csv`: the shared-feature
   compositional ordination audit trail.
@@ -54,6 +120,10 @@ competes with these CSVs.
   provisional tree-based signal tests on the full compositional geometry.
 - `te_pca_clustering_analysis_manifest.json`: input hashes, seeds, software,
   acceptance gates, and interpretation limits for the structure audit.
+- `bonsai_comparison/data/te34_bonsai_tree_with_feature_bootstrap_support.nwk`,
+  `te34_bonsai_tip_annotations.csv`, and
+  `te34_bonsai_strategy_publication_summary.csv`: the publication-facing tree,
+  tip annotations, and compact post-hoc validation summary.
 - `repeatmasker_divergence_landscape.csv` and
   `repeatmasker_species_inventory.csv`: compact summaries of the archived
   hit-level RepeatMasker evidence.
@@ -62,6 +132,13 @@ competes with these CSVs.
   provenance is `provenance/ltr_terminal_internal_release.json`.
 - `assembly_quality.csv`, `dnapipete_input_quality.csv`, and
   `dnapipete_mass_accounting.csv`: quality and mass-accounting evidence.
+- `wang2025_figure2_te_diversity.csv` and its provenance JSON: exact hash-bound
+  CC0 Dryad Figure 2 values from Wang et al. 2025. The local rounded 87-row
+  historical composite is rejected as a release input.
+- `te_diversity_cross_study.csv`: 84 published rows plus the same 34 canonical
+  current top-ten-superfamily summaries for a descriptive auxiliary comparison.
+  The RepeatModeler/RepeatMasker and dnaPipeTE pipelines differ, so no pooled
+  fit, hypothesis test, or estimator-equivalence claim is permitted.
 
 ## What is editable here
 
@@ -70,14 +147,15 @@ inspect features, or prototype report plots. The report is read-only with
 respect to canonical data; publication tables remain unchanged until
 deliberately replaced and `make publication` is run.
 
-The PCA uses closure, features positive in every included TE34 species, CLR
-transformation, column centering, and SVD without post-CLR variance scaling.
-Axes are oriented deterministically so the largest absolute loading is
-positive. The order-level stratum is the primary paper-facing diversity
-analysis, and the superfamily-level stratum is a sensitivity/audit view. Rare
-features remain in both diversity summaries even when they are not eligible for
-the shared-feature PCA. Unresolved aligned-base mass is excluded from diversity
-and remains only in the S06-S07 dnaPipeTE quality-control tables.
+The diversity and shared-representation feature rules are intentionally
+different. Diversity uses each species' ten most abundant positive
+superfamilies, so category identity can differ among species. PCA uses the 24
+superfamilies positive in every TE34 species. Bonsai fits that unscaled CLR geometry without feature-variance
+rescaling; PCA centers the same CLR columns and applies SVD without post-CLR
+variance scaling. Unresolved aligned-base mass enters neither representation
+and remains only in the S06-S07 dnaPipeTE quality-control tables. Wang et al.
+(2025) describe a top-ten-superfamily scope but do not state whether the
+retained abundances were reclosed; this study makes its reclosure explicit.
 
 The two compact composition matrices reproduce the full released prevalence,
 CLR, scores, variance, and loadings trail without the archived hit-level/HPC

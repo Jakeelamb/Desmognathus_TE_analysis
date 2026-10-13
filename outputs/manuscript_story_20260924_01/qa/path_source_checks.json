@@ -1,0 +1,10 @@
+{
+  "model_classes": 10,
+  "weights_sum": 0.9999999999999999,
+  "best_class": "cell_bridge",
+  "equivalent_winning_directions": 3,
+  "unscored_saturated_DAGs": 6,
+  "S28_normal_intervals_verified": 12,
+  "simulation_settings": 8,
+  "all_frozen_inputs": true
+}

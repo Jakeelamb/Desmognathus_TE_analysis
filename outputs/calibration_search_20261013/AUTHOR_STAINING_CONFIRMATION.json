@@ -1,0 +1,20 @@
+{
+  "confirmation_date": "2026-10-13",
+  "source": "Jake Lamb's direct answer in this conversation",
+  "question": "Do you remember whether all the retained brightfield slides were stained together in one Feulgen run with both reference specimens, 32469 and 32470, or in several staining runs? This determines whether we need one shared batch record or separate slide-to-standard mappings.",
+  "answer_verbatim": "One staining run with both standards",
+  "scope": "All retained brightfield slides and both designated reference slides",
+  "standard_specimen_ids": ["32469", "32470"],
+  "standard_process_ids": ["413", "414"],
+  "staining_run_id": "author_confirmed_single_run",
+  "run_id_is_internal_label": true,
+  "actual_staining_date": null,
+  "original_experimental_run_identifier": null,
+  "evidence_basis": "Author attestation; not recovered from contemporaneous workbook run fields",
+  "does_not_validate": [
+    "Standard-slide IOD quality or agreement",
+    "Use of designated standards as the computational denominator",
+    "Absolute DNA-content anchor",
+    "Complete specimen identity or preservation history"
+  ]
+}

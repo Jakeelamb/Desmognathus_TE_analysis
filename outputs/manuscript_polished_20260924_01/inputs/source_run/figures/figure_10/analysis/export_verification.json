@@ -1,0 +1,41 @@
+{
+  "pass": true,
+  "exports": [
+    {
+      "pdf": "figures/figure_10/Figure_10_manuscript_candidate.pdf",
+      "font": "Arial embedded",
+      "png_pixels": [
+        2125,
+        3717
+      ],
+      "tiff": "CMYK 300 300"
+    },
+    {
+      "pdf": "figures/figure_10/panels/Figure_10a_isolated.pdf",
+      "font": "Arial embedded",
+      "png_pixels": [
+        2125,
+        1475
+      ],
+      "tiff": "CMYK 300 300"
+    },
+    {
+      "pdf": "figures/figure_10/panels/Figure_10b_isolated.pdf",
+      "font": "Arial embedded",
+      "png_pixels": [
+        2125,
+        1829
+      ],
+      "tiff": "CMYK 300 300"
+    },
+    {
+      "pdf": "figures/figure_10/panels/Figure_10c_isolated.pdf",
+      "font": "Arial embedded",
+      "png_pixels": [
+        2125,
+        1063
+      ],
+      "tiff": "CMYK 300 300"
+    }
+  ]
+}

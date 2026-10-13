@@ -1,0 +1,27 @@
+{
+  "artifact_id": "wang2025_figure2_te_diversity",
+  "source_dataset_doi": "10.5061/dryad.zpc866tkv",
+  "source_article_doi": "10.1038/s42003-025-08127-3",
+  "source_dataset_url": "https://datadryad.org/dataset/doi:10.5061/dryad.zpc866tkv",
+  "source_archive_name": "Fig_2.zip",
+  "source_archive_file_id": 4030762,
+  "source_archive_size_bytes": 305298,
+  "source_archive_sha256": "aff6c3fdcd566a5ec1622ce3b256a38e9c337520a812ef75005a8fd896671dc9",
+  "source_member_path": "Fig_2/Data_TE_diversity.xlsx",
+  "source_member_sha256": "367a8102fd18f9c17251c442b0a0112af6afc008b51bf4b110f72a98fcc05c70",
+  "source_rows": 84,
+  "source_columns": 11,
+  "license": "CC0-1.0",
+  "retrieved_on": "2026-08-12",
+  "normalization": {
+    "text": "Convert non-breaking spaces to ASCII spaces, collapse repeated whitespace, and trim leading and trailing whitespace.",
+    "numbers": "Retain the stored workbook values at full precision with no rounding.",
+    "missing_shape": "Represent source NA or empty fish plotting shapes as blank CSV values.",
+    "unchanged": "Preserve source row order, names, group labels, panel labels, and the deposited Non-avian Reptillia spelling."
+  },
+  "metric_contract": {
+    "scope": "Published natural-log Shannon and Gini-Simpson diversity over the top 10 TE superfamilies.",
+    "published_top10_reclosure": "Unresolved in the article and Figure 2 deposit; the workbook supplies final diversity values rather than component abundances."
+  },
+  "acceptance_decision": "Accept the exact 84-row Dryad Figure 2 workbook as the published source. Reject the historical rounded 87-row local composite as a publication source; it is not the deposited Figure 2 sample."
+}

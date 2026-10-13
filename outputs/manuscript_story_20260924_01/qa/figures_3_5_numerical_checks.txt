@@ -1,0 +1,5 @@
+Checks passed: full-sample diversity model F/P match the former Figure 9 after rounding; no subgroup model selection.
+Figure 3: 21 species in each metric, both raw-data and fitted-model numerical exports.
+Figure 5: 24 species per panel and 1,152 accepted paired objects; S26 coefficients reused, no model refit.
+Figure 5 predictor/outcome log10 means and SDs match stored S26 to 1e-7.
+S26 t intervals are used; S28 normal-approximation intervals are not substituted.

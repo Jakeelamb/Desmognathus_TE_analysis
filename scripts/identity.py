@@ -368,10 +368,52 @@ def _audit_tree(root: Path, rows: list[IdentityRow], errors: list[str]) -> None:
     te_panel = _read_csv(root, "data/identity/te34_panel.csv")
     if not _require_columns(path_traits, ("species", "tree_tip"), "Path24 traits", errors):
         return
-    if not _require_columns(path_panel, ("species",), "Path24 panel", errors):
+    panel_columns = (
+        "species",
+        "path_analysis_panel24_v1",
+        "decision_basis",
+        "has_finalized_genome_size",
+        "analysis_role",
+    )
+    if not _require_columns(path_panel, panel_columns, "Path24 panel", errors):
         return
-    if not _require_columns(te_panel, ("species",), "TE34 panel", errors):
+    if not _require_columns(te_panel, panel_columns, "TE34 panel", errors):
         return
+
+    expected_path_role = "finalized_cell_nucleus_genome_phylogenetic_path"
+    has_legacy_iod_schema = (
+        "has_finalized_genome_iod" in path_panel.columns
+        or "has_finalized_genome_iod" in te_panel.columns
+    )
+    if has_legacy_iod_schema:
+        errors.append(
+            "[PANEL_LEGACY_IOD_SCHEMA] identity panels must expose "
+            "has_finalized_genome_size, not has_finalized_genome_iod"
+        )
+    if set(path_panel["analysis_role"]) != {expected_path_role}:
+        errors.append(
+            "[PATH_PANEL_ROLE_MISMATCH] Path24 analysis_role must be "
+            f"{expected_path_role}"
+        )
+    if set(path_panel["has_finalized_genome_size"]) != {"True"}:
+        errors.append(
+            "[PATH_PANEL_GENOME_SIZE_MISMATCH] every Path24 species must have a "
+            "finalized conditional genome-size trait"
+        )
+    te_path_members = te_panel["path_analysis_panel24_v1"].eq("True")
+    te_genome_size_members = te_panel["has_finalized_genome_size"].eq("True")
+    if not te_path_members.equals(te_genome_size_members):
+        errors.append(
+            "[TE_PANEL_GENOME_SIZE_MISMATCH] TE34 genome-size availability must match "
+            "Path24 membership"
+        )
+    if path_panel["decision_basis"].str.contains("IOD", case=False, na=False).any() or te_panel[
+        "decision_basis"
+    ].str.contains("IOD", case=False, na=False).any():
+        errors.append(
+            "[PANEL_DEFAULT_IOD_LEAK] identity-panel decision_basis must describe the "
+            "microscopy/genome-size analysis; IOD belongs only in calibration provenance"
+        )
 
     selected = path_traits["tree_tip"].tolist()
     selected_invalid = len(selected) != 24 or len(set(selected)) != 24

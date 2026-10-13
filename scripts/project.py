@@ -65,17 +65,27 @@ SUPPLEMENT_SOURCES = {
     "S37": "analyses/03_phylogenetic_path/data/path_dsep_tests.csv",
     "S38": "analyses/03_phylogenetic_path/data/phylogeny_edges.csv",
     "S39": "analyses/03_phylogenetic_path/data/phylogeny_nodes.csv",
-    "S40": "analyses/03_phylogenetic_path/data/te_relative_iod_overlap.csv",
+    "S40": "analyses/03_phylogenetic_path/data/te_genome_size_overlap.csv",
+    "S41": "analyses/01_transposable_elements/data/te_diversity_cross_study.csv",
+    "S42": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_tip_annotations.csv",
+    "S43": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_strategy_publication_summary.csv",
 }
 
 TREE_SOURCES = {
     "trees/desmo900dated_source46.tre": (
         "analyses/03_phylogenetic_path/trees/source_time_tree_46.tre",
         "TRE",
+        "Newick/tree text preserves the supplied 46-tip source phylogeny.",
     ),
     "trees/desmognathus_time_tree_path24_v1.nwk": (
         "analyses/03_phylogenetic_path/trees/path24_time_tree.nwk",
         "NWK",
+        "Newick/tree text preserves the exact 24-tip focal phylogeny.",
+    ),
+    "trees/te34_bonsai_composition_tree_with_feature_support.nwk": (
+        "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_tree_with_feature_bootstrap_support.nwk",
+        "NWK",
+        "Newick text preserves the 34-tip Bonsai TE-composition representation and feature-resampling split-support labels; it is not a species phylogeny.",
     ),
 }
 
@@ -102,9 +112,9 @@ def write_if_changed(source: Path, destination: Path) -> None:
 def build_publication() -> None:
     manifest_path = PUBLICATION_DIR / "DATASET_MANIFEST.csv"
     manifest = read_csv(manifest_path)
-    expected_ids = [f"S{number:02d}" for number in range(1, 41)]
+    expected_ids = [f"S{number:02d}" for number in range(1, 44)]
     if manifest["supplement_id"].tolist() != expected_ids:
-        raise ValueError("Publication manifest must contain ordered S01-S40 rows")
+        raise ValueError("Publication manifest must contain ordered S01-S43 rows")
 
     inventory_rows: list[dict[str, object]] = []
     updated_rows: list[dict[str, object]] = []
@@ -157,7 +167,11 @@ def build_publication() -> None:
     pd.DataFrame(inventory_rows).to_csv(inventory_path, index=False)
 
     non_csv_rows = []
-    for destination_relative, (source_relative, file_format) in TREE_SOURCES.items():
+    for destination_relative, (
+        source_relative,
+        file_format,
+        reason_not_csv,
+    ) in TREE_SOURCES.items():
         source = ROOT / source_relative
         destination = PUBLICATION_DIR / destination_relative
         write_if_changed(source, destination)
@@ -165,9 +179,7 @@ def build_publication() -> None:
             {
                 "filename": destination_relative,
                 "format": file_format,
-                "reason_not_csv": (
-                    "Newick/tree text preserves the source or exact Path24 phylogenetic structure."
-                ),
+                "reason_not_csv": reason_not_csv,
                 "sha256": sha256(destination),
                 "bytes": destination.stat().st_size,
             }
@@ -178,7 +190,7 @@ def build_publication() -> None:
     summary = {
         "publication_dataset_count": len(manifest),
         "csv_files": len(manifest),
-        "non_csv_tree_files": len(non_csv_rows),
+        "non_csv_files": len(non_csv_rows),
         "total_csv_rows": int(manifest["rows"].sum()),
         "total_csv_bytes": int(manifest["bytes"].sum()),
         "release_status_counts": dict(Counter(manifest["release_status"]).most_common()),
@@ -186,7 +198,10 @@ def build_publication() -> None:
         "column_inventory_sha256": sha256(inventory_path),
     }
     (PUBLICATION_DIR / "release_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
-    print(f"Rebuilt {len(manifest)} publication CSVs and {len(non_csv_rows)} trees")
+    print(
+        f"Rebuilt {len(manifest)} publication CSVs and "
+        f"{len(non_csv_rows)} non-CSV representations"
+    )
 
 
 def component_for(path: Path) -> str:
@@ -254,7 +269,7 @@ def validate() -> None:
     errors: list[str] = []
     manifest = read_csv(PUBLICATION_DIR / "DATASET_MANIFEST.csv")
     if manifest["supplement_id"].tolist() != list(SUPPLEMENT_SOURCES):
-        errors.append("publication manifest IDs are not exact ordered S01-S40")
+        errors.append("publication manifest IDs are not exact ordered S01-S43")
 
     for row in manifest.to_dict(orient="records"):
         supplement_id = str(row["supplement_id"])
@@ -374,7 +389,7 @@ def validate() -> None:
     if errors:
         raise SystemExit("Validation failed:\n- " + "\n- ".join(errors))
     print(
-        f"PASS: 40 publication tables; TE34={len(te_species)}; "
+        f"PASS: {len(SUPPLEMENT_SOURCES)} publication tables; TE34={len(te_species)}; "
         f"Path24={len(path_species)}; overlap={len(te_species & path_species)}; identity=PASS"
     )
 

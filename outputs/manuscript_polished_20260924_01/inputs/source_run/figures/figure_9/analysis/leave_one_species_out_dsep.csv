@@ -1,0 +1,145 @@
+mode,id,panel,aggregation,model,claim,p_value,lambda
+leave_one_species_out,anicetus,n23,released,body_only,c ~ b + n,0.00852729668601369,9.999999999999994e-8
+leave_one_species_out,anicetus,n23,released,body_only,n ~ b + g,0.10406345319684293,9.999999999999994e-8
+leave_one_species_out,anicetus,n23,released,body_only,c ~ b + g,0.0034818986121819273,9.999999999999994e-8
+leave_one_species_out,anicetus,n23,released,cell_bridge,n ~ b + c + g,0.8440524107258686,9.999999999999994e-8
+leave_one_species_out,anicetus,n23,released,nucleus_bridge,c ~ b + n + g,0.017680357353980245,9.999999999999994e-8
+leave_one_species_out,anicetus,n23,released,genome_bridge,c ~ b + g + n,0.043025043578636735,9.999999999999994e-8
+leave_one_species_out,tilleyi,n23,released,body_only,c ~ b + n,0.007007303161907303,9.999999999999994e-8
+leave_one_species_out,tilleyi,n23,released,body_only,n ~ b + g,0.08580724374388382,9.999999999999994e-8
+leave_one_species_out,tilleyi,n23,released,body_only,c ~ b + g,0.004140781997747122,9.999999999999994e-8
+leave_one_species_out,tilleyi,n23,released,cell_bridge,n ~ b + c + g,0.7596939548751105,9.999999999999994e-8
+leave_one_species_out,tilleyi,n23,released,nucleus_bridge,c ~ b + n + g,0.02406051748788425,9.999999999999994e-8
+leave_one_species_out,tilleyi,n23,released,genome_bridge,c ~ b + g + n,0.04067454024352686,9.999999999999994e-8
+leave_one_species_out,campi,n23,released,body_only,c ~ b + n,0.007376214604676991,9.999999999999994e-8
+leave_one_species_out,campi,n23,released,body_only,n ~ b + g,0.11175217656682937,9.999999999999994e-8
+leave_one_species_out,campi,n23,released,body_only,c ~ b + g,0.005704908577724545,9.999999999999994e-8
+leave_one_species_out,campi,n23,released,cell_bridge,n ~ b + c + g,0.8356002145209077,9.999999999999994e-8
+leave_one_species_out,campi,n23,released,nucleus_bridge,c ~ b + n + g,0.027003626295705394,9.999999999999994e-8
+leave_one_species_out,campi,n23,released,genome_bridge,c ~ b + g + n,0.034855443550341605,9.999999999999994e-8
+leave_one_species_out,ocoee,n23,released,body_only,c ~ b + n,0.004991224448182708,9.999999999999994e-8
+leave_one_species_out,ocoee,n23,released,body_only,n ~ b + g,0.10168639421746162,9.999999999999994e-8
+leave_one_species_out,ocoee,n23,released,body_only,c ~ b + g,0.006382706537648654,9.999999999999994e-8
+leave_one_species_out,ocoee,n23,released,cell_bridge,n ~ b + c + g,0.8297639859395363,9.999999999999994e-8
+leave_one_species_out,ocoee,n23,released,nucleus_bridge,c ~ b + n + g,0.03272921453499329,9.999999999999994e-8
+leave_one_species_out,ocoee,n23,released,genome_bridge,c ~ b + g + n,0.02563308729341632,9.999999999999994e-8
+leave_one_species_out,apalachicolae,n23,released,body_only,c ~ b + n,0.006702534873577951,9.999999999999994e-8
+leave_one_species_out,apalachicolae,n23,released,body_only,n ~ b + g,0.11097394866783525,9.999999999999994e-8
+leave_one_species_out,apalachicolae,n23,released,body_only,c ~ b + g,0.004129797476244447,9.999999999999994e-8
+leave_one_species_out,apalachicolae,n23,released,cell_bridge,n ~ b + c + g,0.8932028636980593,9.999999999999994e-8
+leave_one_species_out,apalachicolae,n23,released,nucleus_bridge,c ~ b + n + g,0.020028307975309245,9.999999999999994e-8
+leave_one_species_out,apalachicolae,n23,released,genome_bridge,c ~ b + g + n,0.03235063436408772,9.999999999999994e-8
+leave_one_species_out,monticola,n23,released,body_only,c ~ b + n,0.019935192813621785,0.7478416891997784
+leave_one_species_out,monticola,n23,released,body_only,n ~ b + g,0.08324663166060901,9.999999999999994e-8
+leave_one_species_out,monticola,n23,released,body_only,c ~ b + g,0.0032733625600251093,9.999999999999994e-8
+leave_one_species_out,monticola,n23,released,cell_bridge,n ~ b + c + g,0.6786949629682725,9.999999999999994e-8
+leave_one_species_out,monticola,n23,released,nucleus_bridge,c ~ b + n + g,0.018723334614827714,9.999999999999994e-8
+leave_one_species_out,monticola,n23,released,genome_bridge,c ~ b + g + n,0.07386286964443572,9.999999999999994e-8
+leave_one_species_out,perlapsus,n23,released,body_only,c ~ b + n,0.005017357690234937,9.999999999999994e-8
+leave_one_species_out,perlapsus,n23,released,body_only,n ~ b + g,0.11441523541432777,9.999999999999994e-8
+leave_one_species_out,perlapsus,n23,released,body_only,c ~ b + g,0.00251979794253648,9.999999999999994e-8
+leave_one_species_out,perlapsus,n23,released,cell_bridge,n ~ b + c + g,0.9695936579050622,9.999999999999994e-8
+leave_one_species_out,perlapsus,n23,released,nucleus_bridge,c ~ b + n + g,0.012126181906915624,9.999999999999994e-8
+leave_one_species_out,perlapsus,n23,released,genome_bridge,c ~ b + g + n,0.023869298982232712,9.999999999999994e-8
+leave_one_species_out,brimleyorum,n23,released,body_only,c ~ b + n,0.00423447994148803,9.999999999999994e-8
+leave_one_species_out,brimleyorum,n23,released,body_only,n ~ b + g,0.11125036728423755,9.999999999999994e-8
+leave_one_species_out,brimleyorum,n23,released,body_only,c ~ b + g,0.003492432882318788,9.999999999999994e-8
+leave_one_species_out,brimleyorum,n23,released,cell_bridge,n ~ b + c + g,0.9944522372931763,9.999999999999994e-8
+leave_one_species_out,brimleyorum,n23,released,nucleus_bridge,c ~ b + n + g,0.017119694462701625,9.999999999999994e-8
+leave_one_species_out,brimleyorum,n23,released,genome_bridge,c ~ b + g + n,0.02069749771427316,9.999999999999994e-8
+leave_one_species_out,bairdi,n23,released,body_only,c ~ b + n,0.004521789732765825,9.999999999999994e-8
+leave_one_species_out,bairdi,n23,released,body_only,n ~ b + g,0.09287205665143496,9.999999999999994e-8
+leave_one_species_out,bairdi,n23,released,body_only,c ~ b + g,0.01102045923581698,9.999999999999994e-8
+leave_one_species_out,bairdi,n23,released,cell_bridge,n ~ b + c + g,0.5001966356616927,0.9231347179993956
+leave_one_species_out,bairdi,n23,released,nucleus_bridge,c ~ b + n + g,0.05838752499366303,9.999999999999994e-8
+leave_one_species_out,bairdi,n23,released,genome_bridge,c ~ b + g + n,0.023936376231310296,9.999999999999994e-8
+leave_one_species_out,valtos,n23,released,body_only,c ~ b + n,0.013980409055175124,9.999999999999994e-8
+leave_one_species_out,valtos,n23,released,body_only,n ~ b + g,0.30967590120190236,9.999999999999994e-8
+leave_one_species_out,valtos,n23,released,body_only,c ~ b + g,0.013227511857952564,9.999999999999994e-8
+leave_one_species_out,valtos,n23,released,cell_bridge,n ~ b + c + g,0.809472988709677,9.999999999999994e-8
+leave_one_species_out,valtos,n23,released,nucleus_bridge,c ~ b + n + g,0.02682663314434483,9.999999999999994e-8
+leave_one_species_out,valtos,n23,released,genome_bridge,c ~ b + g + n,0.028308978754099504,9.999999999999994e-8
+leave_one_species_out,auriculatus,n23,released,body_only,c ~ b + n,0.013348564296279047,9.999999999999994e-8
+leave_one_species_out,auriculatus,n23,released,body_only,n ~ b + g,0.15043356630293087,9.999999999999994e-8
+leave_one_species_out,auriculatus,n23,released,body_only,c ~ b + g,0.007642692854932945,9.999999999999994e-8
+leave_one_species_out,auriculatus,n23,released,cell_bridge,n ~ b + c + g,0.8545300125086979,9.999999999999994e-8
+leave_one_species_out,auriculatus,n23,released,nucleus_bridge,c ~ b + n + g,0.02812379535371393,9.999999999999994e-8
+leave_one_species_out,auriculatus,n23,released,genome_bridge,c ~ b + g + n,0.048902658643243446,9.999999999999994e-8
+leave_one_species_out,fuscus,n23,released,body_only,c ~ b + n,0.003991692809318014,0.5883459485113957
+leave_one_species_out,fuscus,n23,released,body_only,n ~ b + g,0.10621542887555188,9.999999999999994e-8
+leave_one_species_out,fuscus,n23,released,body_only,c ~ b + g,0.00502330142355117,9.999999999999994e-8
+leave_one_species_out,fuscus,n23,released,cell_bridge,n ~ b + c + g,0.9018115858185479,9.999999999999994e-8
+leave_one_species_out,fuscus,n23,released,nucleus_bridge,c ~ b + n + g,0.025284270237392263,9.999999999999994e-8
+leave_one_species_out,fuscus,n23,released,genome_bridge,c ~ b + g + n,0.022990533594584805,9.999999999999994e-8
+leave_one_species_out,welteri,n23,released,body_only,c ~ b + n,0.008167134952557603,9.999999999999994e-8
+leave_one_species_out,welteri,n23,released,body_only,n ~ b + g,0.06344799855721554,9.999999999999994e-8
+leave_one_species_out,welteri,n23,released,body_only,c ~ b + g,0.0025077439690275078,9.999999999999994e-8
+leave_one_species_out,welteri,n23,released,cell_bridge,n ~ b + c + g,0.6631820095264276,9.999999999999994e-8
+leave_one_species_out,welteri,n23,released,nucleus_bridge,c ~ b + n + g,0.01811987696824086,9.999999999999994e-8
+leave_one_species_out,welteri,n23,released,genome_bridge,c ~ b + g + n,0.059296834319562994,9.999999999999994e-8
+leave_one_species_out,orestes,n23,released,body_only,c ~ b + n,0.004265965314505156,9.999999999999994e-8
+leave_one_species_out,orestes,n23,released,body_only,n ~ b + g,0.08702943761201341,9.999999999999994e-8
+leave_one_species_out,orestes,n23,released,body_only,c ~ b + g,0.0059881225181568345,9.999999999999994e-8
+leave_one_species_out,orestes,n23,released,cell_bridge,n ~ b + c + g,0.786135697881107,9.999999999999994e-8
+leave_one_species_out,orestes,n23,released,nucleus_bridge,c ~ b + n + g,0.034710171252946016,9.999999999999994e-8
+leave_one_species_out,orestes,n23,released,genome_bridge,c ~ b + g + n,0.024757814022683913,9.999999999999994e-8
+leave_one_species_out,ochrophaeus,n23,released,body_only,c ~ b + n,0.0051131685933254595,9.999999999999994e-8
+leave_one_species_out,ochrophaeus,n23,released,body_only,n ~ b + g,0.02747388490975145,9.999999999999994e-8
+leave_one_species_out,ochrophaeus,n23,released,body_only,c ~ b + g,0.0033318806607052485,9.999999999999994e-8
+leave_one_species_out,ochrophaeus,n23,released,cell_bridge,n ~ b + c + g,0.4041800997905559,9.999999999999994e-8
+leave_one_species_out,ochrophaeus,n23,released,nucleus_bridge,c ~ b + n + g,0.03911828666661617,9.999999999999994e-8
+leave_one_species_out,ochrophaeus,n23,released,genome_bridge,c ~ b + g + n,0.06067054070328077,9.999999999999994e-8
+leave_one_species_out,intermedius,n23,released,body_only,c ~ b + n,0.012087082598787078,0.4899682364863981
+leave_one_species_out,intermedius,n23,released,body_only,n ~ b + g,0.11786248125296815,9.999999999999994e-8
+leave_one_species_out,intermedius,n23,released,body_only,c ~ b + g,0.005209961908472795,9.999999999999994e-8
+leave_one_species_out,intermedius,n23,released,cell_bridge,n ~ b + c + g,0.8303207450878209,9.999999999999994e-8
+leave_one_species_out,intermedius,n23,released,nucleus_bridge,c ~ b + n + g,0.023538146034797525,9.999999999999994e-8
+leave_one_species_out,intermedius,n23,released,genome_bridge,c ~ b + g + n,0.04408899036991015,9.999999999999994e-8
+leave_one_species_out,marmoratus,n23,released,body_only,c ~ b + n,0.003933580893258538,9.999999999999994e-8
+leave_one_species_out,marmoratus,n23,released,body_only,n ~ b + g,0.12188290595835609,9.999999999999994e-8
+leave_one_species_out,marmoratus,n23,released,body_only,c ~ b + g,0.0033499951416545103,9.999999999999994e-8
+leave_one_species_out,marmoratus,n23,released,cell_bridge,n ~ b + c + g,0.972023630989848,0.7813331273780036
+leave_one_species_out,marmoratus,n23,released,nucleus_bridge,c ~ b + n + g,0.015155620749523755,9.999999999999994e-8
+leave_one_species_out,marmoratus,n23,released,genome_bridge,c ~ b + g + n,0.017743602141172106,9.999999999999994e-8
+leave_one_species_out,mavrokoilius,n23,released,body_only,c ~ b + n,0.0090156177651402,9.999999999999994e-8
+leave_one_species_out,mavrokoilius,n23,released,body_only,n ~ b + g,0.13090649218089914,9.999999999999994e-8
+leave_one_species_out,mavrokoilius,n23,released,body_only,c ~ b + g,0.006811321667626899,9.999999999999994e-8
+leave_one_species_out,mavrokoilius,n23,released,cell_bridge,n ~ b + c + g,0.8599611730569326,9.999999999999994e-8
+leave_one_species_out,mavrokoilius,n23,released,nucleus_bridge,c ~ b + n + g,0.028279233808088763,9.999999999999994e-8
+leave_one_species_out,mavrokoilius,n23,released,genome_bridge,c ~ b + g + n,0.03734562321198436,9.999999999999994e-8
+leave_one_species_out,kanawha,n23,released,body_only,c ~ b + n,0.00743168964059365,9.999999999999994e-8
+leave_one_species_out,kanawha,n23,released,body_only,n ~ b + g,0.10906759100438886,9.999999999999994e-8
+leave_one_species_out,kanawha,n23,released,body_only,c ~ b + g,0.005278332305762837,9.999999999999994e-8
+leave_one_species_out,kanawha,n23,released,cell_bridge,n ~ b + c + g,0.6384245279477303,0.8737622009380601
+leave_one_species_out,kanawha,n23,released,nucleus_bridge,c ~ b + n + g,0.025517774004544903,9.999999999999994e-8
+leave_one_species_out,kanawha,n23,released,genome_bridge,c ~ b + g + n,0.03584880980798565,9.999999999999994e-8
+leave_one_species_out,aeneus,n23,released,body_only,c ~ b + n,0.021731506541732285,9.999999999999994e-8
+leave_one_species_out,aeneus,n23,released,body_only,n ~ b + g,0.4220901432790646,9.999999999999994e-8
+leave_one_species_out,aeneus,n23,released,body_only,c ~ b + g,0.03421159161921166,9.999999999999994e-8
+leave_one_species_out,aeneus,n23,released,cell_bridge,n ~ b + c + g,0.9080275674540215,0.7286689907363014
+leave_one_species_out,aeneus,n23,released,nucleus_bridge,c ~ b + n + g,0.054690290420117825,9.999999999999994e-8
+leave_one_species_out,aeneus,n23,released,genome_bridge,c ~ b + g + n,0.035222176678773774,9.999999999999994e-8
+leave_one_species_out,amphileucus,n23,released,body_only,c ~ b + n,0.004699795792092486,0.6131429407481611
+leave_one_species_out,amphileucus,n23,released,body_only,n ~ b + g,0.1273407851901117,9.999999999999994e-8
+leave_one_species_out,amphileucus,n23,released,body_only,c ~ b + g,0.0047259723287356205,9.999999999999994e-8
+leave_one_species_out,amphileucus,n23,released,cell_bridge,n ~ b + c + g,0.9018918962884057,0.6836033805013975
+leave_one_species_out,amphileucus,n23,released,nucleus_bridge,c ~ b + n + g,0.020500682203134137,9.999999999999994e-8
+leave_one_species_out,amphileucus,n23,released,genome_bridge,c ~ b + g + n,0.02870472840959847,9.999999999999994e-8
+leave_one_species_out,gvnigeusgwotli,n23,released,body_only,c ~ b + n,0.0038758983335867338,9.999999999999994e-8
+leave_one_species_out,gvnigeusgwotli,n23,released,body_only,n ~ b + g,0.08981922993504507,9.999999999999994e-8
+leave_one_species_out,gvnigeusgwotli,n23,released,body_only,c ~ b + g,0.007450844273251733,9.999999999999994e-8
+leave_one_species_out,gvnigeusgwotli,n23,released,cell_bridge,n ~ b + c + g,0.7802797894037445,9.999999999999994e-8
+leave_one_species_out,gvnigeusgwotli,n23,released,nucleus_bridge,c ~ b + n + g,0.04189944064575092,9.999999999999994e-8
+leave_one_species_out,gvnigeusgwotli,n23,released,genome_bridge,c ~ b + g + n,0.021842377519640434,9.999999999999994e-8
+leave_one_species_out,folkertsi,n23,released,body_only,c ~ b + n,0.005628424786918082,9.999999999999994e-8
+leave_one_species_out,folkertsi,n23,released,body_only,n ~ b + g,0.11272738029881785,9.999999999999994e-8
+leave_one_species_out,folkertsi,n23,released,body_only,c ~ b + g,0.0044899463429145855,9.999999999999994e-8
+leave_one_species_out,folkertsi,n23,released,cell_bridge,n ~ b + c + g,0.9172065984958206,9.999999999999994e-8
+leave_one_species_out,folkertsi,n23,released,nucleus_bridge,c ~ b + n + g,0.02154828344288525,9.999999999999994e-8
+leave_one_species_out,folkertsi,n23,released,genome_bridge,c ~ b + g + n,0.026944226959428247,9.999999999999994e-8
+leave_one_species_out,wrighti,n23,released,body_only,c ~ b + n,0.0070026351390371664,0.464231296974918
+leave_one_species_out,wrighti,n23,released,body_only,n ~ b + g,0.14307782174157202,0.6092044920202822
+leave_one_species_out,wrighti,n23,released,body_only,c ~ b + g,0.0036179198041206098,9.999999999999994e-8
+leave_one_species_out,wrighti,n23,released,cell_bridge,n ~ b + c + g,0.6277850946510417,0.7778962754449199
+leave_one_species_out,wrighti,n23,released,nucleus_bridge,c ~ b + n + g,0.017557496888014397,9.999999999999994e-8
+leave_one_species_out,wrighti,n23,released,genome_bridge,c ~ b + g + n,0.03284531372704049,9.999999999999994e-8

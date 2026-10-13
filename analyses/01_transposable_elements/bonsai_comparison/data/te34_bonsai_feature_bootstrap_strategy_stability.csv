@@ -1,0 +1,4 @@
+strategy,strategy_label,group_n,full_fit_smallest_containing_side_tips,full_fit_edge_delimited,matched_calibration_smallest_containing_side_tips,matched_calibration_edge_delimited,bootstrap_edge_delimited_count,bootstrap_replicates,bootstrap_edge_delimited_fraction,bootstrap_smallest_side_median,bootstrap_smallest_side_q05,bootstrap_smallest_side_q95
+aquatic_eggs,Aquatic eggs,7,7,True,7,True,55,200,0.27500000000000002,14,7,30
+direct_development,Direct development,3,3,True,3,True,70,200,0.34999999999999998,14,3,28
+terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,24,27,False,27,False,2,200,0.01,27,25,31

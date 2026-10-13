@@ -1,0 +1,3 @@
+source,path,snapshot,sha256
+traits,/home/jake/Projects/Desmognathus_TE/outputs/manuscript_story_20260924_01/figures/figure_8/analysis/traits_joined.csv,/home/jake/Projects/Desmognathus_TE/outputs/manuscript_story_20260924_01/inputs/body_roles/traits24.csv,4b54105722548b9ff5b84170341a3b2b63f694e343874e791fd820e66dc09f63
+tree,/home/jake/Projects/Desmognathus_TE/outputs/manuscript_story_20260924_01/inputs/body_size/path24_time_tree.nwk,/home/jake/Projects/Desmognathus_TE/outputs/manuscript_story_20260924_01/inputs/body_roles/tree24.nwk,5c05e24b5b63d5a4e7cecf054ec7c34bc1607548845d1ea3bd745062db54beab

@@ -1,0 +1,27 @@
+{
+  "confirmation_date": "2026-10-13",
+  "source": "Jake Lamb's direct answer after viewing labeled standard previews in this conversation",
+  "question": "Looking at the labeled previews now, what can you confirm about the imaging and preparation of Process 413 / specimen 32469 and Process 414 / specimen 32470? In particular, were these the 40× brightfield images without oil, and what do you remember about their fixation or preservation?",
+  "answer_verbatim": "yes these are the 40x brightfield images without oil. they are also the green channel images. they were fixed with the same protocol as the others",
+  "standard_process_ids": ["413", "414"],
+  "standard_specimen_ids": ["32469", "32470"],
+  "author_confirmed": {
+    "objective_magnification": "40x",
+    "imaging_mode": "brightfield",
+    "immersion_oil_used": false,
+    "retained_channel": "green",
+    "fixation_protocol": "Same protocol as the other study slides; exact execution details not supplied in this answer"
+  },
+  "evidence_basis": "Author identification of displayed retained image tiles; not recovered acquisition metadata",
+  "preview_url": "http://127.0.0.1:18765/",
+  "preview_files": [
+    "author_preview/Process_413_specimen_32469_whole_tile.png",
+    "author_preview/Process_414_specimen_32470_whole_tile.png"
+  ],
+  "limits": [
+    "No camera exposure, gain, gamma, original bit depth or linearity measurement supplied",
+    "No exact fixation reagent, concentration or duration supplied in this answer",
+    "Prior museum fixation and storage history remains distinct from the shared preparation protocol",
+    "No manual nucleus acceptance or independent standard C-value established"
+  ]
+}

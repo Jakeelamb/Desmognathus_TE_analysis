@@ -63,7 +63,8 @@ specimen, or the reproductive-strategy figure label.
 `overlap21` is always the exact set intersection `TE34 ∩ Path24`; an identity
 correction does not redefine that panel. Resolving the two *D. orestes* SVL
 rows gives *D. orestes* a canonical maximum SVL of 52 mm, so all 21 overlap
-species currently have TE composition, reviewed morphology/IOD, and maximum
+species currently have TE composition, reviewed morphology, conditional
+genome-size estimates with retained IOD calibration provenance, and maximum
 SVL. A final integrated model is still unselected and unfitted.
 
 ## What the audit proves

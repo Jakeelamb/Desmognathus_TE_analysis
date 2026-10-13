@@ -1,0 +1,20 @@
+Comparison,Species,Statistic,Estimate,95% CI low,95% CI high,Null,P,Lambda,Scale,Source
+Reproductive strategy and TE composition,34,R²,0.2601016805953517,,,0,1e-05,,CLR / Aitchison composition,te_pca_trait_association_tests.csv
+Strategy adjusted for recorded body size,34,R²,0.19904284290161434,,,0,1e-05,,CLR / Aitchison composition,te_pca_trait_association_tests.csv
+Shannon entropy versus genome size,21,Slope per pg/1C,-0.007557817096005305,-0.015233862804372453,0.00011822861236184326,0,0.05328164510348311,1.0,Untransformed diversity and pg/1C,Figure 3 model_summary.csv
+Gini–Simpson index versus genome size,21,Slope per pg/1C,-0.003623494940657906,-0.00696416319658273,-0.00028282668473308134,0,0.03502101656908224,1.0,Untransformed diversity and pg/1C,Figure 3 model_summary.csv
+Cell area versus genome size,24,Standardized slope,0.71666442,0.40830013,1.02502872,0,8.157e-05,1e-07,Log10 then standardized,S26
+Nucleus area versus genome size,24,Standardized slope,0.41901841,0.01755494,0.82048187,0,0.04154379,1e-07,Log10 then standardized,S26
+Cell area versus nucleus area,24,Standardized slope,0.57930128,0.21889785,0.93970471,0,0.00301277,1e-07,Log10 then standardized,S26
+Median LTR ratio versus genome size,19,Log–log slope,0.024196124321278045,-0.5608651711893331,0.6092574198318892,0,0.93148859408955,6.1971160237726395e-09,Log10 ratio and Gbp,LTR PGLS model_summary.csv
+Genome size versus SVL,24,Standardized slope,0.6673596254244273,0.19205765636658534,1.1426615944822691,0,0.008081986574792565,1,Full24-standardized log10 traits,Figure 8 regression coefficients
+Cell area versus SVL,24,Standardized slope,0.6113171845556894,0.26140501873196015,0.9612293503794187,0,0.0015049813871663943,9.999999999999994e-08,Full24-standardized log10 traits,Figure 8 regression coefficients
+Nucleus area versus SVL,24,Standardized slope,0.24800207109384084,-0.18033615751522006,0.6763402997029018,0,0.24261960529394527,9.999999999999994e-08,Full24-standardized log10 traits,Figure 8 regression coefficients
+"Cell area versus genome size, adjusted for SVL",24,Standardized slope,0.5453794365491734,0.19199472937536838,0.8987641437229785,0,0.004209930003189944,9.999999999999994e-08,Full24-standardized log10 traits,Figure 8 regression coefficients
+"Nucleus area versus cell area, adjusted for SVL",24,Standardized slope,0.6828984337315104,0.22185317257006776,1.1439436948929531,0,0.005674414638115744,9.999999999999994e-08,Full24-standardized log10 traits,Figure 8 regression coefficients
+"Nucleus area versus genome size, adjusted for cell area and SVL",24,Standardized slope,0.05058352519534526,-0.49892182690018627,0.6000888772908768,0,0.8496636557165945,9.999999999999994e-08,Full24-standardized log10 traits,Figure 8 regression coefficients
+Nucleus-on-cell area scaling (test against isometry),24,Log–log slope,0.4500478713898247,0.17005747420514117,0.7300382685745083,1,0.0005042092820616852,9.999999999999994e-08,Unstandardized log10 areas; P tests slope = 1,Figure 10 allometry summary
+"Genome size versus within-LTR score, adjusted for SVL",21,Standardized slope,0.3110951280533104,-0.38112017163583833,1.0033104277424592,0,0.3575720579722269,1,Logit TE share; full24 cellular scaling and full34 TE scaling,Figure 11 regression coefficients
+"Cell area versus within-LTR score, adjusted for genome size and SVL",21,Standardized slope,0.06607210969357806,-0.26388071003412134,0.3960249294212775,0,0.6779666962343378,9.999999999999994e-08,Logit TE share; full24 cellular scaling and full34 TE scaling,Figure 11 regression coefficients
+"Nucleus area versus within-LTR score, adjusted for cell area, genome size and SVL",21,Standardized slope,-0.0646991417760117,-0.47763890466461884,0.3482406211125954,0,0.7440909220690912,9.999999999999994e-08,Logit TE share; full24 cellular scaling and full34 TE scaling,Figure 11 regression coefficients
+"Within-LTR low-divergence share and reproductive strategy, adjusted for SVL",34,Likelihood ratio (df = 2),14.946500511173355,,,,0.0005680788913950969,,Logit within-LTR fraction; approximate chi-square ML test,Figure 12 omnibus tests

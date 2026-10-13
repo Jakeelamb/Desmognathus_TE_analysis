@@ -1,0 +1,20 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "tests/test_methods_release.py",
+    "tests/test_repository.py",
+    "tests/test_path_dag_reference.py",
+    "scripts/publication/build_methods_document.py",
+    "Publication/methods"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:18:28.950369+00:00",
+  "completed_at": "2026-10-13T16:18:28.956213+00:00",
+  "elapsed_seconds": 0.006,
+  "exit_code": 0,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/scoped-diff-check.log",
+  "raw_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

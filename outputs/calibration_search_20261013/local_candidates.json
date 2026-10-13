@@ -1,0 +1,632 @@
+[
+  {
+    "path": "/home/jake/PhD_Research/Desmognathus_slides_pyron_mueller.ods",
+    "sha256": "8054751f59c93be2e9e90c2c26b7fb01a2e8201b987664719e0755b4cfdb68d7",
+    "mtime_utc": "2024-12-11T18:40:50.441704+00:00",
+    "sheets": [
+      {
+        "name": "Sheet1",
+        "nonempty_rows": 186
+      },
+      {
+        "name": "Sheet2",
+        "nonempty_rows": 94
+      },
+      {
+        "name": "Sheet3",
+        "nonempty_rows": 0
+      }
+    ],
+    "selected_records": [
+      {
+        "sheet": "Sheet1",
+        "row": 65,
+        "cells": [
+          {
+            "column": 1,
+            "value": "RAP3372"
+          },
+          {
+            "column": 3,
+            "value": "Fuscus B"
+          },
+          {
+            "column": 4,
+            "value": "Fresh"
+          }
+        ]
+      },
+      {
+        "sheet": "Sheet1",
+        "row": 66,
+        "cells": [
+          {
+            "column": 1,
+            "value": "RAP3373"
+          },
+          {
+            "column": 3,
+            "value": "Fuscus B"
+          },
+          {
+            "column": 4,
+            "value": "Fresh"
+          }
+        ]
+      },
+      {
+        "sheet": "Sheet1",
+        "row": 179,
+        "cells": [
+          {
+            "column": 1,
+            "value": "conanti"
+          },
+          {
+            "column": 3,
+            "value": "???"
+          },
+          {
+            "column": 4,
+            "value": "Formalin"
+          },
+          {
+            "column": 5,
+            "value": "Not convinced it isn't monticola"
+          },
+          {
+            "column": 6,
+            "value": "1/12/2023"
+          },
+          {
+            "column": 7,
+            "value": "D. fuscus"
+          },
+          {
+            "column": 9,
+            "value": "32469"
+          },
+          {
+            "column": 10,
+            "value": "United States"
+          },
+          {
+            "column": 11,
+            "value": "Tennessee"
+          },
+          {
+            "column": 12,
+            "value": "6 mi E Calderwood"
+          },
+          {
+            "column": 13,
+            "value": "7-Apr-37"
+          },
+          {
+            "column": 14,
+            "value": "35.5092"
+          },
+          {
+            "column": 15,
+            "value": "-83.894"
+          },
+          {
+            "column": 16,
+            "value": "8653"
+          }
+        ]
+      },
+      {
+        "sheet": "Sheet1",
+        "row": 180,
+        "cells": [
+          {
+            "column": 1,
+            "value": "conanti"
+          },
+          {
+            "column": 3,
+            "value": "???"
+          },
+          {
+            "column": 4,
+            "value": "Formalin"
+          },
+          {
+            "column": 5,
+            "value": "Not convinced it isn't monticola"
+          },
+          {
+            "column": 6,
+            "value": "1/12/2023"
+          },
+          {
+            "column": 7,
+            "value": "D. fuscus"
+          },
+          {
+            "column": 9,
+            "value": "32470"
+          },
+          {
+            "column": 10,
+            "value": "United States"
+          },
+          {
+            "column": 11,
+            "value": "Tennessee"
+          },
+          {
+            "column": 12,
+            "value": "6 mi E Calderwood"
+          },
+          {
+            "column": 13,
+            "value": "7-Apr-37"
+          },
+          {
+            "column": 14,
+            "value": "35.5092"
+          },
+          {
+            "column": 15,
+            "value": "-83.894"
+          },
+          {
+            "column": 16,
+            "value": "8653"
+          }
+        ]
+      },
+      {
+        "sheet": "Sheet2",
+        "row": 84,
+        "cells": [
+          {
+            "column": 1,
+            "value": "conanti"
+          },
+          {
+            "column": 2,
+            "value": "???"
+          },
+          {
+            "column": 3,
+            "value": "Not convinced it isn't monticola"
+          },
+          {
+            "column": 4,
+            "value": "1/12/2023"
+          },
+          {
+            "column": 5,
+            "value": "D. fuscus"
+          },
+          {
+            "column": 7,
+            "value": "32469"
+          },
+          {
+            "column": 8,
+            "value": "United States"
+          },
+          {
+            "column": 9,
+            "value": "Tennessee"
+          },
+          {
+            "column": 10,
+            "value": "6 mi E Calderwood"
+          },
+          {
+            "column": 11,
+            "value": "7-Apr-37"
+          },
+          {
+            "column": 12,
+            "value": "35.5092"
+          },
+          {
+            "column": 13,
+            "value": "-83.894"
+          },
+          {
+            "column": 14,
+            "value": "8653"
+          }
+        ]
+      },
+      {
+        "sheet": "Sheet2",
+        "row": 85,
+        "cells": [
+          {
+            "column": 1,
+            "value": "conanti"
+          },
+          {
+            "column": 2,
+            "value": "???"
+          },
+          {
+            "column": 3,
+            "value": "Not convinced it isn't monticola"
+          },
+          {
+            "column": 4,
+            "value": "1/12/2023"
+          },
+          {
+            "column": 5,
+            "value": "D. fuscus"
+          },
+          {
+            "column": 7,
+            "value": "32470"
+          },
+          {
+            "column": 8,
+            "value": "United States"
+          },
+          {
+            "column": 9,
+            "value": "Tennessee"
+          },
+          {
+            "column": 10,
+            "value": "6 mi E Calderwood"
+          },
+          {
+            "column": 11,
+            "value": "7-Apr-37"
+          },
+          {
+            "column": 12,
+            "value": "35.5092"
+          },
+          {
+            "column": 13,
+            "value": "-83.894"
+          },
+          {
+            "column": 14,
+            "value": "8653"
+          }
+        ]
+      }
+    ],
+    "staining_run_mapping_found": false
+  },
+  {
+    "path": "/home/jake/PhD_Research/Berkely_Salamander_Lab_Work_MVZ_RAP_2.xlsx",
+    "sha256": "c1dc24a7e3739bfb7b7a81f1dc1b22b0edf2597e3cd19061f2356c5935e4afa1",
+    "mtime_utc": "2024-12-11T17:32:19.859617+00:00",
+    "sheets": [
+      {
+        "name": "Berkely_Salamander_Lab_Work_MVZ",
+        "nonempty_rows": 94
+      }
+    ],
+    "selected_records": [
+      {
+        "sheet": "Berkely_Salamander_Lab_Work_MVZ",
+        "row": "84",
+        "cells": [
+          {
+            "cell": "A84",
+            "value": "conanti"
+          },
+          {
+            "cell": "B84",
+            "value": "???"
+          },
+          {
+            "cell": "C84",
+            "value": "Not convinced it isn't monticola"
+          },
+          {
+            "cell": "D84",
+            "value": "44938"
+          },
+          {
+            "cell": "E84",
+            "value": "D. fuscus"
+          },
+          {
+            "cell": "F84",
+            "value": "D. fuscus"
+          },
+          {
+            "cell": "G84",
+            "value": "32469"
+          },
+          {
+            "cell": "H84",
+            "value": "United States"
+          },
+          {
+            "cell": "I84",
+            "value": "Tennessee"
+          },
+          {
+            "cell": "J84",
+            "value": "6 mi E Calderwood"
+          },
+          {
+            "cell": "K84",
+            "value": "13612"
+          },
+          {
+            "cell": "L84",
+            "value": "35.5092"
+          },
+          {
+            "cell": "M84",
+            "value": "-83.894000000000005"
+          },
+          {
+            "cell": "N84",
+            "value": "8653"
+          }
+        ]
+      },
+      {
+        "sheet": "Berkely_Salamander_Lab_Work_MVZ",
+        "row": "85",
+        "cells": [
+          {
+            "cell": "A85",
+            "value": "conanti"
+          },
+          {
+            "cell": "B85",
+            "value": "???"
+          },
+          {
+            "cell": "C85",
+            "value": "Not convinced it isn't monticola"
+          },
+          {
+            "cell": "D85",
+            "value": "44938"
+          },
+          {
+            "cell": "E85",
+            "value": "D. fuscus"
+          },
+          {
+            "cell": "F85",
+            "value": "D. fuscus"
+          },
+          {
+            "cell": "G85",
+            "value": "32470"
+          },
+          {
+            "cell": "H85",
+            "value": "United States"
+          },
+          {
+            "cell": "I85",
+            "value": "Tennessee"
+          },
+          {
+            "cell": "J85",
+            "value": "6 mi E Calderwood"
+          },
+          {
+            "cell": "K85",
+            "value": "13612"
+          },
+          {
+            "cell": "L85",
+            "value": "35.5092"
+          },
+          {
+            "cell": "M85",
+            "value": "-83.894000000000005"
+          },
+          {
+            "cell": "N85",
+            "value": "8653"
+          }
+        ]
+      }
+    ],
+    "staining_run_mapping_found": false
+  },
+  {
+    "path": "/home/jake/Projects/misc_desmog_scripts/Lamb Slide Specimens.xlsx",
+    "sha256": "282814913c961ab88b1cce10d27d027d53cf14f0bb5d417ff43a9f84d343b44d",
+    "mtime_utc": "2025-02-19T20:59:10.418721+00:00",
+    "sheets": [
+      {
+        "name": "Sheet1",
+        "nonempty_rows": 48
+      }
+    ],
+    "selected_records": [
+      {
+        "sheet": "Sheet1",
+        "row": "4",
+        "cells": [
+          {
+            "cell": "A4",
+            "value": "RAP3372"
+          },
+          {
+            "cell": "B4",
+            "value": "Desmognathus"
+          },
+          {
+            "cell": "C4",
+            "value": "fuscus"
+          },
+          {
+            "cell": "D4",
+            "value": "fuscus B"
+          },
+          {
+            "cell": "E4",
+            "value": "West Virginia"
+          },
+          {
+            "cell": "F4",
+            "value": "Randolph"
+          },
+          {
+            "cell": "G4",
+            "value": "Mill Creek Tributary"
+          },
+          {
+            "cell": "H4",
+            "value": "38.645471000000001"
+          },
+          {
+            "cell": "I4",
+            "value": "-80.080680999999998"
+          },
+          {
+            "cell": "J4",
+            "value": "959.29"
+          },
+          {
+            "cell": "K4",
+            "value": "24"
+          },
+          {
+            "cell": "L4",
+            "value": "September"
+          },
+          {
+            "cell": "M4",
+            "value": "2023"
+          },
+          {
+            "cell": "N4",
+            "value": "RAP, MAS, JMH"
+          },
+          {
+            "cell": "O4",
+            "value": "WVDNR 2023.001"
+          },
+          {
+            "cell": "P4",
+            "value": "Whole + Tissue"
+          }
+        ]
+      },
+      {
+        "sheet": "Sheet1",
+        "row": "5",
+        "cells": [
+          {
+            "cell": "A5",
+            "value": "RAP3373"
+          },
+          {
+            "cell": "B5",
+            "value": "Desmognathus"
+          },
+          {
+            "cell": "C5",
+            "value": "fuscus"
+          },
+          {
+            "cell": "D5",
+            "value": "fuscus B"
+          },
+          {
+            "cell": "E5",
+            "value": "West Virginia"
+          },
+          {
+            "cell": "F5",
+            "value": "Randolph"
+          },
+          {
+            "cell": "G5",
+            "value": "Meatbox Run"
+          },
+          {
+            "cell": "H5",
+            "value": "38.650317999999999"
+          },
+          {
+            "cell": "I5",
+            "value": "-80.079155999999998"
+          },
+          {
+            "cell": "J5",
+            "value": "939.43"
+          },
+          {
+            "cell": "K5",
+            "value": "24"
+          },
+          {
+            "cell": "L5",
+            "value": "September"
+          },
+          {
+            "cell": "M5",
+            "value": "2023"
+          },
+          {
+            "cell": "N5",
+            "value": "RAP, MAS, JMH"
+          },
+          {
+            "cell": "O5",
+            "value": "WVDNR 2023.001"
+          },
+          {
+            "cell": "P5",
+            "value": "Whole + Tissue"
+          }
+        ]
+      }
+    ],
+    "staining_run_mapping_found": false
+  },
+  {
+    "path": "/home/jake/Projects/misc_desmog_scripts/Ectopic_recombination/Desmo_trait_evo/conserved_slides.xlsx",
+    "sha256": "38899b8e88cc66a359fcab82e05ea28890c9e1342276d7d44a6ccff7981a7c50",
+    "mtime_utc": "2025-02-19T21:07:35.141000+00:00",
+    "sheets": [
+      {
+        "name": "Sheet1",
+        "nonempty_rows": 32
+      }
+    ],
+    "selected_records": [],
+    "staining_run_mapping_found": false
+  },
+  {
+    "path": "/home/jake/Documents/Attachments/Documents/untitled_0.ods",
+    "sha256": "04e1f2b61290e653c9cb0ab55a780d015d034b95d04b068449ba68e9abc27136",
+    "mtime_utc": "2024-10-29T21:19:17.310247+00:00",
+    "sheets": [
+      {
+        "name": "Sheet1",
+        "nonempty_rows": 76
+      }
+    ],
+    "selected_records": [],
+    "staining_run_mapping_found": false
+  },
+  {
+    "path": "/home/jake/Projects/misc_desmog_scripts/Desmognathus_slides_pyron_mueller.ods",
+    "sha256": "5c8ad45add0940c9e75791b1d6fc58dd858bc12f015507034c533328e8c60cbf",
+    "mtime_utc": "2024-12-11T17:40:56.809744+00:00",
+    "staining_run_mapping_found": false,
+    "inspected": "ODS all displayed cell texts; XLSX sheet names and XML text scan for stain/Feulgen/batch/32469/32470"
+  },
+  {
+    "path": "/home/jake/Projects/Desmognathus_Results/Lamb Slide Specimens.xlsx",
+    "sha256": "684fc95ff4bafc8c28a30a069a67063bc33f20847ff91097e764987a764c430a",
+    "mtime_utc": "2025-03-29T18:29:45.566387+00:00",
+    "staining_run_mapping_found": false,
+    "inspected": "ODS all displayed cell texts; XLSX sheet names and XML text scan for stain/Feulgen/batch/32469/32470"
+  }
+]

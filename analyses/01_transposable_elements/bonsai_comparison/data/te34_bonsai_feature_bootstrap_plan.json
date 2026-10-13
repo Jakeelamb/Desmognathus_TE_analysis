@@ -1,0 +1,24 @@
+{
+  "analysis_id": "te34_bonsai_feature_bootstrap_v1",
+  "reference_tree": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_tree.nwk",
+  "reference_tree_sha256": "544bc3bc6c318eb2c0e58d700d19aba553a1d12f774fe0c4b7b969a3326715d0",
+  "source_clr": "analyses/01_transposable_elements/data/te_pca_clr_matrix.csv",
+  "source_clr_sha256": "c58a7cc71ed4306544e81397007cd3f8b348e6df4fce54066e0f2f748f52ff39",
+  "replicates": 200,
+  "seed": 20260826,
+  "sampling_unit": "24 CLR-superfamily feature coordinates sampled with replacement",
+  "calibration_replicate": "replicate_000 uses all 24 features exactly once",
+  "bounded_bonsai_config": {
+    "input_is_sanity_output": false,
+    "measurement_standard_deviations": null,
+    "zscore_cutoff": -1.0,
+    "rescale_by_var": false,
+    "use_knn": -1,
+    "nnn_n_randommoves": 100,
+    "nnn_n_randomtrees": 1,
+    "UB_ellipsoid_size": 1.0
+  },
+  "upstream_repository": "https://github.com/dhdegroot/Bonsai-data-representation",
+  "upstream_commit": "b16ef6f0a164610327022c7d0b92de82b3596aad",
+  "upstream_license": "CC-BY-NC-4.0"
+}

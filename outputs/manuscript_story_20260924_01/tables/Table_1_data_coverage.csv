@@ -1,0 +1,7 @@
+Component,Species,Objects,Animals,Measurement,Source
+TE composition and divergence,34,,,Species-level repeat summaries,S02; S08; S12
+LTR depth distributions,30,380,,Elements; species medians,S14–S16
+Cell and nucleus morphology,24,1152,42,Selected cell–nucleus pairs,S18–S19
+Nuclear optical density,24,805,50,Nuclei; estimated genome size,S21–S22
+TE–genome-size comparison,21,,,Species-level overlap,S40
+LTR–genome-size comparison,19,239,,Elements summarized to species medians,LTR PGLS species data

@@ -1,0 +1,13 @@
+parent,child,model,orientation
+c,g,cell_body_branch,1
+n,c,cell_body_branch,1
+c,b,cell_body_branch,1
+c,g,cell_body_branch,2
+b,c,cell_body_branch,2
+c,n,cell_body_branch,2
+c,g,cell_body_branch,3
+c,b,cell_body_branch,3
+c,n,cell_body_branch,3
+g,c,cell_body_branch,4
+c,b,cell_body_branch,4
+c,n,cell_body_branch,4

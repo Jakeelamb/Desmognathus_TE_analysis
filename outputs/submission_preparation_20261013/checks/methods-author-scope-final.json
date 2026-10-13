@@ -1,0 +1,24 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--no-sync",
+    "--python",
+    "3.13",
+    "python",
+    "-m",
+    "pytest",
+    "tests/test_methods_release.py",
+    "tests/test_repository.py",
+    "tests/test_path_dag_reference.py",
+    "-q"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:23:47.956547+00:00",
+  "completed_at": "2026-10-13T16:23:54.397954+00:00",
+  "elapsed_seconds": 6.441,
+  "exit_code": 0,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/methods-author-scope-final.log",
+  "raw_log_sha256": "468342b27f06cf16ad0bc74d6b9dbb8521741787b3d2b74e05e5a9166b037b67"
+}

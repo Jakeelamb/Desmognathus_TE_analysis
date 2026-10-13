@@ -1,0 +1,6 @@
+PASS: 24 species retained in each scatterplot and in nuclear-fraction panel.
+PASS: 42 animals and 1152 paired cells represented in frozen nuclear-fraction summaries.
+PASS: three unassigned reproductive-strategy records retained explicitly.
+PASS: all model coefficients, predictions and intervals read from frozen prior exports; no models refitted.
+PASS:12 conditional coefficients; exactly2 aggregations x2 species panels x3 relationships.
+Arial target; minimum plot text7.5pt; collage widths180mm, heights240mm and235mm.

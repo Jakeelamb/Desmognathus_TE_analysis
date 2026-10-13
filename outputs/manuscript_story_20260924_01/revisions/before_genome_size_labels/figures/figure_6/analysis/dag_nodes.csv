@@ -1,0 +1,13 @@
+node,x,label,dag_id,y
+GS,1.45,"Estimated
+genome size",GS->CS;CS->NS,3.6
+CS,5,Cell area,GS->CS;CS->NS,3.6
+NS,8.55,Nucleus area,GS->CS;CS->NS,3.6
+GS,1.45,"Estimated
+genome size",NS->CS;CS->GS,2
+CS,5,Cell area,NS->CS;CS->GS,2
+NS,8.55,Nucleus area,NS->CS;CS->GS,2
+GS,1.45,"Estimated
+genome size",CS->GS;CS->NS,0.55
+CS,5,Cell area,CS->GS;CS->NS,0.55
+NS,8.55,Nucleus area,CS->GS;CS->NS,0.55

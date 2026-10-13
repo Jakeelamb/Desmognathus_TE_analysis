@@ -1,0 +1,5 @@
+All 34 species retained; strategy counts 7/24/3.
+Profiles: 5,100 species-order-bin rows; 450 strategy-order-bin means; 102 low-divergence rows.
+Primary denominator remains all species RepeatMasker aligned-hit bp. Missing bins zero-filled, not reclosed.
+Figure 1 has 21 available genome estimates and 13 explicit missing values; every composition row closes to one.
+No inferential analyses were performed.

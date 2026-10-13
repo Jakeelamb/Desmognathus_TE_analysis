@@ -1,0 +1,151 @@
+UV_PROJECT_ENVIRONMENT=/tmp/desmo-standard-qc-20261013/env uv run --frozen --python 3.13 --with Pillow --with tifffile --with scipy --with scikit-image --with matplotlib --with roifile python - <<'PY'
+import collections
+import csv
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from datetime import datetime, timezone
+
+sys.dont_write_bytecode = True
+import numpy as np
+from PIL import Image
+import tifffile
+from skimage.segmentation import find_boundaries
+
+root = Path('outputs/standard_calibration_review_20261013').resolve()
+a, b = root/'pixel_audit_v1', root/'pixel_audit_v2'
+checks = []
+start = datetime.now(timezone.utc).isoformat()
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open('rb') as f:
+        for chunk in iter(lambda: f.read(1024*1024), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+def check(name, condition, evidence):
+    checks.append({'name': name, 'pass': bool(condition), 'evidence': evidence})
+    print(('PASS ' if condition else 'FAIL ') + name, flush=True)
+
+def snapshot(folder):
+    return {str(p.relative_to(folder)): {'sha256': sha(p), 'bytes': p.stat().st_size,
+                                       'mtime_ns': p.stat().st_mtime_ns}
+            for p in sorted(folder.rglob('*')) if p.is_file()}
+
+receipts = [json.loads((folder/'receipt.json').read_text()) for folder in (a,b)]
+for folder, receipt in zip((a,b), receipts, strict=True):
+    check(folder.name+'_execution', receipt['exit_status'] == 0 and json.loads((folder/'command_receipt.json').read_text())['exit_status'] == 0,
+          {'exit_status': receipt['exit_status'], 'clock': [receipt['start_utc'], receipt['finish_utc']]})
+    check(folder.name+'_source_integrity', not receipt['changed_inputs'] and receipt['inputs_before'] == receipt['inputs_after']
+          and all(sha(Path(path)) == pin['sha256'] for path,pin in receipt['inputs_after'].items()),
+          {'pinned_source_count': len(receipt['inputs_after']), 'changed_inputs': receipt['changed_inputs']})
+    check(folder.name+'_retained_artifact_pins', all(sha(folder/path) == pin['sha256'] for path,pin in receipt['artifacts'].items()),
+          {'pinned_artifact_count': len(receipt['artifacts'])})
+
+objects = json.loads((a/'objects.json').read_text())
+inventory = json.loads((root/'source_inventory.json').read_text())
+check('exact_inventoried_standard_records', [{'line': r['csv_line'], **r['source_record']} for r in objects if r['role']=='standard'] == inventory['standard_yolo_candidate_rows'],
+      {'count': sum(r['role']=='standard' for r in objects)})
+target_csv = Path(objects[-1]['csv_path'])
+with target_csv.open(newline='') as f:
+    canonical = list(enumerate(csv.DictReader(f), start=2))
+selected = [next((line,row) for line,row in canonical if row['filename']==f'Process_{p}_raw_green.ome.tiff') for p in ('314','315','320','321')]
+check('first_canonical_targets_passed_unchanged', all(result['csv_line']==line and result['source_record']==row and result['metric_input_record']==row
+      for result,(line,row) in zip(objects[-4:],selected,strict=True)), {'lines':[line for line,row in selected], 'keys':[r['row_key'] for r in objects[-4:]]})
+check('six_decimal_iod_exact_area_51', len(objects)==51 and all(r['iod_six_decimal_match'] and r['area_exact_match'] and not r['issues'] for r in objects),
+      {'rows':len(objects), 'max_abs_unrounded_iod_delta':max(abs(r['iod_delta']) for r in objects)})
+max_delta=max(abs(d) for r in objects[-4:] for d in r['stored_pixel_metric_deltas'].values())
+check('target_32_pixel_metrics_absolute_tolerance', max_delta <= 1e-12 and sum(len(r['stored_pixel_metric_deltas']) for r in objects)==32,
+      {'tolerance':1e-12,'max_absolute_delta':max_delta})
+check('full_label_metric_and_gallery_coverage', all(r['helper_complete_label_coverage'] and r['gallery_complete_label_coverage'] for r in objects),
+      {'gallery_clipped_keys':[r['row_key'] for r in objects if r['gallery_clipped']],
+       'target_full_tile_fallback_keys':[r['row_key'] for r in objects[-4:] if r['helper_full_tile_fallback']]})
+
+pixel_failures=[]
+for r in objects:
+    raw_path=Path(r['raw_path'])
+    raw=np.asarray(Image.open(raw_path)) if raw_path.suffix.lower() in {'.png','.jpg','.jpeg'} else tifffile.imread(raw_path)
+    if raw.ndim==3 and raw.shape[-1] in (3,4):
+        raw=raw[...,0]
+    elif raw.ndim==3 and raw.shape[0] in (1,3,4):
+        raw=raw[0]
+    raw=np.squeeze(raw)
+    labels=tifffile.imread(r['mask_path'])
+    x0,y0,x1,y1=r['gallery_bounds_xyxy']
+    binary=labels==int(r['metric_input_record']['nucleus_label'])
+    expected_raw=raw[y0:y1,x0:x1]
+    expected_mask=binary[y0:y1,x0:x1]
+    overlay=np.repeat(expected_raw[...,None],3,axis=-1)
+    overlay[find_boundaries(expected_mask,mode='inner')]=[255,32,32]
+    arrays=(expected_raw,expected_mask.astype(np.uint8)*255,overlay)
+    for name,expected in zip(r['gallery_images'],arrays,strict=True):
+        saved=np.asarray(Image.open(a/name))
+        if saved.dtype!=np.uint8 or not np.array_equal(saved,expected):
+            pixel_failures.append(name)
+    if int(expected_mask.sum())!=int(binary.sum()):
+        pixel_failures.append(r['row_key']+' coverage')
+check('all_153_gallery_images_exact_source_pixels', not pixel_failures, {'failed':pixel_failures,'images':153})
+html=(a/'gallery.html').read_text()
+check('gallery_membership_and_order', html.count('<article>')==51 and html.count('<img ')==153
+      and all(html.count('src="'+name+'"')==1 for r in objects for name in r['gallery_images'])
+      and len(list((a/'crops').glob('*.png')))==153,
+      {'articles':html.count('<article>'),'images':html.count('<img ')})
+scientific_artifacts=['objects.csv','objects.json','controls.json','gallery.html']+[name for r in objects for name in r['gallery_images']]
+mismatches=[path for path in scientific_artifacts if sha(a/path)!=sha(b/path)]
+check('repeat_determinism_157_artifacts', not mismatches, {'compared':len(scientific_artifacts),'mismatches':mismatches})
+check('same_script_helpers_sources_and_versions', receipts[0]['inputs_before']==receipts[1]['inputs_before'] and receipts[0]['packages']==receipts[1]['packages']
+      and receipts[0]['python']['version']==receipts[1]['python']['version'], {'python':receipts[0]['python']['version'],'packages':receipts[0]['packages']})
+for folder in (a,b):
+    falsification=json.loads((folder/'controls.json').read_text())
+    check(folder.name+'_six_falsifications_rejected', len(falsification['tests'])==6 and all(t['rejected'] for t in falsification['tests']),
+          {'tests':falsification['tests']})
+check('torch_not_loaded', not any(r['torch_loaded'] for r in receipts), {'torch_loaded':[r['torch_loaded'] for r in receipts]})
+
+before=snapshot(a)
+command=['uv','run','--frozen','--python','3.13','--with','Pillow','--with','tifffile','--with','scipy','--with','scikit-image','--with','matplotlib','--with','roifile',
+         'python',str(root/'audit_mask_pixels.py'),'--out',str(a)]
+refusal_start=datetime.now(timezone.utc).isoformat()
+refusal=subprocess.run(command,env=os.environ.copy(),stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+refusal_end=datetime.now(timezone.utc).isoformat()
+after=snapshot(a)
+(b/'existing_output_refusal.log').write_text(refusal.stdout)
+refusal_receipt={'command':command,'cwd':os.getcwd(),'start_utc':refusal_start,'finish_utc':refusal_end,'exit_status':refusal.returncode,
+                 'before':before,'after':after,'files_unchanged':before==after}
+(b/'existing_output_refusal_receipt.json').write_text(json.dumps(refusal_receipt,indent=2,sort_keys=True)+'\n')
+check('existing_output_exit2_no_file_changes', refusal.returncode==2 and before==after,
+      {'exit_status':refusal.returncode,'files':len(before),'files_unchanged':before==after,'log':refusal.stdout})
+
+spec=importlib.util.spec_from_file_location('audit_under_test',root/'audit_mask_pixels.py')
+module=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+fixtures=b/'guard_fixtures'
+fixtures.mkdir()
+link=fixtures/'symlink'
+link.symlink_to(a,target_is_directory=True)
+guard_cases=[('symlink_ancestor',link/'new',()),
+             ('input_ancestor_overlap',fixtures/'new',(fixtures,)),
+             ('output_contains_input',fixtures/'new',(fixtures/'new'/'input.tiff',)),
+             ('missing_output_parent',fixtures/'absent'/'new',())]
+for name,path,inputs in guard_cases:
+    try:
+        module.fresh_path(path,inputs)
+    except ValueError as exc:
+        check('guard_'+name,True,{'error':str(exc),'output_created':path.exists()})
+    else:
+        check('guard_'+name,False,{'error':'unexpected acceptance'})
+check('guard_tests_do_not_change_v1', snapshot(a)==before, {'v1_files':len(before)})
+
+summary={'start_utc':start,'finish_utc':datetime.now(timezone.utc).isoformat(),'checks':checks,
+         'exit_status':int(any(not c['pass'] for c in checks)),
+         'standard_counts':dict(collections.Counter(r['source_record']['slide_id'] for r in objects if r['role']=='standard')),
+         'target_areas':[r['mask_area_px'] for r in objects[-4:]],
+         'source_and_gallery_clipping':[{'row_key':r['row_key'],'gallery_clipped':r['gallery_clipped'],'mask_touches_tile_edge':r['gallery_mask_touches_tile_edge']} for r in objects if r['gallery_clipped']]}
+(b/'validation.json').write_text(json.dumps(summary,indent=2,sort_keys=True)+'\n')
+print(json.dumps({k:v for k,v in summary.items() if k!='checks'},indent=2),flush=True)
+sys.exit(summary['exit_status'])
+PY

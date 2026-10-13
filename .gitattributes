@@ -1,0 +1,19 @@
+# Keep runnable source and hashed dependency declarations portable.
+*.py text eol=lf
+*.sh text eol=lf
+*.R text eol=lf
+*.toml text eol=lf
+uv.lock text eol=lf
+environment.yml text eol=lf
+
+# Keep manifest-bound scientific data and review evidence byte-for-byte.
+# These rules also apply to source snapshots retained under outputs/.
+data/** -text
+analyses/**/data/** -text
+analyses/**/provenance/** -text
+analyses/**/trees/** -text
+analyses/**/figures/** -text -whitespace
+Publication/datasets/** -text
+Publication/figures/** -text -whitespace
+Publication/*.html -text -whitespace
+outputs/** -text -whitespace

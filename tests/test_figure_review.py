@@ -1,18 +1,39 @@
 from __future__ import annotations
 
 import csv
+import html
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Publication/Desmognathus_figure_review.Rmd"
 RENDERER = ROOT / "scripts/publication/render_figure_review.R"
 MANIFEST = ROOT / "Publication/figures/FIGURE_MANIFEST.csv"
+AUXILIARY_MANIFEST = ROOT / "Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv"
 OUTPUT = ROOT / "Publication/Desmognathus_figure_review.html"
-AUXILIARY_PNG = ROOT / "Publication/figures/Path_DAG_equivalence_class_reference.png"
+EXPECTED_AUXILIARY_IDS = [
+    "Auxiliary_Wang_style_integrated_te_history_candidate",
+    "Auxiliary_Wang_style_diversity_genome_size_candidate",
+    "Auxiliary_Path24_development_traits_reference",
+    "Auxiliary_Path_DAG_reference",
+    "Auxiliary_Wang2025_cross_study_te_diversity_reference",
+]
+EXPECTED_AUXILIARY_TITLES = [
+    "Wang-style integrated TE content and proliferation candidate",
+    "Wang-style TE diversity and genome-size candidate",
+    "Path24 development and phenotype reference",
+    "Path DAG equivalence-class reference",
+    "Cross-study TE-diversity reference (Wang et al. 2025)",
+]
 
 
 def read_manifest() -> list[dict[str, str]]:
     with MANIFEST.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
+def read_auxiliary_manifest() -> list[dict[str, str]]:
+    with AUXILIARY_MANIFEST.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
 
 
@@ -21,8 +42,7 @@ def figure_one_has_phylogeny(rows: list[dict[str, str]]) -> bool:
     if len(figure_one) != 1:
         return False
     evidence = " ".join(
-        figure_one[0].get(field, "")
-        for field in ("datasets", "legend", "alt_text", "basename")
+        figure_one[0].get(field, "") for field in ("datasets", "legend", "alt_text", "basename")
     ).lower()
     return any(
         token in evidence
@@ -36,12 +56,16 @@ def test_review_source_is_self_contained_and_manifest_driven() -> None:
 
     assert "self_contained: true" in source
     assert '"FIGURE_MANIFEST.csv"' in source
+    assert '"AUXILIARY_FIGURE_MANIFEST.csv"' in source
     assert "for (index in seq_len(nrow(figure_manifest)))" in source
+    assert "for (index in seq_len(nrow(auxiliary_manifest)))" in source
     assert "figure_manifest$width_mm / maximum_width_mm" in source
+    assert "auxiliary_manifest$width_mm / maximum_width_mm" in source
     assert "row$legend" in source
     assert "row$alt_text" in source
     assert "row$png" in source
-    assert "AUXILIARY_DAG_BASENAME <- \"Path_DAG_equivalence_class_reference.png\"" in source
+    assert "required_auxiliary_columns" in source
+    assert "expected_auxiliary_ids" in source
     assert "write_csv(" not in source
     assert "ggsave(" not in source
 
@@ -61,13 +85,46 @@ def test_review_exposes_critique_and_tree_boundaries() -> None:
         "publication or archive identifier",
         "calibration method",
         "branch-length provenance",
-        "Figure 1 includes the Path24 dated phylogeny",
-        "Auxiliary Path DAG reference",
+        "Figure 1 is the integrated 21-species overview",
+        "Figure 2 Bonsai boundary",
+        "TE-composition representation, not a species phylogeny",
+        "feature resampling perturbs correlated compositional coordinates",
+        "Wang-style integrated TE content and proliferation candidate",
+        "Review candidate, not a numbered manuscript figure",
+        "Six representatives are selected",
+        "fractions of aligned RepeatMasker hit bp",
+        "divergence bins are not insertion ages",
+        "Wang-style TE diversity and genome-size candidate",
+        "Reproductive-strategy panels are post-hoc descriptive strata",
+        "without a regression because n = 2",
+        "Pagel-lambda PGLS fits",
+        "Path24 development and phenotype reference",
+        "Descriptive review only",
+        "D. organi is absent",
+        "conditional D. fuscus assembly-anchored pg/1C estimates",
+        "not direct independently measured species C-values",
+        "Path DAG equivalence-class reference",
         "Not a numbered manuscript figure.",
         "10 testable equivalence classes",
         "saturated 6-member class is not shown",
         "remains unscored because it has no d-separation claim",
-        "current Path24 relative IOD-only analysis",
+        "Genome size",
+        "conditional D. fuscus assembly-anchored pg/1C analysis",
+        "not a direct species C-value measurement",
+        "same released genome-size scale is used consistently",
+        "do not orient a unique causal arrow",
+        "Cross-study TE-diversity reference (Wang et al. 2025)",
+        "Descriptive cross-study context only",
+        "no pooled regression or hypothesis test",
+        "10.5061/dryad.zpc866tkv",
+        "10.1038/s42003-025-08127-3",
+        "CC0-1.0",
+        "published top-10 TE-superfamily indices",
+        "RepeatModeler/RepeatMasker",
+        "reclosed calculations from dnaPipeTE compositions",
+        "pipelines are different and not method-harmonized",
+        "conditional D. fuscus assembly-anchored estimates",
+        "not direct species C-values",
     ]:
         assert phrase in source
     assert "figure_1_has_phylogeny" in source
@@ -85,6 +142,38 @@ def test_manifest_assets_are_complete_for_the_gallery() -> None:
         assert row["alt_text"].strip()
         assert (ROOT / "Publication/figures" / row["png"]).is_file()
 
+    genome_size_basenames = {
+        "Figure_6": "Figure_6_genome_size_pairwise_pgls",
+    }
+    rows_by_id = {row["figure_id"]: row for row in rows}
+    assert rows_by_id["Figure_2"]["basename"] == "Figure_2_te_diversity_and_bonsai"
+    figure_two_copy = " ".join(
+        rows_by_id["Figure_2"][field] for field in ("datasets", "legend", "alt_text")
+    )
+    for phrase in ("S42", "S43", "Bonsai", "not a species phylogeny", "feature resampling"):
+        assert phrase.casefold() in figure_two_copy.casefold()
+    for figure_id, basename in genome_size_basenames.items():
+        assert rows_by_id[figure_id]["basename"] == basename
+        public_copy = " ".join(
+            rows_by_id[figure_id][field]
+            for field in ("legend", "alt_text", "release_status")
+        )
+        assert "genome size" in public_copy.lower()
+        assert not re.search(
+            r"relative[- ]?(?:nuclear[- ]?)?iod", public_copy, re.IGNORECASE
+        )
+
+    auxiliary_rows = read_auxiliary_manifest()
+    assert [row["auxiliary_id"] for row in auxiliary_rows] == EXPECTED_AUXILIARY_IDS
+    assert [row["title"] for row in auxiliary_rows] == EXPECTED_AUXILIARY_TITLES
+    for row in auxiliary_rows:
+        assert float(row["width_mm"]) > 0
+        assert float(row["height_mm"]) > 0
+        assert row["boundary"].strip()
+        assert row["legend"].strip()
+        assert row["alt_text"].strip()
+        assert (ROOT / "Publication/figures" / row["png"]).is_file()
+
 
 def test_renderer_targets_and_validates_the_review_html() -> None:
     assert RENDERER.exists()
@@ -93,43 +182,125 @@ def test_renderer_targets_and_validates_the_review_html() -> None:
     assert 'output_file <- "Desmognathus_figure_review.html"' in renderer
     assert "knit_root_dir = root" in renderer
     assert 'count_fixed("data:image/png;base64", html)' in renderer
-    assert "expected_embedded_png_count <- nrow(manifest) + 1L" in renderer
-    assert 'stop("Missing auxiliary Path24 DAG reference: ", auxiliary_png)' in renderer
+    assert "expected_embedded_png_count <- nrow(manifest) + nrow(auxiliary_manifest)" in renderer
+    assert "expected_embedded_png_count != 12L" in renderer
+    assert "nrow(manifest) != 7L" in renderer
+    assert "nrow(auxiliary_manifest) != 5L" in renderer
+    assert 'stop("Missing auxiliary figure manifest: ", auxiliary_manifest_path)' in renderer
+    assert "Missing auxiliary review PNG files" in renderer
     assert "embedded_png_count != expected_embedded_png_count" in renderer
     assert "Unresolved tree provenance" in renderer
-    assert "Figure 1 includes the Path24 dated phylogeny" in renderer
-    assert "Auxiliary Path DAG reference" in renderer
+    assert "Figure 1 is the integrated 21-species overview" in renderer
+    assert "Figure_2_te_diversity_and_bonsai" in renderer
+    assert "Figure_2 is missing its Bonsai boundary phrase" in renderer
+    assert "Auxiliary_Wang_style_integrated_te_history_candidate" in renderer
+    assert "Wang-style integrated TE content and proliferation candidate" in renderer
+    assert "Six representatives are selected" in renderer
+    assert "fractions of aligned RepeatMasker hit bp" in renderer
+    assert "divergence bins are not insertion ages" in renderer
+    assert "Auxiliary_Wang_style_diversity_genome_size_candidate" in renderer
+    assert "Wang-style TE diversity and genome-size candidate" in renderer
+    assert "Reproductive-strategy panels are post-hoc descriptive strata" in renderer
+    assert "without a regression because n = 2" in renderer
+    assert "Pagel-lambda PGLS fits" in renderer
+    assert "Path24 development and phenotype reference" in renderer
+    assert "Descriptive review only" in renderer
+    assert "D. organi is absent" in renderer
+    assert "conditional D. fuscus assembly-anchored pg/1C estimates" in renderer
+    assert "Path DAG equivalence-class reference" in renderer
     assert "Not a numbered manuscript figure." in renderer
     assert "10 testable equivalence classes" in renderer
     assert "saturated 6-member class is not shown" in renderer
     assert "remains unscored because it has no d-separation claim" in renderer
-    assert "current Path24 relative IOD-only analysis" in renderer
+    assert "Genome size" in renderer
+    assert "conditional D. fuscus assembly-anchored pg/1C analysis" in renderer
+    assert "not a direct species C-value measurement" in renderer
+    assert "same released genome-size scale is used consistently" in renderer
+    assert "do not orient a unique causal arrow" in renderer
+    assert "Auxiliary_Wang2025_cross_study_te_diversity_reference" in renderer
+    assert "Cross-study TE-diversity reference (Wang et al. 2025)" in renderer
+    assert "Descriptive cross-study context only; no pooled regression or hypothesis test" in renderer
+    assert "10.5061/dryad.zpc866tkv" in renderer
+    assert "10.1038/s42003-025-08127-3" in renderer
+    assert "CC0-1.0" in renderer
+    assert "published top-10 TE-superfamily indices" in renderer
+    assert "RepeatModeler/RepeatMasker" in renderer
+    assert "reclosed calculations from dnaPipeTE compositions" in renderer
+    assert "pipelines are different and not method-harmonized" in renderer
+    assert "conditional D. fuscus assembly-anchored estimates" in renderer
+    assert "Figure_6_genome_size_pairwise_pgls" in renderer
+    assert "Figure_S1" not in renderer
+    assert "not direct species C-values" in renderer
 
 
 def test_rendered_review_if_present() -> None:
-    if not OUTPUT.exists() or not AUXILIARY_PNG.exists():
+    if not OUTPUT.exists() or not AUXILIARY_MANIFEST.exists():
         return
 
     rows = read_manifest()
-    rendered = OUTPUT.read_text(encoding="utf-8")
-    if "Auxiliary Path DAG reference" not in rendered:
+    auxiliary_rows = read_auxiliary_manifest()
+    if [row["auxiliary_id"] for row in auxiliary_rows] != EXPECTED_AUXILIARY_IDS:
         return
+    if not all((ROOT / "Publication/figures" / row["png"]).exists() for row in auxiliary_rows):
+        return
+    rendered = OUTPUT.read_text(encoding="utf-8")
+    if "Path24 development and phenotype reference" not in rendered:
+        return
+    rendered_text = re.sub(
+        r"\s+",
+        " ",
+        re.sub(r"<[^>]+>", "", html.unescape(rendered)).replace("\xa0", " "),
+    )
 
-    assert rendered.count("data:image/png;base64") == len(rows) + 1
+    assert rendered.count("data:image/png;base64") == len(rows) + len(auxiliary_rows)
     assert 'src="figures/' not in rendered
     assert "Unresolved tree provenance" in rendered
     for phrase in [
-        "Auxiliary Path DAG reference",
+        "Wang-style integrated TE content and proliferation candidate",
+        "Review candidate, not a numbered manuscript figure",
+        "Six representatives are selected",
+        "fractions of aligned RepeatMasker hit bp",
+        "divergence bins are not insertion ages",
+        "Wang-style TE diversity and genome-size candidate",
+        "Reproductive-strategy panels are post-hoc descriptive strata",
+        "without a regression because n = 2",
+        "Pagel-lambda PGLS fits",
+        "Path24 development and phenotype reference",
+        "Descriptive review only",
+        "D. organi is absent",
+        "conditional D. fuscus assembly-anchored pg/1C estimates",
+        "not direct independently measured species C-values",
+        "Path DAG equivalence-class reference",
         "Not a numbered manuscript figure.",
         "10 testable equivalence classes",
         "saturated 6-member class is not shown",
         "remains unscored because it has no d-separation claim",
-        "current Path24 relative IOD-only analysis",
+        "Genome size",
+        "conditional D. fuscus assembly-anchored pg/1C analysis",
+        "not a direct species C-value measurement",
+        "same released genome-size scale is used consistently",
+        "do not orient a unique causal arrow",
+        "Cross-study TE-diversity reference (Wang et al. 2025)",
+        "Descriptive cross-study context only",
+        "no pooled regression or hypothesis test",
+        "10.5061/dryad.zpc866tkv",
+        "10.1038/s42003-025-08127-3",
+        "CC0-1.0",
+        "published top-10 TE-superfamily indices",
+        "RepeatModeler/RepeatMasker",
+        "reclosed calculations from dnaPipeTE compositions",
+        "pipelines are different and not method-harmonized",
+        "conditional D. fuscus assembly-anchored estimates",
+        "not direct species C-values",
     ]:
-        assert phrase in rendered
+        assert phrase in rendered_text
 
     positions = [rendered.index(f'data-figure-id="{row["figure_id"]}"') for row in rows]
     assert positions == sorted(positions)
     if figure_one_has_phylogeny(rows):
-        assert "Figure 1 includes the Path24 dated phylogeny" in rendered
-    assert "data-figure-id=\"Auxiliary_Path_DAG_reference\"" in rendered
+        assert "Figure 1 is the integrated 21-species overview" in rendered
+    auxiliary_positions = [
+        rendered.index(f'data-figure-id="{row["auxiliary_id"]}"') for row in auxiliary_rows
+    ]
+    assert auxiliary_positions == sorted(auxiliary_positions)
+    assert positions[-1] < auxiliary_positions[0]

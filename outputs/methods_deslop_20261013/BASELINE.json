@@ -1,0 +1,30 @@
+{
+  "created_utc": "2026-10-13T18:13:33.333883+00:00",
+  "source_head": "15dfb3c18755cc8659b626fa213087c62c6db02f",
+  "files": {
+    "Publication/methods/README.md": {
+      "sha256": "6e90716dbeba8e270c425e068ce0c41e9a1ee5045d1a15b207d995d242ae7fdd",
+      "bytes": 4725
+    },
+    "Publication/methods/METHODS_REQUIRED_AUTHOR_INPUT.csv": {
+      "sha256": "2036411b11d812ea83d8d1815e05b1eb02b8db98402f05c0ee25acd07759f1c3",
+      "bytes": 7385
+    },
+    "Publication/methods/METHODS_BULLET_SCAFFOLD.md": {
+      "sha256": "6179647455d06aa52e12a0a333c8823e46bee65790900077881cfc85c508c479",
+      "bytes": 36926
+    },
+    "Publication/methods/METHODS_EVIDENCE_MATRIX.csv": {
+      "sha256": "d6c18ce6da8326e80105a0928ed0d177fea8bc741c1bb91f42080b0e9357d8a0",
+      "bytes": 14049
+    },
+    "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md": {
+      "sha256": "2711baa93e0a3535946a7519fd2ee0497211bff35e79c0b304a20d7a63e31173",
+      "bytes": 28969
+    },
+    "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx": {
+      "sha256": "a827f7709334121637d9035414c560ce41514d46b75c5dfedf525d3114e00286",
+      "bytes": 33261
+    }
+  }
+}

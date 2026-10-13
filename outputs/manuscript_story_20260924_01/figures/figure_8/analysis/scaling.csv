@@ -1,0 +1,5 @@
+variable,trait,raw_column,transformation,full24_mean,full24_sd,n_scaling
+b,body_size,max_svl_mm,log10,1.7969959968730023,0.14219447730892254,24
+g,genome_size,genome_size_pg_fuscus_anchored,log10,1.2060096681742212,0.06685599579256375,24
+c,cell_size,cell_area_um2,log10,2.4463787670522046,0.04788850468593766,24
+n,nucleus_size,nucleus_area_um2,log10,1.6485733612564692,0.03720364509996783,24

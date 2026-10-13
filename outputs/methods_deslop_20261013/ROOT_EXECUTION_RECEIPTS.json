@@ -1,0 +1,78 @@
+{
+  "captured_utc": "2026-10-13 18:25:08 UTC",
+  "marker": {
+    "cmd": "/home/jake/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /home/jake/.codex/plugins/cache/openai-primary-runtime/documents/26.1009.11318/skills/documents/container_tools/mark_artifact_operation_started.mjs --operation-kind edit --expected-output-count 1 --output-format docx",
+    "started": {
+      "current_time": "2026-10-13 18:23:34 UTC"
+    },
+    "result": {
+      "chunk_id": "c4b5de",
+      "wall_time_seconds": 0.000009378,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  },
+  "word_sync": {
+    "cmd": "UV_PROJECT_ENVIRONMENT=/tmp/desmo-release-audit-20261013/env uv run --frozen --no-sync --python 3.13 python outputs/methods_deslop_20261013/sync_methods_word.py outputs/methods_deslop_20261013/baseline/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md",
+    "started": {
+      "current_time": "2026-10-13 18:23:39 UTC"
+    },
+    "result": {
+      "chunk_id": "e8f21e",
+      "wall_time_seconds": 0.047749254,
+      "exit_code": 0,
+      "original_token_count": 103,
+      "output": "{\n  \"status\": \"PASS\",\n  \"baseline_paragraphs\": 61,\n  \"baseline_source\": \"/home/jake/Projects/Desmognathus_TE/outputs/methods_deslop_20261013/baseline/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md\",\n  \"final_paragraphs\": 61,\n  \"unchanged_paragraphs_preserved\": 16,\n  \"changed_package_parts\": [\n    \"word/document.xml\"\n  ],\n  \"styles_headers_footers_and_page_settings\": \"preserved byte-for-byte\"\n}\n"
+    }
+  },
+  "render_and_source_check": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "cmd": "UV_PROJECT_ENVIRONMENT=/tmp/desmo-release-audit-20261013/env uv run --frozen --no-sync --python 3.13 /home/jake/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 /home/jake/.codex/plugins/cache/openai-primary-runtime/documents/26.1009.11318/skills/documents/render_docx.py Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx --output_dir outputs/methods_deslop_20261013/docx_render --emit_pdf --verbose",
+        "started": {
+          "current_time": "2026-10-13 18:23:47 UTC"
+        },
+        "result": {
+          "chunk_id": "5a6e8b",
+          "wall_time_seconds": 1.099493199,
+          "exit_code": 0,
+          "original_token_count": 173,
+          "output": "[render_docx] $ /home/jake/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/soffice -env:UserInstallation=file:///tmp/soffice_profile_fpn1yp_j --invisible --headless --norestore --convert-to pdf --outdir /tmp/soffice_convert_nm7h4d8a /home/jake/Projects/Desmognathus_TE/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx\nconvert /home/jake/Projects/Desmognathus_TE/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx as a Writer document -> /tmp/soffice_convert_nm7h4d8a/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.pdf using filter : writer_pdf_Export\n\nPages rendered to /home/jake/Projects/Desmognathus_TE/outputs/methods_deslop_20261013/docx_render\n"
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "cmd": "UV_PROJECT_ENVIRONMENT=/tmp/desmo-release-audit-20261013/env uv run --frozen --no-sync --python 3.13 python scripts/publication/build_methods_document.py --source Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md --output Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx --check",
+        "started": {
+          "current_time": "2026-10-13 18:23:47 UTC"
+        },
+        "result": {
+          "chunk_id": "2754ac",
+          "wall_time_seconds": 0.021111935,
+          "exit_code": 0,
+          "original_token_count": 58,
+          "output": "PASS: visible prose in /home/jake/Projects/Desmognathus_TE/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx matches /home/jake/Projects/Desmognathus_TE/Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md\n"
+        }
+      }
+    }
+  ],
+  "visual_review": {
+    "status": "PASS",
+    "pages_inspected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "detail": "Inspected original-resolution page PNGs. No clipping, overflow, missing glyphs, awkward isolated headings, or blank pages. Italics, subscripts, superscripts, equations, and page numbering are visible.",
+    "output_dir": "outputs/methods_deslop_20261013/docx_render"
+  }
+}

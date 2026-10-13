@@ -1,12 +1,13 @@
 # 03 — Phylogenetic path analysis
 
 This is the current implemented Path24 comparative-analysis surface. The fitted
-model contains three traits: relative nuclear IOD, nucleus area, and cell area.
+model contains three traits: conditional *D. fuscus* assembly-anchored genome
+size in pg/1C, nucleus area, and cell area.
 SVL, life-history, and TE-overlap tables are retained for inspection and
 descriptive sensitivity work; they are not predictors in this fitted model.
 
 The intended final project step may combine TE composition and collaborator
-maximum SVL with morphology/IOD traits on an exact complete-case species panel.
+maximum SVL with morphology/genome-size traits on an exact complete-case species panel.
 That integrated model has not yet been specified or fitted. The current
 three-trait results must not be presented as the completed all-data path
 analysis.
@@ -15,7 +16,7 @@ analysis.
 
 - `data/path24_traits.csv`: exact 24-species model traits.
 - `data/measurement_bootstrap_traits.csv`: measurement-bootstrap traits using
-  the relative-IOD scale.
+  the conditional genome-size scale.
 - `data/candidate_dags.csv`: candidate three-trait graph definitions. This file
   enumerates 25 possible three-node DAG members that collapse to 10 testable
   Markov-equivalence classes plus a 6-member saturated class that is unscored
@@ -46,18 +47,32 @@ These models are exploratory phylogenetic association/sensitivity analyses.
 Markov-equivalent or otherwise close graphs cannot be used to assert a unique
 causal arrow direction.
 
-The unnumbered auxiliary DAG image placed immediately after Figure 7 in the
-researcher-facing study report shows one representative DAG per scored
-equivalence class. That gallery is descriptive only: relative nuclear IOD is
-not absolute genome size, omitted members are Markov-equivalent
-reorientations, and the saturated 6-member class is excluded because it has no
-d-separation claim.
+The two path-analysis auxiliary images placed after the numbered figures in the
+researcher-facing report serve different review purposes. The first aligns the
+exact 24-tip tree with development mode and conditional genome-size,
+nucleus-area, and cell-area intervals. It contains the two sampled direct
+developers, *D. aeneus* and *D. wrighti*, plus 22 aquatic-larval species. *D.
+organi* is absent from Path24 and no development mode or phenotype is imputed.
+This alignment is descriptive and is not a life-history hypothesis test.
 
-Relative nuclear IOD is an image-derived phenotype, not an independently
-validated absolute C-value. Historical model files used a positive rescaling
-of the same signal; log transformation followed by standardization makes the
-saved fits invariant to that constant, so the active data and labels use the
-defensible relative-IOD estimand.
+The second auxiliary image shows one representative DAG per scored equivalence
+class. Its first node is labeled **Genome size**, meaning the conditional *D.
+fuscus* assembly-anchored pg/1C sensitivity derived from IOD. Omitted members
+are Markov-equivalent reorientations, the saturated 6-member class is excluded
+because it has no d-separation claim, and the representative arrows do not
+identify a unique causal direction.
+
+The genome-size trait is produced by multiplying the target-to-*D. fuscus*
+equal-image IOD ratio by the conditional 16.462167689-pg/1C assembly anchor. It
+is the default analysis and display scale, but it is not an independent
+genome-size assay or an independently validated absolute C-value. On the log10
+scale this positive conversion adds a constant, and sample standardization
+removes that constant, so the saved Path24 fit and model ranking are invariant
+to the conversion. The IOD measurement and calibration audit remains in
+Publication S21-S25; no relative-IOD analytical field remains in this analysis
+directory. The DAGs contain one genome-size node and no separate IOD node or
+IOD-to-genome-size arrow, because those labels describe one derived trait rather
+than two causal variables.
 
 Alex Pyron directly provided the focal 46-tip collaborator tree. Its publication
 or archive identifier and calibration provenance are still unresolved and must
@@ -90,6 +105,6 @@ with that PCA is post hoc and must not be presented as an a priori or
 confirmatory test. The original email date still needs to be recorded before a
 formal personal-communication citation is finalized.
 
-The TE–IOD overlap has 21 species. *D. brimleyorum*, *D. folkertsi*, and *D.
-ochrophaeus* have Path24 measurements but no active TE resource, and their TE
-values are not imputed.
+The TE–genome-size overlap table is `data/te_genome_size_overlap.csv` and has 21
+species. *D. brimleyorum*, *D. folkertsi*, and *D. ochrophaeus* have Path24
+measurements but no active TE resource, and their TE values are not imputed.

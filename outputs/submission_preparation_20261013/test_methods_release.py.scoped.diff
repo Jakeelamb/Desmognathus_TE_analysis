@@ -1,0 +1,81 @@
+--- baseline/tests/test_methods_release.py
++++ tests/test_methods_release.py
+@@ -23,7 +23,11 @@
+ 
+ def test_methods_evidence_matrix_uses_only_active_sources() -> None:
+     evidence = pd.read_csv(METHODS / "METHODS_EVIDENCE_MATRIX.csv")
+-    assert evidence["section_id"].tolist() == [f"M{number:02d}" for number in range(1, 21)]
++    assert evidence["section_id"].tolist() == [
++        f"M{number:02d}" for number in range(1, len(evidence) + 1)
++    ]
++    assert {f"M{number:02d}" for number in range(1, 27)} <= set(evidence["section_id"])
++    assert not evidence["primary_sources"].isna().any()
+ 
+     forbidden = ("input_data/", "path_analysis/", "results/", "plans/")
+     for source_list in evidence["primary_sources"].astype(str):
+@@ -409,8 +413,18 @@
+     assert "16.462167689 pg/1C" in narrative
+     assert "Pagel-lambda phylogenetic generalized least squares" in narrative
+     assert "25 directed acyclic graphs" in narrative
+-    assert "does not validate an absolute genome-size scale" in narrative
+-    assert "TE composition and maximum snout-vent length have not been incorporated" in narrative
++    assert "does not validate the absolute genome-size scale" in narrative
++    assert "exact 21 species with complete TE, cellular, and maximum-SVL data" in narrative
++    assert "expanded body-role comparison comprised eight distinct equivalence classes" in narrative
++    assert "animal-aware body-adjusted sensitivity" in narrative
++    assert "allometry refits re-estimated lambda" in narrative
++    assert "brightfield microscopy" in narrative
++    assert "40× objective" in narrative
++    assert "independently validated C-values" in narrative
++    assert "TE composition and maximum snout-vent length have not been incorporated" not in narrative
++    assert "60×" not in narrative
++    assert "All animals were ethanol-fixed" not in narrative
++    assert "For specimens sampled directly, erythrocytes were collected" in narrative
+     assert "SRA Toolkit" not in narrative
+     assert "fastp" not in narrative
+     assert "DeepTE" not in narrative
+@@ -439,12 +453,30 @@
+         builder["check_document_matches_source"](source, output)
+ 
+ 
++def test_methods_builder_preserves_subsection_heading_text(tmp_path: Path) -> None:
++    builder = run_path(ROOT / "scripts/publication/build_methods_document.py")
++    source = tmp_path / "methods.md"
++    source.write_text(
++        "# Materials and Methods\n\n## Comparative analyses\n\n"
++        "### Paired measurements\n\nMeasurements remain paired.\n",
++        encoding="utf-8",
++    )
++    output = tmp_path / "methods.docx"
++    builder["build_document"](source, output)
++    builder["check_document_matches_source"](source, output)
++    document = Document(output)
++    heading = document.paragraphs[2]
++    assert heading.text == "Paired measurements"
++    assert heading.style.name == "Heading 2"
++    assert "###" not in _docx_text(output)
++
++
+ def test_methods_readme_separates_internal_evidence_from_shareable_prose() -> None:
+     readme = (METHODS / "README.md").read_text(encoding="utf-8")
+     normalized = " ".join(readme.split())
+-    assert "internal evidence ledger" in normalized
+-    assert "author-edited narrative authority" in normalized
+-    assert "refuse to overwrite an existing author-edited DOCX" in normalized
++    assert "internal ledger" in normalized
++    assert "author-edited Word draft" in normalized
++    assert "refuses to replace an existing author-edited DOCX" in normalized
+     assert "make methods-word" in normalized
+     assert "no audit tags" in normalized
+     assert "two synchronized Word" not in normalized.casefold()
+@@ -456,6 +488,10 @@
+     assert required.loc["W16", "status"] == "partial"
+     assert "multimapper policy" in required.loc["W12", "required_detail"]
+     assert "checkpoint-to-mask-release mapping" in required.loc["W16", "required_detail"]
++    assert required.loc["W15", "status"] == "completed_exploratory_documented_author_review_pending"
++    assert required.loc["W06", "status"] == "partial"
++    assert "not standards 413/414" in required.loc["W06", "current_repository_evidence"]
++    assert "run map" in required.loc["W06", "current_repository_evidence"]
+ 
+     old_image_table = ROOT / "analyses/02_morphology/data/relative_nuclear_iod_by_image.csv"
+     new_image_table = ROOT / "analyses/02_morphology/data/nuclear_iod_by_image.csv"

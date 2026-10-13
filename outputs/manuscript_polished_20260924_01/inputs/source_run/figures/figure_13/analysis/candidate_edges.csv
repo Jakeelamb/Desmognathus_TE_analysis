@@ -1,0 +1,30 @@
+parent,child,model,code,hypothesis
+b,g,body_upstream_cell,H1,SVL upstream: cell bridge
+b,c,body_upstream_cell,H1,SVL upstream: cell bridge
+g,c,body_upstream_cell,H1,SVL upstream: cell bridge
+b,n,body_upstream_cell,H1,SVL upstream: cell bridge
+c,n,body_upstream_cell,H1,SVL upstream: cell bridge
+b,g,body_upstream_nucleus,H2,SVL upstream: nucleus bridge
+b,n,body_upstream_nucleus,H2,SVL upstream: nucleus bridge
+g,n,body_upstream_nucleus,H2,SVL upstream: nucleus bridge
+b,c,body_upstream_nucleus,H2,SVL upstream: nucleus bridge
+n,c,body_upstream_nucleus,H2,SVL upstream: nucleus bridge
+b,g,body_upstream_genome,H3,SVL upstream: genome fork
+b,n,body_upstream_genome,H3,SVL upstream: genome fork
+g,n,body_upstream_genome,H3,SVL upstream: genome fork
+b,c,body_upstream_genome,H3,SVL upstream: genome fork
+g,c,body_upstream_genome,H3,SVL upstream: genome fork
+b,n,body_only,H4,SVL-only fork
+b,c,body_only,H4,SVL-only fork
+b,g,body_only,H4,SVL-only fork
+g,c,cell_body_branch,H5,Cell linked to SVL
+c,b,cell_body_branch,H5,Cell linked to SVL
+c,n,cell_body_branch,H5,Cell linked to SVL
+g,n,nucleus_cell_body_chain,H6,Nucleus–cell–SVL chain
+n,c,nucleus_cell_body_chain,H6,Nucleus–cell–SVL chain
+c,b,nucleus_cell_body_chain,H6,Nucleus–cell–SVL chain
+g,b,genome_body_branch,H7,Genome linked to SVL
+g,c,genome_body_branch,H7,Genome linked to SVL
+c,n,genome_body_branch,H7,Genome linked to SVL
+g,c,body_disconnected,H8,SVL independent
+c,n,body_disconnected,H8,SVL independent

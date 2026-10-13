@@ -1,0 +1,398 @@
+{
+  "checks": [
+    {
+      "evidence": {
+        "clock": [
+          "2026-10-13T17:55:59.155776+00:00",
+          "2026-10-13T17:56:16.896513+00:00"
+        ],
+        "exit_status": 0
+      },
+      "name": "pixel_audit_v1_execution",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "changed_inputs": [],
+        "pinned_source_count": 62
+      },
+      "name": "pixel_audit_v1_source_integrity",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "pinned_artifact_count": 157
+      },
+      "name": "pixel_audit_v1_retained_artifact_pins",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "clock": [
+          "2026-10-13T17:57:03.256718+00:00",
+          "2026-10-13T17:57:21.134354+00:00"
+        ],
+        "exit_status": 0
+      },
+      "name": "pixel_audit_v2_execution",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "changed_inputs": [],
+        "pinned_source_count": 62
+      },
+      "name": "pixel_audit_v2_source_integrity",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "pinned_artifact_count": 157
+      },
+      "name": "pixel_audit_v2_retained_artifact_pins",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "count": 47
+      },
+      "name": "exact_inventoried_standard_records",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "keys": [
+          "Process_314_raw_green.ome.tiff::tile_y024576_x024576.tiff::20",
+          "Process_315_raw_green.ome.tiff::tile_y016384_x024576.tiff::2",
+          "Process_320_raw_green.ome.tiff::tile_y004096_x081920.tiff::41",
+          "Process_321_raw_green.ome.tiff::tile_y004096_x028672.tiff::34"
+        ],
+        "lines": [
+          313,
+          325,
+          333,
+          338
+        ]
+      },
+      "name": "first_canonical_targets_passed_unchanged",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "max_abs_unrounded_iod_delta": 4.895912297797622e-07,
+        "rows": 51
+      },
+      "name": "six_decimal_iod_exact_area_51",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "max_absolute_delta": 9.020562075079397e-17,
+        "tolerance": 1e-12
+      },
+      "name": "target_32_pixel_metrics_absolute_tolerance",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "gallery_clipped_keys": [
+          "Process_413_green.ome.tiff::tile_y008192_x045056.tiff::4",
+          "Process_414_green.ome.tiff::tile_y000000_x028672.tiff::1",
+          "Process_414_green.ome.tiff::tile_y020480_x040960.tiff::1"
+        ],
+        "target_full_tile_fallback_keys": [
+          "Process_314_raw_green.ome.tiff::tile_y024576_x024576.tiff::20",
+          "Process_315_raw_green.ome.tiff::tile_y016384_x024576.tiff::2",
+          "Process_320_raw_green.ome.tiff::tile_y004096_x081920.tiff::41",
+          "Process_321_raw_green.ome.tiff::tile_y004096_x028672.tiff::34"
+        ]
+      },
+      "name": "full_label_metric_and_gallery_coverage",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "failed": [],
+        "images": 153
+      },
+      "name": "all_153_gallery_images_exact_source_pixels",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "articles": 51,
+        "images": 153
+      },
+      "name": "gallery_membership_and_order",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "compared": 157,
+        "mismatches": []
+      },
+      "name": "repeat_determinism_157_artifacts",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "packages": {
+          "Pillow": "12.3.0",
+          "matplotlib": "3.11.2",
+          "numpy": "2.5.2",
+          "pandas": "3.0.5",
+          "roifile": "2026.9.22",
+          "scikit-image": "0.26.0",
+          "scipy": "1.18.1",
+          "tifffile": "2026.9.20"
+        },
+        "python": "3.13.11"
+      },
+      "name": "same_script_helpers_sources_and_versions",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "tests": [
+          {
+            "evidence": "recorded mask label absent",
+            "name": "absent_mask_label",
+            "rejected": true
+          },
+          {
+            "evidence": "coordinate projection inconsistent: (19201.16,1791.28) vs (2817.162198391421,1791.28418230563)",
+            "name": "unconverted_standard_coordinates",
+            "rejected": true
+          },
+          {
+            "evidence": "source hash mismatch: /home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y000000_x016384.tiff: expected 0000000000000000000000000000000000000000000000000000000000000000, actual 42ce17e2111a1598e8fdae19fe7581cb7743844acba7eb6279b3366d4eb5795b",
+            "name": "changed_source_hash",
+            "rejected": true
+          },
+          {
+            "changed_background": 254.0,
+            "evidence": {
+              "area_delta_px": 0,
+              "area_exact_match": true,
+              "iod_delta": -5.09208835335005,
+              "iod_six_decimal_match": false,
+              "mask_area_px": 2984,
+              "recomputed_iod": 602.63064964665,
+              "recomputed_iod_six_decimals": "602.630650",
+              "stored_area_px": 2984,
+              "stored_iod": 607.722738,
+              "stored_iod_six_decimals": "607.722738"
+            },
+            "name": "changed_background",
+            "rejected": true
+          },
+          {
+            "evidence": {
+              "area_delta_px": -1,
+              "area_exact_match": false,
+              "iod_delta": -0.1512680076535844,
+              "iod_six_decimal_match": false,
+              "mask_area_px": 2983,
+              "recomputed_iod": 607.5714699923465,
+              "recomputed_iod_six_decimals": "607.571470",
+              "stored_area_px": 2984,
+              "stored_iod": 607.722738,
+              "stored_iod_six_decimals": "607.722738"
+            },
+            "name": "removed_positive_od_pixel",
+            "rejected": true,
+            "removed_pixel_xy": [
+              2804,
+              1760
+            ],
+            "removed_raw_value": 180
+          },
+          {
+            "evidence": {
+              "area_delta_px": 0,
+              "area_exact_match": true,
+              "iod_delta": -1.0332322972317343e-05,
+              "iod_six_decimal_match": false,
+              "mask_area_px": 2984,
+              "recomputed_iod": 607.722737667677,
+              "recomputed_iod_six_decimals": "607.722738",
+              "stored_area_px": 2984,
+              "stored_iod": 607.722748,
+              "stored_iod_six_decimals": "607.722748"
+            },
+            "name": "changed_stored_iod",
+            "rejected": true
+          }
+        ]
+      },
+      "name": "pixel_audit_v1_six_falsifications_rejected",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "tests": [
+          {
+            "evidence": "recorded mask label absent",
+            "name": "absent_mask_label",
+            "rejected": true
+          },
+          {
+            "evidence": "coordinate projection inconsistent: (19201.16,1791.28) vs (2817.162198391421,1791.28418230563)",
+            "name": "unconverted_standard_coordinates",
+            "rejected": true
+          },
+          {
+            "evidence": "source hash mismatch: /home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y000000_x016384.tiff: expected 0000000000000000000000000000000000000000000000000000000000000000, actual 42ce17e2111a1598e8fdae19fe7581cb7743844acba7eb6279b3366d4eb5795b",
+            "name": "changed_source_hash",
+            "rejected": true
+          },
+          {
+            "changed_background": 254.0,
+            "evidence": {
+              "area_delta_px": 0,
+              "area_exact_match": true,
+              "iod_delta": -5.09208835335005,
+              "iod_six_decimal_match": false,
+              "mask_area_px": 2984,
+              "recomputed_iod": 602.63064964665,
+              "recomputed_iod_six_decimals": "602.630650",
+              "stored_area_px": 2984,
+              "stored_iod": 607.722738,
+              "stored_iod_six_decimals": "607.722738"
+            },
+            "name": "changed_background",
+            "rejected": true
+          },
+          {
+            "evidence": {
+              "area_delta_px": -1,
+              "area_exact_match": false,
+              "iod_delta": -0.1512680076535844,
+              "iod_six_decimal_match": false,
+              "mask_area_px": 2983,
+              "recomputed_iod": 607.5714699923465,
+              "recomputed_iod_six_decimals": "607.571470",
+              "stored_area_px": 2984,
+              "stored_iod": 607.722738,
+              "stored_iod_six_decimals": "607.722738"
+            },
+            "name": "removed_positive_od_pixel",
+            "rejected": true,
+            "removed_pixel_xy": [
+              2804,
+              1760
+            ],
+            "removed_raw_value": 180
+          },
+          {
+            "evidence": {
+              "area_delta_px": 0,
+              "area_exact_match": true,
+              "iod_delta": -1.0332322972317343e-05,
+              "iod_six_decimal_match": false,
+              "mask_area_px": 2984,
+              "recomputed_iod": 607.722737667677,
+              "recomputed_iod_six_decimals": "607.722738",
+              "stored_area_px": 2984,
+              "stored_iod": 607.722748,
+              "stored_iod_six_decimals": "607.722748"
+            },
+            "name": "changed_stored_iod",
+            "rejected": true
+          }
+        ]
+      },
+      "name": "pixel_audit_v2_six_falsifications_rejected",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "torch_loaded": [
+          false,
+          false
+        ]
+      },
+      "name": "torch_not_loaded",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "exit_status": 2,
+        "files": 161,
+        "files_unchanged": true,
+        "log": "warning: `VIRTUAL_ENV=/home/jake/.cache/uv/builds-v0/.tmpwNPyMy` does not match the project environment path `/tmp/desmo-standard-qc-20261013/env` and will be ignored; use `--active` to target the active environment instead\nPREFLIGHT REFUSAL: output already exists: /home/jake/Projects/Desmognathus_TE/outputs/standard_calibration_review_20261013/pixel_audit_v1\n"
+      },
+      "name": "existing_output_exit2_no_file_changes",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "error": "symlinked output or ancestor: /home/jake/Projects/Desmognathus_TE/outputs/standard_calibration_review_20261013/pixel_audit_v2/guard_fixtures/symlink",
+        "output_created": false
+      },
+      "name": "guard_symlink_ancestor",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "error": "input/output ancestry overlap: /home/jake/Projects/Desmognathus_TE/outputs/standard_calibration_review_20261013/pixel_audit_v2/guard_fixtures",
+        "output_created": false
+      },
+      "name": "guard_input_ancestor_overlap",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "error": "input/output ancestry overlap: /home/jake/Projects/Desmognathus_TE/outputs/standard_calibration_review_20261013/pixel_audit_v2/guard_fixtures/new/input.tiff",
+        "output_created": false
+      },
+      "name": "guard_output_contains_input",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "error": "output parent does not exist: /home/jake/Projects/Desmognathus_TE/outputs/standard_calibration_review_20261013/pixel_audit_v2/guard_fixtures/absent",
+        "output_created": false
+      },
+      "name": "guard_missing_output_parent",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "v1_files": 161
+      },
+      "name": "guard_tests_do_not_change_v1",
+      "pass": true
+    }
+  ],
+  "exit_status": 0,
+  "finish_utc": "2026-10-13T17:59:30.742998+00:00",
+  "source_and_gallery_clipping": [
+    {
+      "gallery_clipped": true,
+      "mask_touches_tile_edge": true,
+      "row_key": "Process_413_green.ome.tiff::tile_y008192_x045056.tiff::4"
+    },
+    {
+      "gallery_clipped": true,
+      "mask_touches_tile_edge": false,
+      "row_key": "Process_414_green.ome.tiff::tile_y000000_x028672.tiff::1"
+    },
+    {
+      "gallery_clipped": true,
+      "mask_touches_tile_edge": false,
+      "row_key": "Process_414_green.ome.tiff::tile_y020480_x040960.tiff::1"
+    }
+  ],
+  "standard_counts": {
+    "413": 31,
+    "414": 16
+  },
+  "start_utc": "2026-10-13T17:59:27.647482+00:00",
+  "target_areas": [
+    3117,
+    3430,
+    2960,
+    2901
+  ]
+}

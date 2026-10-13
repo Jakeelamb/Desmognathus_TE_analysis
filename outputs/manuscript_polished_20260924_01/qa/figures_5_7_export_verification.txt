@@ -1,0 +1,36 @@
+PASS: genome-cellular model table exactly equals frozen source
+PASS: genome-cellular predictions exactly equal frozen source
+PASS: allometry model table exactly equals frozen source
+PASS: allometry predictions exactly equal frozen source
+PASS: body-size model table exactly equals frozen source
+PASS: body-size predictions exactly equal frozen source
+PASS: all 12 conditional coefficients and intervals exactly equal frozen source
+PASS: paired nuclear-fraction rows match the other figures: anicetus at top, wrighti at bottom
+PASS: Figure 5 has one collage and four isolated PDF panels
+PASS: Figure_5_polished.pdf uses only embedded Arial font subsets
+PASS: Figure_5a_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_5b_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_5c_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_5d_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_5a_isolated.pdf contains all 24 species labels
+PASS: Figure_5b_isolated.pdf contains all 24 species labels
+PASS: Figure_5c_isolated.pdf contains all 24 species labels
+PASS: Figure_5_polished.tif is CMYK at 300 dpi
+PASS: Figure_5a_isolated.tif is CMYK at 300 dpi
+PASS: Figure_5b_isolated.tif is CMYK at 300 dpi
+PASS: Figure_5c_isolated.tif is CMYK at 300 dpi
+PASS: Figure_5d_isolated.tif is CMYK at 300 dpi
+PASS: Figure 7 has one collage and four isolated PDF panels
+PASS: Figure_7_polished.pdf uses only embedded Arial font subsets
+PASS: Figure_7a_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_7b_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_7c_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_7d_isolated.pdf uses only embedded Arial font subsets
+PASS: Figure_7a_isolated.pdf contains all 24 species labels
+PASS: Figure_7b_isolated.pdf contains all 24 species labels
+PASS: Figure_7c_isolated.pdf contains all 24 species labels
+PASS: Figure_7_polished.tif is CMYK at 300 dpi
+PASS: Figure_7a_isolated.tif is CMYK at 300 dpi
+PASS: Figure_7b_isolated.tif is CMYK at 300 dpi
+PASS: Figure_7c_isolated.tif is CMYK at 300 dpi
+PASS: Figure_7d_isolated.tif is CMYK at 300 dpi

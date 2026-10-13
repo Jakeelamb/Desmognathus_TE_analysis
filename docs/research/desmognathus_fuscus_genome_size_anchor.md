@@ -47,10 +47,10 @@ For erythrocytes, the measured nucleus is diploid (2C), whereas reported genome 
 
 `target genome size (1C pg) = (target IOD / reference IOD) × reference genome size (1C pg)`
 
-The author confirmed that Process_413/specimen 32469 and Process_414/specimen 32470 were the *D. fuscus* DNA-content standards and that the standards were stained in the same experimental runs as the unknowns. Use **16.462167689 pg 1C**, derived from the selected 16.1-Gbp pooled assembly, only as the named conditional anchor. The historical 15.00–18.00-pg C-values remain useful sensitivity comparators. Do not present the resulting estimates as independently validated absolute C-values until all of the following are resolved:
+The author confirmed that Process_413/specimen 32469 and Process_414/specimen 32470 were the *D. fuscus* DNA-content standards and that both standards and all retained unknowns were stained together in one Feulgen run. The standard images were 40× brightfield without oil, using the green channel and the same fixation protocol as the other slides. The [author-confirmed run map](../../outputs/calibration_search_20261013/STAINING_RUN_MAP_AUTHOR_CONFIRMED.csv) records this membership; it does not establish accepted standard nuclei or an independent C-value. Use **16.462167689 pg 1C**, derived from the selected 16.1-Gbp pooled assembly, only as the named conditional anchor. The released denominator remains the reviewed target-species *D. fuscus* IOD estimate. The historical 15.00–18.00-pg C-values remain useful sensitivity comparators. Do not present the resulting estimates as independently validated absolute C-values until all of the following are resolved:
 
-- recover the exact standard-to-target staining and imaging run map for Process_413/specimen 32469 and Process_414/specimen 32470;
-- calibrate each target only against the standard processed in the same run, rather than averaging standards across runs;
+- complete the eligibility, image-quality matching, and acceptance review of the designated standard nuclei;
+- establish a defensible standard-based denominator for the shared staining run and document camera response and acquisition settings;
 - investigate the approximately 41% difference between the two standard-slide median IOD values and exclude saturation, focus, segmentation, background, or preservation artifacts;
 - confirm voucher identity and locality for 32469/32470 so their modern *D. fuscus* lineage can be assessed;
 - report the chosen 1C anchor, its source, the calibration equation, nuclei retained/excluded, and a sensitivity interval in the final data release.

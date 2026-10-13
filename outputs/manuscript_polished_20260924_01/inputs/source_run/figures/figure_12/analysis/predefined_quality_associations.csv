@@ -1,0 +1,3 @@
+quality_variable,n_species,spearman_rho,p_value,purpose
+order_unresolved_fraction,34,-0.45240641711229945,0.007223262427348752,"Descriptive cross-pipeline quality association; not phylogenetic, not a genome-load correction"
+repeat_aligned_fraction_of_sample,34,-0.16149732620320856,0.3615214023812914,"Descriptive cross-pipeline quality association; not phylogenetic, not a genome-load correction"

@@ -1,0 +1,4 @@
+node,x,y,label
+GS,1.6,4.25,Genome size
+CS,7.7,4.25,Cell area
+NS,7.7,0.7,Nucleus area

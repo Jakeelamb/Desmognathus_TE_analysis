@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "full24_n": 24,
+  "subset22_n": 22,
+  "excluded_exactly": ["aeneus", "wrighti"],
+  "log10_scaling_reference": "full24 for both panels",
+  "all_species_positive_complete": true,
+  "frozen_and_canonical_traits_identical": true,
+  "frozen_and_canonical_trees_identical": true,
+  "all_inputs_unchanged": true,
+  "candidate_sets": [4, 10],
+  "group_weight_sums": {
+    "full24.body_adjusted_four": 1,
+    "subset22.body_adjusted_four": 1,
+    "full24.original_three": 1,
+    "subset22.original_three": 1
+  },
+  "maximum_full24_CICc_reproduction_difference": 2.276e-06,
+  "maximum_full24_weight_reproduction_difference": 1.4915e-08,
+  "coefficient_prediction_and_t_interval_checks": true,
+  "n_warning_occurrences": 67,
+  "R_version": "R version 4.4.3 (2025-02-28)",
+  "phylolm_version": "2.6.5",
+  "phylopath_version": "1.3.1"
+}

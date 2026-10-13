@@ -1,0 +1,25 @@
+analysis,endpoint,fit_id,warning
+integration21,within_ltr,cell_baseline,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,within_ltr,cell_te_adjusted,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,within_ltr,nucleus_baseline,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,within_ltr,nucleus_te_adjusted,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,all_hit,cell_baseline,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,all_hit,cell_te_adjusted,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,all_hit,nucleus_baseline,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+integration21,all_hit,nucleus_te_adjusted,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"

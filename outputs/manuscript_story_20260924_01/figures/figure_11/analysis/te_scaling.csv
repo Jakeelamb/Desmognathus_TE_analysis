@@ -1,0 +1,3 @@
+raw_column,transformation,mean34,sd34,n_scaling,endpoint
+within_ltr_fraction,logit,-2.597299304791432,0.4101497310792162,34,within_ltr
+low_ltr_fraction_all_hits,logit,-3.4247114538059487,0.4514106824598785,34,all_hit

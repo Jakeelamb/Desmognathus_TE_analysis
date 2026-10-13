@@ -1,0 +1,160 @@
+{
+  "coverage": [
+    [
+      "TE composition and divergence",
+      34,
+      null,
+      null,
+      "Species-level repeat summaries",
+      "S02; S08; S12"
+    ],
+    [
+      "LTR depth distributions",
+      30,
+      380,
+      null,
+      "Elements; species medians",
+      "S14–S16"
+    ],
+    [
+      "Cell and nucleus morphology",
+      24,
+      1152,
+      42,
+      "Selected cell–nucleus pairs",
+      "S18–S19"
+    ],
+    [
+      "Nuclear optical density",
+      24,
+      805,
+      50,
+      "Nuclei; estimated genome size",
+      "S21–S22"
+    ],
+    [
+      "TE–genome-size comparison",
+      21,
+      null,
+      null,
+      "Species-level overlap",
+      "S40"
+    ],
+    [
+      "LTR–genome-size comparison",
+      19,
+      239,
+      null,
+      "Elements summarized to species medians",
+      "LTR PGLS species data"
+    ]
+  ],
+  "associations": [
+    {
+      "block": "Composition",
+      "comparison": "Reproductive strategy and TE composition",
+      "n_species": 34,
+      "effect_type": "R²",
+      "estimate": 0.2601016805953517,
+      "ci_low": null,
+      "ci_high": null,
+      "p_value": 1e-05,
+      "lambda": null,
+      "source": "te_pca_trait_association_tests.csv",
+      "scale": "CLR / Aitchison composition"
+    },
+    {
+      "block": "Composition",
+      "comparison": "Strategy adjusted for recorded body size",
+      "n_species": 34,
+      "effect_type": "R²",
+      "estimate": 0.19904284290161434,
+      "ci_low": null,
+      "ci_high": null,
+      "p_value": 1e-05,
+      "lambda": null,
+      "source": "te_pca_trait_association_tests.csv",
+      "scale": "CLR / Aitchison composition"
+    },
+    {
+      "block": "Diversity",
+      "comparison": "Shannon entropy versus estimated genome size",
+      "n_species": 21,
+      "effect_type": "Slope per pg/1C",
+      "estimate": -0.007557817096005305,
+      "ci_low": -0.015233862804372453,
+      "ci_high": 0.00011822861236184326,
+      "p_value": 0.05328164510348311,
+      "lambda": 1.0,
+      "source": "Figure 3 model_summary.csv",
+      "scale": "Untransformed diversity and pg/1C"
+    },
+    {
+      "block": "Diversity",
+      "comparison": "Gini–Simpson index versus estimated genome size",
+      "n_species": 21,
+      "effect_type": "Slope per pg/1C",
+      "estimate": -0.003623494940657906,
+      "ci_low": -0.00696416319658273,
+      "ci_high": -0.00028282668473308134,
+      "p_value": 0.03502101656908224,
+      "lambda": 1.0,
+      "source": "Figure 3 model_summary.csv",
+      "scale": "Untransformed diversity and pg/1C"
+    },
+    {
+      "block": "Cellular",
+      "comparison": "Cell area versus estimated genome size",
+      "n_species": 24,
+      "effect_type": "Standardized slope",
+      "estimate": 0.71666442,
+      "ci_low": 0.40830013,
+      "ci_high": 1.02502872,
+      "p_value": 8.157e-05,
+      "lambda": 1e-07,
+      "source": "S26",
+      "scale": "Log10 then standardized"
+    },
+    {
+      "block": "Cellular",
+      "comparison": "Nucleus area versus estimated genome size",
+      "n_species": 24,
+      "effect_type": "Standardized slope",
+      "estimate": 0.41901841,
+      "ci_low": 0.01755494,
+      "ci_high": 0.82048187,
+      "p_value": 0.04154379,
+      "lambda": 1e-07,
+      "source": "S26",
+      "scale": "Log10 then standardized"
+    },
+    {
+      "block": "Cellular",
+      "comparison": "Cell area versus nucleus area",
+      "n_species": 24,
+      "effect_type": "Standardized slope",
+      "estimate": 0.57930128,
+      "ci_low": 0.21889785,
+      "ci_high": 0.93970471,
+      "p_value": 0.00301277,
+      "lambda": 1e-07,
+      "source": "S26",
+      "scale": "Log10 then standardized"
+    },
+    {
+      "block": "LTR",
+      "comparison": "Median LTR ratio versus estimated genome size",
+      "n_species": 19,
+      "effect_type": "Log–log slope",
+      "estimate": 0.024196124321278045,
+      "ci_low": -0.5608651711893331,
+      "ci_high": 0.6092574198318892,
+      "p_value": 0.93148859408955,
+      "lambda": 6.1971160237726395e-09,
+      "source": "LTR PGLS model_summary.csv",
+      "scale": "Log10 ratio and Gbp"
+    }
+  ],
+  "coverage_notes": "Rows overlap. Objects are elements, selected cell–nucleus pairs, or nuclei as indicated. Morphology and IOD animal sets overlap (51 animals in their union). Species-level joins do not imply matching specimens. The four-domain LTR sensitivity retains 989 elements across the same 30 species.",
+  "association_notes": "Composition tests use post hoc species-label permutations without phylogenetic adjustment. Regression rows use Pagel-lambda PGLS. Slopes have different scales, specified in the statistic column. Cellular and LTR intervals are t-based. Genome sizes are IOD-derived estimates; morphology describes selected large erythrocytes. Displayed measurement uncertainty is not propagated through these regressions. Both diversity indices summarize each species’ ten most abundant superfamilies. No multiplicity adjustment has been added in this run."
+}

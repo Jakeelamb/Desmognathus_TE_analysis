@@ -1,0 +1,11 @@
+analysis_id,n_species,model,formula,coefficient_scale,intercept,slope,standard_error,ci_low,ci_high,df,t_vs_zero,p_vs_zero,t_vs_isometry,p_vs_isometry,lambda,lambda_at_boundary,interval_method,measurement_error_corrected,warnings
+released24,24,Pagel_lambda_PGLS,log10(nucleus_area_um2) ~ log10(cell_area_um2),unstandardized_log10_log10,0.5475858057111179,0.4500478713898247,0.13500845423855076,0.17005747420514117,0.7300382685745083,22,3.333479180456512,0.0030127749981416424,-4.073464374597218,5.042092820616852e-4,9.999999999999994e-8,TRUE,95% t coefficient interval conditional on fitted lambda,FALSE,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+equal_animal24,24,Pagel_lambda_PGLS,log10(nucleus_area_um2) ~ log10(cell_area_um2),unstandardized_log10_log10,0.46458118657973063,0.4832388746978657,0.10929463813261416,0.25657566820832084,0.7099020811874106,22,4.421432587676636,2.155033394909177e-4,-4.7281470905747,1.0196147865860321e-4,9.999999999999994e-8,TRUE,95% t coefficient interval conditional on fitted lambda,FALSE,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+released22,22,Pagel_lambda_PGLS,log10(nucleus_area_um2) ~ log10(cell_area_um2),unstandardized_log10_log10,0.6794889605841915,0.39664611126637395,0.17620142493300842,0.02909637949995819,0.7641958430327898,20,2.251094799132177,0.03578359168052473,-3.42422820339291,0.0026868837665341835,0.5478749497316047,FALSE,95% t coefficient interval conditional on fitted lambda,FALSE,
+equal_animal22,22,Pagel_lambda_PGLS,log10(nucleus_area_um2) ~ log10(cell_area_um2),unstandardized_log10_log10,0.6332076222445879,0.41467639727734795,0.15602721035091918,0.08920933970646833,0.7401434548482275,20,2.6577184604192023,0.01511031187824321,-3.7514200337633854,0.0012571959810987817,9.999999999999994e-8,TRUE,95% t coefficient interval conditional on fitted lambda,FALSE,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"

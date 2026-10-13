@@ -1,8 +1,8 @@
 # Genome Biology and Evolution requirements
 
-**Verified:** 2026-07-29
+**Verified:** GBE instructions rechecked 2026-09-17; publisher-wide OUP guidance retained from 2026-07-29.
 
-**Target assumed here:** GBE **Article**; final classification remains an editorial decision.
+**Confirmed journal target:** GBE. Requirements below are for an **Article**; final classification remains an editorial decision.
 
 **Evidence boundary:** Only current first-party GBE and Oxford University Press (OUP) sources are used. Journal-specific GBE instructions take precedence over publisher-wide OUP guidance.
 

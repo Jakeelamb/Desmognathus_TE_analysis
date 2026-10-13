@@ -1,0 +1,1 @@
+UV_PROJECT_ENVIRONMENT=/tmp/desmo-standard-qc-20261013/env uv run --frozen --python 3.13 --with Pillow --with tifffile --with scipy --with scikit-image --with matplotlib --with roifile python outputs/standard_calibration_review_20261013/audit_mask_pixels.py --out outputs/standard_calibration_review_20261013/pixel_audit_v1

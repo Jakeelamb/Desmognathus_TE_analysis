@@ -168,12 +168,18 @@ suppressPackageStartupMessages({
 ROOT <- normalizePath(getwd(), mustWork = TRUE)
 FIGURE_DIR <- file.path(ROOT, "Publication", "figures")
 MANIFEST_PATH <- file.path(FIGURE_DIR, "FIGURE_MANIFEST.csv")
-AUXILIARY_DAG_BASENAME <- "Path_DAG_equivalence_class_reference.png"
-AUXILIARY_DAG_PATH <- file.path(FIGURE_DIR, AUXILIARY_DAG_BASENAME)
-AUXILIARY_DAG_RELATIVE_PATH <- file.path("figures", AUXILIARY_DAG_BASENAME)
+AUXILIARY_MANIFEST_PATH <- file.path(
+  FIGURE_DIR,
+  "AUXILIARY_FIGURE_MANIFEST.csv"
+)
 
 figure_manifest <- read_csv(
   MANIFEST_PATH,
+  show_col_types = FALSE,
+  progress = FALSE
+)
+auxiliary_manifest <- read_csv(
+  AUXILIARY_MANIFEST_PATH,
   show_col_types = FALSE,
   progress = FALSE
 )
@@ -197,6 +203,53 @@ if (any(!is.finite(figure_manifest$width_mm)) || any(figure_manifest$width_mm <=
   stop("Every figure must declare a positive final width")
 }
 
+required_auxiliary_columns <- c(
+  "auxiliary_id", "title", "basename", "width_mm", "height_mm",
+  "final_font_family", "minimum_target_text_pt", "datasets",
+  "release_status", "boundary", "legend", "alt_text", "pdf", "png", "tiff"
+)
+expected_auxiliary_ids <- c(
+  "Auxiliary_Wang_style_integrated_te_history_candidate",
+  "Auxiliary_Wang_style_diversity_genome_size_candidate",
+  "Auxiliary_Path24_development_traits_reference",
+  "Auxiliary_Path_DAG_reference",
+  "Auxiliary_Wang2025_cross_study_te_diversity_reference"
+)
+expected_auxiliary_titles <- c(
+  "Wang-style integrated TE content and proliferation candidate",
+  "Wang-style TE diversity and genome-size candidate",
+  "Path24 development and phenotype reference",
+  "Path DAG equivalence-class reference",
+  "Cross-study TE-diversity reference (Wang et al. 2025)"
+)
+
+if (!all(required_auxiliary_columns %in% names(auxiliary_manifest))) {
+  stop(
+    "Auxiliary figure manifest is missing required columns: ",
+    paste(setdiff(required_auxiliary_columns, names(auxiliary_manifest)), collapse = ", ")
+  )
+}
+if (!identical(auxiliary_manifest$auxiliary_id, expected_auxiliary_ids)) {
+  stop(
+    "Auxiliary figure manifest must contain exactly these ordered records: ",
+    paste(expected_auxiliary_ids, collapse = ", ")
+  )
+}
+if (!identical(auxiliary_manifest$title, expected_auxiliary_titles)) {
+  stop(
+    "Auxiliary figure manifest titles must match the ordered review contract: ",
+    paste(expected_auxiliary_titles, collapse = "; ")
+  )
+}
+if (
+  any(!is.finite(auxiliary_manifest$width_mm)) ||
+    any(auxiliary_manifest$width_mm <= 0) ||
+    any(!is.finite(auxiliary_manifest$height_mm)) ||
+    any(auxiliary_manifest$height_mm <= 0)
+) {
+  stop("Every auxiliary figure must declare positive final dimensions")
+}
+
 figure_paths <- file.path(FIGURE_DIR, figure_manifest$png)
 if (any(!file.exists(figure_paths))) {
   stop(
@@ -204,10 +257,19 @@ if (any(!file.exists(figure_paths))) {
     paste(basename(figure_paths[!file.exists(figure_paths)]), collapse = ", ")
   )
 }
+auxiliary_paths <- file.path(FIGURE_DIR, auxiliary_manifest$png)
+if (any(!file.exists(auxiliary_paths))) {
+  stop(
+    "Missing auxiliary review PNG files: ",
+    paste(basename(auxiliary_paths[!file.exists(auxiliary_paths)]), collapse = ", ")
+  )
+}
 
-maximum_width_mm <- max(figure_manifest$width_mm)
+maximum_width_mm <- max(figure_manifest$width_mm, auxiliary_manifest$width_mm)
 figure_manifest$review_width_percent <-
   100 * figure_manifest$width_mm / maximum_width_mm
+auxiliary_manifest$review_width_percent <-
+  100 * auxiliary_manifest$width_mm / maximum_width_mm
 
 escape_html <- function(value, attribute = FALSE) {
   htmltools::htmlEscape(as.character(value), attribute = attribute)
@@ -236,45 +298,187 @@ figure_1_has_phylogeny <- nrow(figure_one) == 1L && grepl(
   ignore.case = TRUE,
   perl = TRUE
 )
+
+figure_two <- figure_manifest[
+  figure_manifest$figure_id == "Figure_2",
+  ,
+  drop = FALSE
+]
+if (
+  nrow(figure_two) != 1L ||
+    !identical(figure_two$basename[[1]], "Figure_2_te_diversity_and_bonsai")
+) {
+  stop("Figure 2 does not use the canonical Bonsai figure basename")
+}
+figure_two_evidence <- paste(
+  figure_two$datasets,
+  figure_two$legend,
+  figure_two$alt_text,
+  collapse = " "
+)
+for (phrase in c("S42", "S43", "Bonsai", "not a species phylogeny", "feature resampling")) {
+  if (!grepl(tolower(phrase), tolower(figure_two_evidence), fixed = TRUE)) {
+    stop("Figure 2 is missing its Bonsai boundary phrase: ", phrase)
+  }
+}
+
+auxiliary_evidence <- function(auxiliary_id) {
+  row <- auxiliary_manifest[
+    auxiliary_manifest$auxiliary_id == auxiliary_id,
+    ,
+    drop = FALSE
+  ]
+  paste(row$boundary, row$legend, row$alt_text, collapse = " ")
+}
+
+required_auxiliary_phrases <- list(
+  Auxiliary_Wang_style_integrated_te_history_candidate = c(
+    "Review candidate, not a numbered manuscript figure",
+    "Six representatives are selected",
+    "fractions of aligned RepeatMasker hit bp",
+    "divergence bins are not insertion ages"
+  ),
+  Auxiliary_Wang_style_diversity_genome_size_candidate = c(
+    "Review candidate, not a numbered manuscript figure",
+    "Reproductive-strategy panels are post-hoc descriptive strata",
+    "without a regression because n = 2",
+    "Pagel-lambda PGLS fits"
+  ),
+  Auxiliary_Path24_development_traits_reference = c(
+    "Descriptive review only",
+    "D. organi is absent",
+    "conditional D. fuscus assembly-anchored pg/1C estimates",
+    "not direct independently measured species C-values"
+  ),
+  Auxiliary_Path_DAG_reference = c(
+    "Not a numbered manuscript figure.",
+    "10 testable equivalence classes",
+    "saturated 6-member class is not shown",
+    "remains unscored because it has no d-separation claim",
+    "Genome size",
+    "conditional D. fuscus assembly-anchored pg/1C analysis",
+    "not a direct species C-value measurement",
+    "same released genome-size scale is used consistently",
+    "do not orient a unique causal arrow"
+  ),
+  Auxiliary_Wang2025_cross_study_te_diversity_reference = c(
+    "Descriptive cross-study context only",
+    "no pooled regression or hypothesis test",
+    "10.5061/dryad.zpc866tkv",
+    "10.1038/s42003-025-08127-3",
+    "CC0-1.0",
+    "published top-10 TE-superfamily indices",
+    "RepeatModeler/RepeatMasker",
+    "reclosed calculations from dnaPipeTE compositions",
+    "pipelines are different and not method-harmonized",
+    "conditional D. fuscus assembly-anchored estimates",
+    "not direct species C-values"
+  )
+)
+
+for (auxiliary_id in names(required_auxiliary_phrases)) {
+  evidence <- auxiliary_evidence(auxiliary_id)
+  missing_phrases <- required_auxiliary_phrases[[auxiliary_id]][
+    !vapply(
+      required_auxiliary_phrases[[auxiliary_id]],
+      grepl,
+      logical(1),
+      x = evidence,
+      fixed = TRUE
+    )
+  ]
+  if (length(missing_phrases) > 0L) {
+    stop(
+      auxiliary_id,
+      " is missing required review-boundary text: ",
+      paste(missing_phrases, collapse = "; ")
+    )
+  }
+}
 ```
 
 <div class="gallery-summary">
 This page is a visual-review surface, not a second figure authority. It reads
-`Publication/figures/FIGURE_MANIFEST.csv` in row order and displays the exact
-current review PNG for every record. Declared final widths are preserved
-proportionally, so a 120-mm figure appears narrower than a 185-mm figure.
+`Publication/figures/FIGURE_MANIFEST.csv` and
+`Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv` in row order and displays
+the exact current review PNG for every record. Declared final widths are
+preserved proportionally, so a 120-mm figure appears narrower than a 180-mm
+figure.
 </div>
 
 ```{r review-status, echo=FALSE, results='asis'}
 cat(
   sprintf(
-    "<p><strong>Current gallery:</strong> %d manifest figures; widest declared figure: %.0f mm.</p>\n",
+    paste0(
+      "<p><strong>Current gallery:</strong> %d numbered or supplemental figures; ",
+      "%d auxiliary review figures; widest declared figure: %.0f mm.</p>\n"
+    ),
     nrow(figure_manifest),
+    nrow(auxiliary_manifest),
     maximum_width_mm
   )
 )
 
 if (figure_1_has_phylogeny) {
   cat(paste0(
-    '<div class="review-callout info"><strong>Figure 1 includes the Path24 dated phylogeny.</strong> ',
-    'The tree is shown with the study-design and genomic-QC material so its time scale, ',
-    'taxon labels, spacing, and relationship to the other panels can be reviewed together.</div>\n'
+    '<div class="review-callout info"><strong>Figure 1 is the integrated 21-species overview.</strong> ',
+    'A topology-only species tree aligns reproductive strategy, conditional genome size, ',
+    'dnaPipeTE composition, and low-divergence RepeatMasker signal in one fixed row order.</div>\n'
   ))
 } else {
   cat(paste0(
     '<div class="review-callout info"><strong>Figure 1 phylogeny status:</strong> ',
-    'the current manifest does not yet declare a Path24 dated-phylogeny panel. ',
+    'the current manifest does not yet declare an integrated phylogenetic overview. ',
     'This notice will change automatically when Figure 1 records that material.</div>\n'
   ))
 }
 ```
 
 <div class="review-callout warning">
-<strong>Unresolved tree provenance.</strong> The focal dated tree was supplied
-directly by Alex Pyron, but its publication or archive identifier, calibration method,
-and branch-length provenance remain unresolved. Review the displayed
-time scale as supplied; do not interpret this gallery as independent validation
-of the calibration.
+<strong>Unresolved tree provenance.</strong> The source tree was supplied directly
+by Alex Pyron, but its publication or archive identifier, calibration method, and
+branch-length provenance remain unresolved. Numbered Figures 1, 4, and 5 therefore
+show topology only. Supplied-time displays remain quarantined as auxiliary review
+figures and are not independent validation of the calibration.
+</div>
+
+<div class="review-callout info">
+<strong>Figure 2 Bonsai boundary.</strong> The rooted Bonsai Newick is a
+TE-composition representation, not a species phylogeny; its display root has no
+phylogenetic meaning. Reproductive strategy was annotated after initial PCA
+review, and feature resampling perturbs correlated compositional coordinates
+rather than resampling biological specimens. S09–S11 retain the PCA geometry as
+a supplementary audit.
+</div>
+
+<div class="review-callout info">
+<strong>Wang-style integrated TE-history candidate boundary.</strong> This is a
+review candidate, not a numbered manuscript figure. Six representatives are
+selected deterministically from the overlap21 genome-size distribution plus
+the <em>D. fuscus</em> anchor. Repeat proportions are fractions of aligned
+RepeatMasker hit bp, not genome occupancy; divergence bins are not insertion
+ages.
+</div>
+
+<div class="review-callout info">
+<strong>Wang-style TE-diversity candidate boundary.</strong> Conditional genome
+sizes are assembly-anchored IOD-derived estimates. Reproductive-strategy panels
+are post-hoc descriptive strata. The two direct developers are shown without a
+regression because n = 2; the other six panels use Pagel-lambda PGLS fits.
+</div>
+
+<div class="review-callout info">
+<strong>Cross-study TE-diversity boundary.</strong> Descriptive cross-study
+context only; no pooled regression or hypothesis test. Wang et al. (2025)
+values are the published top-10 TE-superfamily indices from Dryad (dataset DOI
+<a href="https://doi.org/10.5061/dryad.zpc866tkv">10.5061/dryad.zpc866tkv</a>;
+article DOI
+<a href="https://doi.org/10.1038/s42003-025-08127-3">10.1038/s42003-025-08127-3</a>;
+CC0-1.0), generated from RepeatModeler/RepeatMasker annotations. Current
+<em>Desmognathus</em> top-10 indices are reclosed calculations from dnaPipeTE
+compositions; the pipelines are different and not method-harmonized. Current
+genome sizes are conditional <em>D. fuscus</em> assembly-anchored estimates,
+not direct species C-values.
 </div>
 
 # Critique checklist
@@ -365,59 +569,72 @@ ggplot theme or production figure builder, not in this gallery or its embedded
 images.
 </div>
 
-# Auxiliary path-DAG reference
+# Auxiliary review figures
 
-```{r auxiliary-dag-reference, echo=FALSE, results='asis'}
-cat(
-  paste0(
-    '<section class="figure-card" data-figure-id="Auxiliary_Path_DAG_reference">',
-    '<h2>Auxiliary Path DAG reference</h2>',
-    '<div class="figure-meta">',
-    '<span>Status: <code>auxiliary_review_only</code></span>',
-    '<span>Asset: <code>', escape_html(AUXILIARY_DAG_BASENAME), "</code></span>",
-    "</div>",
-    '<div class="review-callout info"><strong>Not a numbered manuscript figure.</strong> ',
-    'This auxiliary review-only graphic shows one representative for each of the 10 testable equivalence classes. ',
-    'The saturated 6-member class is not shown and remains unscored because it has no d-separation claim. ',
-    'The current Path24 relative IOD-only analysis remains exploratory and does not orient a unique causal arrow.</div>'
-  )
-)
+```{r auxiliary-review-gallery, echo=FALSE, results='asis'}
+for (index in seq_len(nrow(auxiliary_manifest))) {
+  row <- auxiliary_manifest[index, , drop = FALSE]
+  relative_png <- file.path("figures", row$png[[1]])
+  width_percent <- row$review_width_percent[[1]]
 
-if (file.exists(AUXILIARY_DAG_PATH)) {
+  cat(sprintf(
+    '<section class="figure-card" data-figure-id="%s">\n',
+    escape_html(row$auxiliary_id[[1]], attribute = TRUE)
+  ))
+  cat(sprintf("<h2>%s</h2>\n", escape_html(row$title[[1]])))
+  cat('<div class="figure-meta">\n')
+  cat(sprintf(
+    "<span>Final size: %.0f × %.0f mm</span>\n",
+    row$width_mm[[1]],
+    row$height_mm[[1]]
+  ))
+  cat(sprintf(
+    "<span>Font: %s</span>\n",
+    escape_html(row$final_font_family[[1]])
+  ))
+  cat(sprintf(
+    "<span>Target text: ≥%g pt</span>\n",
+    row$minimum_target_text_pt[[1]]
+  ))
+  cat(sprintf(
+    "<span>Datasets: %s</span>\n",
+    escape_html(row$datasets[[1]])
+  ))
+  cat(sprintf(
+    "<span>Status: <code>%s</code></span>\n",
+    escape_html(row$release_status[[1]])
+  ))
+  cat(sprintf(
+    "<span>Asset: <code>%s</code></span>\n",
+    escape_html(row$png[[1]])
+  ))
+  cat("</div>\n")
+
+  cat(sprintf(
+    '<div class="review-callout info"><strong>Boundary.</strong> %s</div>\n',
+    format_inline(row$boundary[[1]])
+  ))
   cat('<div class="figure-frame">\n')
   cat(sprintf(
     paste0(
       '<img src="%s" alt="%s" ',
-      'style="width: 100%%; max-width: 100%%;" />\n'
+      'style="width: %.3f%%; max-width: 100%%;" />\n'
     ),
-    escape_html(AUXILIARY_DAG_RELATIVE_PATH, attribute = TRUE),
-    escape_html(
-      paste(
-        "Auxiliary review-only path-DAG reference showing one representative",
-        "for each of the 10 testable equivalence classes, with the saturated",
-        "6-member class identified as unscored for the current Path24 relative IOD-only analysis."
-      ),
-      attribute = TRUE
-    )
+    escape_html(relative_png, attribute = TRUE),
+    escape_html(row$alt_text[[1]], attribute = TRUE),
+    width_percent
   ))
   cat("</div>\n")
-} else {
-  cat(
-    paste0(
-      '<div class="review-callout warning"><strong>Auxiliary DAG image pending.</strong> ',
-      'Expected <code>', escape_html(AUXILIARY_DAG_BASENAME),
-      "</code> under <code>Publication/figures/</code> before the self-contained review HTML is refreshed.</div>\n"
-    )
-  )
-}
 
-cat(
-  paste0(
-    '<div class="figure-copy">',
-    '<p class="legend"><strong>Boundary.</strong> One representative for each of the 10 testable equivalence classes is shown for review. ',
-    'The saturated 6-member class is not shown and remains unscored because it has no d-separation claim.</p>',
-    '<p class="alt-text"><strong>Scope.</strong> Current Path24 relative IOD only; no TE, SVL, or unique causal-arrow claim is introduced by this auxiliary panel.</p>',
-    "</div></section>\n"
-  )
-)
+  cat('<div class="figure-copy">\n')
+  cat(sprintf(
+    '<p class="legend"><strong>Legend.</strong> %s</p>\n',
+    format_inline(row$legend[[1]])
+  ))
+  cat(sprintf(
+    '<p class="alt-text"><strong>Alt text.</strong> %s</p>\n',
+    format_inline(row$alt_text[[1]])
+  ))
+  cat("</div>\n</section>\n")
+}
 ```

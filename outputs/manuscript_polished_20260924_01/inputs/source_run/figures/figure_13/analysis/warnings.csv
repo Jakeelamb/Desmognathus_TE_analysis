@@ -1,0 +1,270 @@
+fit,warning
+full24 primary,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+full24 primary,"Fitting the following model:
+    n ~ b + c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    n ~ b + g + c 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    n ~ b + c 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    n ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    c ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    n ~ c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    n ~ c + b 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    c ~ n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    c ~ g + b 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 primary,"Fitting the following model:
+    n ~ g + c + b 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+full24 reverse_test_order,"Fitting the following model:
+    n ~ b + c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Fitting the following model:
+    c ~ b + g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Fitting the following model:
+    c ~ b + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Fitting the following model:
+    g ~ b + c 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Fitting the following model:
+    n ~ c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 reverse_test_order,"Fitting the following model:
+    c ~ n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24 body_upstream_cell c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_upstream_cell n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_upstream_nucleus n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_upstream_nucleus c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_upstream_genome n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_upstream_genome c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_only n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_only c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 cell_body_branch c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 cell_body_branch n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 nucleus_cell_body_chain n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 nucleus_cell_body_chain c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 genome_body_branch c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 genome_body_branch n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_disconnected c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24 body_disconnected n,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 primary,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+subset22 primary,"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 primary,"Fitting the following model:
+    c ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 primary,"Fitting the following model:
+    c ~ n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 primary,"Fitting the following model:
+    c ~ g + b 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 reverse_test_order,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+subset22 reverse_test_order,"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 reverse_test_order,"Fitting the following model:
+    c ~ b + g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 reverse_test_order,"Fitting the following model:
+    c ~ b + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 reverse_test_order,"Fitting the following model:
+    g ~ b + c 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 reverse_test_order,"Fitting the following model:
+    c ~ n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22 body_upstream_cell c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 body_upstream_nucleus c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 body_upstream_genome c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 body_only c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 cell_body_branch c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 nucleus_cell_body_chain c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 genome_body_branch c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22 body_disconnected c,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"

@@ -1,0 +1,9 @@
+block,comparison,n_species,effect_type,estimate,ci_low,ci_high,p_value,lambda,source,scale
+Composition,Reproductive strategy and TE composition,34,R²,0.2601016805953517,,,1e-05,,te_pca_trait_association_tests.csv,CLR / Aitchison composition
+Composition,Strategy adjusted for recorded body size,34,R²,0.19904284290161434,,,1e-05,,te_pca_trait_association_tests.csv,CLR / Aitchison composition
+Diversity,Shannon entropy versus estimated genome size,21,Slope per pg/1C,-0.007557817096005305,-0.015233862804372453,0.00011822861236184326,0.05328164510348311,1.0,Figure 3 model_summary.csv,Untransformed diversity and pg/1C
+Diversity,Gini–Simpson index versus estimated genome size,21,Slope per pg/1C,-0.003623494940657906,-0.00696416319658273,-0.00028282668473308134,0.03502101656908224,1.0,Figure 3 model_summary.csv,Untransformed diversity and pg/1C
+Cellular,Cell area versus estimated genome size,24,Standardized slope,0.71666442,0.40830013,1.02502872,8.157e-05,1e-07,S26,Log10 then standardized
+Cellular,Nucleus area versus estimated genome size,24,Standardized slope,0.41901841,0.01755494,0.82048187,0.04154379,1e-07,S26,Log10 then standardized
+Cellular,Cell area versus nucleus area,24,Standardized slope,0.57930128,0.21889785,0.93970471,0.00301277,1e-07,S26,Log10 then standardized
+LTR,Median LTR ratio versus estimated genome size,19,Log–log slope,0.024196124321278045,-0.5608651711893331,0.6092574198318892,0.93148859408955,6.1971160237726395e-09,LTR PGLS model_summary.csv,Log10 ratio and Gbp

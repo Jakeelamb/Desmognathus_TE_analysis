@@ -1,0 +1,21 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--no-sync",
+    "--python",
+    "3.13",
+    "python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:14:13.681839+00:00",
+  "completed_at": "2026-10-13T16:18:25.836799+00:00",
+  "elapsed_seconds": 252.155,
+  "exit_code": 0,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/full-suite.log",
+  "raw_log_sha256": "7189e209c87612e4b0997ecdcb15b8c8421f47eb023a0b7f4991381df9a0854d"
+}

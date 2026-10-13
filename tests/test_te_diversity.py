@@ -21,28 +21,28 @@ def test_compact_inputs_reproduce_canonical_diversity() -> None:
     diversity = products["diversity"]
     assert list(diversity.columns) == [
         "species",
-        "te_level",
-        "observed_richness",
+        "n_superfamilies_included",
         "shannon_entropy",
         "gini_simpson",
     ]
-    assert diversity.groupby("te_level", sort=False).size().to_dict() == {
-        "order": 34,
-        "superfamily": 34,
-    }
     panel_species = REPLAY.read_panel()
-    assert diversity.loc[diversity["te_level"].eq("order"), "species"].tolist() == panel_species
-    assert (
-        diversity.loc[diversity["te_level"].eq("superfamily"), "species"].tolist() == panel_species
-    )
+    assert diversity.shape == (34, 4)
+    assert diversity["species"].tolist() == panel_species
+    assert diversity["n_superfamilies_included"].eq(10).all()
     REPLAY.check_release(products)
 
 
-def test_te_relative_iod_overlap_uses_exact_canonical_diversity_rows() -> None:
-    overlap = pd.read_csv(ROOT / "analyses/03_phylogenetic_path/data/te_relative_iod_overlap.csv")
+def test_te_genome_size_overlap_uses_exact_canonical_diversity_rows() -> None:
+    overlap = pd.read_csv(
+        ROOT / "analyses/03_phylogenetic_path/data/te_genome_size_overlap.csv",
+        float_precision="round_trip",
+    )
     te34 = pd.read_csv(ROOT / "data/identity/te34_panel.csv")
     path24 = pd.read_csv(ROOT / "data/identity/path24_panel.csv")
-    diversity = pd.read_csv(ROOT / "analyses/01_transposable_elements/data/te_diversity.csv")
+    diversity = pd.read_csv(
+        ROOT / "analyses/01_transposable_elements/data/te_diversity.csv",
+        float_precision="round_trip",
+    )
 
     assert not any(
         unsupported in column.casefold()
@@ -59,19 +59,27 @@ def test_te_relative_iod_overlap_uses_exact_canonical_diversity_rows() -> None:
     assert len(overlap21_species) == 21
     assert overlap["species"].is_unique
     assert set(overlap["species"]) == overlap21_species
+    assert "genome_size_pg_fuscus_anchored" in overlap.columns
+    assert "relative_iod_index" not in overlap.columns
 
-    source_rows = diversity.loc[diversity["te_level"].eq("superfamily")]
-    assert len(source_rows) == 34
-    assert source_rows["species"].is_unique
+    assert list(diversity.columns) == [
+        "species",
+        "n_superfamilies_included",
+        "shannon_entropy",
+        "gini_simpson",
+    ]
+    assert diversity.shape == (34, 4)
+    assert diversity["species"].is_unique
+    assert diversity["n_superfamilies_included"].eq(10).all()
 
     metric_columns = [
-        "observed_richness",
+        "n_superfamilies_included",
         "shannon_entropy",
         "gini_simpson",
     ]
     observed = overlap[["species", *metric_columns]].sort_values("species")
-    expected = source_rows.loc[
-        source_rows["species"].isin(overlap21_species),
+    expected = diversity.loc[
+        diversity["species"].isin(overlap21_species),
         ["species", *metric_columns],
     ].sort_values("species")
     pd.testing.assert_frame_equal(
@@ -81,26 +89,46 @@ def test_te_relative_iod_overlap_uses_exact_canonical_diversity_rows() -> None:
     )
 
 
-def test_diversity_metrics_use_exact_positive_categories() -> None:
-    probabilities = np.array([0.5, 0.25, 0.25, 0.0])
-    metrics = REPLAY.diversity_metrics(probabilities)
-    expected_shannon = -np.sum(probabilities[:3] * np.log(probabilities[:3]))
-    expected_sum_squared = np.sum(probabilities**2)
+def test_top_superfamily_selection_recloses_and_breaks_cutoff_ties_by_name() -> None:
+    proportions = pd.Series(
+        {
+            **{f"feature_{number:02d}": 0.1 for number in range(9, 0, -1)},
+            "Zulu": 0.05,
+            "Alpha": 0.05,
+        }
+    )
 
-    assert metrics["observed_richness"] == 3
-    assert np.isclose(metrics["shannon_entropy"], expected_shannon)
-    assert np.isclose(metrics["gini_simpson"], 1 - expected_sum_squared)
+    selected = REPLAY.select_top_superfamilies(proportions)
+
+    assert selected.index.tolist() == [
+        *[f"feature_{number:02d}" for number in range(1, 10)],
+        "Alpha",
+    ]
+    assert "Zulu" not in selected.index
+    assert len(selected) == 10
+    assert np.isclose(selected.sum(), 1, rtol=0, atol=1e-15)
+    assert np.isclose(selected.loc["Alpha"], 0.05 / 0.95, rtol=0, atol=1e-15)
+
+
+def test_top_superfamily_selection_requires_ten_positive_categories() -> None:
+    proportions = pd.Series({f"feature_{number}": 0.1 for number in range(9)})
+
+    with np.testing.assert_raises_regex(
+        AssertionError,
+        "at least 10 positive superfamilies",
+    ):
+        REPLAY.select_top_superfamilies(proportions)
+
+
+def test_diversity_metrics_use_natural_log_shannon_and_gini_simpson() -> None:
+    probabilities = np.repeat(0.1, 10)
+    metrics = REPLAY.diversity_metrics(probabilities)
+
+    assert np.isclose(metrics["shannon_entropy"], np.log(10), rtol=0, atol=1e-15)
+    assert np.isclose(metrics["gini_simpson"], 0.9, rtol=0, atol=1e-15)
     assert set(metrics) == {
-        "observed_richness",
         "shannon_entropy",
         "gini_simpson",
-    }
-
-    singleton = REPLAY.diversity_metrics(np.array([1.0, 0.0]))
-    assert singleton == {
-        "observed_richness": 1,
-        "shannon_entropy": 0.0,
-        "gini_simpson": 0.0,
     }
 
 
@@ -124,8 +152,9 @@ def test_mass_accounting_is_qc_only_and_closes_exactly() -> None:
             atol=1e-3,
         )
 
-    diversity = REPLAY.build_diversity(REPLAY.read_compositions(panel_species))
-    assert diversity.shape == (68, 5)
+    compositions = REPLAY.read_compositions(panel_species)
+    diversity = REPLAY.build_diversity(compositions["superfamily"])
+    assert diversity.shape == (34, 4)
     assert "composition_mode" not in diversity.columns
     assert not any("unresolved" in column.casefold() for column in diversity.columns)
     assert not hasattr(REPLAY, "add_unresolved_accounting_bin")

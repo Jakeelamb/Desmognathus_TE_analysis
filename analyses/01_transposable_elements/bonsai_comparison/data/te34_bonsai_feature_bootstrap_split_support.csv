@@ -1,0 +1,32 @@
+split_id,smaller_side_n,smaller_side_species,focal_strategy,present_in_matched_calibration,bootstrap_support_count,bootstrap_replicates,bootstrap_support_fraction
+split_001,2,"[""adatsihi"", ""balsameus""]",,True,116,200,0.57999999999999996
+split_002,2,"[""amphileucus"", ""gvnigeusgwotli""]",,True,107,200,0.53500000000000003
+split_003,2,"[""anicetus"", ""lycos""]",,True,117,200,0.58499999999999996
+split_004,2,"[""apalachicolae"", ""welteri""]",,True,34,200,0.17000000000000001
+split_005,2,"[""auriculatus"", ""valentinei""]",,True,131,200,0.65500000000000003
+split_006,2,"[""bairdi"", ""fuscus""]",,True,22,200,0.11
+split_007,2,"[""carolinensis"", ""tilleyi""]",,True,57,200,0.28499999999999998
+split_008,2,"[""conanti"", ""monticola""]",,True,53,200,0.26500000000000001
+split_009,2,"[""marmoratus"", ""mavrokoilius""]",,True,35,200,0.17499999999999999
+split_010,2,"[""organi"", ""wrighti""]",,True,200,200,1
+split_011,3,"[""aeneus"", ""organi"", ""wrighti""]",direct_development,True,70,200,0.34999999999999998
+split_012,3,"[""amphileucus"", ""aureatus"", ""gvnigeusgwotli""]",,True,58,200,0.28999999999999998
+split_013,3,"[""anicetus"", ""campi"", ""lycos""]",,True,98,200,0.48999999999999999
+split_014,3,"[""auriculatus"", ""pascagoula"", ""valentinei""]",,True,69,200,0.34499999999999997
+split_015,3,"[""carolinensis"", ""cheaha"", ""tilleyi""]",,False,12,200,0.059999999999999998
+split_016,4,"[""adatsihi"", ""balsameus"", ""conanti"", ""monticola""]",,True,8,200,0.040000000000000001
+split_017,4,"[""aeneus"", ""organi"", ""perlapsus"", ""wrighti""]",,False,31,200,0.155
+split_018,4,"[""anicetus"", ""campi"", ""catahoula"", ""lycos""]",,True,39,200,0.19500000000000001
+split_019,4,"[""auriculatus"", ""pascagoula"", ""valentinei"", ""valtos""]",,True,40,200,0.20000000000000001
+split_020,4,"[""carolinensis"", ""cheaha"", ""orestes"", ""tilleyi""]",,False,8,200,0.040000000000000001
+split_021,5,"[""abditus"", ""adatsihi"", ""balsameus"", ""conanti"", ""monticola""]",,False,1,200,0.0050000000000000001
+split_022,5,"[""amphileucus"", ""aureatus"", ""gvnigeusgwotli"", ""marmoratus"", ""mavrokoilius""]",,True,15,200,0.074999999999999997
+split_023,6,"[""amphileucus"", ""aureatus"", ""gvnigeusgwotli"", ""kanawha"", ""marmoratus"", ""mavrokoilius""]",,True,11,200,0.055
+split_024,6,"[""apalachicolae"", ""carolinensis"", ""cheaha"", ""orestes"", ""tilleyi"", ""welteri""]",,False,4,200,0.02
+split_025,6,"[""auriculatus"", ""bairdi"", ""fuscus"", ""pascagoula"", ""valentinei"", ""valtos""]",,True,16,200,0.080000000000000002
+split_026,7,"[""amphileucus"", ""aureatus"", ""gvnigeusgwotli"", ""intermedius"", ""kanawha"", ""marmoratus"", ""mavrokoilius""]",aquatic_eggs,True,55,200,0.27500000000000002
+split_027,10,"[""aeneus"", ""auriculatus"", ""bairdi"", ""fuscus"", ""organi"", ""pascagoula"", ""perlapsus"", ""valentinei"", ""valtos"", ""wrighti""]",,True,2,200,0.01
+split_028,11,"[""aeneus"", ""auriculatus"", ""bairdi"", ""fuscus"", ""ocoee"", ""organi"", ""pascagoula"", ""perlapsus"", ""valentinei"", ""valtos"", ""wrighti""]",,True,3,200,0.014999999999999999
+split_029,12,"[""abditus"", ""adatsihi"", ""amphileucus"", ""aureatus"", ""balsameus"", ""conanti"", ""gvnigeusgwotli"", ""intermedius"", ""kanawha"", ""marmoratus"", ""mavrokoilius"", ""monticola""]",,True,0,200,0
+split_030,15,"[""aeneus"", ""anicetus"", ""auriculatus"", ""bairdi"", ""campi"", ""catahoula"", ""fuscus"", ""lycos"", ""ocoee"", ""organi"", ""pascagoula"", ""perlapsus"", ""valentinei"", ""valtos"", ""wrighti""]",,False,0,200,0
+split_031,16,"[""aeneus"", ""anicetus"", ""auriculatus"", ""bairdi"", ""campi"", ""catahoula"", ""fuscus"", ""lycos"", ""ocoee"", ""organi"", ""pascagoula"", ""perlapsus"", ""santeetlah"", ""valentinei"", ""valtos"", ""wrighti""]",,False,0,200,0

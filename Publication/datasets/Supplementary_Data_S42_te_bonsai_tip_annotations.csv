@@ -1,0 +1,35 @@
+species,display_species,reproductive_strategy,reproductive_strategy_label,strategy_assigned,annotation_timing
+abditus,D. abditus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+adatsihi,D. adatsihi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+aeneus,D. aeneus,direct_development,Direct development,True,expert_post_hoc_after_initial_pca_review
+amphileucus,D. amphileucus,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+anicetus,D. anicetus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+apalachicolae,D. apalachicolae,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+aureatus,D. aureatus,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+auriculatus,D. auriculatus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+bairdi,D. bairdi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+balsameus,D. balsameus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+campi,D. campi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+carolinensis,D. carolinensis,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+catahoula,D. catahoula,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+cheaha,D. cheaha,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+conanti,D. conanti,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+fuscus,D. fuscus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+gvnigeusgwotli,D. gvnigeusgwotli,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+intermedius,D. intermedius,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+kanawha,D. kanawha,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+lycos,D. lycos,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+marmoratus,D. marmoratus,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+mavrokoilius,D. mavrokoilius,aquatic_eggs,Aquatic eggs,True,expert_post_hoc_after_initial_pca_review
+monticola,D. monticola,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+ocoee,D. ocoee,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+orestes,D. orestes,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+organi,D. organi,direct_development,Direct development,True,expert_post_hoc_after_initial_pca_review
+pascagoula,D. pascagoula,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+perlapsus,D. perlapsus,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+santeetlah,D. santeetlah,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+tilleyi,D. tilleyi,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+valentinei,D. valentinei,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+valtos,D. valtos,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+welteri,D. welteri,terrestrial_eggs_aquatic_larvae,Terrestrial eggs + aquatic larvae,True,expert_post_hoc_after_initial_pca_review
+wrighti,D. wrighti,direct_development,Direct development,True,expert_post_hoc_after_initial_pca_review

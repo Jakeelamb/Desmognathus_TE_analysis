@@ -1,0 +1,278 @@
+panel,fit_id,warning_source,warning
+full24,body_to_cell,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_to_nucleus,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,genome_to_cell,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,cell_to_nucleus,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,genome_to_nucleus,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,genome_to_cell_body_adjusted,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,cell_to_nucleus_body_adjusted,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,genome_to_nucleus_body_adjusted,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,genome_and_cell_to_nucleus,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,genome_and_cell_to_nucleus_body_adjusted,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,body_to_cell,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,genome_to_cell,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,genome_to_cell_body_adjusted,regression,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four,phylopath_runtime,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+full24,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    n ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    n ~ b + c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,body_adjusted_four/body_only/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/body_only/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/cell_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/cell_bridge/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/nucleus_bridge/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/nucleus_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/genome_bridge/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,body_adjusted_four/genome_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three,phylopath_runtime,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+full24,original_three,phylopath_stored,"Fitting the following model:
+    n ~ g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,original_three,phylopath_stored,"Fitting the following model:
+    c ~ n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,original_three,phylopath_stored,"Fitting the following model:
+    c ~ g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,original_three,phylopath_stored,"Fitting the following model:
+    c ~ g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,original_three,phylopath_stored,"Fitting the following model:
+    c ~ n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,original_three,phylopath_stored,"Fitting the following model:
+    n ~ c + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+full24,original_three/genome_nucleus_only/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/nucleus_cell_only/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/genome_cell_only/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/nucleus_bridge/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/nucleus_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/nucleus_collider/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/cell_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/cell_bridge/n,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/cell_collider/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/genome_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+full24,original_three/genome_collider/g,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,body_adjusted_four,phylopath_runtime,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+subset22,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,body_adjusted_four,phylopath_stored,"Fitting the following model:
+    c ~ b + g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,body_adjusted_four/body_only/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,body_adjusted_four/cell_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,body_adjusted_four/nucleus_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,body_adjusted_four/genome_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three,phylopath_runtime,"Some models produced warnings. Use `show_warnings()` to view them.
+"
+subset22,original_three,phylopath_stored,"Fitting the following model:
+    c ~ n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,original_three,phylopath_stored,"Fitting the following model:
+    c ~ g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,original_three,phylopath_stored,"Fitting the following model:
+    c ~ g + n 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,original_three,phylopath_stored,"Fitting the following model:
+    c ~ n + g 
+produced this/these warning(s):
+    the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+ 
+"
+subset22,original_three/nucleus_cell_only/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three/genome_cell_only/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three/nucleus_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three/cell_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three/cell_collider/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three/genome_bridge/c,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"
+subset22,original_three/genome_collider/g,path_edge,"the estimation of lambda matches the upper/lower bound for this parameter.
+                          You may change the bounds using options ""upper.bound"" and ""lower.bound"".
+"

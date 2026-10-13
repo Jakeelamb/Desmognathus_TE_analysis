@@ -1,4 +1,4 @@
-# Morphology: cells, nuclei, and relative nuclear IOD
+# Morphology: cells, nuclei, and IOD-derived genome size
 
 This directory is the active, compact morphology component of the paper repo.
 It starts from finalized manual-review decisions and does **not** rerun image
@@ -7,14 +7,16 @@ segmentation, model training, or the large review galleries.
 ## Canonical data
 
 The study panel is `data/identity/path24_panel.csv`: 24 species with finalized
-cell/nucleus morphology and relative nuclear-IOD measurements.
+cell/nucleus morphology and conditional genome-size estimates. Nuclear IOD is
+the measurement and calibration substrate for those estimates and remains fully
+available for audit.
 
 | File | Unit and final size | Role |
 | --- | --- | --- |
 | `data/cell_nucleus_objects.csv` | 1,152 reviewed cell/nucleus objects; 24 species | Canonical object-level morphology table |
 | `data/cell_nucleus_species_estimates.csv` | 24 species | Canonical species-level cell/nucleus estimates and biological support |
 | `data/nuclear_iod_objects.csv` | 805 reviewed nuclei; 24 species | Canonical object-level nuclear-IOD table |
-| `data/relative_nuclear_iod_species.csv` | 24 species | Canonical species-level relative-IOD estimates |
+| `data/relative_nuclear_iod_species.csv` | 24 species | Canonical species-level IOD summaries and conditional *D. fuscus*-anchored genome-size estimates |
 | `data/nuclear_iod_by_image.csv` | 51 images; 24 species | Unnormalized image-level nuclear-IOD summary |
 | `data/cell_mask_review_audit.csv` | 129 review-audit rows | Audit of the manually extended morphology release |
 | `data/nuclear_iod_quality_balance.csv` | 24 species | Per-species IOD support and balance |
@@ -39,9 +41,10 @@ make report
 ```
 
 `validate_release.py` replays the compact release without raw imagery. It checks
-the S19 species summaries against S18, the S23 image summaries and S22 relative
-index against S21, the fixed physical-area conversion, the S24 balance rule,
-and the declared animal-support totals.
+the S19 species summaries against S18, the S23 image summaries and both the S22
+IOD audit fields and conditional genome-size fields against S21, the fixed
+physical-area conversion, the S24 balance rule, and the declared animal-support
+totals.
 
 If a reviewed canonical table is intentionally revised, update its matching
 decision/provenance record, then refresh the publication copies and catalog:
@@ -86,25 +89,34 @@ the compact finalized tables and provenance above define the paper release.
 
 ## Interpretation boundary
 
-Nuclear IOD is a **relative image-derived phenotype** within this reviewed
-imaging workflow. It is not an independently validated absolute genome size or
-C-value. The separate *D. fuscus*-anchored descriptive scale uses the published
-pooled-assembly estimate of `16.1 Gbp`, converted with `1 pg = 0.978 Gbp` to
-`16.462167689 pg/1C`. Process_413/specimen 32469 and Process_414/specimen 32470
-were author-confirmed as the *D. fuscus* standards and were stained in the same
-experimental runs as the unknowns. Their exact standard-to-target run map and
-the approximately 41% difference between their median IOD values remain
-unresolved calibration/QC issues. The assembly-derived picogram scale is
-therefore conditional; the Path24 analysis continues to use relative IOD as its
-primary phenotype.
+Conditional *D. fuscus*-anchored genome size in pg/1C is the default downstream
+Path24 analysis trait. It is calculated from the target-to-*D. fuscus*
+equal-image IOD ratio using the published pooled-assembly estimate of `16.1
+Gbp`, converted with `1 pg = 0.978 Gbp` to `16.462167689 pg/1C`. This is not an
+independent genome-size assay or an independently validated absolute C-value.
+
+The author confirmed that Process_413/specimen 32469 and
+Process_414/specimen 32470 were the *D. fuscus* standards and were stained with
+all retained unknowns in one Feulgen run. The retained standard images were
+40× brightfield without oil, using the green channel and the same fixation
+protocol as the other slides. The released conditional estimate still uses
+the finalized *D. fuscus* target-species IOD estimate as its denominator.
+Standard-nucleus acceptance, the approximately 41% difference between the two
+standard-slide median IOD values, and absolute calibration remain unresolved.
+The [calibration decision](../../outputs/standard_calibration_review_20261013/CALIBRATION_DECISION.md)
+records these limits. S21-S25 retain the IOD measurement, quality, and
+calibration audit.
 
 The stored physical-area conversion is exactly `0.0144 µm²/pixel`. Per-nucleus
 integrated optical density (IOD) is the sum of optical density over nuclear-mask
 pixels; it is distinct from mean optical density. The primary species estimand
 is the equal-image mean of within-image median nuclear IOD. Dividing those 24
-species estimates by their Path24 median gives `relative_iod_index`, whose
-Path24 median is one. S23 contains the unnormalized image medians and means used
-in that aggregation; it is not itself a relative-IOD or ratio table.
+species estimates by their Path24 median gives the retained audit field
+`relative_iod_index`, whose Path24 median is one. Dividing each estimate by the
+*D. fuscus* estimate and multiplying by `16.462167689 pg/1C` gives the default
+conditional genome-size trait and interval. S23 contains the unnormalized image
+medians and means used in that aggregation; it is not itself a relative-IOD,
+genome-size, or ratio table.
 
 Genomic and microscopy records are joined at species level. They are not
 measurements from the same specimen, and object-level image paths do not prove

@@ -1,0 +1,6 @@
+analysis_id,label,slope,ci_low,ci_high,interval_type,y
+released24,Released medians; 24 species,0.4500478713898247,0.17005747420514117,0.7300382685745083,PGLS 95% t interval,5
+equal_animal24,Equal-animal means; 24 species,0.4832388746978657,0.25657566820832084,0.7099020811874106,PGLS 95% t interval,4
+released22,Released medians; 22 species,0.39664611126637395,0.02909637949995819,0.7641958430327898,PGLS 95% t interval,3
+equal_animal22,Equal-animal means; 22 species,0.41467639727734795,0.08920933970646833,0.7401434548482275,PGLS 95% t interval,2
+paired_bootstrap24,Paired resampling; 24 species,0.465003082690702,0.30559204022425146,0.6331256837657986,95% resampling range,1

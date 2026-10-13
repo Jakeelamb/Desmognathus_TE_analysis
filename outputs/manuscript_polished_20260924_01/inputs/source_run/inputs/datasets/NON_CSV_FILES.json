@@ -1,0 +1,23 @@
+[
+  {
+    "filename": "trees/desmo900dated_source46.tre",
+    "format": "TRE",
+    "reason_not_csv": "Newick/tree text preserves the supplied 46-tip source phylogeny.",
+    "sha256": "1cf561526405c794b70d5767182eefe84dfa1552f9f9c0be6b36c465b19301aa",
+    "bytes": 1322
+  },
+  {
+    "filename": "trees/desmognathus_time_tree_path24_v1.nwk",
+    "format": "NWK",
+    "reason_not_csv": "Newick/tree text preserves the exact 24-tip focal phylogeny.",
+    "sha256": "5c05e24b5b63d5a4e7cecf054ec7c34bc1607548845d1ea3bd745062db54beab",
+    "bytes": 659
+  },
+  {
+    "filename": "trees/te34_bonsai_composition_tree_with_feature_support.nwk",
+    "format": "NWK",
+    "reason_not_csv": "Newick text preserves the 34-tip Bonsai TE-composition representation and feature-resampling split-support labels; it is not a species phylogeny.",
+    "sha256": "fea4600a2b26706b2f431eeceae49a5b38c2cba6fe15341c0964569cb0963f04",
+    "bytes": 1125
+  }
+]

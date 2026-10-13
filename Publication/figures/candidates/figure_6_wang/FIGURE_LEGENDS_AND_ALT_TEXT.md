@@ -1,0 +1,7 @@
+# Figure legends and alt text
+
+## Figure_6
+
+Estimated genome size, nucleus area, and cell area are positively associated in the released 24-species Pagel-lambda PGLS sensitivity fits. Fits use log10 traits followed by sample standardization; lines and 95% model confidence ribbons are back-transformed onto the displayed measurement scales. Annotations give standardized slopes with 95% intervals and unadjusted P-values. In panels a and b, circles identify balanced multiple-image support, triangles identify three estimates from one image and animal, and crosses identify four species that fail the declared quality-balance gate. Panel c uses a common circle symbol. Bars are conditional measurement-bootstrap intervals. The asterisk marks D. fuscus assembly-anchored pg/1C estimates, not independently measured species C-values; their intervals exclude anchor uncertainty. All three released lambda estimates lie at the lower fitting boundary, so phylogenetic covariance has little influence in these fitted sensitivity models. These associations do not establish causal direction.
+
+**Alt text:** Three scatterplots show estimated genome size versus nucleus area, estimated genome size versus cell area, and nucleus area versus cell area, each with measurement intervals and a phylogenetically corrected fitted line; point shape exposes single-image and quality-balance limitations in the genome-size panels.

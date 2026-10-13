@@ -1,0 +1,37 @@
+{
+  "captured_utc": "2026-10-13 18:30:31 UTC",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "cmd": "UV_PROJECT_ENVIRONMENT=/tmp/desmo-release-audit-20261013/env uv run --frozen --no-sync --python 3.13 python -m pytest -q -p no:cacheprovider tests/test_methods_release.py",
+        "started": {
+          "current_time": "2026-10-13 18:30:20 UTC"
+        },
+        "result": {
+          "chunk_id": "744026",
+          "wall_time_seconds": 0.652831727,
+          "exit_code": 0,
+          "original_token_count": 25,
+          "output": "............                                                             [100%]\n12 passed in 0.48s\n"
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "cmd": "git diff --check -- Publication/methods",
+        "started": {
+          "current_time": "2026-10-13 18:30:20 UTC"
+        },
+        "result": {
+          "chunk_id": "a552e4",
+          "wall_time_seconds": 0.00001582,
+          "exit_code": 0,
+          "original_token_count": 0,
+          "output": ""
+        }
+      }
+    }
+  ]
+}

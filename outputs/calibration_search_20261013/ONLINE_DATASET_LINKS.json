@@ -1,0 +1,95 @@
+{
+  "source": {
+    "export_path": "/tmp/browser-use/exports/Desmognathus dataset-52841d9f-57d0-46ab-8166-49d734618bbf.xlsx",
+    "sha256": "79793579f5175f51db8a1b57dc31a7f839c39472a937aab30d1d627b57ae750c",
+    "online_workbook_url": "https://docs.google.com/spreadsheets/d/1CaMYntCP1eDSa1kX297Y36b6hhb9Jcps_1SQqnE2M6E/edit"
+  },
+  "tabs": [
+    "Sheet1",
+    {
+      "xlsx_name": "List of 38 Desmognathus species",
+      "browser_observed_google_sheets_name": "List of 38 Desmognathus species and Axolotl and TE",
+      "note": "XLSX tab title is limited to 31 characters."
+    },
+    "dnaPipeTE results",
+    "Links"
+  ],
+  "links": [
+    {
+      "title_cell": "Links!A1",
+      "url_cell": "Links!B1",
+      "title": "phylogeny",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35222955/",
+      "relevance": "general phylogeny source; no microscopy/staining record indicated"
+    },
+    {
+      "title_cell": "Links!A2",
+      "url_cell": "Links!B2",
+      "title": "SRA",
+      "url": "https://www.ncbi.nlm.nih.gov/sra",
+      "relevance": "general sequence archive; no target specimen/process linkage indicated"
+    },
+    {
+      "title_cell": "Links!A3",
+      "url_cell": "Links!B3",
+      "title": "NCBI",
+      "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/?taxon=43045",
+      "relevance": "genome assembly resource; no microscopy/staining record indicated"
+    },
+    {
+      "title_cell": "Links!A4",
+      "url_cell": "Links!B4",
+      "title": "Animal Genome DB",
+      "url": "https://www.genomesize.com/results.php?page=1",
+      "relevance": "genome-size resource; no microscopy/staining record indicated"
+    }
+  ],
+  "relevant_record_search": {
+    "terms": [
+      "microscopy",
+      "blood",
+      "slide",
+      "stain/staining",
+      "Feulgen",
+      "batch",
+      "metadata",
+      "pixel/pixels",
+      "picogram/picograms",
+      "specimen",
+      "32469",
+      "32470",
+      "process",
+      "413414"
+    ],
+    "matched_cells": [],
+    "staining_event_linkage_found": false,
+    "target_specimen_or_process_ids_found": false
+  },
+  "xlsx_link_metadata": {
+    "literal_url_cells": 4,
+    "excel_hyperlink_objects": 0,
+    "hyperlink_relationships": 0,
+    "limitation": "Native Google Sheets cell-link annotations may not be represented in this XLSX export."
+  },
+  "inspected_headers": [
+    {"cell": "Sheet1!A1", "value": "Link"},
+    {"cell": "Sheet1!C1", "value": "SRA Acession"},
+    {"cell": "Sheet1!D1", "value": "Genome Accession"},
+    {"cell": "Sheet1!E1", "value": "Genome Accession"},
+    {"cell": "Sheet1!F1", "value": "dnaPipeTE"},
+    {"cell": "Sheet1!G1", "value": "Genome Sequence size from NCBI"},
+    {"cell": "Sheet1!H1", "value": "Contig N51"},
+    {"cell": "Sheet1!I1", "value": "C-value"},
+    {"cell": "Sheet1!J1", "value": "TE_curate_alpine"},
+    {"cell": "Sheet1!K1", "value": "TE_curate"},
+    {"cell": "Sheet1!N1", "value": "RepeatModeler"},
+    {"cell": "List of 38 Desmognathus species!A1", "value": "Species"},
+    {"cell": "List of 38 Desmognathus species!B1", "value": "family"},
+    {"cell": "List of 38 Desmognathus species!C1", "value": "GenBank assembly accession"},
+    {"cell": "List of 38 Desmognathus species!D1", "value": "Contig N50 (kb)"},
+    {"cell": "List of 38 Desmognathus species!E1", "value": "Scaffold N50 (kb)"},
+    {"cell": "List of 38 Desmognathus species!F1", "value": "Scaffolds count"},
+    {"cell": "List of 38 Desmognathus species!G1", "value": "GC percent"}
+  ],
+  "links_fetched": false
+}

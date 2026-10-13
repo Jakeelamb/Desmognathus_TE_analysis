@@ -1,0 +1,103 @@
+species,display_species,strategy,component,fraction
+abditus,D. abditus,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.46302030869969246
+abditus,D. abditus,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08236276343303163
+abditus,D. abditus,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03813563215012205
+adatsihi,D. adatsihi,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.45776505824097063
+adatsihi,D. adatsihi,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.07673147959460684
+adatsihi,D. adatsihi,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03512499022554105
+aeneus,D. aeneus,direct_development,LTR / all hits,0.4273146046983839
+aeneus,D. aeneus,direct_development,Low-divergence / LTR,0.040529275339961854
+aeneus,D. aeneus,direct_development,Low-divergence LTR / all hits,0.01731875127060776
+amphileucus,D. amphileucus,aquatic_eggs,LTR / all hits,0.423124436304637
+amphileucus,D. amphileucus,aquatic_eggs,Low-divergence / LTR,0.046728152607847406
+amphileucus,D. amphileucus,aquatic_eggs,Low-divergence LTR / all hits,0.019771823231752486
+anicetus,D. anicetus,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4591465622843705
+anicetus,D. anicetus,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08101133274459633
+anicetus,D. anicetus,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03719607493575667
+apalachicolae,D. apalachicolae,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4523379831448511
+apalachicolae,D. apalachicolae,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.07403889235773747
+apalachicolae,D. apalachicolae,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.033490603243377694
+aureatus,D. aureatus,aquatic_eggs,LTR / all hits,0.4260498432643524
+aureatus,D. aureatus,aquatic_eggs,Low-divergence / LTR,0.0437803581869011
+aureatus,D. aureatus,aquatic_eggs,Low-divergence LTR / all hits,0.01865261474358642
+auriculatus,D. auriculatus,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.5081620999790804
+auriculatus,D. auriculatus,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.06566360011926564
+auriculatus,D. auriculatus,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03336775292879262
+bairdi,D. bairdi,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.48982715377763986
+bairdi,D. bairdi,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.10995152027124298
+bairdi,D. bairdi,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.05385724022798742
+balsameus,D. balsameus,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4625471419722638
+balsameus,D. balsameus,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.07980511860444645
+balsameus,D. balsameus,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03691362952524424
+campi,D. campi,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4681291953776044
+campi,D. campi,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.0882537929473691
+campi,D. campi,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.04131417708147359
+carolinensis,D. carolinensis,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4496568879202774
+carolinensis,D. carolinensis,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08845992894333993
+carolinensis,D. carolinensis,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03977661635431111
+catahoula,D. catahoula,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.48582033953328385
+catahoula,D. catahoula,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08169472175796241
+catahoula,D. catahoula,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03968895746253045
+cheaha,D. cheaha,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.47541134609220187
+cheaha,D. cheaha,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.07582940876775192
+cheaha,D. cheaha,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.036050161295652756
+conanti,D. conanti,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4557528104687492
+conanti,D. conanti,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08080968896440568
+conanti,D. conanti,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03682924285863336
+fuscus,D. fuscus,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.47431510963841644
+fuscus,D. fuscus,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.12203356946674951
+fuscus,D. fuscus,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.0578823658811886
+gvnigeusgwotli,D. gvnigeusgwotli,aquatic_eggs,LTR / all hits,0.42124281917550277
+gvnigeusgwotli,D. gvnigeusgwotli,aquatic_eggs,Low-divergence / LTR,0.046543221790887046
+gvnigeusgwotli,D. gvnigeusgwotli,aquatic_eggs,Low-divergence LTR / all hits,0.019605997960703954
+intermedius,D. intermedius,aquatic_eggs,LTR / all hits,0.4356247970892527
+intermedius,D. intermedius,aquatic_eggs,Low-divergence / LTR,0.06088185284392017
+intermedius,D. intermedius,aquatic_eggs,Low-divergence LTR / all hits,0.026521644791550468
+kanawha,D. kanawha,aquatic_eggs,LTR / all hits,0.44622657327393606
+kanawha,D. kanawha,aquatic_eggs,Low-divergence / LTR,0.061438900443266255
+kanawha,D. kanawha,aquatic_eggs,Low-divergence LTR / all hits,0.02741567001051721
+lycos,D. lycos,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.48498608089486334
+lycos,D. lycos,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.09522644532449151
+lycos,D. lycos,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.04618350051547412
+marmoratus,D. marmoratus,aquatic_eggs,LTR / all hits,0.4316343759281631
+marmoratus,D. marmoratus,aquatic_eggs,Low-divergence / LTR,0.06137502247599659
+marmoratus,D. marmoratus,aquatic_eggs,Low-divergence LTR / all hits,0.026491569524003774
+mavrokoilius,D. mavrokoilius,aquatic_eggs,LTR / all hits,0.4366345544690715
+mavrokoilius,D. mavrokoilius,aquatic_eggs,Low-divergence / LTR,0.05990249462932582
+mavrokoilius,D. mavrokoilius,aquatic_eggs,Low-divergence LTR / all hits,0.02615549905406163
+monticola,D. monticola,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4616532146702494
+monticola,D. monticola,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.074836189157969
+monticola,D. monticola,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.034548367298447256
+ocoee,D. ocoee,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.46144720036497044
+ocoee,D. ocoee,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.087084049973879335
+ocoee,D. ocoee,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.0401846910568898
+orestes,D. orestes,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.46508689576552525
+orestes,D. orestes,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.10280093925736096
+orestes,D. orestes,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.04781136972098633
+organi,D. organi,direct_development,LTR / all hits,0.3836459990628968
+organi,D. organi,direct_development,Low-divergence / LTR,0.021115447481016424
+organi,D. organi,direct_development,Low-divergence LTR / all hits,0.008100856944514673
+pascagoula,D. pascagoula,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4992573333397411
+pascagoula,D. pascagoula,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.06080736668305452
+pascagoula,D. pascagoula,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.030358523737593616
+perlapsus,D. perlapsus,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.45975248907333716
+perlapsus,D. perlapsus,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.07784794052367261
+perlapsus,D. perlapsus,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.0357907844249916
+santeetlah,D. santeetlah,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4645970934628811
+santeetlah,D. santeetlah,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.09351648824992975
+santeetlah,D. santeetlah,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.04344748863177303
+tilleyi,D. tilleyi,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4546523447723842
+tilleyi,D. tilleyi,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08512163071197079
+tilleyi,D. tilleyi,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03870074899404651
+valentinei,D. valentinei,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.5032176387131728
+valentinei,D. valentinei,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.058001644399309105
+valentinei,D. valentinei,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.02918745053610145
+valtos,D. valtos,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.4976097597469735
+valtos,D. valtos,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.1018949943757938
+valtos,D. valtos,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.05070394367075797
+welteri,D. welteri,terrestrial_eggs_aquatic_larvae,LTR / all hits,0.46327530251867016
+welteri,D. welteri,terrestrial_eggs_aquatic_larvae,Low-divergence / LTR,0.08376353354522433
+welteri,D. welteri,terrestrial_eggs_aquatic_larvae,Low-divergence LTR / all hits,0.03880557634319658
+wrighti,D. wrighti,direct_development,LTR / all hits,0.382894882316707
+wrighti,D. wrighti,direct_development,Low-divergence / LTR,0.023792079312196988
+wrighti,D. wrighti,direct_development,Low-divergence LTR / all hits,0.009109865408313425

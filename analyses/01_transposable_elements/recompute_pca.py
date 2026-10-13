@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -16,10 +17,10 @@ PANEL = ROOT / "data" / "identity" / "te34_panel.csv"
 COMPOSITION_MODE = "classified_conditional"
 EXCLUSION_REASON = "not_positive_in_all_retry_averaged_te34_species"
 EXPECTED_EXCLUDED_SUPERFAMILIES = {"CR1", "Chapaev", "Dada", "Ginger", "Merlin"}
+TOP_SUPERFAMILIES = 10
 DIVERSITY_COLUMNS = [
     "species",
-    "te_level",
-    "observed_richness",
+    "n_superfamilies_included",
     "shannon_entropy",
     "gini_simpson",
 ]
@@ -108,7 +109,42 @@ def read_mass_accounting(panel_species: list[str]) -> pd.DataFrame:
     return mass
 
 
-def diversity_metrics(probabilities: np.ndarray | pd.Series) -> dict[str, float | int]:
+def select_top_superfamilies(proportions: pd.Series) -> pd.Series:
+    if not isinstance(proportions, pd.Series) or proportions.index.has_duplicates:
+        fail(
+            "DIVERSITY_COMPOSITION_INVALID",
+            "superfamily proportions must be a Series with unique feature names",
+        )
+    if not all(isinstance(feature, str) for feature in proportions.index):
+        fail(
+            "DIVERSITY_COMPOSITION_INVALID",
+            "superfamily feature names must be strings",
+        )
+
+    values = proportions.to_numpy(dtype=float)
+    if not np.isfinite(values).all() or (values < 0).any():
+        fail(
+            "DIVERSITY_COMPOSITION_INVALID",
+            "superfamily proportions must be finite and nonnegative",
+        )
+    positive = [(feature, float(value)) for feature, value in proportions.items() if value > 0]
+    if len(positive) < TOP_SUPERFAMILIES:
+        fail(
+            "DIVERSITY_COMPOSITION_INVALID",
+            f"each species must have at least {TOP_SUPERFAMILIES} positive superfamilies",
+        )
+
+    selected = sorted(positive, key=lambda item: (-item[1], item[0]))[:TOP_SUPERFAMILIES]
+    closed = pd.Series(
+        [value for _, value in selected],
+        index=[feature for feature, _ in selected],
+        dtype=float,
+        name=proportions.name,
+    )
+    return closed / closed.sum()
+
+
+def diversity_metrics(probabilities: np.ndarray | pd.Series) -> dict[str, float]:
     values = np.asarray(probabilities, dtype=float)
     if values.ndim != 1 or not np.isfinite(values).all() or (values < 0).any():
         fail(
@@ -119,36 +155,47 @@ def diversity_metrics(probabilities: np.ndarray | pd.Series) -> dict[str, float 
         fail("DIVERSITY_COMPOSITION_INVALID", "diversity probabilities do not close to one")
 
     positive = values[values > 0]
-    observed_richness = len(positive)
     shannon_entropy = float(-np.sum(positive * np.log(positive)))
     sum_squared = float(np.sum(positive**2))
     return {
-        "observed_richness": observed_richness,
         "shannon_entropy": shannon_entropy,
         "gini_simpson": 1 - sum_squared,
     }
 
 
-def build_diversity(compositions: dict[str, pd.DataFrame]) -> pd.DataFrame:
+def build_diversity(superfamily_composition: pd.DataFrame) -> pd.DataFrame:
+    if (
+        not isinstance(superfamily_composition, pd.DataFrame)
+        or superfamily_composition.index.has_duplicates
+        or superfamily_composition.columns.has_duplicates
+    ):
+        fail(
+            "DIVERSITY_RELEASE_INVALID",
+            "superfamily composition must have unique species and feature names",
+        )
+
     rows: list[dict[str, object]] = []
-    for level, composition in compositions.items():
-        for species, probabilities in composition.iterrows():
-            rows.append(
-                {
-                    "species": species,
-                    "te_level": level,
-                    **diversity_metrics(probabilities),
-                }
-            )
+    for species, proportions in superfamily_composition.iterrows():
+        selected = select_top_superfamilies(proportions)
+        rows.append(
+            {
+                "species": species,
+                "n_superfamilies_included": len(selected),
+                **diversity_metrics(selected),
+            }
+        )
 
     diversity = pd.DataFrame(rows, columns=DIVERSITY_COLUMNS)
-    key_columns = ["species", "te_level"]
-    if diversity.duplicated(key_columns).any():
-        fail("DIVERSITY_RELEASE_INVALID", "diversity keys are not unique")
-    strata = diversity.groupby("te_level", sort=False).size().to_dict()
-    expected_strata = {level: 34 for level in compositions}
-    if strata != expected_strata or len(diversity) != 68:
-        fail("DIVERSITY_RELEASE_INVALID", f"unexpected diversity strata: {strata}")
+    if len(diversity) != 34 or diversity["species"].duplicated().any():
+        fail(
+            "DIVERSITY_RELEASE_INVALID",
+            "diversity release must contain exactly 34 unique TE34 species",
+        )
+    if not diversity["n_superfamilies_included"].eq(TOP_SUPERFAMILIES).all():
+        fail(
+            "DIVERSITY_RELEASE_INVALID",
+            f"diversity release must include {TOP_SUPERFAMILIES} superfamilies per species",
+        )
     return diversity
 
 
@@ -278,7 +325,7 @@ def reconstruct_release() -> dict[str, pd.DataFrame]:
     panel_species = read_panel()
     compositions = read_compositions(panel_species)
     read_mass_accounting(panel_species)
-    diversity = build_diversity(compositions)
+    diversity = build_diversity(compositions["superfamily"])
     prevalence = build_prevalence(compositions)
     included_counts = (
         prevalence.loc[prevalence["pca_included"]].groupby("te_level").size().to_dict()
@@ -367,12 +414,30 @@ def check_release(products: dict[str, pd.DataFrame]) -> None:
         check_frame(products[key], expected_path, key)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="promote the reconstructed canonical diversity table before verification",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
     products = reconstruct_release()
+    if args.write:
+        products["diversity"].to_csv(
+            DATA / "te_diversity.csv",
+            index=False,
+            lineterminator="\n",
+            float_format="%.17g",
+        )
     check_release(products)
     print(
         "PASS: compact TE34 inputs reproduce feature prevalence, complete CLR, "
-        "and final superfamily PCA; all 68 canonical diversity rows also reproduce"
+        "and final superfamily PCA; all 34 canonical top-10 diversity rows also reproduce"
     )
 
 

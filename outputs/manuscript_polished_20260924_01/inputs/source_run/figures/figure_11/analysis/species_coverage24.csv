@@ -1,0 +1,25 @@
+species,genome_size_pg_fuscus_anchored,cell_area_um2,nucleus_area_um2,max_svl_mm,te_included,status
+anicetus,15.45387409,244.1952,41.6952,51,TRUE,Complete TE + cellular + SVL
+tilleyi,16.68146717,264.4776,41.8536,52,TRUE,Complete TE + cellular + SVL
+campi,14.87418931,257.4504,37.0728,57,TRUE,Complete TE + cellular + SVL
+ocoee,16.79250338,293.1552,43.4448,54,TRUE,Complete TE + cellular + SVL
+apalachicolae,15.73446808,299.54880000000003,45.2016,57,TRUE,Complete TE + cellular + SVL
+monticola,16.90311075,260.0784,39.6072,72,TRUE,Complete TE + cellular + SVL
+perlapsus,14.44569121,293.5512,43.38,56,TRUE,Complete TE + cellular + SVL
+brimleyorum,17.12522754,329.4,45.1656,75,FALSE,No TE data; not imputed
+bairdi,18.79106722,306.1368,44.208,55,TRUE,Complete TE + cellular + SVL
+valtos,22.70273273,314.1936,49.968,62,TRUE,Complete TE + cellular + SVL
+auriculatus,17.75430342,315.1368,49.176,60,TRUE,Complete TE + cellular + SVL
+fuscus,16.46216769,272.808,46.944,72,TRUE,Complete TE + cellular + SVL
+welteri,15.05822603,304.5456,48.708,75,TRUE,Complete TE + cellular + SVL
+orestes,14.15107926,255.4704,46.3176,52,TRUE,Complete TE + cellular + SVL
+ochrophaeus,13.61093163,272.304,52.1352,44,FALSE,No TE data; not imputed
+intermedius,18.11498489,325.2456,48.9384,85,TRUE,Complete TE + cellular + SVL
+marmoratus,17.98164897,274.9032,47.6064,76,TRUE,Complete TE + cellular + SVL
+mavrokoilius,15.5729803,269.064,42.552,80,TRUE,Complete TE + cellular + SVL
+kanawha,17.17384282,288.5904,41.724,87,TRUE,Complete TE + cellular + SVL
+aeneus,9.62450057,208.9872,37.6632,31,TRUE,Complete TE + cellular + SVL
+amphileucus,17.4640436,318.78,44.4312,122,TRUE,Complete TE + cellular + SVL
+gvnigeusgwotli,15.54983565,272.4192,46.62,86,TRUE,Complete TE + cellular + SVL
+folkertsi,17.04034368,268.8408,44.8704,89,FALSE,No TE data; not imputed
+wrighti,14.79493124,237.0312,42.9696,29,TRUE,Complete TE + cellular + SVL

@@ -1,0 +1,8 @@
+check,value,status
+retained_elements,380,PASS
+distribution_species,30,PASS
+pgls_species,19,PASS
+pgls_elements,239,PASS
+median_replay_max_absolute_error,5.551115123125783e-17,PASS
+pgls_coefficients_and_ci_exact,1,PASS
+pgls_input_summary_join_exact,1,PASS

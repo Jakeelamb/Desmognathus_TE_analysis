@@ -9,6 +9,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from scripts.project import SUPPLEMENT_SOURCES, TREE_SOURCES
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -30,7 +32,6 @@ def test_compact_top_level_layout() -> None:
         "results",
         "path_analysis",
         "notebooks",
-        "outputs",
         "plans",
         "Dusky.yml",
         "paths.yaml",
@@ -38,6 +39,36 @@ def test_compact_top_level_layout() -> None:
     assert all((ROOT / path).exists() for path in required)
     assert not any((ROOT / path).exists() for path in forbidden)
     assert not (ROOT / "analyses/01_transposable_elements/output").exists()
+
+
+def test_isolated_review_outputs_remain_separate_from_canonical_sources() -> None:
+    outputs = (ROOT / "outputs").resolve()
+    canonical_sources = [*SUPPLEMENT_SOURCES.values()]
+    canonical_sources.extend(record[0] for record in TREE_SOURCES.values())
+    manifest = pd.read_csv(ROOT / "Publication/datasets/DATASET_MANIFEST.csv")
+    canonical_sources.extend(manifest["source_path"])
+    for dependencies in manifest["additional_source_paths"]:
+        canonical_sources.extend(json.loads(dependencies))
+    canonical_sources.extend(pd.read_csv(ROOT / "data/DATA_CATALOG.csv")["path"])
+    for relative in canonical_sources:
+        source = (ROOT / relative).resolve()
+        assert source.is_file(), relative
+        assert not source.is_relative_to(outputs), relative
+
+    review = outputs / "manuscript_polished_20260924_01"
+    frozen_inputs = (review / "inputs/source_run").resolve()
+    assert frozen_inputs.is_dir()
+    assert frozen_inputs.is_relative_to(outputs)
+    figure_manifests = list((review / "figures").glob("*/FIGURE_MANIFEST.csv"))
+    assert len(figure_manifests) == 8
+    for figure_manifest in figure_manifests:
+        figures = pd.read_csv(figure_manifest)
+        assert len(figures) == 1
+        for field in ("pdf", "png", "tiff"):
+            artifact = (figure_manifest.parent / figures.iloc[0][field]).resolve()
+            assert artifact.is_file(), artifact
+            assert artifact.is_relative_to(outputs), artifact
+            assert not artifact.is_relative_to(frozen_inputs), artifact
 
 
 def test_repository_validator() -> None:
@@ -99,6 +130,7 @@ def test_expert_reproductive_strategy_coding_and_provenance() -> None:
             "catahoula",
             "cheaha",
             "conanti",
+            "fuscus",
             "lycos",
             "monticola",
             "ocoee",
@@ -113,15 +145,24 @@ def test_expert_reproductive_strategy_coding_and_provenance() -> None:
         },
     }
     missing = traits.loc[traits["reproductive_strategy"].eq(""), "species"]
-    assert set(missing) == {"brimleyorum", "folkertsi", "fuscus", "ochrophaeus"}
+    assert set(missing) == {"brimleyorum", "folkertsi", "ochrophaeus"}
 
     source_id = "pyron_personal_communication_reproductive_strategy"
+    fuscus_source_id = "author_curator_decision_2026_08_28_fuscus_reproductive_strategy"
     coded = traits.loc[traits["reproductive_strategy"].ne("")]
-    assert set(coded["reproductive_strategy_source_id"]) == {source_id}
+    assert set(coded["reproductive_strategy_source_id"]) == {
+        source_id,
+        fuscus_source_id,
+    }
     assert set(coded["reproductive_strategy_confidence"]) == {"high"}
-    assert coded["organismal_source_ids"].str.split(";").apply(
-        lambda source_ids: source_id in source_ids
-    ).all()
+    assert all(
+        row.reproductive_strategy_source_id in row.organismal_source_ids.split(";")
+        for row in coded.itertuples(index=False)
+    )
+    assert indexed.loc["fuscus", "reproductive_strategy_source_id"] == fuscus_source_id
+    assert "resolves the earlier planiceps-to-fuscus annotation ambiguity" in indexed.loc[
+        "fuscus", "reproductive_strategy_source_detail"
+    ]
 
     # Egg environment is not adult aquaticity: these deliberate cross-codings
     # prevent the two concepts from being collapsed later.
@@ -139,9 +180,13 @@ def test_expert_reproductive_strategy_coding_and_provenance() -> None:
         keep_default_na=False,
     ).set_index("source_id")
     assert source_id in sources.index
+    assert fuscus_source_id in sources.index
     assert sources.loc[source_id, "year"] == ""
     assert "post hoc" in sources.loc[source_id, "notes"]
     assert "Original email date not yet recorded" in sources.loc[source_id, "notes"]
+    assert sources.loc[fuscus_source_id, "source_type"] == "author_curator_decision"
+    assert sources.loc[fuscus_source_id, "tree_tip"] == "fuscus"
+    assert sources.loc[fuscus_source_id, "decision_date"] == "2026-08-28"
 
 
 def test_compact_te_inputs_reproduce_released_pca() -> None:
@@ -275,19 +320,19 @@ def test_final_pca_structure_audit_rejects_discrete_clusters_but_preserves_signa
     }
 
     strategy = traits.loc["reproductive_strategy_permanova"]
-    assert strategy["n_species"] == 33
-    assert strategy["excluded_species"] == "fuscus"
-    assert np.isclose(strategy["variance_explained_r2"], 0.262373, atol=1e-6)
+    assert strategy["n_species"] == 34
+    assert strategy["excluded_species"] == "none"
+    assert np.isclose(strategy["variance_explained_r2"], 0.260102, atol=1e-6)
     assert strategy["p_value"] == 0.00001
     assert traits.loc["reproductive_strategy_permdisp", "p_value"] > 0.05
     assert traits.loc["size_adjusted_model_reproductive_strategy", "p_value"] == 0.00001
     assert traits.loc["max_svl_log10_permanova", "n_species"] == 34
     assert traits.loc["max_svl_log10_permanova", "excluded_species"] == "none"
-    assert traits.loc["size_adjusted_model_log10_max_svl_mm", "n_species"] == 33
-    assert traits.loc["size_adjusted_model_log10_max_svl_mm", "excluded_species"] == "fuscus"
+    assert traits.loc["size_adjusted_model_log10_max_svl_mm", "n_species"] == 34
+    assert traits.loc["size_adjusted_model_log10_max_svl_mm", "excluded_species"] == "none"
     assert traits.loc["size_adjusted_model_log10_max_svl_mm", "p_value"] > 0.05
-    assert traits.loc["size_adjusted_model_reproductive_strategy", "n_species"] == 33
-    assert traits.loc["size_adjusted_model_reproductive_strategy", "excluded_species"] == "fuscus"
+    assert traits.loc["size_adjusted_model_reproductive_strategy", "n_species"] == 34
+    assert traits.loc["size_adjusted_model_reproductive_strategy", "excluded_species"] == "none"
     assert (
         traits.loc["rejected_k2_reproductive_strategy_ari", "statistic"] > 0.8
     )
@@ -299,22 +344,23 @@ def test_final_pca_structure_audit_rejects_discrete_clusters_but_preserves_signa
     assert phylogeny.loc["first_2_pc_k2_patristic_separation", "p_value"] > 0.05
 
 
-def test_pairwise_release_uses_relative_iod_scale() -> None:
+def test_pairwise_release_uses_conditional_genome_size_scale() -> None:
     traits = pd.read_csv(ROOT / "analyses/03_phylogenetic_path/data/path24_traits.csv")
     pairwise = pd.read_csv(ROOT / "analyses/03_phylogenetic_path/data/pairwise_pgls.csv")
-    iod_rows = pairwise.loc[pairwise["left_metric"].eq("relative_iod_index")]
-    assert set(iod_rows["comparison"]) == {
-        "relative_iod_vs_nucleus_area",
-        "relative_iod_vs_cell_area",
+    genome_rows = pairwise.loc[
+        pairwise["left_metric"].eq("genome_size_pg_fuscus_anchored")
+    ]
+    assert set(genome_rows["comparison"]) == {
+        "genome_size_vs_nucleus_area",
+        "genome_size_vs_cell_area",
     }
-    assert (
-        not pairwise.astype(str)
-        .apply(lambda column: column.str.contains("genome_size", regex=False).any())
-        .any()
-    )
+    assert "relative_iod_index" not in traits.columns
+    assert not pairwise.astype(str).apply(
+        lambda column: column.str.contains("relative_iod", regex=False).any()
+    ).any()
     np.testing.assert_allclose(
-        iod_rows["predictor_log10_mean"],
-        np.log10(traits["relative_iod_index"]).mean(),
+        genome_rows["predictor_log10_mean"],
+        np.log10(traits["genome_size_pg_fuscus_anchored"]).mean(),
         atol=5e-9,
     )
 

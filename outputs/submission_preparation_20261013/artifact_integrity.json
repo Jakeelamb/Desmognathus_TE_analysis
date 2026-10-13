@@ -1,0 +1,11 @@
+{
+  "recorded_at": "2026-10-13T16:16:52.938838+00:00",
+  "status": "PASS",
+  "protected_figure_files_unchanged": 614,
+  "package_manifest_entries_verified": 26,
+  "selected_inventory_entries": 34,
+  "target_images_in_mapping_template": 51,
+  "designated_standards_in_mapping_template": 2,
+  "scientific_models_refitted": false,
+  "qualification": "artifact integrity and local inventory; submission readiness remains open"
+}

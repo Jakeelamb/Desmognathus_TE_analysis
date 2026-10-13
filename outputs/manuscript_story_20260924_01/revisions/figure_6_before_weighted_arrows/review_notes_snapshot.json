@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "notes": {
+    "figure-2": {
+      "text": "",
+      "title": "Figure 2 — Contrasting repeat-divergence profiles — full collage",
+      "revision": 2,
+      "updated_at": "2026-09-25T00:41:15.566398+00:00"
+    },
+    "table-1": {
+      "text": "",
+      "title": "Table 1 — Data coverage and measurement units",
+      "revision": 2,
+      "updated_at": "2026-09-25T00:41:16.222122+00:00"
+    },
+    "figure-6": {
+      "text": "",
+      "title": "Figure 6 — Path analysis of genome size, cell area and nucleus area — full collage",
+      "revision": 2,
+      "updated_at": "2026-09-25T01:57:35.970882+00:00"
+    }
+  }
+}

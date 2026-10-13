@@ -1,0 +1,134 @@
+{
+  "analysis_id": "te34_bonsai_vs_pca_exploratory_v1",
+  "analysis_date": "2026-08-25",
+  "analysis_status": "exploratory_method_comparison_with_validated_publication_representation",
+  "source": {
+    "request_post": "https://x.com/bravo_abad/status/2091911661183451532",
+    "paper_doi": "10.1038/s41587-026-03220-2",
+    "paper_title": "Bonsai reconstructs tree representations for distortion-free visualization and exploration of high-dimensional data",
+    "upstream_repository": "https://github.com/dhdegroot/Bonsai-data-representation",
+    "upstream_commit": "b16ef6f0a164610327022c7d0b92de82b3596aad",
+    "upstream_license": "CC-BY-NC-4.0"
+  },
+  "inputs": {
+    "te34_panel": {
+      "path": "data/identity/te34_panel.csv",
+      "sha256": "115776aa7c18446b31d5d9e6ae3f35274e9ab0380c844a23454f8b9e9a43f60a"
+    },
+    "superfamily_clr": {
+      "path": "analyses/01_transposable_elements/data/te_pca_clr_matrix.csv",
+      "sha256": "c58a7cc71ed4306544e81397007cd3f8b348e6df4fce54066e0f2f748f52ff39"
+    },
+    "pca_scores": {
+      "path": "analyses/01_transposable_elements/data/te_pca_scores.csv",
+      "sha256": "baa282fbe82ea825fde1ef83d345db802509992b8e5241ea21eb93fd4dab5795"
+    },
+    "organismal_traits": {
+      "path": "analyses/03_phylogenetic_path/data/organismal_traits.csv",
+      "sha256": "3dedc64a53d1c08e7278d2954c173672362fe459848298372911a3a89f278822"
+    },
+    "bonsai_tree": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_tree.nwk",
+      "sha256": "544bc3bc6c318eb2c0e58d700d19aba553a1d12f774fe0c4b7b969a3326715d0"
+    },
+    "bonsai_metadata": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_upstream_metadata.csv",
+      "sha256": "53021c7fe6362922790104608b0b706ee4fcf644fdaef9c4e57668a1d790789b"
+    },
+    "comparison_script": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/compare_bonsai_to_pca.py",
+      "sha256": "4f40d19f10c0d9159b5ac27a84408fb9d326f8f8dd09650349995b9a127f5f56"
+    },
+    "plot_script": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/plot_bonsai_comparison.R",
+      "sha256": "86bc603ea6016adfdac8574391ca611b3157e1d4a8aedb35d8c490acff594c1a"
+    },
+    "upstream_runner": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/run_upstream_bonsai.sh",
+      "sha256": "46241fa95d7675e6d8030c36024bb624847221b9a8c0b69d6f70b8986e4729dd"
+    },
+    "python_project": {
+      "path": "pyproject.toml",
+      "sha256": "90033d39fb6183771c263af20dc3c51634d293494ae20264969ebbe5a7dbc848"
+    },
+    "python_lock": {
+      "path": "uv.lock",
+      "sha256": "90823ad81675820db9c306d03d27fa4323877b6c09abaeb9213d5bdcfd767723"
+    }
+  },
+  "method_adaptation": {
+    "objects": "34 TE34 species",
+    "features": "24 superfamilies positive in every TE34 species",
+    "feature_values": "canonical classified-conditional CLR values",
+    "measurement_standard_deviations": null,
+    "measurement_uncertainty_treatment": "omitted; upstream assumes a very small error bar",
+    "input_is_sanity_output": false,
+    "zscore_cutoff": -1,
+    "rescale_by_var": false,
+    "rescale_reason": "preserve the same unscaled CLR/Aitchison geometry used by the canonical PCA",
+    "use_knn": -1,
+    "use_knn_reason": "exact all-pairs candidate search is tractable for 34 species",
+    "nnn_n_randommoves": 1000,
+    "nnn_n_randomtrees": 10,
+    "UB_ellipsoid_size": 1.0
+  },
+  "distance_fidelity": {
+    "source_distance": "squared Euclidean distance in the 24-feature CLR matrix",
+    "pca_distance": "squared Euclidean distance in the stated PC score subspace",
+    "bonsai_distance": "sum of fitted diffusion-time branch lengths along the tree path",
+    "primary_summary": "Pearson correlation across distances from each species to the other 33 species",
+    "secondary_summaries": [
+      "global pairwise Pearson correlation",
+      "five-nearest-neighbor recall",
+      "normalized least-squares stress after one global scale factor"
+    ],
+    "maximum_full_pca_squared_distance_difference": 1.9539925233402755e-14
+  },
+  "upstream_run": {
+    "n_features": 24,
+    "n_species": 34,
+    "reconstruction_seconds_reported_by_bonsai": 157.38645911216736,
+    "zscore_cutoff": -1.0,
+    "cores_reported_by_bonsai": 1,
+    "final_log_likelihood": -293.6583205624518
+  },
+  "tree_diagnostics": {
+    "tips": 34,
+    "zero_length_branches": 6,
+    "bootstrap_or_measurement_error_sensitivity": "not part of this fit; see the companion bounded feature-bootstrap strategy validation"
+  },
+  "results": {
+    "pca_2d": {
+      "global_distance_pearson_r": 0.9182000979764047,
+      "median_species_distance_pearson_r": 0.9132841440439032,
+      "mean_five_neighbor_recall": 0.488235294117647,
+      "normalized_stress_after_scale": 0.39653070651440886
+    },
+    "pca_6d": {
+      "global_distance_pearson_r": 0.9944249053113272,
+      "median_species_distance_pearson_r": 0.9938288533057403,
+      "mean_five_neighbor_recall": 0.823529411764706,
+      "normalized_stress_after_scale": 0.09862748101594887
+    },
+    "pca_full_23d": {
+      "global_distance_pearson_r": 1.0,
+      "median_species_distance_pearson_r": 1.0,
+      "mean_five_neighbor_recall": 1.0,
+      "normalized_stress_after_scale": 9.503163808634592e-16
+    },
+    "bonsai_tree": {
+      "global_distance_pearson_r": 0.8808066686378608,
+      "median_species_distance_pearson_r": 0.8751324130695077,
+      "mean_five_neighbor_recall": 0.723529411764706,
+      "normalized_stress_after_scale": 0.2777024997368977
+    }
+  },
+  "interpretation_boundaries": [
+    "The Bonsai tree is a representation of TE-composition similarity, not an inferred species phylogeny.",
+    "This 34-species use is far smaller than the single-cell applications emphasized by the paper.",
+    "No defensible per-species feature-error matrix exists, so the run does not exercise Bonsai's uncertainty model.",
+    "The direct visual comparison is Bonsai versus PC1-PC2; all 23 PCs remain the exact distance-preserving PCA control.",
+    "A companion 200-replicate feature-resampling analysis measures topology sensitivity but is not a biological-specimen bootstrap.",
+    "The method comparison remains exploratory and does not alter canonical PCA files; compact validated Bonsai outputs are promoted separately to the controlled publication release."
+  ]
+}

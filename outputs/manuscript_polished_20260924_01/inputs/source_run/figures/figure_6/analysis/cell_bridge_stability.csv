@@ -1,0 +1,9 @@
+analysis,model,n_fits,top_count,top_rate,admissible_competitive_count,admissible_competitive_rate,path_trait_definition,order,y,label,count_label,top_percent
+measurement_bootstrap_primary,cell_bridge,250,246,0.984,250,1,conditional_fuscus_assembly_anchored_genome_size_pg_1c; iod_derived_not_measured_c_value,1,4,"Measurement resampling
+24 species",246/250,98.4
+leave_one_species_out_24,cell_bridge,24,24,1,24,1,conditional_fuscus_assembly_anchored_genome_size_pg_1c; iod_derived_not_measured_c_value,2,3,"Leave one species out
+23 species per fit",24/24,100
+evolutionary_model_choice_primary,cell_bridge,4,4,1,4,1,conditional_fuscus_assembly_anchored_genome_size_pg_1c; iod_derived_not_measured_c_value,3,2,"Evolution models
+24 species",4/4,100
+published_bootstrap_trees_18,cell_bridge,200,200,1,200,1,conditional_fuscus_assembly_anchored_genome_size_pg_1c; iod_derived_not_measured_c_value,4,1,"Published trees
+18 species",200/200,100

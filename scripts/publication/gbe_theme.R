@@ -1,6 +1,7 @@
-# Shared Genome Biology and Evolution figure style for this project. The panel
-# grammar and palette follow the supplied salamander-genome reference, while the
-# journal-facing sans-serif typography and redundant shapes/linetypes remain.
+# Shared Genome Biology and Evolution figure style for this project.
+# Arial, restrained colour, and minimal framing are shared across figures.
+# The 88/180-mm widths and lower-case panel labels are project conventions;
+# GBE requires labels of at least 6 pt, and our working minimum is 7 pt.
 
 suppressPackageStartupMessages({
   library(ggplot2)
@@ -8,33 +9,47 @@ suppressPackageStartupMessages({
 })
 
 GBE_FONT <- "Arial"
-GBE_FALLBACK_FONT <- "Nimbus Sans"
 GBE_BASE_SIZE <- 8
 GBE_MIN_TEXT_PT <- 7
 GBE_LABEL_SIZE_MM <- GBE_MIN_TEXT_PT / ggplot2::.pt
-GBE_SINGLE_COLUMN_MM <- 89
-GBE_DOUBLE_COLUMN_MM <- 185
+GBE_LINE_MM <- 1 / ggplot2::.pt
+GBE_SINGLE_COLUMN_MM <- 88
+GBE_DOUBLE_COLUMN_MM <- 180
 
 GBE_COLORS <- c(
-  blue = "#00BFC4",
-  orange = "#F8766D",
-  green = "#35B779",
-  vermillion = "#C44E52",
-  sky = "#31688E",
-  purple = "#440154",
-  yellow = "#FDE725",
-  charcoal = "#1A1A1A",
-  gray = "#767676",
-  light_gray = "#D6D6D6"
+  blue = "#0072B2",
+  orange = "#E69F00",
+  green = "#009E73",
+  vermillion = "#D55E00",
+  sky = "#56B4E9",
+  purple = "#6A3D9A",
+  yellow = "#F0E442",
+  charcoal = "#222222",
+  gray = "#6F6F6F",
+  light_gray = "#D9D9D9"
+)
+
+# Named biological mappings remain stable when figures use different subsets.
+GBE_TE_ORDER_COLORS <- c(
+  LTR = "#6A3D9A", LINE = "#0072B2", TIR = "#009E73", Other = "#D9D9D9"
+)
+GBE_TE_SUPERFAMILY_COLORS <- c(
+  Gypsy = "#440154", hAT = "#482878", L2 = "#3E4989", DIRS = "#31678E",
+  L1 = "#26828E", `PIF-Harbinger` = "#1E9C89", Mutator = "#33B67A",
+  `Tc1-mariner` = "#68CC5C", CACTA = "#AEDC30"
 )
 
 resolve_gbe_font <- function() {
-  installed <- tryCatch(systemfonts::system_fonts()$family, error = function(e) character())
-  if (GBE_FONT %in% installed) return(GBE_FONT)
-  if (GBE_FALLBACK_FONT %in% installed) return(GBE_FALLBACK_FONT)
-  if ("Helvetica" %in% installed) return("Helvetica")
-  if ("Liberation Sans" %in% installed) return("Liberation Sans")
-  "sans"
+  installed <- systemfonts::system_fonts()$family
+  if (!GBE_FONT %in% installed) {
+    stop(
+      "Arial is required for GBE figures. Install Arial (regular, bold, italic, ",
+      "and bold italic), refresh the font cache, and restart R; font substitution ",
+      "is not permitted.",
+      call. = FALSE
+    )
+  }
+  GBE_FONT
 }
 
 theme_gbe <- function(base_size = GBE_BASE_SIZE, base_family = resolve_gbe_font()) {
@@ -42,22 +57,37 @@ theme_gbe <- function(base_size = GBE_BASE_SIZE, base_family = resolve_gbe_font(
     theme(
       text = element_text(colour = GBE_COLORS[["charcoal"]]),
       axis.title = element_text(size = base_size, face = "plain"),
-      axis.text = element_text(size = base_size - 0.5, colour = GBE_COLORS[["charcoal"]]),
-      axis.line = element_blank(),
-      axis.ticks = element_line(linewidth = 0.3, colour = GBE_COLORS[["charcoal"]]),
-      axis.ticks.length = grid::unit(1.5, "mm"),
+      axis.text = element_text(
+        size = base_size - 0.5,
+        colour = GBE_COLORS[["charcoal"]],
+        lineheight = 0.95
+      ),
+      axis.line = element_line(
+        linewidth = GBE_LINE_MM,
+        colour = GBE_COLORS[["charcoal"]]
+      ),
+      axis.ticks = element_line(
+        linewidth = GBE_LINE_MM,
+        colour = GBE_COLORS[["charcoal"]]
+      ),
+      axis.ticks.length = grid::unit(1, "mm"),
       panel.background = element_rect(fill = "white", colour = NA),
-      panel.border = element_rect(fill = NA, linewidth = 0.4, colour = GBE_COLORS[["charcoal"]]),
+      panel.border = element_blank(),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
       panel.spacing = grid::unit(5, "pt"),
-      strip.background = element_rect(fill = "white", linewidth = 0.35, colour = GBE_COLORS[["charcoal"]]),
-      strip.text = element_text(size = base_size, face = "bold", hjust = 0.5),
+      strip.background = element_rect(fill = "#F4F4F4", colour = NA),
+      strip.text = element_text(
+        size = base_size,
+        face = "bold",
+        hjust = 0.5,
+        margin = margin(2, 2, 2, 2, unit = "pt")
+      ),
       plot.title = element_blank(),
       plot.subtitle = element_blank(),
       plot.caption = element_text(size = base_size - 1, hjust = 0, colour = GBE_COLORS[["gray"]]),
       plot.tag = element_text(size = base_size + 1, face = "bold"),
-      plot.tag.position = c(0, 1),
+      plot.tag.position = c(0.005, 0.995),
       legend.position = "bottom",
       legend.justification = "left",
       legend.box.just = "left",
@@ -70,6 +100,22 @@ theme_gbe <- function(base_size = GBE_BASE_SIZE, base_family = resolve_gbe_font(
       plot.background = element_rect(fill = "white", colour = NA),
       plot.margin = margin(3, 4, 3, 4, unit = "pt")
     )
+}
+
+theme_gbe_framed_facets <- function() {
+  theme(
+    axis.line = element_blank(),
+    panel.border = element_rect(
+      fill = NA,
+      linewidth = GBE_LINE_MM,
+      colour = GBE_COLORS[["charcoal"]]
+    ),
+    strip.background = element_rect(
+      fill = "#F4F4F4",
+      linewidth = GBE_LINE_MM,
+      colour = GBE_COLORS[["charcoal"]]
+    )
+  )
 }
 
 scale_color_gbe <- function(..., values = unname(GBE_COLORS[c("purple", "sky", "blue", "green", "yellow", "orange")])) {
@@ -86,10 +132,9 @@ save_gbe_figure <- function(plot, basename, width_mm = GBE_DOUBLE_COLUMN_MM, hei
   height_in <- height_mm / 25.4
   family <- resolve_gbe_font()
 
-  rgb_pdf <- paste0(basename, ".rgb.pdf")
   final_pdf <- paste0(basename, ".pdf")
   grDevices::cairo_pdf(
-    rgb_pdf,
+    final_pdf,
     width = width_in,
     height = height_in,
     family = family,
@@ -97,16 +142,6 @@ save_gbe_figure <- function(plot, basename, width_mm = GBE_DOUBLE_COLUMN_MM, hei
   )
   print(plot)
   grDevices::dev.off()
-
-  ghostscript_args <- c(
-    "-dSAFER", "-dBATCH", "-dNOPAUSE", "-sDEVICE=pdfwrite",
-    "-dPDFSETTINGS=/prepress", "-dEmbedAllFonts=true",
-    "-sProcessColorModel=DeviceCMYK", "-sColorConversionStrategy=CMYK",
-    paste0("-sOutputFile=", final_pdf), rgb_pdf
-  )
-  status <- system2("gs", ghostscript_args, stdout = FALSE, stderr = FALSE)
-  if (status != 0L || !file.exists(final_pdf)) stop("Ghostscript CMYK PDF conversion failed")
-  unlink(rgb_pdf)
 
   png_path <- paste0(basename, ".png")
   ghostscript_png_args <- c(
@@ -118,16 +153,13 @@ save_gbe_figure <- function(plot, basename, width_mm = GBE_DOUBLE_COLUMN_MM, hei
   if (status != 0L || !file.exists(png_path)) stop("Ghostscript PNG rendering failed")
 
   tiff_path <- paste0(basename, ".tif")
-  status <- system2(
-    "magick",
-    c(
-      png_path, "-colorspace", "CMYK", "-units", "PixelsPerInch",
-      "-density", as.character(dpi), "-compress", "LZW", tiff_path
-    ),
-    stdout = FALSE,
-    stderr = FALSE
+  ghostscript_tiff_args <- c(
+    "-dSAFER", "-dBATCH", "-dNOPAUSE", "-sDEVICE=tiff32nc",
+    "-sCompression=lzw", paste0("-r", dpi),
+    paste0("-sOutputFile=", tiff_path), final_pdf
   )
-  if (status != 0L || !file.exists(tiff_path)) stop("ImageMagick CMYK TIFF conversion failed")
+  status <- system2("gs", ghostscript_tiff_args, stdout = FALSE, stderr = FALSE)
+  if (status != 0L || !file.exists(tiff_path)) stop("Ghostscript CMYK TIFF rendering failed")
 
   invisible(c(final_pdf, png_path, tiff_path))
 }

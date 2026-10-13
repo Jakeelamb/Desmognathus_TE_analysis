@@ -1,0 +1,9 @@
+model,code,hypothesis,equivalence_key,equivalent_orientations
+body_upstream_cell,H1,SVL upstream: cell bridge,b-c;b-g;b-n;c-g;c-n / ,10
+body_upstream_nucleus,H2,SVL upstream: nucleus bridge,b-c;b-g;b-n;c-n;g-n / ,10
+body_upstream_genome,H3,SVL upstream: genome fork,b-c;b-g;b-n;c-g;g-n / ,10
+body_only,H4,SVL-only fork,b-c;b-g;b-n / ,4
+cell_body_branch,H5,Cell linked to SVL,b-c;c-g;c-n / ,4
+nucleus_cell_body_chain,H6,Nucleus–cell–SVL chain,b-c;c-n;g-n / ,4
+genome_body_branch,H7,Genome linked to SVL,b-g;c-g;c-n / ,4
+body_disconnected,H8,SVL independent,c-g;c-n / ,3

@@ -1,0 +1,20 @@
+Relationship,Analysis,Species,Estimate,Lower,Upper,Interval / test,P,Source
+Genome–cell | SVL,released; full24,24,0.5453794366911792,0.19199472956675612,0.8987641438156022,95% t coefficient interval,0.004209929990638017,Figure 9
+Cell–nucleus | SVL,released; full24,24,0.6828984337315102,0.22185317257006698,1.1439436948929533,95% t coefficient interval,0.005674414638115811,Figure 9
+Genome–nucleus | cell + SVL,released; full24,24,0.050583524821825286,-0.49892182734923707,0.6000888769928876,95% t coefficient interval,0.849663656832874,Figure 9
+Genome–cell | SVL,released; subset22,22,0.5032779775048649,0.04106613588579561,0.9654898191239343,95% t coefficient interval,0.034400410717924004,Figure 9
+Cell–nucleus | SVL,released; subset22,22,0.6271795640895969,0.14512976935909427,1.1092293588200994,95% t coefficient interval,0.013496787687815004,Figure 9
+Genome–nucleus | cell + SVL,released; subset22,22,0.03861400791073584,-0.5865692775333973,0.663797293354869,95% t coefficient interval,0.8981938227407948,Figure 9
+Genome–cell | SVL,animal_balanced; full24,24,0.5828992759947558,0.22526502233956724,0.9405335296499443,95% t coefficient interval,0.002765295623708162,Figure 9
+Cell–nucleus | SVL,animal_balanced; full24,24,0.6499106905203703,0.2674971768046433,1.0323242042360974,95% t coefficient interval,0.0019665421786026387,Figure 9
+Genome–nucleus | cell + SVL,animal_balanced; full24,24,0.1265992873869828,-0.3489655418183777,0.6021641165923433,95% t coefficient interval,0.5848473197390419,Figure 9
+Genome–cell | SVL,animal_balanced; subset22,22,0.4684185440034761,0.004280513625882054,0.9325565743810702,95% t coefficient interval,0.04812368497021951,Figure 9
+Cell–nucleus | SVL,animal_balanced; subset22,22,0.5401390797650695,0.09340936510896902,0.9868687944211699,95% t coefficient interval,0.020376853987803308,Figure 9
+Genome–nucleus | cell + SVL,animal_balanced; subset22,22,0.04341458198883755,-0.5028143453198467,0.5896435092975217,95% t coefficient interval,0.8692454121743014,Figure 9
+Cell–nucleus | SVL,250 hierarchical measurement resamples,24,0.6425785074852397,0.4004459072743815,0.8720303335750511,Central 95% measurement-sensitivity range,,Figure 9
+Genome–nucleus | cell + SVL,250 hierarchical measurement resamples,24,0.12671776718468972,-0.14784484220307736,0.47992487625031344,Central 95% measurement-sensitivity range,,Figure 9
+Genome–cell | SVL,250 hierarchical measurement resamples,24,0.49685635558072017,0.29365234712936394,0.6675914241323654,Central 95% measurement-sensitivity range,,Figure 9
+Nucleus-on-cell unstandardized log slope,released24,24,0.4500478713898247,0.17005747420514117,0.7300382685745083,95% t interval; P tests slope = 1,0.0005042092820616852,Figure 10
+Nucleus-on-cell unstandardized log slope,equal_animal24,24,0.4832388746978657,0.25657566820832084,0.7099020811874106,95% t interval; P tests slope = 1,0.00010196147865860321,Figure 10
+Nucleus-on-cell unstandardized log slope,released22,22,0.39664611126637395,0.02909637949995819,0.7641958430327898,95% t interval; P tests slope = 1,0.0026868837665341835,Figure 10
+Nucleus-on-cell unstandardized log slope,equal_animal22,22,0.41467639727734795,0.08920933970646833,0.7401434548482275,95% t interval; P tests slope = 1,0.0012571959810987817,Figure 10

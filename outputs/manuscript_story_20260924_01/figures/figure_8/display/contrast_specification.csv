@@ -1,0 +1,7 @@
+relation_id,term,relation,adjustment
+genome_to_cell,g,genome_cell,Without SVL
+genome_to_cell_body_adjusted,g,genome_cell,With SVL
+cell_to_nucleus,c,cell_nucleus,Without SVL
+cell_to_nucleus_body_adjusted,c,cell_nucleus,With SVL
+genome_and_cell_to_nucleus,g,direct_genome_nucleus,Without SVL
+genome_and_cell_to_nucleus_body_adjusted,g,direct_genome_nucleus,With SVL

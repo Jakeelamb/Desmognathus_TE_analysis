@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "notes": {
+    "figure-8-e": {
+      "text": "Many of these boxes are empty and dont provide any valuable information also only 6 species are shown. ",
+      "title": "Figure 8e — Repeat divergence profiles",
+      "revision": 6,
+      "updated_at": "2026-09-18T01:08:55.442552+00:00"
+    },
+    "figure-8-d": {
+      "text": "Many of these boxes are empty and dont provide any valuable information also only 6 species are shown. ",
+      "title": "Figure 8d — Repeat-order fractions",
+      "revision": 1,
+      "updated_at": "2026-09-18T01:09:03.713026+00:00"
+    },
+    "figure-8-c": {
+      "text": "only 6 species are shown. ",
+      "title": "Figure 8c — Repeat-hit composition",
+      "revision": 2,
+      "updated_at": "2026-09-18T01:09:22.014657+00:00"
+    },
+    "figure-8-b": {
+      "text": "only 6 species are shown. ",
+      "title": "Figure 8b — Conditional genome size",
+      "revision": 1,
+      "updated_at": "2026-09-18T01:09:29.720768+00:00"
+    },
+    "figure-8-a": {
+      "text": "only 6 species are shown. ",
+      "title": "Figure 8a — Six representative species",
+      "revision": 1,
+      "updated_at": "2026-09-18T01:09:38.064515+00:00"
+    },
+    "figure-8": {
+      "text": "only 6 species are shown. ",
+      "title": "Figure 8 — Wang-style integrated TE content and proliferation candidate — full collage",
+      "revision": 1,
+      "updated_at": "2026-09-18T01:09:42.036021+00:00"
+    },
+    "figure-10-b": {
+      "text": "This seems redundant and we could convey this information without a figure and just in the figure caption",
+      "title": "Figure 10b — Development mode",
+      "revision": 6,
+      "updated_at": "2026-09-18T01:22:29.265069+00:00"
+    },
+    "figure-10-c": {
+      "text": "I think the max and min could be reduced and right now its really hard to tell the genome sizes, more labels and smaller excess range\n",
+      "title": "Figure 10c — Conditional genome size",
+      "revision": 10,
+      "updated_at": "2026-09-18T01:23:15.353243+00:00"
+    },
+    "figure-10-d": {
+      "text": "I think the max and min could be reduced and right now its really hard to tell the genome sizes, more labels and smaller excess range",
+      "title": "Figure 10d — Reviewed nucleus area",
+      "revision": 3,
+      "updated_at": "2026-09-18T01:23:33.496162+00:00"
+    },
+    "figure-10-e": {
+      "text": "I think the max and min could be reduced and right now its really hard to tell the genome sizes, more labels and smaller excess range",
+      "title": "Figure 10e — Reviewed cell area",
+      "revision": 1,
+      "updated_at": "2026-09-18T01:23:39.826818+00:00"
+    },
+    "figure-11": {
+      "text": "Remove the no directed paths text from independent DAG",
+      "title": "Figure 11 — Path DAG equivalence-class reference — full collage",
+      "revision": 5,
+      "updated_at": "2026-09-18T01:24:09.108733+00:00"
+    },
+    "figure-11-a": {
+      "text": "Remove No directed paths text from this figure",
+      "title": "Figure 11a — Independent",
+      "revision": 5,
+      "updated_at": "2026-09-18T01:24:30.628036+00:00"
+    },
+    "figure-1-b": {
+      "text": "It is really hard to tell what the genome size is for each of the species, also  I think the changing symbols is bad and should be removed. \n",
+      "title": "Figure 1b — Conditional genome size",
+      "revision": 7,
+      "updated_at": "2026-09-18T01:26:26.627842+00:00"
+    },
+    "figure-1-c": {
+      "text": "What software generated this i am confused how to interpret this",
+      "title": "Figure 1c — Broad TE composition",
+      "revision": 5,
+      "updated_at": "2026-09-23T23:42:47.771060+00:00"
+    },
+    "figure-3": {
+      "text": "This i think is actually a really interesting figure and we should highlight this. ",
+      "title": "Figure 3 — Repeat divergence across 34 species — full collage",
+      "revision": 2,
+      "updated_at": "2026-09-23T23:44:29.395791+00:00"
+    },
+    "figure-4-b": {
+      "text": "i am wondering if we can get better axis labels and descriptions with genome size like this: ",
+      "title": "Figure 4b — LTR terminal-to-internal depth",
+      "revision": 3,
+      "updated_at": "2026-09-23T23:46:43.790164+00:00"
+    },
+    "figure-6": {
+      "text": "I dont like the word \"conditional\" i would rather just have Genome size\n",
+      "title": "Figure 6 — Conditional genome size and cellular associations — full collage",
+      "revision": 5,
+      "updated_at": "2026-09-23T23:49:47.078353+00:00"
+    }
+  }
+}

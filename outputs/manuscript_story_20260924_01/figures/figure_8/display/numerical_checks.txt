@@ -1,0 +1,6 @@
+PASS: all four input SHA256 digests unchanged after rendering; no model refitted by this script.
+PASS: eight candidate rows identify exactly four candidates in each of two species panels; weights sum to one separately.
+PASS: the displayed network is selected from the first-ranked full24 candidate, retaining every matching structural edge.
+PASS: all displayed network and contrast intervals match coefficient +/- qt(.975,residual_df)*SE.
+PASS: 12 contrast rows contain paired SVL adjustments for three focal associations in the full24 and subset22 panels.
+PASS: all source-matched sample sizes are 24 or 22 as specified; original figures, inputs and notes are untouched.

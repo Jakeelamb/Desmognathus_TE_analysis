@@ -1,0 +1,5 @@
+endpoint,comparison,svl_adjusted,alternative_logLik,null_logLik,likelihood_ratio,df,p_value,n_species,test
+within_ltr,strategy vs null,FALSE,14.911147446758562,7.011897102861454,15.798500687794217,2,3.710215748188575e-4,34,Exploratory approximate chi-square ML likelihood-ratio test; lambda separately fitted
+within_ltr,strategy_body vs body,TRUE,14.911166731908324,7.4379164763216465,14.946500511173355,2,5.680788913950969e-4,34,Exploratory approximate chi-square ML likelihood-ratio test; lambda separately fitted
+all_hit,strategy vs null,FALSE,17.069378500795665,6.630997727243837,20.876761547103655,2,2.928659153278391e-5,34,Exploratory approximate chi-square ML likelihood-ratio test; lambda separately fitted
+all_hit,strategy_body vs body,TRUE,17.121269626690108,7.290687686115632,19.66116388114895,2,5.378145028056396e-5,34,Exploratory approximate chi-square ML likelihood-ratio test; lambda separately fitted

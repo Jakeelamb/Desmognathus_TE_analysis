@@ -9,9 +9,13 @@ SUPPLEMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
         "analyses/02_morphology/validate_release.py",
         "analyses/02_morphology/provenance/iod_source_manifest.json",
     ),
+    "S04": (
+        "analyses/02_morphology/data/relative_nuclear_iod_species.csv",
+        "analyses/02_morphology/provenance/iod_source_manifest.json",
+    ),
     "S08": (
-        "analyses/01_transposable_elements/data/te_order_composition.csv",
         "analyses/01_transposable_elements/data/te_superfamily_composition.csv",
+        "analyses/01_transposable_elements/recompute_pca.py",
     ),
     "S14": (
         "analyses/01_transposable_elements/recompute_ltr_release.py",
@@ -54,12 +58,56 @@ SUPPLEMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
         "analyses/02_morphology/data/nuclear_iod_objects.csv",
         "analyses/02_morphology/provenance/iod_source_manifest.json",
     ),
+    **{
+        supplement_id: (
+            "analyses/03_phylogenetic_path/data/path24_traits.csv",
+            "analyses/03_phylogenetic_path/run_path_analysis.R",
+            "analyses/02_morphology/data/relative_nuclear_iod_species.csv",
+            "analyses/02_morphology/provenance/iod_source_manifest.json",
+        )
+        for supplement_id in (
+            "S26",
+            "S27",
+            "S28",
+            "S29",
+            "S30",
+            "S31",
+            "S32",
+            "S33",
+            "S34",
+            "S35",
+            "S36",
+            "S37",
+        )
+    },
     "S40": (
         "data/identity/te34_panel.csv",
         "data/identity/path24_panel.csv",
         "analyses/01_transposable_elements/data/te_diversity.csv",
         "analyses/02_morphology/data/relative_nuclear_iod_species.csv",
+        "analyses/02_morphology/provenance/iod_source_manifest.json",
         "data/identity/species_taxonomy_crosswalk.csv",
+    ),
+    "S41": (
+        "analyses/01_transposable_elements/data/wang2025_figure2_te_diversity.csv",
+        "analyses/01_transposable_elements/data/wang2025_figure2_te_diversity.provenance.json",
+        "analyses/01_transposable_elements/build_cross_study_diversity.py",
+        "analyses/01_transposable_elements/data/te_diversity.csv",
+        "analyses/02_morphology/data/relative_nuclear_iod_species.csv",
+        "data/identity/te34_panel.csv",
+        "data/identity/path24_panel.csv",
+    ),
+    "S42": (
+        "data/identity/te34_panel.csv",
+        "analyses/03_phylogenetic_path/data/organismal_traits.csv",
+        "analyses/01_transposable_elements/bonsai_comparison/validate_strategy_localization.py",
+        "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_strategy_validation_manifest.json",
+    ),
+    "S43": (
+        "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_strategy_label_permutation_tests.csv",
+        "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_feature_bootstrap_strategy_stability.csv",
+        "analyses/01_transposable_elements/bonsai_comparison/validate_strategy_localization.py",
+        "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_strategy_validation_manifest.json",
     ),
 }
 
@@ -77,18 +125,28 @@ SUPPLEMENT_METADATA: dict[str, dict[str, str]] = {
             "calibrated absolute genome size."
         ),
     },
-    "S08": {
+    "S04": {
+        "title": "Finalized Path24 conditional genome-size traits",
         "description": (
-            "A 68-row, five-column classified-only diversity table: 34 order-level and "
-            "34 superfamily-level species summaries, each calculated after classified "
-            "categories were reclosed to one."
+            "Conditional D. fuscus assembly-anchored genome size in pg/1C, nucleus area, "
+            "cell area, and support counts for all 24 finalized species."
         ),
         "manuscript_use": (
-            "Order-level Shannon entropy and the Gini-Simpson index are the primary "
-            "paper-facing diversity endpoints. Superfamily rows are sensitivity/audit "
-            "summaries, and observed richness is an audit/support count. Unresolved "
-            "aligned-base mass is excluded from diversity and remains only in S06-S07 "
-            "dnaPipeTE quality-control tables."
+            "Primary three-trait input. Genome size is the default analysis trait but is "
+            "IOD-derived and assembly-anchored, not an independent assay or measured C-value."
+        ),
+    },
+    "S08": {
+        "description": (
+            "A 34-row, four-column Wang-style TE-diversity table. For each species, the "
+            "ten most abundant positive classified superfamilies were selected, reclosed "
+            "to one, and summarized with natural-log Shannon and Gini-Simpson indices."
+        ),
+        "manuscript_use": (
+            "Canonical paper-facing Shannon entropy and Gini-Simpson endpoints, matched "
+            "to the Wang et al. top-10-superfamily scope. The species-specific top ten "
+            "are explicitly reclosed in this study; Wang et al. did not document that "
+            "normalization detail. Unresolved aligned-base mass remains only in S06-S07 QC."
         ),
     },
     "S14": {
@@ -128,17 +186,27 @@ SUPPLEMENT_METADATA: dict[str, dict[str, str]] = {
             "animals and images and are not population-level uncertainty."
         ),
     },
-    "S22": {
+    "S21": {
         "description": (
-            "Equal-image means of within-image median nuclear IOD, the primary Path24-median "
-            "relative index, and a clearly separated conditional D. fuscus scale derived "
-            "from the author-selected rounded 16.1-Gbp pooled assembly span at 0.978 Gbp "
-            "per pg."
+            "All 805 reviewed nuclei retained across the 24-species image-quality-matched "
+            "panel as the object-level IOD measurement and calibration substrate."
         ),
         "manuscript_use": (
-            "Relative IOD is primary. Picogram fields are conditional assembly-derived "
-            "sensitivity values, not a measured C-value; their intervals exclude uncertainty "
-            "in the chosen assembly anchor and do not make the assay absolute."
+            "Object-level IOD measurement and calibration audit; not a separate downstream "
+            "relative-IOD analysis branch."
+        ),
+    },
+    "S22": {
+        "description": (
+            "Equal-image means of within-image median nuclear IOD, the retained Path24-median "
+            "relative audit index, and the conditional D. fuscus genome-size scale used by "
+            "downstream analyses, derived from the selected rounded 16.1-Gbp pooled assembly "
+            "span at 0.978 Gbp per pg."
+        ),
+        "manuscript_use": (
+            "IOD fields retain measurement and calibration provenance. Conditional picogram "
+            "fields supply the default downstream genome-size trait, but are not a measured "
+            "C-value; their intervals exclude uncertainty in the chosen assembly anchor."
         ),
     },
     "S23": {
@@ -147,31 +215,201 @@ SUPPLEMENT_METADATA: dict[str, dict[str, str]] = {
             "Unnormalized image-specific nuclear-IOD summaries used to construct and audit "
             "the equal-image species estimator."
         ),
-        "manuscript_use": "Image-level assay and aggregation audit; values are not ratios.",
+        "manuscript_use": (
+            "Image-level IOD measurement and aggregation audit; values are neither ratios nor "
+            "independent genome-size measurements."
+        ),
     },
     "S24": {
         "description": (
             "Species-level support and balance against the apalachicolae quality template; "
             "the declared gate is absolute SMD <= 0.10 and KS distance <= 0.25."
         ),
+        "manuscript_use": "Underlying IOD support and image-quality audit for genome-size use.",
     },
     "S25": {
         "description": (
             "Within-species-centered associations between image-quality features and log "
             "nuclear IOD, retained as descriptive confounding diagnostics."
         ),
+        "manuscript_use": "Underlying IOD assay-quality audit for genome-size use.",
     },
-    "S40": {
+    "S26": {
+        "title": "Conditional genome-size pairwise PGLS sensitivity",
         "description": (
-            "Exact 21-species TE34-by-Path24 overlap joining classified-superfamily "
-            "observed-richness audit metadata, Shannon entropy, and the Gini-Simpson "
-            "index to the relative image-derived nuclear-IOD index and conditional "
-            "intervals."
+            "Raw correlations and Pagel-lambda PGLS fits among conditional D. fuscus "
+            "assembly-anchored genome size, nucleus area, and cell area."
         ),
         "manuscript_use": (
-            "Descriptive integrated sensitivity table only; observed richness is an "
-            "audit/support count, and relative IOD is not an independently validated "
-            "absolute genome-size measurement."
+            "Conditional genome-size association sensitivity; the trait is IOD-derived and "
+            "not an independent genome-size assay."
+        ),
+    },
+    "S27": {
+        "title": "Standardized Path24 conditional genome-size traits",
+        "description": (
+            "Log10-transformed and standardized conditional genome size, nucleus area, and "
+            "cell area for the 24-species primary fit."
+        ),
+        "manuscript_use": (
+            "Primary path-analysis trait matrix on the conditional D. fuscus assembly-anchored "
+            "genome-size scale; not an independent assay."
+        ),
+    },
+    "S28": {
+        "title": "Pairwise conditional-genome-size phylogenetic regressions",
+        "description": (
+            "Scale-invariant pairwise phylogenetic regressions among conditional genome size, "
+            "nucleus area, and cell area."
+        ),
+        "manuscript_use": (
+            "Exploratory associations on the IOD-derived conditional genome-size scale."
+        ),
+    },
+    "S29": {
+        "title": "Conditional genome-size evolutionary-model sensitivity",
+        "description": (
+            "Conditional genome-size path-model rankings under the declared phylogenetic "
+            "evolutionary models."
+        ),
+        "manuscript_use": (
+            "Evolutionary-model sensitivity audit; genome size is assembly-anchored and "
+            "IOD-derived rather than independently assayed."
+        ),
+    },
+    "S30": {
+        "title": "Conditional genome-size path-model comparison",
+        "description": (
+            "Global fit, CICc, delta, and weights for the finalized 24-species conditional "
+            "genome-size analysis."
+        ),
+        "manuscript_use": (
+            "Exploratory association structures only; conditional genome size is not an "
+            "independent assay and equivalence classes do not orient a unique causal arrow."
+        ),
+    },
+    "S31": {
+        "title": "Conditional genome-size mechanism edge estimates",
+        "description": (
+            "Standardized coefficients and intervals for the three Markov-equivalent "
+            "conditional-genome-size mechanisms."
+        ),
+        "manuscript_use": (
+            "Exploratory edge estimates; no unique causal orientation or independent "
+            "genome-size assay claim."
+        ),
+    },
+    "S32": {
+        "title": "Conditional genome-size path-model stability",
+        "description": (
+            "Top-model and competitive-model frequencies across fitted conditional "
+            "genome-size sensitivity analyses."
+        ),
+        "manuscript_use": "Exploratory stability summary on the IOD-derived conditional scale.",
+    },
+    "S33": {
+        "title": "Conditional genome-size path tree sensitivity",
+        "description": (
+            "Conditional genome-size model rankings across the declared focal and published-tree "
+            "sensitivity fits."
+        ),
+        "manuscript_use": (
+            "Tree uncertainty audit; the primary focal-tree fit retains all 24 species and "
+            "uses the IOD-derived conditional genome-size trait."
+        ),
+    },
+    "S34": {
+        "title": "Conditional genome-size path measurement sensitivity",
+        "description": (
+            "Conditional genome-size model rankings across 250 measurement-bootstrap replicates "
+            "of the finalized 24-species panel."
+        ),
+        "manuscript_use": "Measurement-model audit for the conditional genome-size analysis.",
+    },
+    "S35": {
+        "title": "Conditional genome-size path leave-one-species-out analysis",
+        "description": (
+            "Conditional genome-size model rankings after omitting each of the 24 finalized "
+            "species in turn."
+        ),
+        "manuscript_use": "Species-influence audit for the conditional genome-size analysis.",
+    },
+    "S36": {
+        "title": "Conditional genome-size path simulation calibration",
+        "description": (
+            "Recovery and false-selection summaries for the declared conditional genome-size "
+            "simulation regimes."
+        ),
+        "manuscript_use": "Calibration gate; blocks confirmatory or uniquely causal interpretation.",
+    },
+    "S37": {
+        "title": "Primary conditional genome-size d-separation tests",
+        "description": (
+            "Basis-set tests for the finalized 24-species conditional genome-size candidate "
+            "models."
+        ),
+        "manuscript_use": (
+            "Global-fit and identifiability audit; no independent-assay or unique-causal-arrow "
+            "claim."
+        ),
+    },
+    "S40": {
+        "analysis_section": "Integrated TE and conditional genome size",
+        "title": "TE diversity and conditional genome size overlap",
+        "description": (
+            "Exact 21-species TE34-by-Path24 overlap joining canonical species-specific "
+            "top-10-superfamily Shannon entropy and Gini-Simpson values to conditional "
+            "D. fuscus assembly-anchored genome size and intervals."
+        ),
+        "manuscript_use": (
+            "Descriptive integrated sensitivity table only; genome size is IOD-derived "
+            "rather than an independent assay or validated absolute C-value."
+        ),
+    },
+    "S41": {
+        "analysis_section": "Cross-study TE-diversity context",
+        "title": "Wang 2025 and current top-10-superfamily TE diversity",
+        "description": (
+            "Descriptive cross-study plotting table containing the 84 exact CC0 Dryad "
+            "Figure 2 rows from Wang et al. 2025 and 34 current Desmognathus rows "
+            "recomputed over each species' ten most abundant positive superfamilies."
+        ),
+        "release_status": "sensitivity_only",
+        "manuscript_use": (
+            "Auxiliary descriptive context only. Published RepeatModeler/RepeatMasker and "
+            "current dnaPipeTE inputs come from different pipelines; no pooled regression, "
+            "hypothesis test, or estimator-equivalence claim is permitted. Current genome "
+            "sizes are conditional D. fuscus-anchored IOD-derived sensitivities, not direct "
+            "C-values."
+        ),
+    },
+    "S42": {
+        "analysis_section": "TE-composition tree representation",
+        "title": "TE34 Bonsai tip annotations",
+        "description": (
+            "Exact 34-species tip annotation table for the pinned Bonsai "
+            "TE-composition representation, including expert reproductive-strategy "
+            "labels for every species."
+        ),
+        "release_status": "main_candidate",
+        "manuscript_use": (
+            "Supplies Figure 2 tip labels and post-hoc reproductive-strategy colors. "
+            "The representation is not a species phylogeny, and annotation timing "
+            "precludes a confirmatory trait-association claim."
+        ),
+    },
+    "S43": {
+        "analysis_section": "TE-composition tree validation",
+        "title": "TE34 Bonsai reproductive-strategy validation",
+        "description": (
+            "Three-row publication summary of fixed-tree strategy localization and "
+            "200 bounded feature-resampling Bonsai refits for the TE34 representation."
+        ),
+        "release_status": "main_candidate",
+        "manuscript_use": (
+            "Supplies Figure 2 validation annotations and exact-edge stability. "
+            "Label tests are post hoc, and coordinate resampling is a feature "
+            "perturbation rather than a biological-specimen bootstrap."
         ),
     },
 }
@@ -181,6 +419,35 @@ COMMON_COLUMN_DEFINITIONS: dict[str, str] = {
     "species": "Canonical analyzed Desmognathus species label.",
     "te_sra_accession": "SRA experiment accession bound to the species TE resource.",
     "te_assembly_accession": "Assembly accession bound to the species TE resource.",
+    "genome_size_pg_fuscus_anchored": (
+        "Conditional target-to-D. fuscus equal-image IOD ratio multiplied by the selected "
+        "16.462167689-pg/1C assembly anchor; not an independent genome-size assay."
+    ),
+    "genome_size_pg_ci_low": (
+        "Lower conditional 95% measurement-bootstrap interval on the D. fuscus-anchored "
+        "genome-size scale; anchor-value uncertainty is excluded."
+    ),
+    "genome_size_pg_ci_high": (
+        "Upper conditional 95% measurement-bootstrap interval on the D. fuscus-anchored "
+        "genome-size scale; anchor-value uncertainty is excluded."
+    ),
+    "genome_size_definition": (
+        "Declared conditional D. fuscus assembly-anchored, IOD-derived genome-size contract; "
+        "not a measured C-value."
+    ),
+    "path_trait_definition": (
+        "Declared path trait contract: conditional D. fuscus assembly-anchored genome size "
+        "in pg/1C, IOD-derived and not a measured C-value."
+    ),
+    "n_genome_size_nuclei": (
+        "Number of finalized reviewed nuclei supporting the conditional genome-size estimate."
+    ),
+    "n_genome_size_images": (
+        "Number of distinct microscopy images supporting the conditional genome-size estimate."
+    ),
+    "n_genome_size_specimens": (
+        "Number of distinct animals supporting the conditional genome-size estimate."
+    ),
     "n_nuclei": "Number of finalized reviewed nuclei contributing to the row.",
     "n_images": "Number of distinct source images contributing to the row.",
     "n_specimens": "Number of distinct specimen_id values; each value denotes one animal.",
@@ -220,22 +487,29 @@ SUPPLEMENT_COLUMN_DEFINITIONS: dict[str, dict[str, str]] = {
             "Source-corrupt exclusions within the correctly selected cohort."
         ),
     },
+    "S04": {
+        "genome_size_pg_fuscus_anchored": COMMON_COLUMN_DEFINITIONS[
+            "genome_size_pg_fuscus_anchored"
+        ],
+        "genome_size_pg_ci_low": COMMON_COLUMN_DEFINITIONS["genome_size_pg_ci_low"],
+        "genome_size_pg_ci_high": COMMON_COLUMN_DEFINITIONS["genome_size_pg_ci_high"],
+        "n_genome_size_nuclei": COMMON_COLUMN_DEFINITIONS["n_genome_size_nuclei"],
+        "n_genome_size_images": COMMON_COLUMN_DEFINITIONS["n_genome_size_images"],
+        "n_genome_size_specimens": COMMON_COLUMN_DEFINITIONS["n_genome_size_specimens"],
+        "genome_size_definition": COMMON_COLUMN_DEFINITIONS["genome_size_definition"],
+    },
     "S08": {
-        "te_level": (
-            "TE classification level: order is primary for diversity; superfamily is a "
-            "sensitivity/audit level."
-        ),
-        "observed_richness": (
-            "Audit/support count of strictly positive classified compositional bins, "
-            "not a paper-facing diversity endpoint."
+        "n_superfamilies_included": (
+            "Number of species-specific most-abundant positive classified TE "
+            "superfamilies retained before reclosure; fixed at ten."
         ),
         "shannon_entropy": (
-            "Natural-log Shannon entropy, -sum(p_i * ln(p_i)), over positive bins; a "
-            "paper-facing diversity endpoint in the order-level stratum."
+            "Natural-log Shannon entropy, -sum(p_i * ln(p_i)), over the species-specific "
+            "ten most abundant positive superfamilies after reclosure to one."
         ),
         "gini_simpson": (
-            "Gini-Simpson index, 1 - sum(p_i^2), over positive bins; a paper-facing "
-            "diversity endpoint in the order-level stratum."
+            "Gini-Simpson index, 1 - sum(p_i^2), over the species-specific ten most "
+            "abundant positive superfamilies after reclosure to one."
         ),
     },
     "S14": {
@@ -520,44 +794,168 @@ SUPPLEMENT_COLUMN_DEFINITIONS: dict[str, dict[str, str]] = {
         ),
         "p_value_descriptive_only": "Unadjusted descriptive p-value; not a confirmatory endpoint.",
     },
+    "S26": {
+        "comparison": (
+            "Declared pairwise comparison among genome size, nucleus area, and cell area."
+        ),
+        "left_metric": (
+            "Left-hand trait; genome-size comparisons use genome_size_pg_fuscus_anchored."
+        ),
+        "right_metric": "Right-hand trait in the declared pairwise comparison.",
+    },
+    "S27": {
+        "genome_size_log10_z": (
+            "Sample-standardized log10 conditional D. fuscus-anchored genome size; invariant "
+            "to the positive IOD-to-pg scale factor."
+        ),
+        "genome_size_definition": COMMON_COLUMN_DEFINITIONS["genome_size_definition"],
+    },
+    "S28": {
+        "relation_id": (
+            "Declared directional regression identifier using genome, nucleus, and cell labels."
+        ),
+        "outcome": "Standardized outcome trait; genome_size denotes conditional genome size.",
+        "predictor": (
+            "Standardized predictor trait for this coefficient row; genome_size denotes "
+            "conditional genome size."
+        ),
+        "path_trait_definition": COMMON_COLUMN_DEFINITIONS["path_trait_definition"],
+    },
     "S40": {
         "scientific_name": "Display-form scientific name for the canonical species row.",
         "manual_review_inclusion": (
             "Whether the Path24 species was retained through a documented manual-review "
             "decision below the automatic object-count target."
         ),
-        "observed_richness": (
-            "Audit/support count of positive classified-superfamily bins in the canonical "
-            "S08 row; not a paper-facing diversity endpoint."
+        "n_superfamilies_included": (
+            "Number of species-specific most-abundant positive classified TE "
+            "superfamilies used by canonical S08; fixed at ten."
         ),
         "shannon_entropy": (
-            "Natural-log Shannon entropy from the canonical classified-conditional "
-            "superfamily S08 row."
+            "Natural-log Shannon entropy from the canonical species-specific top-10 "
+            "superfamily S08 row after reclosure to one."
         ),
         "gini_simpson": (
-            "Gini-Simpson index, 1 - sum(p_i^2), from the canonical "
-            "classified-conditional superfamily S08 row."
+            "Gini-Simpson index, 1 - sum(p_i^2), from the canonical species-specific "
+            "top-10 superfamily S08 row after reclosure to one."
         ),
         "te_diversity_definition": (
             "Declared TE classification level, denominator, and diversity metric source "
             "for the joined row."
         ),
-        "relative_iod_index": (
-            "Image-derived species nuclear-IOD estimate divided by the Path24 median; "
-            "not an independently calibrated absolute genome size."
+        "genome_size_pg_fuscus_anchored": (
+            "Conditional target-to-D. fuscus equal-image IOD ratio multiplied by the selected "
+            "16.462167689-pg/1C assembly anchor."
         ),
-        "relative_iod_ci_low": (
-            "Lower conditional 95% interval bound for the relative nuclear-IOD index."
+        "genome_size_pg_ci_low": (
+            "Lower conditional 95% measurement-bootstrap interval for genome size; "
+            "anchor-value uncertainty is excluded."
         ),
-        "relative_iod_ci_high": (
-            "Upper conditional 95% interval bound for the relative nuclear-IOD index."
+        "genome_size_pg_ci_high": (
+            "Upper conditional 95% measurement-bootstrap interval for genome size; "
+            "anchor-value uncertainty is excluded."
         ),
-        "estimate_support": "Whether one or multiple observed images support the IOD estimate.",
-        "sample_size_support": "Recorded nucleus-count support category for the IOD estimate.",
+        "estimate_support": (
+            "Whether one or multiple observed images support the genome-size estimate."
+        ),
+        "sample_size_support": (
+            "Recorded nucleus-count support category for the genome-size estimate."
+        ),
         "quality_match_status": "Image-quality common-support or limited-overlap category.",
-        "iod_definition": (
-            "Declared relative nuclear-IOD estimator and normalization; never an absolute "
-            "genome-size conversion."
+        "genome_size_definition": COMMON_COLUMN_DEFINITIONS["genome_size_definition"],
+    },
+    "S41": {
+        "data_origin": (
+            "Row origin: exact Wang et al. 2025 Dryad Figure 2 value or current "
+            "Desmognathus recomputation."
+        ),
+        "source_record_id": "Stable row identifier within the declared data origin.",
+        "source_doi": "Dataset DOI for published rows or this_study for current rows.",
+        "source_file": (
+            "Exact published workbook member or semicolon-delimited canonical current "
+            "input paths."
+        ),
+        "source_file_sha256": (
+            "SHA-256 of the published workbook member or semicolon-delimited hashes of "
+            "the canonical current inputs."
+        ),
+        "metric_scope": (
+            "Method-specific top-ten-superfamily diversity contract; published and current "
+            "scopes remain explicitly distinct."
+        ),
+        "scientific_name": "Scientific name retained from the source or canonical current row.",
+        "common_name": "Published English name when supplied; blank for current rows.",
+        "family": "Taxonomic family retained from the published source or current genus.",
+        "comparison_group": "Display group used by the cross-study distribution panels.",
+        "genome_size_gb": (
+            "Published genome size in Gbp or current conditional D. fuscus-anchored "
+            "IOD-derived sensitivity converted to Gbp at 0.978 Gbp per pg."
+        ),
+        "genome_size_ci_low_gb": (
+            "Lower conditional interval for current genome-size sensitivity; blank for "
+            "published and current group-only rows."
+        ),
+        "genome_size_ci_high_gb": (
+            "Upper conditional interval for current genome-size sensitivity; blank for "
+            "published and current group-only rows."
+        ),
+        "shannon_top10_superfamilies": (
+            "Natural-log Shannon entropy after retaining the ten most abundant positive "
+            "TE superfamilies and reclosing them to one."
+        ),
+        "gini_simpson_top10_superfamilies": (
+            "Gini-Simpson index, 1 - sum(p_i^2), after retaining the ten most abundant "
+            "positive TE superfamilies and reclosing them to one."
+        ),
+        "figure_inclusion": (
+            "Declared group-only or scatter-and-group use; no row is used for a pooled fit."
+        ),
+    },
+    "S42": {
+        "display_species": "Italic-ready display label for the canonical TE34 species.",
+        "reproductive_strategy": "Machine-readable expert reproductive-strategy annotation.",
+        "reproductive_strategy_label": "Publication display label for reproductive strategy.",
+        "strategy_assigned": "Whether an expert reproductive-strategy label is available.",
+        "annotation_timing": (
+            "Records that reproductive strategy was supplied after review of the initial "
+            "PCA, making the annotation and associated tests post hoc."
+        ),
+    },
+    "S43": {
+        "strategy": "Machine-readable reproductive-strategy identifier.",
+        "strategy_label": "Publication display label for reproductive strategy.",
+        "group_n": "Number of assigned TE34 species in the strategy group.",
+        "full_fit_smallest_containing_side_tips": (
+            "Fewest tips on an edge-delimited side containing every group member in the "
+            "full fitted Bonsai tree."
+        ),
+        "full_fit_edge_delimited": (
+            "Whether one full-fit tree edge exactly delimits all and only the group members."
+        ),
+        "fixed_tree_smallest_side_p_value": (
+            "One-sided fixed-tree label-permutation P value for a containing side this "
+            "small or smaller."
+        ),
+        "fixed_tree_smallest_side_p_value_holm": (
+            "Holm-adjusted P value across the nine reported localization tests."
+        ),
+        "feature_bootstrap_edge_delimited_count": (
+            "Number of 200 bounded feature-resampling refits with an exact group edge."
+        ),
+        "feature_bootstrap_replicates": "Declared feature-resampling replicate count.",
+        "feature_bootstrap_edge_delimited_fraction": (
+            "Fraction of bounded feature-resampling refits with an exact group edge."
+        ),
+        "feature_bootstrap_smallest_side_median": (
+            "Median smallest containing-side tip count across feature-resampling refits."
+        ),
+        "global_fitch_observed_steps": "Observed Fitch parsimony steps on the fixed tree.",
+        "global_fitch_null_mean_steps": (
+            "Mean Fitch parsimony steps across 99,999 fixed-tree label permutations."
+        ),
+        "global_fitch_p_value": "One-sided global Fitch label-permutation P value.",
+        "global_fitch_p_value_holm": (
+            "Global Fitch P value after Holm adjustment across nine reported tests."
         ),
     },
 }

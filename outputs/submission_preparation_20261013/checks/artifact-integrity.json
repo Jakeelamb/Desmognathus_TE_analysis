@@ -1,0 +1,19 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--no-sync",
+    "--python",
+    "3.13",
+    "python",
+    "outputs/submission_preparation_20261013/build_submission_inventory.py"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:16:52.499551+00:00",
+  "completed_at": "2026-10-13T16:16:52.949717+00:00",
+  "elapsed_seconds": 0.45,
+  "exit_code": 0,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/artifact-integrity.log",
+  "raw_log_sha256": "b1bf97bc484b303313ed27c9fa916622644a522e8568b53ce98a7629925e69cd"
+}

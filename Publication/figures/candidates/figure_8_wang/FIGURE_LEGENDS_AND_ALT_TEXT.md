@@ -1,0 +1,7 @@
+# Figure legends and alt text
+
+## Figure_8
+
+Panel a shows the topology-only supplied-tree prune for all 34 TE species; branch lengths are omitted because publication and calibration provenance remain unresolved. Panel b shows 21 estimated D. fuscus-anchored genome-size estimates and measurement intervals; n/a marks 13 unavailable estimates. Panel c shows stacked aligned-hit composition across six named orders plus Other (including Unclassified). Panel d compares LTR, LINE, and TIR on a common 0-60% fraction scale. Panel e shows those three orders' zero-filled 0-50% divergence profiles with a common 0-3% height scale. Every repeat track retains the full species aligned-hit denominator; all tracks use the same phylogenetic order. Review candidate, not a numbered manuscript figure. All 34 TE species are included; estimated genome-size estimates and measurement intervals are available for 21, with 13 labelled n/a. Estimated genome size is IOD-derived, anchored to D. fuscus, and not a direct species C-value; intervals omit anchor uncertainty. Repeat proportions are fractions of aligned RepeatMasker hit bp, not genome occupancy; divergence bins are not insertion ages.
+
+**Alt text:** Thirty-four Desmognathus species align across a topology-only phylogeny, estimated genome-size estimates with explicit missing values, stacked repeat composition, three repeat-order dot plots, and three columns of divergence profiles without boxes. All rows share the same phylogenetic order.

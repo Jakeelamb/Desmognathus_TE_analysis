@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "source_hashes": true,
+  "support_shares_recomputed_from_animal_counts": true,
+  "dsep_C_P_CICc_weights_replayed_fits": 278,
+  "bootstrap_species_panels": 250,
+  "pdfs": 5,
+  "embedded_Arial": true,
+  "CMYK_300dpi_tiffs": 5,
+  "rendered_label_check": true
+}

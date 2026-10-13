@@ -1,0 +1,795 @@
+{
+  "status": "PASS",
+  "main_figures": 8,
+  "figure_and_panel_exports": 34,
+  "preserved_source_files": 642,
+  "frozen_input_files": 374,
+  "user_note_changes": [],
+  "note_fields": 34,
+  "local_asset_links": 174,
+  "errors": [],
+  "artifacts": [
+    {
+      "pdf": "figures/figure_1/Figure_1_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 225.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 224.7194444444444,
+      "minimum_upright_font_pt": 7.499999999999943,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2654
+      ],
+      "tiff_dimensions": [
+        4250,
+        5308
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_1/panels/Figure_1a_isolated.pdf",
+      "width_mm": 115.0,
+      "height_mm": 220.0,
+      "actual_pdf_width_mm": 114.65277777777779,
+      "actual_pdf_height_mm": 219.78055555555557,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1354,
+        2596
+      ],
+      "tiff_dimensions": [
+        2708,
+        5192
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_1/panels/Figure_1b_isolated.pdf",
+      "width_mm": 120.0,
+      "height_mm": 205.0,
+      "actual_pdf_width_mm": 119.94444444444444,
+      "actual_pdf_height_mm": 204.96388888888887,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1417,
+        2421
+      ],
+      "tiff_dimensions": [
+        2833,
+        4842
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_1/panels/Figure_1c_isolated.pdf",
+      "width_mm": 140.0,
+      "height_mm": 210.0,
+      "actual_pdf_width_mm": 139.7,
+      "actual_pdf_height_mm": 209.90277777777777,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1650,
+        2479
+      ],
+      "tiff_dimensions": [
+        3300,
+        4958
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_2/Figure_2_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 245.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 244.82777777777778,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2892
+      ],
+      "tiff_dimensions": [
+        4250,
+        5783
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_2/panels/Figure_2a_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 100.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 99.8361111111111,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1179
+      ],
+      "tiff_dimensions": [
+        4250,
+        2358
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_2/panels/Figure_2b_isolated.pdf",
+      "width_mm": 135.0,
+      "height_mm": 225.0,
+      "actual_pdf_width_mm": 134.7611111111111,
+      "actual_pdf_height_mm": 224.7194444444444,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1592,
+        2654
+      ],
+      "tiff_dimensions": [
+        3183,
+        5308
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_2/panels/Figure_2c_isolated.pdf",
+      "width_mm": 160.0,
+      "height_mm": 110.0,
+      "actual_pdf_width_mm": 159.80833333333334,
+      "actual_pdf_height_mm": 109.71388888888889,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1888,
+        1296
+      ],
+      "tiff_dimensions": [
+        3775,
+        2592
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_2/panels/Figure_2d_isolated.pdf",
+      "width_mm": 150.0,
+      "height_mm": 100.0,
+      "actual_pdf_width_mm": 149.93055555555554,
+      "actual_pdf_height_mm": 99.8361111111111,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1771,
+        1179
+      ],
+      "tiff_dimensions": [
+        3542,
+        2358
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_3/Figure_3_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 110.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 109.71388888888889,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1296
+      ],
+      "tiff_dimensions": [
+        4250,
+        2592
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_3/panels/Figure_3a_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 125.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 124.88333333333334,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1475
+      ],
+      "tiff_dimensions": [
+        4250,
+        2950
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_3/panels/Figure_3b_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 125.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 124.88333333333334,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1475
+      ],
+      "tiff_dimensions": [
+        4250,
+        2950
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_4/Figure_4_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 245.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 244.82777777777778,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2892
+      ],
+      "tiff_dimensions": [
+        4250,
+        5783
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_4/panels/Figure_4a_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 190.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 189.79444444444442,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2242
+      ],
+      "tiff_dimensions": [
+        4250,
+        4483
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_4/panels/Figure_4b_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 125.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 124.88333333333334,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1475
+      ],
+      "tiff_dimensions": [
+        4250,
+        2950
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_5/Figure_5_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 240.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 239.88888888888889,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2833
+      ],
+      "tiff_dimensions": [
+        4250,
+        5667
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_5/panels/Figure_5a_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 135.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 134.7611111111111,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1592
+      ],
+      "tiff_dimensions": [
+        4250,
+        3183
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_5/panels/Figure_5b_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 135.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 134.7611111111111,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1592
+      ],
+      "tiff_dimensions": [
+        4250,
+        3183
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_5/panels/Figure_5c_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 140.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 139.7,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1650
+      ],
+      "tiff_dimensions": [
+        4250,
+        3300
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_5/panels/Figure_5d_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 165.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 164.7472222222222,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1946
+      ],
+      "tiff_dimensions": [
+        4250,
+        3892
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_6/Figure_6_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 235.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 234.95,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2775
+      ],
+      "tiff_dimensions": [
+        4250,
+        5550
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_6/panels/Figure_6a_isolated.pdf",
+      "width_mm": 90.0,
+      "height_mm": 79.0,
+      "actual_pdf_width_mm": 89.95833333333333,
+      "actual_pdf_height_mm": 78.66944444444444,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1063,
+        929
+      ],
+      "tiff_dimensions": [
+        2125,
+        1858
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_6/panels/Figure_6b_isolated.pdf",
+      "width_mm": 105.0,
+      "height_mm": 79.0,
+      "actual_pdf_width_mm": 104.77499999999999,
+      "actual_pdf_height_mm": 78.66944444444444,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        1238,
+        929
+      ],
+      "tiff_dimensions": [
+        2475,
+        1858
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_6/panels/Figure_6c_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 118.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 117.82777777777778,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1392
+      ],
+      "tiff_dimensions": [
+        4250,
+        2783
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_6/panels/Figure_6d_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 51.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 50.8,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        600
+      ],
+      "tiff_dimensions": [
+        4250,
+        1200
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_7/Figure_7_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 235.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 234.95,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2775
+      ],
+      "tiff_dimensions": [
+        4250,
+        5550
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_7/panels/Figure_7a_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 145.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 144.99166666666665,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1713
+      ],
+      "tiff_dimensions": [
+        4250,
+        3425
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_7/panels/Figure_7b_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 145.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 144.99166666666665,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1713
+      ],
+      "tiff_dimensions": [
+        4250,
+        3425
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_7/panels/Figure_7c_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 145.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 144.99166666666665,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1713
+      ],
+      "tiff_dimensions": [
+        4250,
+        3425
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_7/panels/Figure_7d_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 145.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 144.99166666666665,
+      "minimum_upright_font_pt": 7.499999999999986,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1713
+      ],
+      "tiff_dimensions": [
+        4250,
+        3425
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_8/Figure_8_polished.pdf",
+      "width_mm": 180.0,
+      "height_mm": 235.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 234.95,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        2775
+      ],
+      "tiff_dimensions": [
+        4250,
+        5550
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_8/panels/Figure_8a_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 130.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 129.8222222222222,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1533
+      ],
+      "tiff_dimensions": [
+        4250,
+        3067
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_8/panels/Figure_8b_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 85.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 84.66666666666667,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1000
+      ],
+      "tiff_dimensions": [
+        4250,
+        2000
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    },
+    {
+      "pdf": "figures/figure_8/panels/Figure_8c_isolated.pdf",
+      "width_mm": 180.0,
+      "height_mm": 95.0,
+      "actual_pdf_width_mm": 179.91666666666666,
+      "actual_pdf_height_mm": 94.89722222222221,
+      "minimum_upright_font_pt": 7.5,
+      "font_families": "Arial embedded",
+      "png_dimensions": [
+        2125,
+        1121
+      ],
+      "tiff_dimensions": [
+        4250,
+        2242
+      ],
+      "tiff_color": "CMYK",
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "text_within_page": true
+    }
+  ]
+}

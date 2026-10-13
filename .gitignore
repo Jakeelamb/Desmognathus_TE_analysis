@@ -1,5 +1,6 @@
 # Local environments and caches
 .venv/
+node_modules
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -25,6 +26,9 @@ test-results/
 # Disposable analysis outputs. Canonical data and publication outputs are tracked.
 analyses/02_morphology/output/
 analyses/03_phylogenetic_path/output/
+analyses/01_transposable_elements/bonsai_comparison/output/
 Publication/figures/*.rgb.pdf
 *.log
 .~lock.*#
+.gstack/
+/tmp/

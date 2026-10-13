@@ -1,0 +1,15 @@
+{
+  "source_matched_paths": 3,
+  "preserved_prior_files": 273,
+  "changed_prior_files": [],
+  "Arial_PDFs": [
+    "Direct_indirect_candidate.pdf",
+    "Direct_indirect_network.pdf",
+    "Direct_indirect_intervals.pdf"
+  ],
+  "note_cards": 27,
+  "no_chain_weight_on_candidate": true,
+  "served_candidate_assets_match_disk": true,
+  "TIFF_metadata": "Direct_indirect_candidate.tif: CMYK, 600 x 600 PixelsPerInch\nDirect_indirect_intervals.tif: CMYK, 600 x 600 PixelsPerInch\nDirect_indirect_network.tif: CMYK, 600 x 600 PixelsPerInch\n",
+  "visual_QA": "Collage and isolated network inspected; isolated panel tag/title overlap corrected and re-rendered."
+}

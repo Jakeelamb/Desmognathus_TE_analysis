@@ -1,0 +1,43 @@
+candidate_set,panel,model,independence_claim,component_p,fitted_phylogenetic_parameter,n_species
+body_adjusted_four,full24,body_only,c ~ b + n,0.0056744146381157235,9.999999999999994e-8,24
+body_adjusted_four,full24,body_only,n ~ b + g,0.10244106371400391,9.999999999999994e-8,24
+body_adjusted_four,full24,body_only,c ~ b + g,0.004209930003189944,9.999999999999994e-8,24
+body_adjusted_four,full24,cell_bridge,n ~ b + c + g,0.8496636557165943,9.999999999999994e-8,24
+body_adjusted_four,full24,nucleus_bridge,c ~ b + n + g,0.021473907086400106,9.999999999999994e-8,24
+body_adjusted_four,full24,genome_bridge,c ~ b + g + n,0.028885855601372665,9.999999999999994e-8,24
+original_three,full24,independent,n ~ g,0.0415438106961232,9.999999999999994e-8,24
+original_three,full24,independent,c ~ n,0.003012776466313736,9.999999999999994e-8,24
+original_three,full24,independent,c ~ g,8.156832723679096e-5,9.999999999999994e-8,24
+original_three,full24,genome_nucleus_only,c ~ g,8.156832723679096e-5,9.999999999999994e-8,24
+original_three,full24,genome_nucleus_only,c ~ g + n,0.03535835040424587,9.999999999999994e-8,24
+original_three,full24,nucleus_cell_only,n ~ g,0.0415438106961232,9.999999999999994e-8,24
+original_three,full24,nucleus_cell_only,c ~ n + g,9.971095556373843e-4,9.999999999999994e-8,24
+original_three,full24,genome_cell_only,n ~ g,0.0415438106961232,9.999999999999994e-8,24
+original_three,full24,genome_cell_only,c ~ g + n,0.03535835040424587,9.999999999999994e-8,24
+original_three,full24,nucleus_bridge,c ~ n + g,9.971095556373843e-4,9.999999999999994e-8,24
+original_three,full24,nucleus_collider,c ~ g,8.156832723679096e-5,9.999999999999994e-8,24
+original_three,full24,cell_bridge,n ~ c + g,0.9755098603376662,9.999999999999994e-8,24
+original_three,full24,cell_collider,n ~ g,0.0415438106961232,9.999999999999994e-8,24
+original_three,full24,genome_bridge,c ~ g + n,0.03535835040424587,9.999999999999994e-8,24
+original_three,full24,genome_collider,c ~ n,0.003012776466313736,9.999999999999994e-8,24
+body_adjusted_four,subset22,body_only,c ~ b + n,0.02787133916301453,9.999999999999994e-8,22
+body_adjusted_four,subset22,body_only,n ~ b + g,0.3736324087500371,0.7435096636673658,22
+body_adjusted_four,subset22,body_only,c ~ b + g,0.0344004107472986,9.999999999999994e-8,22
+body_adjusted_four,subset22,cell_bridge,n ~ b + c + g,0.8981938198179972,0.8439628994972753,22
+body_adjusted_four,subset22,nucleus_bridge,c ~ b + n + g,0.05479644657576954,9.999999999999994e-8,22
+body_adjusted_four,subset22,genome_bridge,c ~ b + g + n,0.04469683692185178,9.999999999999994e-8,22
+original_three,subset22,independent,n ~ g,0.4868409680804179,0.5566291888633726,22
+original_three,subset22,independent,c ~ n,0.03350143477544624,9.999999999999994e-8,22
+original_three,subset22,independent,c ~ g,0.013757126381602643,9.999999999999994e-8,22
+original_three,subset22,genome_nucleus_only,c ~ g,0.013757126381602643,9.999999999999994e-8,22
+original_three,subset22,genome_nucleus_only,c ~ g + n,0.05015788417816713,9.999999999999994e-8,22
+original_three,subset22,nucleus_cell_only,n ~ g,0.4868409680804179,0.5566291888633726,22
+original_three,subset22,nucleus_cell_only,c ~ n + g,0.02125460788078961,9.999999999999994e-8,22
+original_three,subset22,genome_cell_only,n ~ g,0.4868409680804179,0.5566291888633726,22
+original_three,subset22,genome_cell_only,c ~ g + n,0.05015788417816713,9.999999999999994e-8,22
+original_three,subset22,nucleus_bridge,c ~ n + g,0.02125460788078961,9.999999999999994e-8,22
+original_three,subset22,nucleus_collider,c ~ g,0.013757126381602643,9.999999999999994e-8,22
+original_three,subset22,cell_bridge,n ~ c + g,0.7483999833137487,0.48847876703897103,22
+original_three,subset22,cell_collider,n ~ g,0.4868409680804179,0.5566291888633726,22
+original_three,subset22,genome_bridge,c ~ g + n,0.05015788417816713,9.999999999999994e-8,22
+original_three,subset22,genome_collider,c ~ n,0.03350143477544624,9.999999999999994e-8,22

@@ -1,0 +1,34 @@
+--- before-heading2-support
++++ scripts/publication/build_methods_document.py
+@@ -160,6 +160,9 @@
+         elif line.startswith("## "):
+             flush_paragraph()
+             blocks.append(("heading", line[3:].strip()))
++        elif line.startswith("### "):
++            flush_paragraph()
++            blocks.append(("subheading", line[4:].strip()))
+         else:
+             paragraph_lines.append(line)
+     flush_paragraph()
+@@ -191,8 +194,10 @@
+             paragraph = document.add_paragraph(style="Manuscript Title")
+             run = paragraph.add_run(text)
+             set_run_font(run, size=15, bold=True)
+-        elif kind == "heading":
+-            paragraph = document.add_paragraph(style="Heading 1")
++        elif kind in {"heading", "subheading"}:
++            paragraph = document.add_paragraph(
++                style="Heading 1" if kind == "heading" else "Heading 2"
++            )
+             run = paragraph.add_run(text)
+             set_run_font(run, size=11.5, bold=True)
+             set_keep_with_next(paragraph)
+@@ -261,6 +266,8 @@
+             continue
+         if paragraph.style.name == "Manuscript Title":
+             kind = "title"
++        elif paragraph.style.name == "Heading 2":
++            kind = "subheading"
+         elif paragraph.style.name.startswith("Heading"):
+             kind = "heading"
+         else:

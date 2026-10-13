@@ -1,0 +1,24 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--no-sync",
+    "--python",
+    "3.13",
+    "/home/jake/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/home/jake/.codex/plugins/cache/openai-primary-runtime/documents/26.1009.11318/skills/documents/render_docx.py",
+    "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx",
+    "--output_dir",
+    "outputs/submission_preparation_20261013/docx_render",
+    "--emit_pdf",
+    "--verbose"
+  ],
+  "cwd": "/home/jake/Projects/Desmognathus_TE",
+  "started_at": "2026-10-13T16:12:29.161894+00:00",
+  "completed_at": "2026-10-13T16:12:31.289489+00:00",
+  "elapsed_seconds": 2.128,
+  "exit_code": 0,
+  "raw_log": "/home/jake/Projects/Desmognathus_TE/outputs/submission_preparation_20261013/checks/word-render.log",
+  "raw_log_sha256": "88d5740a373cb8b27148354d14015e541f4d016e6769d16a7c751a008cc911cb"
+}

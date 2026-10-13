@@ -1,0 +1,2 @@
+n_replicates,median_slope,ci_low,ci_high,fraction_slope_below_one,n_lambda_lower_boundary,interval_method,measurement_error_corrected
+1000,0.465003082690702,0.30559204022425146,0.6331256837657986,1,929,95% percentile range across selected animal and paired-cell resampling refits,FALSE

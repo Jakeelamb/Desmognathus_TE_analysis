@@ -6,7 +6,7 @@
   "inputs": {
     "te34_panel": {
       "path": "data/identity/te34_panel.csv",
-      "sha256": "b78afbff2fee4067a4987d837c29ba970b296bb9f0d09104f0b6bf0770a27fbd"
+      "sha256": "115776aa7c18446b31d5d9e6ae3f35274e9ab0380c844a23454f8b9e9a43f60a"
     },
     "order_composition": {
       "path": "analyses/01_transposable_elements/data/te_order_composition.csv",
@@ -38,7 +38,7 @@
     },
     "traits": {
       "path": "analyses/03_phylogenetic_path/data/organismal_traits.csv",
-      "sha256": "0512d7c75b05358a7cd1a230b38f9d2bb362be1147119ab2919898602eecdd9e"
+      "sha256": "3dedc64a53d1c08e7278d2954c173672362fe459848298372911a3a89f278822"
     },
     "tree": {
       "path": "analyses/03_phylogenetic_path/trees/source_time_tree_46.tre",
@@ -46,7 +46,7 @@
     },
     "pca_recompute_script": {
       "path": "analyses/01_transposable_elements/recompute_pca.py",
-      "sha256": "7db9894ec6fb13b6416527415d23b086b70a35cbe1854d4a9652b84274ef9f25"
+      "sha256": "4cfe8e067bb9964019e55c005dc30069cc58da8883e69c176162adf740a0e2c5"
     },
     "analysis_script": {
       "path": "analyses/01_transposable_elements/analyze_pca_structure.R",
@@ -58,11 +58,11 @@
     },
     "python_project": {
       "path": "pyproject.toml",
-      "sha256": "4ee48e5d8870f8e7f8b8370842c9876ce9cde0154602dc9d02aec67e9702b1ef"
+      "sha256": "90033d39fb6183771c263af20dc3c51634d293494ae20264969ebbe5a7dbc848"
     },
     "python_lock": {
       "path": "uv.lock",
-      "sha256": "77eca4b4558dab4d1fcbde502a81f076f9c3f5660233321af5487943937f6b93"
+      "sha256": "90823ad81675820db9c306d03d27fa4323877b6c09abaeb9213d5bdcfd767723"
     }
   },
   "pca_geometry": {

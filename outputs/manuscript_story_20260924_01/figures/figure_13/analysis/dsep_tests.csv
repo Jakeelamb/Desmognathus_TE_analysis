@@ -1,0 +1,77 @@
+panel,test_order,model,independence_claim,p_value,lambda
+full24,primary,body_upstream_cell,n ~ b + c + g,0.8496636557165941,9.999999999999994e-8
+full24,primary,body_upstream_nucleus,c ~ b + n + g,0.021473907086400214,9.999999999999994e-8
+full24,primary,body_upstream_genome,n ~ b + g + c,0.028885855601372756,9.999999999999994e-8
+full24,primary,body_only,n ~ b + c,0.005674414638115744,9.999999999999994e-8
+full24,primary,body_only,n ~ b + g,0.10244106371400384,9.999999999999994e-8
+full24,primary,body_only,c ~ b + g,0.00420993000318996,9.999999999999994e-8
+full24,primary,cell_body_branch,b ~ c + g,0.11289162929066726,1
+full24,primary,cell_body_branch,n ~ c + g,0.9755098603376653,9.999999999999994e-8
+full24,primary,cell_body_branch,n ~ c + b,0.4531335748797066,9.999999999999994e-8
+full24,primary,nucleus_cell_body_chain,c ~ n + g,9.97109555637388e-4,9.999999999999994e-8
+full24,primary,nucleus_cell_body_chain,b ~ c + g,0.11289162929066726,1
+full24,primary,nucleus_cell_body_chain,b ~ g + c + n,0.15868083108829362,1
+full24,primary,genome_body_branch,n ~ c + g,0.9755098603376653,9.999999999999994e-8
+full24,primary,genome_body_branch,c ~ g + b,0.08319770538916307,9.999999999999994e-8
+full24,primary,genome_body_branch,n ~ g + c + b,0.4500991588244976,9.999999999999994e-8
+full24,primary,body_disconnected,g ~ b,0.008081986574792565,1
+full24,primary,body_disconnected,c ~ g + b,0.08319770538916307,9.999999999999994e-8
+full24,primary,body_disconnected,n ~ c + b,0.4531335748797066,9.999999999999994e-8
+full24,primary,body_disconnected,n ~ c + g,0.9755098603376653,9.999999999999994e-8
+full24,reverse_test_order,body_upstream_cell,n ~ b + c + g,0.8496636557165941,9.999999999999994e-8
+full24,reverse_test_order,body_upstream_nucleus,c ~ b + n + g,0.021473907086400214,9.999999999999994e-8
+full24,reverse_test_order,body_upstream_genome,c ~ b + g + n,0.02888585560137271,9.999999999999994e-8
+full24,reverse_test_order,body_only,c ~ b + n,0.0056744146381157235,9.999999999999994e-8
+full24,reverse_test_order,body_only,g ~ b + n,0.10142512096981271,1
+full24,reverse_test_order,body_only,g ~ b + c,0.004209930003189977,9.999999999999994e-8
+full24,reverse_test_order,cell_body_branch,b ~ c + g,0.11289162929066726,1
+full24,reverse_test_order,cell_body_branch,n ~ c + g,0.9755098603376653,9.999999999999994e-8
+full24,reverse_test_order,cell_body_branch,b ~ c + n,0.21107218335188327,1
+full24,reverse_test_order,nucleus_cell_body_chain,c ~ n + g,9.97109555637388e-4,9.999999999999994e-8
+full24,reverse_test_order,nucleus_cell_body_chain,b ~ c + g,0.11289162929066726,1
+full24,reverse_test_order,nucleus_cell_body_chain,b ~ g + c + n,0.15868083108829362,1
+full24,reverse_test_order,genome_body_branch,n ~ c + g,0.9755098603376653,9.999999999999994e-8
+full24,reverse_test_order,genome_body_branch,b ~ g + c,0.14640279165502854,1
+full24,reverse_test_order,genome_body_branch,b ~ g + c + n,0.15868083108829362,1
+full24,reverse_test_order,body_disconnected,b ~ g,0.008081986574792591,1
+full24,reverse_test_order,body_disconnected,b ~ g + c,0.14640279165502854,1
+full24,reverse_test_order,body_disconnected,b ~ c + n,0.21107218335188327,1
+full24,reverse_test_order,body_disconnected,n ~ c + g,0.9755098603376653,9.999999999999994e-8
+subset22,primary,body_upstream_cell,n ~ b + c + g,0.8981938198175126,0.8439628994977767
+subset22,primary,body_upstream_nucleus,c ~ b + n + g,0.054796446575769625,9.999999999999994e-8
+subset22,primary,body_upstream_genome,n ~ b + g + c,0.02589524987907388,0.8439628994973527
+subset22,primary,body_only,n ~ b + c,0.013496787687799983,0.8233991051615863
+subset22,primary,body_only,n ~ b + g,0.3736324087506573,0.7435096636652793
+subset22,primary,body_only,c ~ b + g,0.034400410747298625,9.999999999999994e-8
+subset22,primary,cell_body_branch,b ~ c + g,0.383730363686147,1
+subset22,primary,cell_body_branch,n ~ c + g,0.7483999833147548,0.48847876704433574
+subset22,primary,cell_body_branch,n ~ c + b,0.14696639717671242,0.8233991051613012
+subset22,primary,nucleus_cell_body_chain,c ~ n + g,0.02125460788078962,9.999999999999994e-8
+subset22,primary,nucleus_cell_body_chain,b ~ c + g,0.383730363686147,1
+subset22,primary,nucleus_cell_body_chain,b ~ g + c + n,0.1051408983923236,1
+subset22,primary,genome_body_branch,n ~ c + g,0.7483999833147548,0.48847876704433574
+subset22,primary,genome_body_branch,c ~ g + b,0.38290489288957585,9.999999999999994e-8
+subset22,primary,genome_body_branch,n ~ g + c + b,0.15351191250206536,0.8439628994977268
+subset22,primary,body_disconnected,g ~ b,0.15178151615896285,1
+subset22,primary,body_disconnected,c ~ g + b,0.38290489288957585,9.999999999999994e-8
+subset22,primary,body_disconnected,n ~ c + b,0.14696639717671242,0.8233991051613012
+subset22,primary,body_disconnected,n ~ c + g,0.7483999833147548,0.48847876704433574
+subset22,reverse_test_order,body_upstream_cell,n ~ b + c + g,0.8981938198175126,0.8439628994977767
+subset22,reverse_test_order,body_upstream_nucleus,c ~ b + n + g,0.054796446575769625,9.999999999999994e-8
+subset22,reverse_test_order,body_upstream_genome,c ~ b + g + n,0.04469683692185182,9.999999999999994e-8
+subset22,reverse_test_order,body_only,c ~ b + n,0.027871339163014503,9.999999999999994e-8
+subset22,reverse_test_order,body_only,g ~ b + n,0.2572927429570802,1
+subset22,reverse_test_order,body_only,g ~ b + c,0.0344004107472986,9.999999999999994e-8
+subset22,reverse_test_order,cell_body_branch,b ~ c + g,0.383730363686147,1
+subset22,reverse_test_order,cell_body_branch,n ~ c + g,0.7483999833147548,0.48847876704433574
+subset22,reverse_test_order,cell_body_branch,b ~ c + n,0.10550190031016024,1
+subset22,reverse_test_order,nucleus_cell_body_chain,c ~ n + g,0.02125460788078962,9.999999999999994e-8
+subset22,reverse_test_order,nucleus_cell_body_chain,b ~ c + g,0.383730363686147,1
+subset22,reverse_test_order,nucleus_cell_body_chain,b ~ g + c + n,0.1051408983923236,1
+subset22,reverse_test_order,genome_body_branch,n ~ c + g,0.7483999833147548,0.48847876704433574
+subset22,reverse_test_order,genome_body_branch,b ~ g + c,0.2662440031110035,1
+subset22,reverse_test_order,genome_body_branch,b ~ g + c + n,0.1051408983923236,1
+subset22,reverse_test_order,body_disconnected,b ~ g,0.15178151615896315,1
+subset22,reverse_test_order,body_disconnected,b ~ g + c,0.2662440031110035,1
+subset22,reverse_test_order,body_disconnected,b ~ c + n,0.10550190031016024,1
+subset22,reverse_test_order,body_disconnected,n ~ c + g,0.7483999833147548,0.48847876704433574

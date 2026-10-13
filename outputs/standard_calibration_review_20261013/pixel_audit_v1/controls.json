@@ -1,0 +1,75 @@
+{
+  "all_rejected": true,
+  "row_key": "Process_413_green.ome.tiff::tile_y000000_x016384.tiff::1",
+  "tests": [
+    {
+      "evidence": "recorded mask label absent",
+      "name": "absent_mask_label",
+      "rejected": true
+    },
+    {
+      "evidence": "coordinate projection inconsistent: (19201.16,1791.28) vs (2817.162198391421,1791.28418230563)",
+      "name": "unconverted_standard_coordinates",
+      "rejected": true
+    },
+    {
+      "evidence": "source hash mismatch: /home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y000000_x016384.tiff: expected 0000000000000000000000000000000000000000000000000000000000000000, actual 42ce17e2111a1598e8fdae19fe7581cb7743844acba7eb6279b3366d4eb5795b",
+      "name": "changed_source_hash",
+      "rejected": true
+    },
+    {
+      "changed_background": 254.0,
+      "evidence": {
+        "area_delta_px": 0,
+        "area_exact_match": true,
+        "iod_delta": -5.09208835335005,
+        "iod_six_decimal_match": false,
+        "mask_area_px": 2984,
+        "recomputed_iod": 602.63064964665,
+        "recomputed_iod_six_decimals": "602.630650",
+        "stored_area_px": 2984,
+        "stored_iod": 607.722738,
+        "stored_iod_six_decimals": "607.722738"
+      },
+      "name": "changed_background",
+      "rejected": true
+    },
+    {
+      "evidence": {
+        "area_delta_px": -1,
+        "area_exact_match": false,
+        "iod_delta": -0.1512680076535844,
+        "iod_six_decimal_match": false,
+        "mask_area_px": 2983,
+        "recomputed_iod": 607.5714699923465,
+        "recomputed_iod_six_decimals": "607.571470",
+        "stored_area_px": 2984,
+        "stored_iod": 607.722738,
+        "stored_iod_six_decimals": "607.722738"
+      },
+      "name": "removed_positive_od_pixel",
+      "rejected": true,
+      "removed_pixel_xy": [
+        2804,
+        1760
+      ],
+      "removed_raw_value": 180
+    },
+    {
+      "evidence": {
+        "area_delta_px": 0,
+        "area_exact_match": true,
+        "iod_delta": -1.0332322972317343e-05,
+        "iod_six_decimal_match": false,
+        "mask_area_px": 2984,
+        "recomputed_iod": 607.722737667677,
+        "recomputed_iod_six_decimals": "607.722738",
+        "stored_area_px": 2984,
+        "stored_iod": 607.722748,
+        "stored_iod_six_decimals": "607.722748"
+      },
+      "name": "changed_stored_iod",
+      "rejected": true
+    }
+  ]
+}

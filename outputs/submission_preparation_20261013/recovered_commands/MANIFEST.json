@@ -1,0 +1,37 @@
+[
+  {
+    "path": "outputs/submission_preparation_20261013/recovered_commands/dnaPipeTE.sh",
+    "source_git_object": "cc64ffb134968250671ff0e3456255063a1aba97:dnaPipeTE.sh",
+    "git_blob": "738c7cece113ce03b34f7523bf2139431646fac1",
+    "sha256": "f3ed508c844c55c9fb1d1be49f641a70b3acefdde0e6ebf810357293d46d4189",
+    "qualification": "historical source configuration; execution and resource-to-job correspondence unverified"
+  },
+  {
+    "path": "outputs/submission_preparation_20261013/recovered_commands/repeat_mask.sh",
+    "source_git_object": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a:repeat_mask.sh",
+    "git_blob": "4a5517e42a2970630490c406dd0a16e4b9947dfc",
+    "sha256": "aedc039ab036fced09a6fdee3c53a42ea8dbc4d2ccf8388e256b47eaa14775fc",
+    "qualification": "historical source configuration; execution and resource-to-job correspondence unverified"
+  },
+  {
+    "path": "outputs/submission_preparation_20261013/recovered_commands/large_repeat_mask.sh",
+    "source_git_object": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a:large_repeat_mask.sh",
+    "git_blob": "40bdc81912a5bc642330a8455a32448d780fe95b",
+    "sha256": "41651823682148bc11bb5e997b262bd0a945ff57cd1916e6b70cb65abc542988",
+    "qualification": "historical source configuration; execution and resource-to-job correspondence unverified"
+  },
+  {
+    "path": "outputs/submission_preparation_20261013/recovered_commands/LTR_pipeline.sh",
+    "source_git_object": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a:LTR_pipeline.sh",
+    "git_blob": "76a564d557f59c15db5e2c26a52f4fa7d6bb1c32",
+    "sha256": "b4ad86aa37b327ff5cfdfd99eee56c495a9e94548062240d3bec73bf42655ed0",
+    "qualification": "historical source configuration; execution and resource-to-job correspondence unverified"
+  },
+  {
+    "path": "outputs/submission_preparation_20261013/recovered_commands/Mass_map.sh",
+    "source_git_object": "6a3d379fbbf32c58ddaed68035b4eee863b8a99a:Mass_map.sh",
+    "git_blob": "97dfb20d021ea7b1b7ae29ffea7b6ee78af5553c",
+    "sha256": "15b4f835518a3850c09d0aa647d1bf4e83a913ae1e73d48885f0f10aca1376eb",
+    "qualification": "historical source configuration; execution and resource-to-job correspondence unverified"
+  }
+]

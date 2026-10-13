@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "baseline_paragraphs": 40,
+  "final_paragraphs": 61,
+  "unchanged_paragraphs_preserved": 29,
+  "changed_package_parts": [
+    "word/document.xml"
+  ],
+  "styles_headers_footers_and_page_settings": "preserved byte-for-byte"
+}

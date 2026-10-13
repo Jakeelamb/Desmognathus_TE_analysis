@@ -46,7 +46,7 @@ S02,Supplementary_Data_S02_te_resource_panel34.csv,analysis_role,str,analysis_ro
 S02,Supplementary_Data_S02_te_resource_panel34.csv,decision_basis,str,decision_basis,Source-named field retained for audit; see the canonical component documentation.
 S02,Supplementary_Data_S02_te_resource_panel34.csv,has_ectopic,bool,has_ectopic,Source-named field retained for audit; see the canonical component documentation.
 S02,Supplementary_Data_S02_te_resource_panel34.csv,has_finalized_cell_morphology,bool,has_finalized_cell_morphology,Source-named field retained for audit; see the canonical component documentation.
-S02,Supplementary_Data_S02_te_resource_panel34.csv,has_finalized_genome_iod,bool,has_finalized_genome_iod,Source-named field retained for audit; see the canonical component documentation.
+S02,Supplementary_Data_S02_te_resource_panel34.csv,has_finalized_genome_size,bool,has_finalized_genome_size,Source-named field retained for audit; see the canonical component documentation.
 S02,Supplementary_Data_S02_te_resource_panel34.csv,has_genome,bool,has_genome,Source-named field retained for audit; see the canonical component documentation.
 S02,Supplementary_Data_S02_te_resource_panel34.csv,has_ltr_high_confidence,bool,has_ltr_high_confidence,Source-named field retained for audit; see the canonical component documentation.
 S02,Supplementary_Data_S02_te_resource_panel34.csv,has_ltr_history,bool,has_ltr_history,Source-named field retained for audit; see the canonical component documentation.
@@ -64,7 +64,7 @@ S03,Supplementary_Data_S03_path_analysis_panel24.csv,analysis_role,str,analysis_
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,decision_basis,str,decision_basis,Source-named field retained for audit; see the canonical component documentation.
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_ectopic,bool,has_ectopic,Source-named field retained for audit; see the canonical component documentation.
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_finalized_cell_morphology,bool,has_finalized_cell_morphology,Source-named field retained for audit; see the canonical component documentation.
-S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_finalized_genome_iod,bool,has_finalized_genome_iod,Source-named field retained for audit; see the canonical component documentation.
+S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_finalized_genome_size,bool,has_finalized_genome_size,Source-named field retained for audit; see the canonical component documentation.
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_genome,bool,has_genome,Source-named field retained for audit; see the canonical component documentation.
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_ltr_high_confidence,bool,has_ltr_high_confidence,Source-named field retained for audit; see the canonical component documentation.
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,has_ltr_history,bool,has_ltr_history,Source-named field retained for audit; see the canonical component documentation.
@@ -79,16 +79,16 @@ S03,Supplementary_Data_S03_path_analysis_panel24.csv,te_assembly_accession,str,t
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,te_resource_panel34_v1,bool,te_resource_panel34_v1,Source-named field retained for audit; see the canonical component documentation.
 S03,Supplementary_Data_S03_path_analysis_panel24.csv,te_sra_accession,str,te_sra_accession,SRA experiment accession bound to the species TE resource.
 S04,Supplementary_Data_S04_path_analysis_traits24.csv,cell_area_um2,float64,cell_area_um2,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,iod_definition,str,iod_definition,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_iod_images,int64,n_iod_images,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_iod_nuclei,int64,n_iod_nuclei,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_iod_specimens,int64,n_iod_specimens,Source-named field retained for audit; see the canonical component documentation.
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,genome_size_definition,str,genome_size_definition,"Declared conditional D. fuscus assembly-anchored, IOD-derived genome-size contract; not a measured C-value."
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,genome_size_pg_ci_high,float64,genome_size_pg_ci_high,Upper conditional 95% measurement-bootstrap interval on the D. fuscus-anchored genome-size scale; anchor-value uncertainty is excluded.
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,genome_size_pg_ci_low,float64,genome_size_pg_ci_low,Lower conditional 95% measurement-bootstrap interval on the D. fuscus-anchored genome-size scale; anchor-value uncertainty is excluded.
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,genome_size_pg_fuscus_anchored,float64,genome_size_pg_fuscus_anchored,Conditional target-to-D. fuscus equal-image IOD ratio multiplied by the selected 16.462167689-pg/1C assembly anchor; not an independent genome-size assay.
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_genome_size_images,int64,n_genome_size_images,Number of distinct microscopy images supporting the conditional genome-size estimate.
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_genome_size_nuclei,int64,n_genome_size_nuclei,Number of finalized reviewed nuclei supporting the conditional genome-size estimate.
+S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_genome_size_specimens,int64,n_genome_size_specimens,Number of distinct animals supporting the conditional genome-size estimate.
 S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_size_cells,int64,n_size_cells,Source-named field retained for audit; see the canonical component documentation.
 S04,Supplementary_Data_S04_path_analysis_traits24.csv,n_size_images,int64,n_size_images,Source-named field retained for audit; see the canonical component documentation.
 S04,Supplementary_Data_S04_path_analysis_traits24.csv,nucleus_area_um2,float64,nucleus_area_um2,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,relative_iod_ci_high,float64,relative_iod_ci_high,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,relative_iod_ci_low,float64,relative_iod_ci_low,Source-named field retained for audit; see the canonical component documentation.
-S04,Supplementary_Data_S04_path_analysis_traits24.csv,relative_iod_index,float64,relative_iod_index,Source-named field retained for audit; see the canonical component documentation.
 S04,Supplementary_Data_S04_path_analysis_traits24.csv,species,str,species,Canonical analyzed Desmognathus species label.
 S04,Supplementary_Data_S04_path_analysis_traits24.csv,tree_tip,str,tree_tip,Source-named field retained for audit; see the canonical component documentation.
 S05,Supplementary_Data_S05_assembly_quality.csv,contig_n50_bp,int64,contig_n50_bp,Source-named field retained for audit; see the canonical component documentation.
@@ -142,11 +142,10 @@ S07,Supplementary_Data_S07_dnapipete_mass_accounting.csv,superfamily_unresolved_
 S07,Supplementary_Data_S07_dnapipete_mass_accounting.csv,te_assembly_accession,str,te_assembly_accession,Assembly accession bound to the species TE resource.
 S07,Supplementary_Data_S07_dnapipete_mass_accounting.csv,te_sra_accession,str,te_sra_accession,SRA experiment accession bound to the species TE resource.
 S07,Supplementary_Data_S07_dnapipete_mass_accounting.csv,total_aligned_bases,float64,total_aligned_bases,Source-named field retained for audit; see the canonical component documentation.
-S08,Supplementary_Data_S08_te_diversity.csv,gini_simpson,float64,gini_simpson,"Gini-Simpson index, 1 - sum(p_i^2), over positive bins; a paper-facing diversity endpoint in the order-level stratum."
-S08,Supplementary_Data_S08_te_diversity.csv,observed_richness,int64,observed_richness,"Audit/support count of strictly positive classified compositional bins, not a paper-facing diversity endpoint."
-S08,Supplementary_Data_S08_te_diversity.csv,shannon_entropy,float64,shannon_entropy,"Natural-log Shannon entropy, -sum(p_i * ln(p_i)), over positive bins; a paper-facing diversity endpoint in the order-level stratum."
+S08,Supplementary_Data_S08_te_diversity.csv,gini_simpson,float64,gini_simpson,"Gini-Simpson index, 1 - sum(p_i^2), over the species-specific ten most abundant positive superfamilies after reclosure to one."
+S08,Supplementary_Data_S08_te_diversity.csv,n_superfamilies_included,int64,n_superfamilies_included,Number of species-specific most-abundant positive classified TE superfamilies retained before reclosure; fixed at ten.
+S08,Supplementary_Data_S08_te_diversity.csv,shannon_entropy,float64,shannon_entropy,"Natural-log Shannon entropy, -sum(p_i * ln(p_i)), over the species-specific ten most abundant positive superfamilies after reclosure to one."
 S08,Supplementary_Data_S08_te_diversity.csv,species,str,species,Canonical analyzed Desmognathus species label.
-S08,Supplementary_Data_S08_te_diversity.csv,te_level,str,te_level,TE classification level: order is primary for diversity; superfamily is a sensitivity/audit level.
 S09,Supplementary_Data_S09_te_pca_scores.csv,PC1,float64,PC1,Source-named field retained for audit; see the canonical component documentation.
 S09,Supplementary_Data_S09_te_pca_scores.csv,PC10,float64,PC10,Source-named field retained for audit; see the canonical component documentation.
 S09,Supplementary_Data_S09_te_pca_scores.csv,PC11,float64,PC11,Source-named field retained for audit; see the canonical component documentation.
@@ -799,8 +798,8 @@ S25,Supplementary_Data_S25_nuclear_iod_quality_diagnostics.csv,n_nuclei,int64,n_
 S25,Supplementary_Data_S25_nuclear_iod_quality_diagnostics.csv,p_value_descriptive_only,float64,p_value_descriptive_only,Unadjusted descriptive p-value; not a confirmatory endpoint.
 S25,Supplementary_Data_S25_nuclear_iod_quality_diagnostics.csv,quality_feature,str,quality_feature,Image-quality feature tested as a residual technical diagnostic.
 S25,Supplementary_Data_S25_nuclear_iod_quality_diagnostics.csv,within_species_centered_spearman_rho,float64,within_species_centered_spearman_rho,Spearman correlation after centering the feature and log IOD within species.
-S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,comparison,str,comparison,Source-named field retained for audit; see the canonical component documentation.
-S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,left_metric,str,left_metric,Source-named field retained for audit; see the canonical component documentation.
+S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,comparison,str,comparison,"Declared pairwise comparison among genome size, nucleus area, and cell area."
+S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,left_metric,str,left_metric,Left-hand trait; genome-size comparisons use genome_size_pg_fuscus_anchored.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,outcome_log10_mean,float64,outcome_log10_mean,Source-named field retained for audit; see the canonical component documentation.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,outcome_log10_sd,float64,outcome_log10_sd,Source-named field retained for audit; see the canonical component documentation.
@@ -825,13 +824,13 @@ S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,pgls_var_slope,float64,
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,phylogenetically_corrected,bool,phylogenetically_corrected,Source-named field retained for audit; see the canonical component documentation.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,predictor_log10_mean,float64,predictor_log10_mean,Source-named field retained for audit; see the canonical component documentation.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,predictor_log10_sd,float64,predictor_log10_sd,Source-named field retained for audit; see the canonical component documentation.
-S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,right_metric,str,right_metric,Source-named field retained for audit; see the canonical component documentation.
+S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,right_metric,str,right_metric,Right-hand trait in the declared pairwise comparison.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,spearman_rho,float64,spearman_rho,Source-named field retained for audit; see the canonical component documentation.
 S26,Supplementary_Data_S26_pairwise_pgls_sensitivity.csv,trait_transformation,str,trait_transformation,Source-named field retained for audit; see the canonical component documentation.
 S27,Supplementary_Data_S27_path_standardized_traits.csv,cell_area_log10_z,float64,cell_area_log10_z,Source-named field retained for audit; see the canonical component documentation.
-S27,Supplementary_Data_S27_path_standardized_traits.csv,iod_definition,str,iod_definition,Source-named field retained for audit; see the canonical component documentation.
+S27,Supplementary_Data_S27_path_standardized_traits.csv,genome_size_definition,str,genome_size_definition,"Declared conditional D. fuscus assembly-anchored, IOD-derived genome-size contract; not a measured C-value."
+S27,Supplementary_Data_S27_path_standardized_traits.csv,genome_size_log10_z,float64,genome_size_log10_z,Sample-standardized log10 conditional D. fuscus-anchored genome size; invariant to the positive IOD-to-pg scale factor.
 S27,Supplementary_Data_S27_path_standardized_traits.csv,nucleus_area_log10_z,float64,nucleus_area_log10_z,Source-named field retained for audit; see the canonical component documentation.
-S27,Supplementary_Data_S27_path_standardized_traits.csv,relative_iod_log10_z,float64,relative_iod_log10_z,Source-named field retained for audit; see the canonical component documentation.
 S27,Supplementary_Data_S27_path_standardized_traits.csv,species,str,species,Canonical analyzed Desmognathus species label.
 S27,Supplementary_Data_S27_path_standardized_traits.csv,tree_tip,str,tree_tip,Source-named field retained for audit; see the canonical component documentation.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,ci_high,float64,ci_high,Source-named field retained for audit; see the canonical component documentation.
@@ -839,12 +838,12 @@ S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,ci_low,float64,
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,evolutionary_model,str,evolutionary_model,Source-named field retained for audit; see the canonical component documentation.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,fitted_phylogenetic_parameter,float64,fitted_phylogenetic_parameter,Source-named field retained for audit; see the canonical component documentation.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
-S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,outcome,str,outcome,Source-named field retained for audit; see the canonical component documentation.
+S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,outcome,str,outcome,Standardized outcome trait; genome_size denotes conditional genome size.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,p_value,float64,p_value,Source-named field retained for audit; see the canonical component documentation.
-S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
-S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,predictor,str,predictor,Source-named field retained for audit; see the canonical component documentation.
+S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
+S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,predictor,str,predictor,Standardized predictor trait for this coefficient row; genome_size denotes conditional genome size.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,r_squared,float64,r_squared,Source-named field retained for audit; see the canonical component documentation.
-S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,relation_id,str,relation_id,Source-named field retained for audit; see the canonical component documentation.
+S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,relation_id,str,relation_id,"Declared directional regression identifier using genome, nucleus, and cell labels."
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,standard_error,float64,standard_error,Source-named field retained for audit; see the canonical component documentation.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,standardized_coefficient,float64,standardized_coefficient,Source-named field retained for audit; see the canonical component documentation.
 S28,Supplementary_Data_S28_pairwise_phylogenetic_regressions.csv,t_value,float64,t_value,Source-named field retained for audit; see the canonical component documentation.
@@ -862,7 +861,7 @@ S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,l,float64,l,Source
 S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,model,str,model,Source-named field retained for audit; see the canonical component documentation.
 S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
 S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,p,float64,p,Source-named field retained for audit; see the canonical component documentation.
-S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,q,int64,q,Source-named field retained for audit; see the canonical component documentation.
 S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,rank,int64,rank,Source-named field retained for audit; see the canonical component documentation.
 S29,Supplementary_Data_S29_evolutionary_model_sensitivity.csv,replicate_id,str,replicate_id,Source-named field retained for audit; see the canonical component documentation.
@@ -885,7 +884,7 @@ S30,Supplementary_Data_S30_path_model_comparison.csv,l,float64,l,Source-named fi
 S30,Supplementary_Data_S30_path_model_comparison.csv,model,str,model,Source-named field retained for audit; see the canonical component documentation.
 S30,Supplementary_Data_S30_path_model_comparison.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
 S30,Supplementary_Data_S30_path_model_comparison.csv,p,float64,p,Source-named field retained for audit; see the canonical component documentation.
-S30,Supplementary_Data_S30_path_model_comparison.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S30,Supplementary_Data_S30_path_model_comparison.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S30,Supplementary_Data_S30_path_model_comparison.csv,q,int64,q,Source-named field retained for audit; see the canonical component documentation.
 S30,Supplementary_Data_S30_path_model_comparison.csv,rank,int64,rank,Source-named field retained for audit; see the canonical component documentation.
 S30,Supplementary_Data_S30_path_model_comparison.csv,replicate_id,str,replicate_id,Source-named field retained for audit; see the canonical component documentation.
@@ -901,7 +900,7 @@ S31,Supplementary_Data_S31_path_edge_estimates.csv,equivalence_class,str,equival
 S31,Supplementary_Data_S31_path_edge_estimates.csv,interval_excludes_zero,bool,interval_excludes_zero,Source-named field retained for audit; see the canonical component documentation.
 S31,Supplementary_Data_S31_path_edge_estimates.csv,mechanism,str,mechanism,Source-named field retained for audit; see the canonical component documentation.
 S31,Supplementary_Data_S31_path_edge_estimates.csv,parent,str,parent,Source-named field retained for audit; see the canonical component documentation.
-S31,Supplementary_Data_S31_path_edge_estimates.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S31,Supplementary_Data_S31_path_edge_estimates.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S31,Supplementary_Data_S31_path_edge_estimates.csv,standard_error,float64,standard_error,Source-named field retained for audit; see the canonical component documentation.
 S31,Supplementary_Data_S31_path_edge_estimates.csv,standardized_coefficient,float64,standardized_coefficient,Source-named field retained for audit; see the canonical component documentation.
 S32,Supplementary_Data_S32_path_model_stability.csv,admissible_competitive_count,int64,admissible_competitive_count,Source-named field retained for audit; see the canonical component documentation.
@@ -909,7 +908,7 @@ S32,Supplementary_Data_S32_path_model_stability.csv,admissible_competitive_rate,
 S32,Supplementary_Data_S32_path_model_stability.csv,analysis,str,analysis,Source-named field retained for audit; see the canonical component documentation.
 S32,Supplementary_Data_S32_path_model_stability.csv,model,str,model,Source-named field retained for audit; see the canonical component documentation.
 S32,Supplementary_Data_S32_path_model_stability.csv,n_fits,int64,n_fits,Source-named field retained for audit; see the canonical component documentation.
-S32,Supplementary_Data_S32_path_model_stability.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S32,Supplementary_Data_S32_path_model_stability.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S32,Supplementary_Data_S32_path_model_stability.csv,top_count,int64,top_count,Source-named field retained for audit; see the canonical component documentation.
 S32,Supplementary_Data_S32_path_model_stability.csv,top_rate,float64,top_rate,Source-named field retained for audit; see the canonical component documentation.
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,C,float64,C,Source-named field retained for audit; see the canonical component documentation.
@@ -926,7 +925,7 @@ S33,Supplementary_Data_S33_path_tree_sensitivity.csv,l,float64,l,Source-named fi
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,model,str,model,Source-named field retained for audit; see the canonical component documentation.
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,p,float64,p,Source-named field retained for audit; see the canonical component documentation.
-S33,Supplementary_Data_S33_path_tree_sensitivity.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S33,Supplementary_Data_S33_path_tree_sensitivity.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,q,int64,q,Source-named field retained for audit; see the canonical component documentation.
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,rank,int64,rank,Source-named field retained for audit; see the canonical component documentation.
 S33,Supplementary_Data_S33_path_tree_sensitivity.csv,replicate_id,str,replicate_id,Source-named field retained for audit; see the canonical component documentation.
@@ -949,7 +948,7 @@ S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,l,float64,l,Source-n
 S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,model,str,model,Source-named field retained for audit; see the canonical component documentation.
 S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
 S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,p,float64,p,Source-named field retained for audit; see the canonical component documentation.
-S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,q,int64,q,Source-named field retained for audit; see the canonical component documentation.
 S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,rank,int64,rank,Source-named field retained for audit; see the canonical component documentation.
 S34,Supplementary_Data_S34_path_measurement_sensitivity.csv,replicate_id,str,replicate_id,Source-named field retained for audit; see the canonical component documentation.
@@ -972,7 +971,7 @@ S35,Supplementary_Data_S35_path_leave_one_species_out.csv,l,float64,l,Source-nam
 S35,Supplementary_Data_S35_path_leave_one_species_out.csv,model,str,model,Source-named field retained for audit; see the canonical component documentation.
 S35,Supplementary_Data_S35_path_leave_one_species_out.csv,n_species,int64,n_species,Source-named field retained for audit; see the canonical component documentation.
 S35,Supplementary_Data_S35_path_leave_one_species_out.csv,p,float64,p,Source-named field retained for audit; see the canonical component documentation.
-S35,Supplementary_Data_S35_path_leave_one_species_out.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S35,Supplementary_Data_S35_path_leave_one_species_out.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S35,Supplementary_Data_S35_path_leave_one_species_out.csv,q,int64,q,Source-named field retained for audit; see the canonical component documentation.
 S35,Supplementary_Data_S35_path_leave_one_species_out.csv,rank,int64,rank,Source-named field retained for audit; see the canonical component documentation.
 S35,Supplementary_Data_S35_path_leave_one_species_out.csv,replicate_id,str,replicate_id,Source-named field retained for audit; see the canonical component documentation.
@@ -985,7 +984,7 @@ S36,Supplementary_Data_S36_path_simulation_calibration.csv,any_bridge_top_rate,f
 S36,Supplementary_Data_S36_path_simulation_calibration.csv,generating_class,str,generating_class,Source-named field retained for audit; see the canonical component documentation.
 S36,Supplementary_Data_S36_path_simulation_calibration.csv,median_admissible_competitive_models,int64,median_admissible_competitive_models,Source-named field retained for audit; see the canonical component documentation.
 S36,Supplementary_Data_S36_path_simulation_calibration.csv,n_simulations,int64,n_simulations,Source-named field retained for audit; see the canonical component documentation.
-S36,Supplementary_Data_S36_path_simulation_calibration.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S36,Supplementary_Data_S36_path_simulation_calibration.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S36,Supplementary_Data_S36_path_simulation_calibration.csv,residual_regime,str,residual_regime,Source-named field retained for audit; see the canonical component documentation.
 S36,Supplementary_Data_S36_path_simulation_calibration.csv,true_class_delta_le_2_rate,float64,true_class_delta_le_2_rate,Source-named field retained for audit; see the canonical component documentation.
 S36,Supplementary_Data_S36_path_simulation_calibration.csv,true_class_global_fit_rate,float64,true_class_global_fit_rate,Source-named field retained for audit; see the canonical component documentation.
@@ -997,7 +996,7 @@ S37,Supplementary_Data_S37_path_dsep_tests.csv,component_p,float64,component_p,S
 S37,Supplementary_Data_S37_path_dsep_tests.csv,evolutionary_model,str,evolutionary_model,Source-named field retained for audit; see the canonical component documentation.
 S37,Supplementary_Data_S37_path_dsep_tests.csv,fitted_phylogenetic_parameter,float64,fitted_phylogenetic_parameter,Source-named field retained for audit; see the canonical component documentation.
 S37,Supplementary_Data_S37_path_dsep_tests.csv,independence_claim,str,independence_claim,Source-named field retained for audit; see the canonical component documentation.
-S37,Supplementary_Data_S37_path_dsep_tests.csv,path_trait_definition,str,path_trait_definition,Source-named field retained for audit; see the canonical component documentation.
+S37,Supplementary_Data_S37_path_dsep_tests.csv,path_trait_definition,str,path_trait_definition,"Declared path trait contract: conditional D. fuscus assembly-anchored genome size in pg/1C, IOD-derived and not a measured C-value."
 S37,Supplementary_Data_S37_path_dsep_tests.csv,replicate_id,str,replicate_id,Source-named field retained for audit; see the canonical component documentation.
 S37,Supplementary_Data_S37_path_dsep_tests.csv,tree_id,str,tree_id,Source-named field retained for audit; see the canonical component documentation.
 S38,Supplementary_Data_S38_phylogeny_edges.csv,branch_length_myr,float64,branch_length_myr,Source-named field retained for audit; see the canonical component documentation.
@@ -1008,22 +1007,59 @@ S39,Supplementary_Data_S39_phylogeny_nodes.csv,is_tip,bool,is_tip,Source-named f
 S39,Supplementary_Data_S39_phylogeny_nodes.csv,node,str,node,Source-named field retained for audit; see the canonical component documentation.
 S39,Supplementary_Data_S39_phylogeny_nodes.csv,root_distance_myr,float64,root_distance_myr,Source-named field retained for audit; see the canonical component documentation.
 S39,Supplementary_Data_S39_phylogeny_nodes.csv,tip_label,str,tip_label,Source-named field retained for audit; see the canonical component documentation.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,estimate_support,str,estimate_support,Whether one or multiple observed images support the IOD estimate.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,gini_simpson,float64,gini_simpson,"Gini-Simpson index, 1 - sum(p_i^2), from the canonical classified-conditional superfamily S08 row."
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,iod_definition,str,iod_definition,Declared relative nuclear-IOD estimator and normalization; never an absolute genome-size conversion.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,manual_review_inclusion,bool,manual_review_inclusion,Whether the Path24 species was retained through a documented manual-review decision below the automatic object-count target.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,n_images,int64,n_images,Number of distinct source images contributing to the row.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,n_nuclei,int64,n_nuclei,Number of finalized reviewed nuclei contributing to the row.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,n_specimens,int64,n_specimens,Number of distinct specimen_id values; each value denotes one animal.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,observed_richness,int64,observed_richness,Audit/support count of positive classified-superfamily bins in the canonical S08 row; not a paper-facing diversity endpoint.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,quality_match_status,str,quality_match_status,Image-quality common-support or limited-overlap category.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,relative_iod_ci_high,float64,relative_iod_ci_high,Upper conditional 95% interval bound for the relative nuclear-IOD index.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,relative_iod_ci_low,float64,relative_iod_ci_low,Lower conditional 95% interval bound for the relative nuclear-IOD index.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,relative_iod_index,float64,relative_iod_index,Image-derived species nuclear-IOD estimate divided by the Path24 median; not an independently calibrated absolute genome size.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,sample_size_support,str,sample_size_support,Recorded nucleus-count support category for the IOD estimate.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,scientific_name,str,scientific_name,Display-form scientific name for the canonical species row.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,shannon_entropy,float64,shannon_entropy,Natural-log Shannon entropy from the canonical classified-conditional superfamily S08 row.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,species,str,species,Canonical analyzed Desmognathus species label.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,te_assembly_accession,str,te_assembly_accession,Assembly accession bound to the species TE resource.
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,te_diversity_definition,str,te_diversity_definition,"Declared TE classification level, denominator, and diversity metric source for the joined row."
-S40,Supplementary_Data_S40_te_relative_iod_overlap21.csv,te_sra_accession,str,te_sra_accession,SRA experiment accession bound to the species TE resource.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,estimate_support,str,estimate_support,Whether one or multiple observed images support the genome-size estimate.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,genome_size_definition,str,genome_size_definition,"Declared conditional D. fuscus assembly-anchored, IOD-derived genome-size contract; not a measured C-value."
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,genome_size_pg_ci_high,float64,genome_size_pg_ci_high,Upper conditional 95% measurement-bootstrap interval for genome size; anchor-value uncertainty is excluded.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,genome_size_pg_ci_low,float64,genome_size_pg_ci_low,Lower conditional 95% measurement-bootstrap interval for genome size; anchor-value uncertainty is excluded.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,genome_size_pg_fuscus_anchored,float64,genome_size_pg_fuscus_anchored,Conditional target-to-D. fuscus equal-image IOD ratio multiplied by the selected 16.462167689-pg/1C assembly anchor.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,gini_simpson,float64,gini_simpson,"Gini-Simpson index, 1 - sum(p_i^2), from the canonical species-specific top-10 superfamily S08 row after reclosure to one."
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,manual_review_inclusion,bool,manual_review_inclusion,Whether the Path24 species was retained through a documented manual-review decision below the automatic object-count target.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,n_images,int64,n_images,Number of distinct source images contributing to the row.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,n_nuclei,int64,n_nuclei,Number of finalized reviewed nuclei contributing to the row.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,n_specimens,int64,n_specimens,Number of distinct specimen_id values; each value denotes one animal.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,n_superfamilies_included,int64,n_superfamilies_included,Number of species-specific most-abundant positive classified TE superfamilies used by canonical S08; fixed at ten.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,quality_match_status,str,quality_match_status,Image-quality common-support or limited-overlap category.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,sample_size_support,str,sample_size_support,Recorded nucleus-count support category for the genome-size estimate.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,scientific_name,str,scientific_name,Display-form scientific name for the canonical species row.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,shannon_entropy,float64,shannon_entropy,Natural-log Shannon entropy from the canonical species-specific top-10 superfamily S08 row after reclosure to one.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,species,str,species,Canonical analyzed Desmognathus species label.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,te_assembly_accession,str,te_assembly_accession,Assembly accession bound to the species TE resource.
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,te_diversity_definition,str,te_diversity_definition,"Declared TE classification level, denominator, and diversity metric source for the joined row."
+S40,Supplementary_Data_S40_te_genome_size_overlap21.csv,te_sra_accession,str,te_sra_accession,SRA experiment accession bound to the species TE resource.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,common_name,str,common_name,Published English name when supplied; blank for current rows.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,comparison_group,str,comparison_group,Display group used by the cross-study distribution panels.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,data_origin,str,data_origin,Row origin: exact Wang et al. 2025 Dryad Figure 2 value or current Desmognathus recomputation.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,family,str,family,Taxonomic family retained from the published source or current genus.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,figure_inclusion,str,figure_inclusion,Declared group-only or scatter-and-group use; no row is used for a pooled fit.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,genome_size_ci_high_gb,float64,genome_size_ci_high_gb,Upper conditional interval for current genome-size sensitivity; blank for published and current group-only rows.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,genome_size_ci_low_gb,float64,genome_size_ci_low_gb,Lower conditional interval for current genome-size sensitivity; blank for published and current group-only rows.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,genome_size_gb,float64,genome_size_gb,Published genome size in Gbp or current conditional D. fuscus-anchored IOD-derived sensitivity converted to Gbp at 0.978 Gbp per pg.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,gini_simpson_top10_superfamilies,float64,gini_simpson_top10_superfamilies,"Gini-Simpson index, 1 - sum(p_i^2), after retaining the ten most abundant positive TE superfamilies and reclosing them to one."
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,metric_scope,str,metric_scope,Method-specific top-ten-superfamily diversity contract; published and current scopes remain explicitly distinct.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,scientific_name,str,scientific_name,Scientific name retained from the source or canonical current row.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,shannon_top10_superfamilies,float64,shannon_top10_superfamilies,Natural-log Shannon entropy after retaining the ten most abundant positive TE superfamilies and reclosing them to one.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,source_doi,str,source_doi,Dataset DOI for published rows or this_study for current rows.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,source_file,str,source_file,Exact published workbook member or semicolon-delimited canonical current input paths.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,source_file_sha256,str,source_file_sha256,SHA-256 of the published workbook member or semicolon-delimited hashes of the canonical current inputs.
+S41,Supplementary_Data_S41_wang2025_cross_study_te_diversity.csv,source_record_id,str,source_record_id,Stable row identifier within the declared data origin.
+S42,Supplementary_Data_S42_te_bonsai_tip_annotations.csv,annotation_timing,str,annotation_timing,"Records that reproductive strategy was supplied after review of the initial PCA, making the annotation and associated tests post hoc."
+S42,Supplementary_Data_S42_te_bonsai_tip_annotations.csv,display_species,str,display_species,Italic-ready display label for the canonical TE34 species.
+S42,Supplementary_Data_S42_te_bonsai_tip_annotations.csv,reproductive_strategy,str,reproductive_strategy,Machine-readable expert reproductive-strategy annotation.
+S42,Supplementary_Data_S42_te_bonsai_tip_annotations.csv,reproductive_strategy_label,str,reproductive_strategy_label,Publication display label for reproductive strategy.
+S42,Supplementary_Data_S42_te_bonsai_tip_annotations.csv,species,str,species,Canonical analyzed Desmognathus species label.
+S42,Supplementary_Data_S42_te_bonsai_tip_annotations.csv,strategy_assigned,bool,strategy_assigned,Whether an expert reproductive-strategy label is available.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,feature_bootstrap_edge_delimited_count,int64,feature_bootstrap_edge_delimited_count,Number of 200 bounded feature-resampling refits with an exact group edge.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,feature_bootstrap_edge_delimited_fraction,float64,feature_bootstrap_edge_delimited_fraction,Fraction of bounded feature-resampling refits with an exact group edge.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,feature_bootstrap_replicates,int64,feature_bootstrap_replicates,Declared feature-resampling replicate count.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,feature_bootstrap_smallest_side_median,int64,feature_bootstrap_smallest_side_median,Median smallest containing-side tip count across feature-resampling refits.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,fixed_tree_smallest_side_p_value,float64,fixed_tree_smallest_side_p_value,One-sided fixed-tree label-permutation P value for a containing side this small or smaller.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,fixed_tree_smallest_side_p_value_holm,float64,fixed_tree_smallest_side_p_value_holm,Holm-adjusted P value across the nine reported localization tests.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,full_fit_edge_delimited,bool,full_fit_edge_delimited,Whether one full-fit tree edge exactly delimits all and only the group members.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,full_fit_smallest_containing_side_tips,int64,full_fit_smallest_containing_side_tips,Fewest tips on an edge-delimited side containing every group member in the full fitted Bonsai tree.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,global_fitch_null_mean_steps,float64,global_fitch_null_mean_steps,"Mean Fitch parsimony steps across 99,999 fixed-tree label permutations."
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,global_fitch_observed_steps,int64,global_fitch_observed_steps,Observed Fitch parsimony steps on the fixed tree.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,global_fitch_p_value,float64,global_fitch_p_value,One-sided global Fitch label-permutation P value.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,global_fitch_p_value_holm,float64,global_fitch_p_value_holm,Global Fitch P value after Holm adjustment across nine reported tests.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,group_n,int64,group_n,Number of assigned TE34 species in the strategy group.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,strategy,str,strategy,Machine-readable reproductive-strategy identifier.
+S43,Supplementary_Data_S43_te_bonsai_strategy_validation.csv,strategy_label,str,strategy_label,Publication display label for reproductive strategy.

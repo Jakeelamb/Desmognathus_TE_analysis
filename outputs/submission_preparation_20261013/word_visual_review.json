@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "initial_all_pages_viewed_at_original_resolution": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "final_page_reinspected": 4,
+  "final_other_pages_byte_identical_to_inspected_pages": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+  ],
+  "findings": "no clipped text, missing glyphs, orphan headings, or footer collisions"
+}

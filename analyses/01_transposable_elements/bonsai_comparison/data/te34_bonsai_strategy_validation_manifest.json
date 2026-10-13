@@ -1,0 +1,96 @@
+{
+  "analysis_id": "te34_bonsai_reproductive_strategy_validation_v1",
+  "analysis_date": "2026-08-25",
+  "analysis_status": "exploratory_post_hoc_label_localization_and_bounded_feature_bootstrap",
+  "inputs": {
+    "reference_bonsai_tree": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_tree.nwk",
+      "sha256": "544bc3bc6c318eb2c0e58d700d19aba553a1d12f774fe0c4b7b969a3326715d0"
+    },
+    "superfamily_clr": {
+      "path": "analyses/01_transposable_elements/data/te_pca_clr_matrix.csv",
+      "sha256": "c58a7cc71ed4306544e81397007cd3f8b348e6df4fce54066e0f2f748f52ff39"
+    },
+    "organismal_traits": {
+      "path": "analyses/03_phylogenetic_path/data/organismal_traits.csv",
+      "sha256": "3dedc64a53d1c08e7278d2954c173672362fe459848298372911a3a89f278822"
+    },
+    "bootstrap_plan": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_feature_bootstrap_plan.json",
+      "sha256": "e2926e7c8dd3e95a3b00e12b9949175115ce30a8e08a70120d792b5307a10214"
+    },
+    "bootstrap_draws": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_feature_bootstrap_draws.csv",
+      "sha256": "80bf081ce801a9c234564f54e700cb2b5fe4e5d28a1b044ad183ab9fc98f4a7e"
+    },
+    "bootstrap_tree_archive": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_feature_bootstrap_trees.nwk.gz",
+      "sha256": "4c176ed4cbf0b8d81b407ab56271ae41207cdd991717751c3f1f7bf72d54ca05"
+    },
+    "bootstrap_tree_index": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/data/te34_bonsai_feature_bootstrap_tree_index.csv",
+      "sha256": "7722ffa073a57bcb72798d19f96a65913d1ad0e4c506619dfedd4bb3aaaf9201"
+    },
+    "validation_script": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/validate_strategy_localization.py",
+      "sha256": "d971504304e66a4301d4026421e4456ebe120f106b50b111c6591a99badea362"
+    },
+    "bootstrap_runner": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/run_feature_bootstrap.sh",
+      "sha256": "fb0e19b4038cdec2bbaa1911c189d84ab64e028932d523cb69b1cbc4a99bda7a"
+    },
+    "validation_plot_script": {
+      "path": "analyses/01_transposable_elements/bonsai_comparison/plot_bonsai_validation.R",
+      "sha256": "18db773d0bc3ecb90a4b93e42c9bc253847a6e446d38e7553e5904f5fc8b3823"
+    },
+    "python_project": {
+      "path": "pyproject.toml",
+      "sha256": "90033d39fb6183771c263af20dc3c51634d293494ae20264969ebbe5a7dbc848"
+    },
+    "python_lock": {
+      "path": "uv.lock",
+      "sha256": "90823ad81675820db9c306d03d27fa4323877b6c09abaeb9213d5bdcfd767723"
+    }
+  },
+  "label_permutation": {
+    "assigned_tips": 34,
+    "unassigned_tips": [],
+    "group_sizes": {
+      "aquatic_eggs": 7,
+      "direct_development": 3,
+      "terrestrial_eggs_aquatic_larvae": 24
+    },
+    "permutations": 99999,
+    "seed": 20260825,
+    "primary_endpoint": "global_fitch_parsimony_steps",
+    "primary_observed": 2.0,
+    "primary_p_value": 1e-05,
+    "holm_adjustment": "all nine reported label-localization tests"
+  },
+  "feature_bootstrap": {
+    "replicates": 200,
+    "seed": 20260826,
+    "sampling_unit": "24 CLR-superfamily coordinates sampled with replacement",
+    "bounded_search": {
+      "nnn_n_randommoves": 100,
+      "nnn_n_randomtrees": 1,
+      "full_fit_nnn_n_randommoves": 1000,
+      "full_fit_nnn_n_randomtrees": 10
+    },
+    "matched_calibration_normalized_rf_to_full_fit": 0.22580645161290322,
+    "strategy_edge_delimited_support": {
+      "aquatic_eggs": 0.275,
+      "direct_development": 0.35,
+      "terrestrial_eggs_aquatic_larvae": 0.01
+    }
+  },
+  "interpretation_boundaries": [
+    "Reproductive-strategy labels were interpreted after review of the initial PCA, so all tests are post hoc and exploratory.",
+    "Permuting labels on the fixed TE-composition tree tests localization, not causation or phylogenetically independent association.",
+    "The two focal exact groups are edge-delimited TE-composition clusters, not inferred species clades.",
+    "Feature coordinates are compositional and correlated; resampling the 24 CLR coordinates is a perturbation analysis, not a biological-specimen bootstrap.",
+    "Bootstrap runs use one random tree and 100 random NNI moves versus ten trees and 1,000 moves in the full fit.",
+    "The matched full-feature calibration differs from the full fit, so support combines feature-resampling and bounded-search sensitivity.",
+    "No per-species feature-error matrix is available; canonical PCA outputs remain as a supplementary audit while the validated Bonsai representation supplies the publication figure."
+  ]
+}

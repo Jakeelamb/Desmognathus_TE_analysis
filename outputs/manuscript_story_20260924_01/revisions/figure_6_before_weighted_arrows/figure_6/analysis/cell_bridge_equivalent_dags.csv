@@ -1,0 +1,4 @@
+dag_id,n_edges,equivalence_class,basis_claim,testable_by_dsep,class_member_count
+CS->GS;CS->NS,2,cell_bridge,genome_size _||_ nucleus_size | cell_size,TRUE,3
+GS->CS;CS->NS,2,cell_bridge,genome_size _||_ nucleus_size | cell_size,TRUE,3
+NS->CS;CS->GS,2,cell_bridge,genome_size _||_ nucleus_size | cell_size,TRUE,3

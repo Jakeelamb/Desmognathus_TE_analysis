@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "prior_files_preserved": 545,
+  "changed_prior_files": [],
+  "note_fields": 64,
+  "expanded_path_score_rows_verified": 32,
+  "workbook_sheets": 5,
+  "workbook_numeric_cells_verified": 636,
+  "workbook_values_and_missingness_match_payload": true,
+  "workbook_populated_cells_all_Arial": true
+}

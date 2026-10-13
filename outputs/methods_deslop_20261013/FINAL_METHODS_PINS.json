@@ -1,0 +1,114 @@
+{
+  "created_utc": "2026-10-13T18:28:39.029837+00:00",
+  "scope": "Final six active Methods files and coordinator editorial/rendering evidence. Independent verifier records the same active-file identities separately.",
+  "files": {
+    "Publication/methods/README.md": {
+      "bytes": 5857,
+      "sha256": "dae84086e9be26d4124238052cc5e1a56ed1871cede13edb8e6229a5a4f639bf"
+    },
+    "Publication/methods/METHODS_REQUIRED_AUTHOR_INPUT.csv": {
+      "bytes": 8717,
+      "sha256": "fe599b5457346afee17b1deae78af430d336d1a7e6ae2ef26b7646445dd76b1a"
+    },
+    "Publication/methods/METHODS_BULLET_SCAFFOLD.md": {
+      "bytes": 38508,
+      "sha256": "441fb17ca89b4685f76fb049e1da44e7c80656f64547305d949e4c9152267b04"
+    },
+    "Publication/methods/METHODS_EVIDENCE_MATRIX.csv": {
+      "bytes": 14475,
+      "sha256": "588a858cbcb8f673f05c1b221c6d1e4788b3e3f4b014dc701432211f75a2e300"
+    },
+    "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md": {
+      "bytes": 28758,
+      "sha256": "c2d4accc934f537c5c595d441ec83dca6da4fb550b02cf2d558532dc2ec375c9"
+    },
+    "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx": {
+      "bytes": 32979,
+      "sha256": "d84e2eeafcb1b6ecb6b1765d9594b6c4778e034de4ab2ac5d7800ee975749f40"
+    },
+    "outputs/methods_deslop_20261013/docx_render/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.pdf": {
+      "bytes": 103594,
+      "sha256": "dfc286befdb2348bec6cef1af65b37bf5c386b3135dba7105eb71bd55598f8cd"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-1.png": {
+      "bytes": 489394,
+      "sha256": "41183c7889efbe4409f9f052f136c3f9f574e0e4ca9876d00330ae4721ba35d8"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-2.png": {
+      "bytes": 489469,
+      "sha256": "0b3e9f32baefd1ae8e7ccba97cf1f55e2f762deb3b5ac09b8874919b98831766"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-3.png": {
+      "bytes": 500601,
+      "sha256": "3e41cd08adfc42c3803810f3d221ea9d264ca891b4f1a06992fc255d6c62ec17"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-4.png": {
+      "bytes": 448290,
+      "sha256": "d540a663aeb820dcb9972cec2056dbfa403621785ab92abf7d59d99b913207d9"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-5.png": {
+      "bytes": 511342,
+      "sha256": "8cbe063a398873eb07456c1bb51ee69b755786f0206e47fa56a0e3d0ca469cef"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-6.png": {
+      "bytes": 479839,
+      "sha256": "5d1dbea8bbbf76d186899e2b2589b056a7a3392e9f523a4c00a776cb50d08632"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-7.png": {
+      "bytes": 502333,
+      "sha256": "9fc1b17ef77a6d8377db832b4cccbe819e6193e3a53da75b1b7c522c6af40c4c"
+    },
+    "outputs/methods_deslop_20261013/docx_render/page-8.png": {
+      "bytes": 383863,
+      "sha256": "3f89d482f4fffcf1ea08b42db78404df28cda01e474536240d087c8a43901cc2"
+    },
+    "outputs/methods_deslop_20261013/BASELINE.json": {
+      "bytes": 1163,
+      "sha256": "90e8e5358662925f816f85e492837713ae62b657ff54e8523ca48d81559e4c16"
+    },
+    "outputs/methods_deslop_20261013/PLAN.md": {
+      "bytes": 2532,
+      "sha256": "ceb2cd85d0437606761298fba5d582dca0192b7ae0cbf90dc7b49fdcd667fdb5"
+    },
+    "outputs/methods_deslop_20261013/word_sync.json": {
+      "bytes": 412,
+      "sha256": "d1d6d7f8e8b8780318335fc32684f7e0707638a8160087bbf1f0a85cffc9c27e"
+    },
+    "outputs/methods_deslop_20261013/ROOT_EXECUTION_RECEIPTS.json": {
+      "bytes": 4465,
+      "sha256": "fa61b900ca310340d28f23e264ffad89a9664d6992eef5d67053d2efdb57694d"
+    },
+    "outputs/methods_deslop_20261013/PROTECTED_ARTIFACT_CHECK.json": {
+      "bytes": 299,
+      "sha256": "de051daec4f93e51ad31c42aecaaacdba0481e1503be0d1a613262285a5c2c07"
+    },
+    "outputs/methods_deslop_20261013/METHODS_EDITORIAL_DIFF.patch": {
+      "bytes": 120001,
+      "sha256": "f13bed1b71caeb51485f681421ef311892ce54ed6531e6a7e029ad9c1db718ff"
+    },
+    "outputs/methods_deslop_20261013/INTEGRATION_NOTES.md": {
+      "bytes": 2226,
+      "sha256": "3343bfc139a6fd90612484489334db373052ec00bdbde580700e3cfa5782d710"
+    },
+    "outputs/methods_deslop_20261013/PROSE_EDIT_NOTES.md": {
+      "bytes": 4274,
+      "sha256": "2fe69d99f3d059baa41682e08af05e7edd79c1447ccda58094ed8e172d1210cc"
+    },
+    "outputs/methods_deslop_20261013/NOTES_EDIT_NOTES.md": {
+      "bytes": 2754,
+      "sha256": "749cfa7d58f38e6636297bfef70bc1867c3148e7b9245b299264ccf4ac1be5ef"
+    },
+    "outputs/methods_deslop_20261013/FINAL_CHECKS.json": {
+      "bytes": 1100,
+      "sha256": "8102a5b4dddb496a964ea7aed41df56bfd265965fdae4a961030f43df06f9c96"
+    },
+    "outputs/methods_deslop_20261013/VERIFICATION.md": {
+      "bytes": 8091,
+      "sha256": "cc2187c3ab8e147236ee9f8899f90ea90eccbda539103c8b6074d191fc8c376f"
+    }
+  },
+  "finalized_utc": "2026-10-13T18:32:55.613505+00:00",
+  "editorial_verification": "PASS",
+  "methods_tests": "12 passed",
+  "rendered_pages_inspected": 8
+}

@@ -19,6 +19,11 @@ body { max-width: 1500px; }
 .boundary { border-left-color: #E69F00; background: #fffaf0; }
 code { white-space: pre-wrap; }
 .figure img { border: 1px solid #D9DEE2; }
+.auxiliary-figure { border-top: 1px solid #D9DEE2; margin-top: 2em; padding-top: 1em; }
+.auxiliary-figure img { border: 1px solid #D9DEE2; display: block; height: auto; margin: 1em auto; max-width: 100%; }
+.auxiliary-copy { display: grid; gap: 1em 2em; grid-template-columns: minmax(0, 3fr) minmax(18em, 2fr); }
+.auxiliary-copy p { margin-top: 0; }
+@media (max-width: 850px) { .auxiliary-copy { grid-template-columns: 1fr; } }
 </style>
 
 ```{r report-setup}
@@ -38,6 +43,10 @@ ROOT <- normalizePath(getwd(), mustWork = TRUE)
 DATA <- file.path(ROOT, "Publication", "datasets")
 FIGURES <- file.path(ROOT, "Publication", "figures")
 REPORT_SOURCE <- file.path(ROOT, "Publication", "Desmognathus_study_data.Rmd")
+AUXILIARY_MANIFEST_PATH <- file.path(
+  FIGURES,
+  "AUXILIARY_FIGURE_MANIFEST.csv"
+)
 
 source(file.path(ROOT, "scripts", "publication", "gbe_theme.R"))
 knitr::read_chunk(file.path(ROOT, "scripts", "publication", "build_gbe_figures.R"))
@@ -55,6 +64,44 @@ manifest <- read_csv(
   show_col_types = FALSE,
   progress = FALSE
 )
+auxiliary_manifest <- read_csv(
+  AUXILIARY_MANIFEST_PATH,
+  show_col_types = FALSE,
+  progress = FALSE
+)
+
+required_auxiliary_columns <- c(
+  "auxiliary_id", "title", "basename", "width_mm", "height_mm",
+  "final_font_family", "minimum_target_text_pt", "datasets",
+  "release_status", "boundary", "legend", "alt_text", "pdf", "png", "tiff"
+)
+expected_auxiliary_ids <- c(
+  "Auxiliary_Wang_style_integrated_te_history_candidate",
+  "Auxiliary_Wang_style_diversity_genome_size_candidate",
+  "Auxiliary_Path24_development_traits_reference",
+  "Auxiliary_Path_DAG_reference",
+  "Auxiliary_Wang2025_cross_study_te_diversity_reference"
+)
+expected_auxiliary_titles <- c(
+  "Wang-style integrated TE content and proliferation candidate",
+  "Wang-style TE diversity and genome-size candidate",
+  "Path24 development and phenotype reference",
+  "Path DAG equivalence-class reference",
+  "Cross-study TE-diversity reference (Wang et al. 2025)"
+)
+
+if (!all(required_auxiliary_columns %in% names(auxiliary_manifest))) {
+  stop(
+    "Auxiliary figure manifest is missing required columns: ",
+    paste(setdiff(required_auxiliary_columns, names(auxiliary_manifest)), collapse = ", ")
+  )
+}
+if (
+  !identical(auxiliary_manifest$auxiliary_id, expected_auxiliary_ids) ||
+    !identical(auxiliary_manifest$title, expected_auxiliary_titles)
+) {
+  stop("Auxiliary figure manifest records or order do not match the report contract")
+}
 
 manifest_row <- function(supplement_id) {
   row <- manifest %>% filter(.data$supplement_id == .env$supplement_id)
@@ -98,9 +145,28 @@ figure_path <- function(filename) {
   path
 }
 
+escape_html <- function(value, attribute = FALSE) {
+  htmltools::htmlEscape(as.character(value), attribute = attribute)
+}
+
+format_inline <- function(value) {
+  escaped <- escape_html(value)
+  gsub("`([^`]+)`", "<code>\\1</code>", escaped, perl = TRUE)
+}
+
+auxiliary_paths <- file.path(FIGURES, auxiliary_manifest$png)
+if (any(!file.exists(auxiliary_paths))) {
+  stop(
+    "Missing auxiliary figure files: ",
+    paste(basename(auxiliary_paths[!file.exists(auxiliary_paths)]), collapse = ", "),
+    ". Run `make figures`."
+  )
+}
+
 stopifnot(
-  nrow(manifest) == 40L,
-  identical(manifest$supplement_id, sprintf("S%02d", seq_len(40)))
+  nrow(manifest) == 43L,
+  identical(manifest$supplement_id, sprintf("S%02d", seq_len(43))),
+  nrow(auxiliary_manifest) == 5L
 )
 ```
 
@@ -112,10 +178,11 @@ table, review decision, or publication dataset.
 </div>
 
 <div class="callout boundary">
-**Claim boundaries.** Relative nuclear IOD is an image-derived relative
-phenotype, not an independently validated absolute genome size. The separate
-*D. fuscus* scale uses an assembly-derived conditional anchor of 16.462167689
-pg/1C (`16.1 Gbp / 0.978 Gbp per pg`). The LTR terminal:internal statistic is a
+**Claim boundaries.** Genome-size values are conditional *D. fuscus*
+assembly-anchored pg/1C estimates, not direct independently measured species
+C-values. Their assay and conversion evidence is isolated in the calibration
+proof below. The anchor is 16.462167689 pg/1C
+(`16.1 Gbp / 0.978 Gbp per pg`). The LTR terminal:internal statistic is a
 mapping/deletion-footprint proxy, not a direct ectopic-recombination, solo-LTR,
 or DNA-loss rate. Cell and nucleus summaries describe the reviewed upper tail
 of observed erythrocytes and their intervals are conditional on the observed
@@ -130,10 +197,11 @@ unique causal arrow.
 ### What is included
 
 - **TE34:** 34 species with accession-linked genomic resources.
-- **Path24:** 24 species with finalized cell, nucleus, and relative-IOD data.
+- **Path24:** 24 species with finalized conditional genome-size, cell, and
+  nucleus data.
 - **overlap21:** the exact 21-species intersection; no TE or phenotype values
   are imputed.
-- **S01–S40:** controlled CSV supplements with source/output SHA-256 hashes.
+- **S01–S43:** controlled CSV supplements with source/output SHA-256 hashes.
 - **Figures:** the exact current ggplot figures built by
   [`scripts/publication/build_gbe_figures.R`](../scripts/publication/build_gbe_figures.R).
 
@@ -226,14 +294,14 @@ the single figure builder rather than copied into this report.
 ```{r figure-1, eval=FALSE}
 ```
 
-```{r show-figure-1, echo=FALSE, fig.cap="Figure 1. Path24 time tree, study panels, and genomic QC."}
+```{r show-figure-1, echo=FALSE, fig.cap="Figure 1. Integrated phylogenetic TE landscape across 21 species."}
 knitr::include_graphics(
-  figure_path("Figure_1_study_design_and_genomic_qc.png"),
+  figure_path("Figure_1_integrated_TE_landscape.png"),
   rel_path = FALSE
 )
 ```
 
-## TE diversity and PCA
+## TE diversity context and Bonsai composition representation
 
 ### Diversity equations and primary filter
 
@@ -249,70 +317,134 @@ D_{GS} = 1 - \sum_i p_i^2
 
 These are natural-log Shannon entropy and the Gini-Simpson index.
 
-The paper-facing primary stratum is `te_level == "order"`. Observed richness
-is retained only as an audit count, and the superfamily stratum is retained as
-a sensitivity/audit view. S08 contains classified-only diversity: classified
-categories are reclosed to one within each species. Unresolved aligned-base
-mass remains separate in S07 as dnaPipeTE classification-accounting QC and is
-not treated as a diversity category.
+Following Wang et al. (2025), the canonical diversity calculation retains each
+species's ten most abundant positive TE superfamilies. Those ten proportions
+are explicitly reclosed to sum to one before calculating natural-log Shannon
+entropy and the Gini-Simpson index. Wang et al. documented the top-ten scope but
+did not state whether the retained proportions were reclosed; this report makes
+our normalization rule explicit. Unresolved aligned-base mass remains separate
+in S07 as dnaPipeTE classification-accounting QC and is not treated as a
+diversity category. The 24-shared-superfamily rule below belongs to the Bonsai
+composition representation and the retained PCA geometry audit.
 
 ```{r diversity-replay}
 te_diversity <- read_supp("S08")
-order_composition <- read_csv(
+superfamily_composition <- read_csv(
   file.path(
     ROOT, "analyses", "01_transposable_elements", "data",
-    "te_order_composition.csv"
+    "te_superfamily_composition.csv"
   ),
   show_col_types = FALSE
 )
 
-primary_diversity <- te_diversity %>%
-  filter(te_level == "order")
-
-recomputed_primary <- order_composition %>%
+recomputed_primary <- superfamily_composition %>%
   pivot_longer(-species, names_to = "feature", values_to = "proportion") %>%
+  filter(proportion > 0) %>%
+  arrange(species, feature) %>%
   group_by(species) %>%
+  slice_max(proportion, n = 10, with_ties = FALSE) %>%
+  mutate(proportion = proportion / sum(proportion)) %>%
   summarise(
-    observed_richness = sum(proportion > 0),
-    shannon_entropy = -sum(proportion[proportion > 0] * log(proportion[proportion > 0])),
+    n_superfamilies_included = n(),
+    shannon_entropy = -sum(proportion * log(proportion)),
     gini_simpson = 1 - sum(proportion^2),
     .groups = "drop"
   ) %>%
   arrange(species)
 
-observed_primary <- primary_diversity %>%
-  select(species, observed_richness, shannon_entropy, gini_simpson) %>%
+observed_primary <- te_diversity %>%
+  select(species, n_superfamilies_included, shannon_entropy, gini_simpson) %>%
   arrange(species)
 
 stopifnot(
-  nrow(te_diversity) == 68L,
-  nrow(primary_diversity) == 34L,
+  nrow(te_diversity) == 34L,
   n_distinct(te_diversity$species) == 34L,
-  setequal(te_diversity$te_level, c("order", "superfamily")),
-  nrow(te_diversity %>% count(te_level)) == 2L,
-  all(te_diversity %>% count(te_level) %>% pull(n) == 34L),
+  all(te_diversity$n_superfamilies_included == 10L),
   !any(grepl("unresolved", names(te_diversity), ignore.case = TRUE)),
   isTRUE(all.equal(recomputed_primary, observed_primary, tolerance = 1e-12))
 )
 
-primary_diversity %>%
+te_diversity %>%
   arrange(desc(shannon_entropy)) %>%
-  show_table(rows = 12, columns = 5)
+  show_table(rows = 12, columns = 4)
 ```
 
-### PCA normalization
+### Published cross-study top-10 superfamily context
 
-The PCA uses retry-averaged superfamily compositions, retains features positive
-in all 34 TE species, closes each row, and applies the centered log-ratio
-transformation:
+`S41` is a descriptive comparison surface containing 118 records: the exact 84
+records deposited for Figure 2 by Wang et al. (2025) and 34 current
+*Desmognathus* records. The published numerical data were retrieved from
+[Dryad (dataset DOI 10.5061/dryad.zpc866tkv)](https://doi.org/10.5061/dryad.zpc866tkv)
+under CC0-1.0 and accompany
+[article DOI 10.1038/s42003-025-08127-3](https://doi.org/10.1038/s42003-025-08127-3).
+
+Both origins report natural-log Shannon and Gini-Simpson diversity over their
+top 10 TE superfamilies, but the pipelines are different and not
+method-harmonized. Wang et al. generated the published values from
+RepeatModeler/RepeatMasker annotations; the current *Desmognathus* rows use the
+same canonical S08 reclosed calculations from retry-averaged dnaPipeTE
+compositions. Current
+genome sizes are conditional *D. fuscus* assembly-anchored estimates, not
+direct species C-values. This is descriptive cross-study context only; no
+pooled regression or hypothesis test is performed.
+
+```{r cross-study-diversity-contract}
+cross_study_diversity <- read_supp("S41")
+
+origin_counts <- cross_study_diversity %>%
+  count(data_origin) %>%
+  tibble::deframe()
+inclusion_counts <- cross_study_diversity %>%
+  count(figure_inclusion) %>%
+  tibble::deframe()
+
+stopifnot(
+  nrow(cross_study_diversity) == 118L,
+  n_distinct(cross_study_diversity$source_record_id) == 118L,
+  identical(
+    as.integer(origin_counts[c("wang2025_published", "desmognathus_current")]),
+    c(84L, 34L)
+  ),
+  identical(
+    as.integer(inclusion_counts[c(
+      "published_scatter_and_group", "published_group_only",
+      "current_scatter_and_group", "current_group_only"
+    )]),
+    c(11L, 73L, 21L, 13L)
+  ),
+  setequal(
+    cross_study_diversity$metric_scope,
+    c(
+      "published_top10_superfamilies_repeatmodeler_repeatmasker",
+      "current_top10_superfamilies_dnapipete_retry_averaged"
+    )
+  )
+)
+
+cross_study_diversity %>%
+  select(
+    data_origin, scientific_name, comparison_group, genome_size_gb,
+    shannon_top10_superfamilies, gini_simpson_top10_superfamilies,
+    metric_scope, figure_inclusion
+  ) %>%
+  show_table(rows = 12, columns = 8)
+```
+
+### Shared CLR composition and retained PCA audit
+
+The Bonsai representation and PCA audit use the same retry-averaged superfamily
+compositions: retain features positive in all 34 TE species, close each row,
+and apply the centered log-ratio transformation:
 
 \[
 \operatorname{clr}(p_{ij}) = \ln(p_{ij}) - \frac{1}{D}\sum_{k=1}^{D}\ln(p_{ik})
 \]
 
-Columns are centered and an unscaled SVD is fit. There is no zero replacement
-in the retained 24-superfamily matrix. CR1, Chapaev, Dada, Ginger, and Merlin
-remain available for diversity but fail the ubiquitous-feature PCA gate.
+For the supplementary PCA audit, columns are centered and an unscaled SVD is
+fit. There is no zero replacement in the retained 24-superfamily matrix. CR1,
+Chapaev, Dada, Ginger, and Merlin fail the ubiquitous-feature gate. Their
+presence does not determine diversity inclusion, which instead uses each
+species's abundance-ranked top ten.
 
 ```{r pca-contract}
 te_scores <- read_supp("S09")
@@ -350,16 +482,70 @@ excluded_superfamilies %>%
 ```
 
 No final sensitivity analysis asks whether forcing CR1 or Chapaev into the
-shared-feature PCA changes support; the report does not invent one.
+shared-feature representation changes support; the report does not invent one.
+
+### Bonsai publication representation and exact validation
+
+Figure 2 uses the pinned Bonsai fit to the shared 24-superfamily CLR matrix.
+S42 binds all 34 tree tips to the expert reproductive-strategy annotation, and
+S43 binds the exact fixed-tree permutation and bounded feature-resampling
+statistics shown in the figure.
+
+```{r bonsai-contract}
+bonsai_tips <- read_supp("S42")
+bonsai_validation <- read_supp("S43")
+
+strategy_counts <- bonsai_tips %>%
+  count(reproductive_strategy) %>%
+  tibble::deframe()
+
+stopifnot(
+  nrow(bonsai_tips) == 34L,
+  identical(
+    as.integer(strategy_counts[c(
+      "aquatic_eggs", "direct_development",
+      "terrestrial_eggs_aquatic_larvae"
+    )]),
+    c(7L, 3L, 24L)
+  ),
+  nrow(bonsai_validation) == 3L,
+  all(bonsai_validation$feature_bootstrap_replicates == 200L),
+  identical(
+    as.integer(bonsai_validation$feature_bootstrap_edge_delimited_count),
+    c(55L, 70L, 2L)
+  ),
+  all(bonsai_validation$global_fitch_observed_steps == 2L),
+  all(abs(bonsai_validation$global_fitch_null_mean_steps - 9.41320413) < 1e-8),
+  all(bonsai_validation$global_fitch_p_value == 0.00001),
+  all(bonsai_validation$global_fitch_p_value_holm == 0.00009)
+)
+
+bonsai_validation %>%
+  select(
+    strategy_label, group_n, full_fit_edge_delimited,
+    fixed_tree_smallest_side_p_value_holm,
+    feature_bootstrap_edge_delimited_count,
+    feature_bootstrap_replicates,
+    feature_bootstrap_edge_delimited_fraction
+  ) %>%
+  show_table(rows = 3, columns = 7)
+```
+
+The rooted Newick is a serialization of a non-phylogenetic TE-composition
+representation: branch length is fitted diffusion time and the display root has
+no phylogenetic meaning. Strategy labels were supplied after review of the
+initial PCA. Localization is therefore post hoc and does not establish causation
+or phylogenetically independent association. Feature resampling perturbs the 24
+correlated compositional coordinates; it is not a biological-specimen bootstrap.
 
 ### Exact ggplot code and current figure
 
 ```{r figure-2, eval=FALSE}
 ```
 
-```{r show-figure-2, echo=FALSE, fig.cap="Figure 2. TE diversity and compositional ordination."}
+```{r show-figure-2, echo=FALSE, fig.cap="Figure 2. Bonsai TE-composition structure and reproductive-strategy localization."}
 knitr::include_graphics(
-  figure_path("Figure_2_te_diversity_and_ordination.png"),
+  figure_path("Figure_2_te_diversity_and_bonsai.png"),
   rel_path = FALSE
 )
 ```
@@ -561,20 +747,65 @@ population-level among-animal uncertainty intervals.
 ```{r figure-5, eval=FALSE}
 ```
 
-```{r show-figure-5, echo=FALSE, fig.cap="Figure 5. Reviewed upper-tail cell and nucleus morphology."}
+```{r show-figure-5, echo=FALSE, fig.cap="Figure 5. Phylogenetically aligned conditional genome size and reviewed cellular traits."}
 knitr::include_graphics(
-  figure_path("Figure_5_reviewed_cell_nucleus_morphology.png"),
+  figure_path("Figure_5_phylogeny_and_cellular_traits.png"),
   rel_path = FALSE
 )
 ```
 
-## Relative nuclear IOD
+## Conditional genome size
+
+The Path24 analysis and all paper-facing figures use the released
+`genome_size_pg_fuscus_anchored` field. Values are expressed in pg/1C on a
+conditional *D. fuscus* assembly-anchored scale. The intervals propagate the
+released measurement bootstrap but not uncertainty in the selected assembly
+anchor; these values are not direct independently measured species C-values.
+
+```{r genome-size-table}
+genome_size_traits <- read_supp("S04")
+
+stopifnot(
+  nrow(genome_size_traits) == 24L,
+  n_distinct(genome_size_traits$species) == 24L,
+  all(is.finite(genome_size_traits$genome_size_pg_fuscus_anchored)),
+  all(genome_size_traits$genome_size_pg_ci_low <= genome_size_traits$genome_size_pg_fuscus_anchored),
+  all(genome_size_traits$genome_size_pg_ci_high >= genome_size_traits$genome_size_pg_fuscus_anchored)
+)
+
+genome_size_traits %>%
+  select(
+    species, genome_size_pg_fuscus_anchored,
+    genome_size_pg_ci_low, genome_size_pg_ci_high,
+    n_genome_size_nuclei, n_genome_size_images, n_genome_size_specimens
+  ) %>%
+  arrange(desc(genome_size_pg_fuscus_anchored)) %>%
+  show_table(rows = 12, columns = 7)
+```
+
+<div class="callout warning">
+Figure 6 shows frozen exploratory Pagel-lambda PGLS sensitivities. Its fitted
+lines should not be read as causal relationships, and the conditional
+genome-size scale should not be mistaken for direct species C-value assays.
+</div>
+
+```{r figure-6, eval=FALSE}
+```
+
+```{r show-figure-6, echo=FALSE, fig.cap="Figure 6. Conditional genome size, nucleus area, and cell area sensitivities."}
+knitr::include_graphics(
+  figure_path("Figure_6_genome_size_pairwise_pgls.png"),
+  rel_path = FALSE
+)
+```
+
+### Calibration proof: optical density to conditional genome size
 
 Optical density is defined per nuclear-mask pixel from background and observed
 intensity; nuclear IOD is the sum of optical density over the mask, not mean
-optical density. The primary species estimator is the arithmetic mean of the
-within-image median IOD values. Dividing the 24 species estimates and their
-interval bounds by the Path24 median anchor produces the relative index:
+optical density. The species estimator is the arithmetic mean of the
+within-image median IOD values. The retained Path24-median relative audit index
+is:
 
 \[
 IOD_{relative,s} = \frac{\operatorname{mean}_{image}
@@ -582,23 +813,26 @@ IOD_{relative,s} = \frac{\operatorname{mean}_{image}
   {\operatorname{median}_{species}(IOD_{equal-image})}
 \]
 
-A separate descriptive scale uses the published rounded pooled *D. fuscus*
-assembly estimate. The declared conversion is:
+The paper-facing conditional scale instead fixes *D. fuscus* to the selected
+rounded pooled assembly span:
 
 \[
 G_{reference,1C} = \frac{16.1\ \mathrm{Gbp}}
-  {0.978\ \mathrm{Gbp\ pg}^{-1}} = 16.462167689\ \mathrm{pg}
+  {0.978\ \mathrm{Gbp\ pg}^{-1}} = 16.462167689\ \mathrm{pg},
+\qquad
+G_s = \frac{IOD_{equal-image,s}}{IOD_{equal-image,fuscus}}
+  G_{reference,1C}.
 \]
 
 Process_413/specimen 32469 and Process_414/specimen 32470 were author-confirmed
 as the *D. fuscus* standards and were stained in the same experimental runs as
 the unknowns. Their exact standard-to-target run map has not been recovered,
-and their median IOD values differ by approximately 41%. The picogram fields
-are therefore an assembly-derived conditional sensitivity scale, not an
-independently validated absolute C-value; `relative_iod_index` remains the
-primary phenotype.
+and their median IOD values differ by approximately 41%. This unresolved
+calibration/QC evidence is why the resulting pg/1C scale remains conditional.
+The relative-IOD fields remain available in S22 for calibration audit, not as
+the default paper-facing trait.
 
-```{r iod-replay}
+```{r iod-calibration-proof}
 iod_objects <- read_supp("S21")
 iod_species <- read_supp("S22")
 iod_images <- read_supp("S23")
@@ -614,14 +848,23 @@ recomputed_iod <- iod_images %>%
     .groups = "drop"
   )
 iod_anchor <- median(recomputed_iod$iod_equal_image_estimate)
+fuscus_iod <- recomputed_iod %>%
+  filter(species == "D. fuscus") %>%
+  pull(iod_equal_image_estimate)
+genome_size_reference_pg <- unique(iod_species$genome_size_reference_pg)
+genome_size_calibration_pg_per_iod <- genome_size_reference_pg / fuscus_iod
 recomputed_iod <- recomputed_iod %>%
-  mutate(relative_iod_index = iod_equal_image_estimate / iod_anchor) %>%
+  mutate(
+    relative_iod_index = iod_equal_image_estimate / iod_anchor,
+    genome_size_pg_fuscus_anchored =
+      iod_equal_image_estimate * genome_size_calibration_pg_per_iod
+  ) %>%
   arrange(species)
 
 observed_iod <- iod_species %>%
   select(
     species, iod_equal_image_estimate, n_images, n_specimens,
-    relative_iod_index
+    relative_iod_index, genome_size_pg_fuscus_anchored
   ) %>%
   arrange(species)
 
@@ -634,8 +877,11 @@ stopifnot(
   nrow(iod_objects) == 805L,
   nrow(iod_images) == 51L,
   nrow(iod_species) == 24L,
+  length(fuscus_iod) == 1L,
+  length(genome_size_reference_pg) == 1L,
   abs(iod_anchor - 950.176112815) < 1e-8,
-  isTRUE(all.equal(recomputed_iod, observed_iod, tolerance = 1e-8)),
+  abs(genome_size_reference_pg - 16.462167689) < 1e-8,
+  isTRUE(all.equal(recomputed_iod, observed_iod, tolerance = 1e-7)),
   identical(
     recomputed_balance,
     as.logical(iod_balance$passes_prespecified_balance_thresholds)
@@ -646,37 +892,22 @@ stopifnot(
 iod_species %>%
   select(
     species, n_nuclei, n_images, n_specimens,
-    relative_iod_index, relative_iod_ci_low, relative_iod_ci_high,
+    iod_equal_image_estimate, relative_iod_index,
+    genome_size_pg_fuscus_anchored,
     estimate_support, sample_size_support, quality_match_status
   ) %>%
-  arrange(desc(relative_iod_index)) %>%
+  arrange(desc(genome_size_pg_fuscus_anchored)) %>%
   show_table(rows = 12, columns = 10)
 ```
 
-The quality-balance rule is `max |SMD| <= 0.10` and `max KS <= 0.25`.
-The four failures remain visible in both the data and Figure 6; they are not
-silently removed.
+The calibration quality-balance rule is `max |SMD| <= 0.10` and
+`max KS <= 0.25`. The four failures remain visible in the released data and by
+point shape in Figure 6; they are not silently removed.
 
 ```{r iod-quality-table}
 iod_balance %>%
   arrange(passes_prespecified_balance_thresholds, desc(max_ks_distance)) %>%
   show_table(rows = 12, columns = 10)
-```
-
-<div class="callout warning">
-Figure 6 includes frozen pairwise Pagel-lambda PGLS sensitivities. It is not an
-absolute-genome-size analysis, and its fitted lines should not be read as
-causal relationships.
-</div>
-
-```{r figure-6, eval=FALSE}
-```
-
-```{r show-figure-6, echo=FALSE, fig.cap="Figure 6. Relative IOD, nucleus area, and cell area sensitivities."}
-knitr::include_graphics(
-  figure_path("Figure_6_relative_iod_pairwise_pgls.png"),
-  rel_path = FALSE
-)
 ```
 
 ## Integrated species views
@@ -685,7 +916,7 @@ knitr::include_graphics(
 level; genomic and microscopy measurements are not from the same animal.
 
 ```{r integrated-data}
-te_iod_overlap <- read_supp("S40")
+te_genome_size_overlap <- read_supp("S40")
 organismal_traits <- read_csv(
   file.path(
     ROOT, "analyses", "03_phylogenetic_path", "data",
@@ -695,16 +926,17 @@ organismal_traits <- read_csv(
 )
 
 stopifnot(
-  nrow(te_iod_overlap) == 21L,
-  n_distinct(te_iod_overlap$species) == 21L,
+  nrow(te_genome_size_overlap) == 21L,
+  n_distinct(te_genome_size_overlap$species) == 21L,
   nrow(organismal_traits) == 37L,
   n_distinct(organismal_traits$species) == 37L
 )
 
-te_iod_overlap %>%
+te_genome_size_overlap %>%
   select(
     species, scientific_name, shannon_entropy, gini_simpson,
-    relative_iod_index, relative_iod_ci_low, relative_iod_ci_high,
+    genome_size_pg_fuscus_anchored,
+    genome_size_pg_ci_low, genome_size_pg_ci_high,
     manual_review_inclusion
   ) %>%
   show_table(rows = 12, columns = 8)
@@ -724,16 +956,6 @@ organismal_traits %>%
   show_table(rows = 12, columns = 8)
 ```
 
-```{r figure-s1, eval=FALSE}
-```
-
-```{r show-figure-s1, echo=FALSE, fig.cap="Supplementary Figure S1. Descriptive TE diversity and relative-IOD overlap."}
-knitr::include_graphics(
-  figure_path("Figure_S1_te_relative_iod_overlap21.png"),
-  rel_path = FALSE
-)
-```
-
 ## Existing frozen statistical sensitivities
 
 <div class="callout warning">
@@ -746,9 +968,10 @@ or diversity-index group test is added here.
 
 The Path24 traits are log10-transformed and sample-standardized for the current
 three-trait analysis. Pairwise PGLS estimates Pagel's lambda by maximum
-likelihood. The implemented model contains relative IOD, nucleus area, and cell
-area only; the possible integrated TE/SVL path model has not been specified or
-fitted.
+likelihood. Genome size is the released conditional *D. fuscus*
+assembly-anchored pg/1C trait throughout S04 and S26–S37. The model otherwise
+contains nucleus area and cell area only; the possible integrated TE/SVL path
+model has not been specified or fitted.
 
 ```{r frozen-statistical-tables}
 pairwise_pgls <- read_supp("S26")
@@ -776,7 +999,8 @@ The complete frozen outputs S26–S37 are linked in the Downloads tab. Their
 code authority is
 [`analyses/03_phylogenetic_path/run_path_analysis.R`](../analyses/03_phylogenetic_path/run_path_analysis.R).
 
-The formal TE-PCA audit remains separate from the descriptive S08–S11 tables:
+The formal TE-PCA audit remains a supplementary geometry and clustering audit,
+separate from the main Bonsai representation and descriptive S08–S11 tables:
 
 ```{r te-formal-audit}
 te_audit_dir <- file.path(ROOT, "analyses", "01_transposable_elements", "data")
@@ -807,10 +1031,10 @@ te_cluster_diagnostics %>%
 te_phylogenetic_tests %>% show_table(rows = 6, columns = 10)
 ```
 
-No discrete PCA cluster is accepted. Tree-based results remain provisional
-until the collaborator tree's publication/calibration provenance is supplied.
-The exact replay command is `make te-pca`; it is intentionally not rerun while
-knitting this report.
+No discrete PCA cluster is accepted. The collaborator Path24 species-tree
+provenance issue is separate from Bonsai, which is not a species phylogeny. The
+PCA audit replay command is `make te-pca`; the Bonsai replay command is
+`make te-bonsai`. Neither is rerun while knitting this report.
 
 ```{r figure-7, eval=FALSE}
 ```
@@ -822,18 +1046,94 @@ knitr::include_graphics(
 )
 ```
 
-Auxiliary DAG reference (unnumbered): the current Path24 analysis scores 10
-testable Markov-equivalence classes and the auxiliary image below shows one
-representative DAG for each class. The saturated 6-member class is omitted
-because it has no d-separation claim and was not scored. Relative nuclear IOD
-is an image-derived relative phenotype, not absolute genome size, and the
-arrows shown here are representative only, not uniquely oriented causal claims.
+## Auxiliary review figures
 
-```{r figure-7-dag-reference, echo=FALSE}
-knitr::include_graphics(
-  figure_path("Path_DAG_equivalence_class_reference.png"),
-  rel_path = FALSE
-)
+These unnumbered figures are displayed in the exact order declared by
+`Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv` and remain outside the
+numbered manuscript-figure sequence.
+
+**Wang-style integrated TE-history candidate boundary.** Review candidate, not
+a numbered manuscript figure. Six representatives are selected deterministically
+from overlap21 conditional genome-size quantiles plus the *D. fuscus* anchor.
+Repeat proportions are fractions of aligned RepeatMasker hit bp, not genome
+occupancy; divergence bins are not insertion ages.
+
+**Wang-style TE-diversity candidate boundary.** Reproductive-strategy panels
+are post-hoc descriptive strata. Conditional genome sizes are assembly-anchored
+IOD-derived estimates. The two direct developers are shown without a regression
+because n = 2; the other six panels use Pagel-lambda PGLS fits.
+
+**Path24 development and phenotype boundary.** Descriptive review only: the
+Path24 tree-aligned view contains 2 direct-development species and 22
+aquatic-larval species. D. organi is absent from Path24 because it has no
+complete phenotype record. No development mode or phenotype is imputed. The
+picogram track contains conditional D. fuscus assembly-anchored estimates, not
+direct independently measured species C-values. The supplied tree provenance
+remains unresolved.
+
+**Path DAG equivalence-class reference boundary.** The current Path24 analysis
+scores 10
+testable Markov-equivalence classes, and the auxiliary image shows one
+representative DAG for each class. The saturated 6-member class is omitted
+because it has no d-separation claim and was not scored. The Genome size node
+uses the released conditional D. fuscus assembly-anchored pg/1C estimates, not
+direct species C-value measurements. The same genome-size scale is used across
+all scored classes. The shown DAGs are representative only and do not orient
+unique causal arrows.
+
+**Cross-study TE-diversity reference boundary.** Descriptive cross-study
+context only; no pooled regression or hypothesis test. Wang et al. (2025)
+values are the published top-10 TE-superfamily indices from Dryad (dataset DOI
+10.5061/dryad.zpc866tkv; article DOI 10.1038/s42003-025-08127-3; CC0-1.0),
+generated from RepeatModeler/RepeatMasker annotations. Current *Desmognathus*
+top-10 indices are reclosed calculations from dnaPipeTE compositions; the
+pipelines are different and not method-harmonized. Current genome sizes are
+conditional D. fuscus assembly-anchored estimates, not direct species C-values.
+
+```{r auxiliary-review-figures, echo=FALSE, results='asis'}
+maximum_auxiliary_width_mm <- max(auxiliary_manifest$width_mm)
+
+for (index in seq_len(nrow(auxiliary_manifest))) {
+  row <- auxiliary_manifest[index, , drop = FALSE]
+  relative_png <- file.path("figures", row$png[[1]])
+  width_percent <- 100 * row$width_mm[[1]] / maximum_auxiliary_width_mm
+
+  cat(sprintf(
+    '<section class="auxiliary-figure" data-auxiliary-id="%s">\n',
+    escape_html(row$auxiliary_id[[1]], attribute = TRUE)
+  ))
+  cat(sprintf("<h3>%s</h3>\n", escape_html(row$title[[1]])))
+  cat(sprintf(
+    paste0(
+      '<div class="callout boundary"><strong>Boundary.</strong> ',
+      '%s</div>\n'
+    ),
+    format_inline(row$boundary[[1]])
+  ))
+  cat(sprintf(
+    paste0(
+      '<img src="%s" alt="%s" ',
+      'style="width: %.3f%%; max-width: 100%%;" />\n'
+    ),
+    escape_html(relative_png, attribute = TRUE),
+    escape_html(row$alt_text[[1]], attribute = TRUE),
+    width_percent
+  ))
+  cat('<div class="auxiliary-copy">\n')
+  cat(sprintf(
+    '<p><strong>Legend.</strong> %s</p>\n',
+    format_inline(row$legend[[1]])
+  ))
+  cat(sprintf(
+    paste0(
+      '<p><strong>Release status.</strong> <code>%s</code><br />',
+      '<strong>Datasets.</strong> %s</p>\n'
+    ),
+    escape_html(row$release_status[[1]]),
+    escape_html(row$datasets[[1]])
+  ))
+  cat("</div>\n</section>\n")
+}
 ```
 
 ## Downloads, provenance, and session
@@ -872,6 +1172,7 @@ tibble(
     "Publication/Desmognathus_study_data.Rmd",
     "Publication/datasets/DATASET_MANIFEST.csv",
     "Publication/figures/FIGURE_MANIFEST.csv",
+    "Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv",
     "scripts/publication/build_gbe_figures.R"
   ),
   sha256 = vapply(
@@ -879,6 +1180,7 @@ tibble(
       REPORT_SOURCE,
       file.path(DATA, "DATASET_MANIFEST.csv"),
       file.path(FIGURES, "FIGURE_MANIFEST.csv"),
+      AUXILIARY_MANIFEST_PATH,
       file.path(ROOT, "scripts", "publication", "build_gbe_figures.R")
     ),
     sha256_file,

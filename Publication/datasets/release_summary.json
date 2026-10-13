@@ -1,15 +1,15 @@
 {
-  "publication_dataset_count": 40,
-  "csv_files": 40,
-  "non_csv_tree_files": 2,
-  "total_csv_rows": 22298,
-  "total_csv_bytes": 9861596,
+  "publication_dataset_count": 43,
+  "csv_files": 43,
+  "non_csv_files": 3,
+  "total_csv_rows": 22419,
+  "total_csv_bytes": 10098731,
   "release_status_counts": {
-    "main_candidate": 15,
-    "sensitivity_only": 14,
+    "main_candidate": 17,
+    "sensitivity_only": 15,
     "audit_only": 6,
     "supplementary": 5
   },
-  "manifest_sha256": "997f093923b6c9b689edeef876333db6c42fd051adb53e2036b59b47fc27e67f",
-  "column_inventory_sha256": "e2c489a6411d28f1df2429e9aa06c61209ea4b88d44849a3e2b9c8aeea18d722"
+  "manifest_sha256": "a9b08a3d174f3b87069e23b87f30e31050c59ab6f1a3407360e700449ae19ce1",
+  "column_inventory_sha256": "4d65d743e30171e7f6991a822ce300378dfdcc0c4f2f02dc7e7ae5df35dcb2b2"
 }

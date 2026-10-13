@@ -1,0 +1,5 @@
+node,x,y,label
+b,5,5.05,Body size (SVL)
+g,1.4,1.65,Genome size
+c,5,1.65,Cell area
+n,8.6,1.65,Nucleus area
