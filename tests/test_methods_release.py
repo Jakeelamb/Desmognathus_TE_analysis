@@ -426,9 +426,12 @@ def test_researcher_methods_docx_is_plain_current_and_singular() -> None:
     assert "All animals were ethanol-fixed" not in narrative
     assert "For specimens sampled directly, erythrocytes were collected" in narrative
     assert "SRA Toolkit" not in narrative
-    assert "fastp" not in narrative
-    assert "DeepTE" not in narrative
-    assert "TEClass2" not in narrative
+    assert "fastp" in narrative
+    assert "--detect_adapter_for_pe" in narrative
+    assert "DeepTE" in narrative
+    assert "rexdb-metazoa" in narrative
+    assert "TEClass/TEclass-2.1.3d/TEclassTest.pl" in narrative
+    assert "This record does not identify which TEClass implementation was used" in narrative
 
     builder = run_path(ROOT / "scripts/publication/build_methods_document.py")
     builder["check_document_matches_source"](source, document)
