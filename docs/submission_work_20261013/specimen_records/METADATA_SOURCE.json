@@ -1,0 +1,6 @@
+{
+  "source_path": "/home/jake/Projects/cellprofiler_test/master_image_metadata.csv",
+  "sha256": "bb164b21dfd5226a5e35879c4095ceb78474837b1510b05354fd165de4593629",
+  "bytes": 24219,
+  "role": "Exact local metadata snapshot for image/specimen identity and historical preservation labels. This source does not record MVZ/RAP namespaces. Accession columns are retained as source fields and are not used in this audit."
+}

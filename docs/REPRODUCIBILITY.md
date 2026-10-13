@@ -44,7 +44,7 @@ prerequisite checked by the project font resolver.
 
 ```bash
 pixi install --locked --all
-pixi run --locked --no-install setup
+pixi run --clean-env --locked --no-install setup
 make check-env
 make test
 ```
@@ -57,6 +57,23 @@ Its NumPy and pandas versions differ from the main environment, so the two
 Python dependency sets are solved separately in the same lockfile. They share
 the retained R package builds.
 
+The `image-qc` environment uses the default Python, NumPy and pandas pins plus
+Pillow, tifffile, roifile, scikit-image, SciPy and Matplotlib. It supports the
+existing-mask standards audit without segmentation or changes to released
+measurements. Run its installed-package check with
+`pixi run -e image-qc --clean-env --locked --no-install check-env`.
+
+The [Methods recovery records](submission_work_20261013/PLAN.md) distinguish
+recovered specimen and model evidence from unresolved calibration,
+camera and upstream-runtime records. Local audit tasks require fresh output
+directories and preserve the released tables.
+
+The [Methods audit verification](submission_work_20261013/VERIFICATION.md)
+records the current three-environment checks, actual local task replays and
+scientific preservation. The default suite passed 365 tests with 11 native
+archive-dependent skips; all skipped cases passed in the separate 23-test
+image-QC run. Existing default and Bonsai lock records were unchanged.
+
 `setup` checksum-verifies CRAN `phylopath` 1.3.1 and installs it into a private
 `.pixi/r-library` directory. Setup checks a staged library before publishing it.
 Existing completed libraries are checked without reinstalling. Incomplete or
@@ -64,6 +81,10 @@ damaged libraries fail without being overwritten. Neither setup nor the R
 wrapper selects a legacy UV or Conda environment.
 
 Activation isolates Python imports and R startup files from user settings.
+Use `pixi run --clean-env` when invoking tasks directly. A live rejection
+control showed that inherited `PYTHONHOME` can survive Pixi's activation delta
+and prevent Python startup; the clean environment removes it before startup.
+Make targets include this flag.
 Both `R_LIBS_USER` and `R_LIBS_SITE` point to the private R library. The site
 setting preserves access to `phylopath` when the frozen path script resets its
 library search path. R and Python executables must belong to the selected
@@ -167,7 +188,7 @@ does not regenerate or alter those outputs.
 
 The canonical diversity table itself can be promoted from the frozen
 superfamily composition matrix with
-`pixi run --locked --no-install --executable python analyses/01_transposable_elements/recompute_pca.py --write`.
+`pixi run --clean-env --locked --no-install --executable python analyses/01_transposable_elements/recompute_pca.py --write`.
 `make te-pca` must then pass as the read-only reconstruction gate. Promotion
 with `--write` belongs in a separate checkout when comparing reconstructions.
 

@@ -302,9 +302,18 @@ python = "3.14.*"
 "ruamel.yaml" = "==0.19.1"
 "psutil" = "==7.2.2"
 
+[feature.image-qc.pypi-dependencies]
+"pillow" = "==12.3.0"
+"tifffile" = "==2026.9.20"
+"roifile" = "==2026.9.22"
+"scikit-image" = "==0.26.0"
+"scipy" = "==1.17.1"
+"matplotlib" = "==3.11.0"
+
 [environments]
 default = { features = ["analysis"] }
 bonsai = { features = ["bonsai"] }
+image-qc = { features = ["analysis", "image-qc"] }
 
 [tasks]
 setup = "bash scripts/setup_r.sh"
@@ -324,6 +333,7 @@ check-python = "python scripts/check_environment.py --python-only"
 "figure-review" = { cmd = "bash scripts/run_r.sh Rscript scripts/publication/render_figure_review.R", depends-on = ["figures", "validate"] }
 "figure-data" = { cmd = "python scripts/publication/build_figure_data_workbook.py", depends-on = ["validate"] }
 "methods-word" = { cmd = "python scripts/publication/build_methods_document.py --check" }
+"specimen-records" = { cmd = "python scripts/publication/reconcile_specimen_records.py" }
 "figures" = { cmd = "bash scripts/run_r.sh Rscript scripts/publication/build_gbe_figures.R" }
 "te-bonsai" = { cmd = "python analyses/01_transposable_elements/bonsai_comparison/compare_bonsai_to_pca.py check && python analyses/01_transposable_elements/bonsai_comparison/validate_strategy_localization.py check" }
 "te-pca" = { cmd = "python analyses/01_transposable_elements/recompute_pca.py && bash scripts/run_r.sh Rscript analyses/01_transposable_elements/analyze_pca_structure.R" }
@@ -333,3 +343,6 @@ check-python = "python scripts/check_environment.py --python-only"
 [feature.bonsai.tasks]
 bonsai-rerun = "python scripts/run_bonsai.py refit"
 bonsai-bootstrap-rerun = "python scripts/run_bonsai.py bootstrap"
+
+[feature.image-qc.tasks]
+standard-qc = "python scripts/microscopy/standard_qc.py"

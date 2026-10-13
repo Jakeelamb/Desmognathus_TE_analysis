@@ -1,0 +1,40 @@
+{
+  "raw_rows": {
+    "MVZ": 97,
+    "RAP": 47
+  },
+  "assay_counts": {
+    "morphometry": {
+      "objects": 1152,
+      "animals": 42
+    },
+    "nuclear_iod": {
+      "objects": 805,
+      "animals": 50
+    }
+  },
+  "association_counts": {
+    "morphometry": {
+      "unique_numeric_candidate": 41,
+      "unmatched": 1
+    },
+    "nuclear_iod": {
+      "unique_numeric_candidate": 49,
+      "unmatched": 1
+    },
+    "reference_standard": {
+      "confirmed_namespace": 2
+    }
+  },
+  "input_sha256": {
+    "author_supplied_records": "93dae07e9ca1ac0566e642634e8aac3a6430bc7f2302bfd1b428ac88f3447963",
+    "master_image_metadata_snapshot": "bb164b21dfd5226a5e35879c4095ceb78474837b1510b05354fd165de4593629",
+    "metadata_source_record": "86c66cc06a7e80d27cde30880c1b01923614913e27df8ce81df5e3dc5754d4d2",
+    "author_source_record": "d29843cdad42ef2595e6aa28366e486e57e0ce93087a16afb845198a8a0e971f",
+    "cell_nucleus_objects.csv": "7cc2904f00038dccb95d5c746364611b79bfaf1f9ade45928a41dfcfb6ca99f3",
+    "nuclear_iod_objects.csv": "fffc91fa5f53a374711b7b71baf2292733e6185fa7d86bb02dc189a9cfc6d4bf"
+  },
+  "script_sha256": "840f510ecbece164d9deb7d4458c1757198343c555ddc71efe097e70c1e1b605",
+  "source_kind": "author-supplied paste; Google Sheets metadata access denied",
+  "release_modified": false
+}

@@ -1,0 +1,14 @@
+{
+  "match_log_edge_sharpness": {
+    "clip_low": 0.0918853819511443,
+    "clip_high": 0.14351591028167543,
+    "median": 0.1162730078971146,
+    "scale_iqr": 0.01408501476837741
+  },
+  "match_log_relative_ring_noise": {
+    "clip_low": 0.05683348912867326,
+    "clip_high": 0.2093502121396634,
+    "median": 0.1094338192883331,
+    "scale_iqr": 0.03819577458050219
+  }
+}

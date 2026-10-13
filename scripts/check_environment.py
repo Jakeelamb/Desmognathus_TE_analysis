@@ -25,7 +25,7 @@ OVERLAY_IDENTITY = {
 
 def runtime_prefix() -> tuple[str, Path]:
     name = os.environ.get("PIXI_ENVIRONMENT_NAME", os.environ.get("PIXI_ENV_NAME", "default"))
-    if name not in {"default", "bonsai"}:
+    if name not in {"default", "bonsai", "image-qc"}:
         raise ValueError(f"Unsupported Pixi environment: {name}")
     prefix = ROOT / ".pixi/envs" / name
     if Path(os.environ.get("PIXI_PROJECT_ROOT", "")).resolve() != ROOT:
@@ -50,7 +50,7 @@ def dependencies(manifest: dict, name: str, kind: str) -> dict:
 
 
 def locked_packages(name: str) -> list[dict]:
-    pixi = shutil.which("pixi")
+    pixi = shutil.which(os.environ.get("PIXI_EXE", "pixi"))
     if pixi is None:
         raise ValueError("Pixi executable is required for the read-only lock check.")
     result = subprocess.run(
@@ -69,6 +69,8 @@ def locked_packages(name: str) -> list[dict]:
         text=True,
         capture_output=True,
         check=True,
+        # Pixi's host glibc probe needs system tools even in --clean-env.
+        env={**os.environ, "PATH": os.environ.get("PATH", "") + os.pathsep + os.defpath},
     )
     records = json.loads(result.stdout)
     if not isinstance(records, list) or not records:
@@ -116,9 +118,9 @@ def check_packages(name: str, prefix: Path, manifest: dict) -> None:
 
 def check_python(name: str) -> None:
     observed = ".".join(map(str, sys.version_info[:3]))
-    valid = observed == "3.13.11" if name == "default" else sys.version_info[:2] == (3, 14)
+    valid = sys.version_info[:2] == (3, 14) if name == "bonsai" else observed == "3.13.11"
     if not valid:
-        expected = "3.13.11" if name == "default" else "3.14.x"
+        expected = "3.14.x" if name == "bonsai" else "3.13.11"
         raise ValueError(f"Python version: expected {expected}, found {observed}")
     print(f"Python interpreter: PASS ({observed})")
 

@@ -1,0 +1,245 @@
+{
+  "observed_utc": "2026-10-13T21:58:36.968615+00:00",
+  "baseline_head": "d64f5a13981e1ff0edc2e30d66940110ac04be06",
+  "scope": "Methods and local reproducibility; no manuscript sections outside Methods",
+  "checks": {
+    "maintained_make_test": {
+      "exit": 0,
+      "result": "365 passed, 11 skipped in 167.35s",
+      "start_utc": "2026-10-13T21:54:11Z",
+      "end_utc": "2026-10-13T21:57:03Z",
+      "log": {
+        "path": ".git/submission_gap_work_20261013/final-maintained-tests.log",
+        "bytes": 1042,
+        "sha256": "bdfa573bdb5148be1a08cbd5b5e0c57119d291bb5f03636ee6437c43d9152dca"
+      }
+    },
+    "native_image_qc": {
+      "exit": 0,
+      "result": "23 passed, 1 SciPy KS fallback warning in 3.60s",
+      "start_utc": "2026-10-13T21:54:56Z",
+      "end_utc": "2026-10-13T21:55:01Z",
+      "log": {
+        "path": ".git/submission_gap_work_20261013/final-native-tests.log",
+        "bytes": 608,
+        "sha256": "743bc17a48ef57ada6496d647e20098eb97bedc1c43ed477ef5342e234527feb"
+      }
+    },
+    "lint": {
+      "exit": 0,
+      "log": {
+        "path": ".git/submission_gap_work_20261013/final-lint.log",
+        "bytes": 202,
+        "sha256": "aff1ee4212af445f2dc4a4a063af015d2ede0e91e900dddb6e7c7576ba847bba"
+      }
+    },
+    "word_markdown_parity": {
+      "exit": 0,
+      "log": {
+        "path": ".git/submission_gap_work_20261013/final-methods-word.log",
+        "bytes": 435,
+        "sha256": "78d9fb00d1aa5a30c885c763ccc83ad0743eda2931ea546d5108d5ec48102d2a"
+      }
+    },
+    "image_qc_installed_packages": {
+      "exit": 0,
+      "log": {
+        "path": ".git/submission_gap_work_20261013/final-image-qc-env.log",
+        "bytes": 222,
+        "sha256": "804f71eb98255d99c29ab4ef60a948330a87ba9fa95ff1e83f41e866bc09b583"
+      }
+    },
+    "bonsai_installed_packages": {
+      "exit": 0,
+      "log": {
+        "path": ".git/submission_gap_work_20261013/final-bonsai-env.log",
+        "bytes": 217,
+        "sha256": "423c0c5c814a3d2c8845e0282b32e2b14b7c8403d69557387cdf314add64d897"
+      }
+    },
+    "bonsai_clean_env_handoff": {
+      "schema": "desmognathus-bonsai-clean-env-fix-v1",
+      "source_head": "d64f5a13981e1ff0edc2e30d66940110ac04be06",
+      "changed_source_pins": {
+        "scripts/run_bonsai.py": "348aedc7eb2cba660763f4caa39d75dc8d22cb7c68df4423df8fc0db9fec1b11",
+        "tests/test_bonsai_runner.py": "8896172e76c36588610523c1eff3d9d8d67d1c37d7bc403788c9bc87bec4a2d9"
+      },
+      "result": "PASS",
+      "targeted_tests": "59 passed in 3.09s",
+      "native_result": "Clean Bonsai guard accepted; genuine read-only default helper reproduced retained comparison exactly; parent PATH unchanged",
+      "tests_boundary": "Fixture campaigns use synthetic producer and isolated temporary Git repositories; actual native probe only calls the read-only check branch",
+      "preserved_existing_edits": "Kept parent fixture-local hooksPath=/dev/null and commit.gpgsign=false",
+      "scope": "Only assigned runner and runner tests edited; evidence stored privately; no lock, environment dependency, retained scientific output, or historical runner edited",
+      "checks": [
+        {
+          "name": "before",
+          "command": "pixi run -e bonsai --clean-env --locked --no-install --executable python -B -c 'from scripts.run_bonsai import require_pixi_environment; require_pixi_environment(); print(\"clean-env guard PASS\")'",
+          "start_utc": "2026-10-13T21:51:18Z",
+          "end_utc": "2026-10-13T21:51:18Z",
+          "exit_record": "1",
+          "raw_log": ".git/submission_gap_work_20261013/bonsai-clean-env-before.log",
+          "raw_log_sha256": "c51063360acf997ed665071d067c6e04ab6a4098c1d9fbc5d838262f60edac00"
+        },
+        {
+          "name": "native",
+          "command": "pixi run -e bonsai --clean-env --locked --no-install --executable python -B -c 'import os; from scripts.run_bonsai import require_pixi_environment, local_helper; require_pixi_environment(); print(\"clean-env guard PASS\", flush=True); original_path = os.environ[\"PATH\"]; local_helper(\"compare_bonsai_to_pca.py\", \"check\"); assert os.environ[\"PATH\"] == original_path; print(\"nested default helper PASS; parent PATH unchanged\", flush=True)'",
+          "start_utc": "2026-10-13T21:52:18Z",
+          "end_utc": "2026-10-13T21:52:19Z",
+          "exit_record": "0",
+          "raw_log": ".git/submission_gap_work_20261013/bonsai-clean-env-native.log",
+          "raw_log_sha256": "c202aad072775dc7a129613dc5f9cc86c7f790ab2bae54ebed0bce5ab62da3d1"
+        },
+        {
+          "name": "tests",
+          "command": "pixi run --clean-env --locked --no-install --executable python -m pytest -q tests/test_bonsai_runner.py tests/test_python_environment.py",
+          "start_utc": "2026-10-13T21:52:18Z",
+          "end_utc": "2026-10-13T21:52:21Z",
+          "exit_record": "0",
+          "raw_log": ".git/submission_gap_work_20261013/bonsai-clean-env-tests.log",
+          "raw_log_sha256": "626edb9d5f45cf83a0f5ed23c461bfc506a2e7c673e3a2521c92bb8d4d5a2424"
+        },
+        {
+          "name": "lint",
+          "command": "pixi run --clean-env --locked --no-install --executable python -m ruff check scripts/run_bonsai.py tests/test_bonsai_runner.py; git diff --check -- scripts/run_bonsai.py tests/test_bonsai_runner.py",
+          "start_utc": "2026-10-13T21:52:18Z",
+          "end_utc": "2026-10-13T21:52:18Z",
+          "exit_record": "ruff=0\ndiff=0",
+          "raw_log": ".git/submission_gap_work_20261013/bonsai-clean-env-lint.log",
+          "raw_log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+        },
+        {
+          "name": "tests-final",
+          "command": "pixi run --clean-env --locked --no-install --executable python -m pytest -q tests/test_bonsai_runner.py tests/test_python_environment.py",
+          "start_utc": "2026-10-13T21:52:53Z",
+          "end_utc": "2026-10-13T21:52:56Z",
+          "exit_record": "0",
+          "raw_log": ".git/submission_gap_work_20261013/bonsai-clean-env-tests-final.log",
+          "raw_log_sha256": "3ff4ce63ecb932fb4ab27f17cb53caf52e0e2dff5a888f66698c81e8017e7805"
+        },
+        {
+          "name": "lint-final",
+          "command": "pixi run --clean-env --locked --no-install --executable python -m ruff check scripts/run_bonsai.py tests/test_bonsai_runner.py; git diff --check -- scripts/run_bonsai.py tests/test_bonsai_runner.py",
+          "start_utc": "2026-10-13T21:53:09Z",
+          "end_utc": "2026-10-13T21:53:09Z",
+          "exit_record": "ruff=0\ndiff=0",
+          "raw_log": ".git/submission_gap_work_20261013/bonsai-clean-env-lint-final.log",
+          "raw_log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+        }
+      ],
+      "remaining": "Parent full-suite and protected-data preservation checks remain required before landing"
+    },
+    "environment_record_preservation": {
+      "default": {
+        "package_records": 287,
+        "environment_and_records_unchanged": true
+      },
+      "bonsai": {
+        "package_records": 290,
+        "environment_and_records_unchanged": true
+      }
+    }
+  },
+  "protected_inventory": {
+    "observed_utc": "2026-10-13T21:58:36.812596+00:00",
+    "baseline_head": "d64f5a13981e1ff0edc2e30d66940110ac04be06",
+    "baseline_sha256": "238979750b2e8f023b44211e708f4aacdf027fd8ebfec75227e995615d242a0f",
+    "protected_entries": 12282,
+    "root_dependency_snapshots": 4,
+    "changed": [
+      {
+        "path": "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx",
+        "before": "08aedd03b39855844721b0d85cbd7d9d5ed794dc7e2df73e0ebc21e4cc9ee480",
+        "after": "b4d16d01f5faf58edebfbdc2d3f979dffb2e044b827b04e1aa07ca3334897dc7"
+      },
+      {
+        "path": "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md",
+        "before": "fc1c2e35c6e7fde37c7b0974cf61b46632e3c65cd2e9e7f0930f6b41426c91ef",
+        "after": "87135d488eb2a916449e5aeebf9cf23752b55ef7cf8456440de824d726293524"
+      },
+      {
+        "path": "Publication/methods/METHODS_BULLET_SCAFFOLD.md",
+        "before": "b9a1501a5d92b017031f79fb9005ac222299c2ea577e598748dc15d4fae92005",
+        "after": "3173b329ed3add03684c48769f0c835fb3e94d65faa0ce7358286f3a003f2100"
+      },
+      {
+        "path": "Publication/methods/METHODS_EVIDENCE_MATRIX.csv",
+        "before": "60f658545ce28d3bffea8a4120572f0fa416ef5f4e61549aed4437d722bedc1a",
+        "after": "43d5b59064cb75f0bb21fcbdff63cda38707864a7ba0c1770413addffb09dc82"
+      },
+      {
+        "path": "Publication/methods/METHODS_REQUIRED_AUTHOR_INPUT.csv",
+        "before": "a58e5243764daab249797893c2af0626070cd847d0a6e773b5e5a7a35ba290f7",
+        "after": "980a7cad45478a10d7d119ebf8ff93df7bd6e19b2bf421f897caeaeb69ab991b"
+      },
+      {
+        "path": "Publication/methods/README.md",
+        "before": "dae84086e9be26d4124238052cc5e1a56ed1871cede13edb8e6229a5a4f639bf",
+        "after": "155a55aec953b6a3fc0e7e3cb391aca3fb5bb9dbc2df37d74bce6cf88fd782dd"
+      }
+    ],
+    "missing": [],
+    "added": [],
+    "authorized_methods_exceptions": [
+      "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.docx",
+      "Publication/methods/MATERIALS_AND_METHODS_RESEARCHER_DRAFT.md",
+      "Publication/methods/METHODS_BULLET_SCAFFOLD.md",
+      "Publication/methods/METHODS_EVIDENCE_MATRIX.csv",
+      "Publication/methods/METHODS_REQUIRED_AUTHOR_INPUT.csv",
+      "Publication/methods/README.md"
+    ],
+    "pass": true,
+    "count_definition": "12,282 unique entries: 12,278 scoped entries and four root dependency snapshots; the snapshots also appear in the baseline files list and are explicitly rechecked"
+  },
+  "docx_render": {
+    "started_utc": "2026-10-13T21:39:17.689778+00:00",
+    "ended_utc": "2026-10-13T21:39:22.160368+00:00",
+    "exit_status": 0,
+    "docx_sha256": "b4d16d01f5faf58edebfbdc2d3f979dffb2e044b827b04e1aa07ca3334897dc7",
+    "docx_unchanged": true,
+    "renderer_sha256": "876d5993324e2faaaa96a68a4f7504642e9a07e6df265b385b2baa03b231369e",
+    "private_soffice": "/home/jake/Projects/Desmognathus_TE/.git/methods_hpc_update_20261013/qa_runtime/opt/libreoffice-private/opt/libreoffice26.2/program/soffice",
+    "pages": [
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-1.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-2.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-3.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-4.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-5.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-6.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-7.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-8.png",
+      "/home/jake/Projects/Desmognathus_TE/.git/submission_gap_work_20261013/rendered/page-9.png"
+    ]
+  },
+  "render_review": "Coordinator and independent verifier inspected all 9 rendered pages; no layout problems observed",
+  "source_script_pins": [
+    {
+      "path": "scripts/check_environment.py",
+      "bytes": 10746,
+      "sha256": "bb34815e0685596e80a2e3791ef5d4378ba2b645033603486a472edd55f32834"
+    },
+    {
+      "path": "scripts/run_bonsai.py",
+      "bytes": 13598,
+      "sha256": "348aedc7eb2cba660763f4caa39d75dc8d22cb7c68df4423df8fc0db9fec1b11"
+    },
+    {
+      "path": "scripts/microscopy/standard_qc.py",
+      "bytes": 29433,
+      "sha256": "92929357f76cad67243b63a26156f22b50c37515826e5b723170678333a753bf"
+    },
+    {
+      "path": "scripts/microscopy/standard_qc_source_pins.json",
+      "bytes": 27900,
+      "sha256": "d3bfed24e791e61836818572879177ed6b93c203f4b11b344d0881da6c305bfc"
+    },
+    {
+      "path": "scripts/publication/reconcile_specimen_records.py",
+      "bytes": 15167,
+      "sha256": "840f510ecbece164d9deb7d4458c1757198343c555ddc71efe097e70c1e1b605"
+    }
+  ],
+  "raw_logs": "Full logs, baseline inventory and execution intermediates remain in the private .git/submission_gap_work_20261013 directory",
+  "native_boundary": "Default-suite skips require pinned sibling microscopy/archive inputs; all 11 skipped cases ran successfully in the dedicated 23-test native suite",
+  "gallery_boundary": "Isolated browser tested 47 cards and 141 images per page with no console/page/request errors. Fixture export was cleared and is not an author review.",
+  "scientific_boundary": "No validated absolute genome-size denominator or new scientific result was produced"
+}

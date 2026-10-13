@@ -4,13 +4,15 @@ Use Pixi for this repository. `pixi.toml` is the task and dependency authority,
 and `pixi.lock` is the active lockfile. This project policy replaces the older
 UV and Conda setup instructions for local work.
 
-- Run `make setup` to install both locked environments and prepare the private
+- Run `make setup` to install all locked environments and prepare the private
   checksum-verified R library. Do not select a host Conda or UV environment.
 - Run `make check-env`, `make test`, and `make lint` for the maintained checks.
   Make delegates to Pixi with `--locked --no-install`. New local workflows
   belong in the Pixi task registry.
 - Use the default environment for the paper analyses and the `bonsai`
   environment for the pinned upstream Bonsai runner.
+- Use `image-qc` for the existing-mask standard-slide audit. It adds image
+  dependencies without changing the default or Bonsai dependency sets.
 - Keep `pyproject.toml`, `uv.lock`, `environment.yml`, and
   `environment-linux-64.explicit.txt` unchanged. They are retained dependency
   snapshots; scientific manifests hash several of them.

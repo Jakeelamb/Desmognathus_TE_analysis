@@ -44,6 +44,8 @@ def manifest():
         ("default", (3, 13, 10), False),
         ("bonsai", (3, 14, 2), True),
         ("bonsai", (3, 13, 11), False),
+        ("image-qc", (3, 13, 11), True),
+        ("image-qc", (3, 14, 2), False),
     ],
 )
 def test_python_environment_version(checker, monkeypatch, name, version, valid):
@@ -144,9 +146,20 @@ def test_python_package_identity_normalizes_separators(
     assert not prefix.exists()
 
 
-def test_native_list_is_locked_and_does_not_install(checker, monkeypatch):
+@pytest.mark.parametrize("pixi_exe", [None, "/project/pixi"])
+def test_native_list_is_locked_and_does_not_install(checker, monkeypatch, pixi_exe):
     calls = []
-    monkeypatch.setattr(checker.shutil, "which", lambda name: "/fake/pixi")
+    lookups = []
+    if pixi_exe:
+        monkeypatch.setenv("PIXI_EXE", pixi_exe)
+    else:
+        monkeypatch.delenv("PIXI_EXE", raising=False)
+
+    def which(name):
+        lookups.append(name)
+        return "/fake/pixi"
+
+    monkeypatch.setattr(checker.shutil, "which", which)
 
     def run(arguments, **kwargs):
         calls.append((arguments, kwargs))
@@ -154,6 +167,7 @@ def test_native_list_is_locked_and_does_not_install(checker, monkeypatch):
 
     monkeypatch.setattr(checker.subprocess, "run", run)
     assert checker.locked_packages("default") == [{"name": "python"}]
+    assert lookups == [pixi_exe or "pixi"]
     assert calls[0][0] == [
         "/fake/pixi",
         "list",

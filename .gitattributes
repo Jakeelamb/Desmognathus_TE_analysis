@@ -17,3 +17,9 @@ Publication/datasets/** -text
 Publication/figures/** -text -whitespace
 Publication/*.html -text -whitespace
 outputs/** -text -whitespace
+
+# Preserve the supplied specimen paste and new hash-bound audit snapshots.
+docs/submission_work_20261013/specimen_records/AUTHOR_SUPPLIED_RECORDS.txt -text -whitespace
+docs/submission_work_20261013/specimen_records/*.csv -text -whitespace
+docs/submission_work_20261013/specimen_records/audit_final/*.csv -text -whitespace
+docs/submission_work_20261013/standard_qc/*.csv -text -whitespace

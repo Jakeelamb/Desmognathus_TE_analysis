@@ -1,5 +1,5 @@
 PIXI ?= pixi
-PIXI_RUN = $(PIXI) run --manifest-path pixi.toml --environment default --locked --no-install
+PIXI_RUN = $(PIXI) run --manifest-path pixi.toml --environment default --clean-env --locked --no-install
 LOCAL_TASKS = status catalog publication refresh identity validate test lint report figure-review figure-data figures methods-word te-bonsai te-pca path path-quick
 
 .PHONY: setup setup-python setup-r check-python check-env _runtime $(LOCAL_TASKS)

@@ -12,20 +12,21 @@ rendering requires Arial; the environment check verifies that R can find it.
 
 ```bash
 pixi install --locked --all
-pixi run --locked --no-install setup
-pixi run --locked --no-install test
-pixi run --locked --no-install identity
-pixi run --locked --no-install te-bonsai
-pixi run --locked --no-install methods-word
-pixi run --locked --no-install status
+pixi run --clean-env --locked --no-install setup
+pixi run --clean-env --locked --no-install test
+pixi run --clean-env --locked --no-install identity
+pixi run --clean-env --locked --no-install te-bonsai
+pixi run --clean-env --locked --no-install methods-word
+pixi run --clean-env --locked --no-install status
 ```
 
-`pixi.toml` defines the local tasks and dependencies. `pixi.lock` pins both
+`pixi.toml` defines the local tasks and dependencies. `pixi.lock` pins all
 environments. The default environment contains Python 3.13.11, R 4.4.3, the
 analysis packages, Node, GNU utilities, Pandoc, and figure converters. The
 Bonsai environment uses Python 3.14 and the pinned upstream requirements, which
-differ from the main analysis packages. Both environments share the retained R
-package builds.
+differ from the main analysis packages. The `image-qc` environment adds pinned
+image-reading and quality-audit packages to the default Python dependencies.
+All three environments share the retained R package builds.
 
 `setup` installs checksum-verified CRAN `phylopath` 1.3.1 into the private
 `.pixi/r-library` directory. It leaves existing UV and Conda environments
@@ -33,17 +34,19 @@ unchanged. Repeated setup validates the completed installation. A damaged or
 incomplete private library fails validation without being overwritten.
 
 ```bash
-make setup       # Install both locked Pixi environments and prepare phylopath
+make setup       # Install all locked Pixi environments and prepare phylopath
 make check-env   # Check the installed default environment without installing packages
 make test        # Run the same Pixi test task
 ```
 
 Make targets delegate to the tasks in `pixi.toml`; they do not maintain separate
 command definitions. Routine Make targets use `--locked --no-install` and
-refuse missing environments. A plain `pixi run --locked <task>` may install
-locked packages before running the task. Use `make check-env` or
-`pixi run --locked --no-install --offline check-env` for a check that cannot
-install or repair packages.
+`--clean-env` and refuse missing environments. Include `--clean-env` in direct
+Pixi runs to exclude inherited Python and R settings. A plain
+`pixi run --locked <task>` may install locked packages before running the task.
+Use `make check-env` or
+`pixi run --clean-env --locked --no-install --offline check-env` for a check that
+cannot install or repair packages.
 
 The older `pyproject.toml`, `uv.lock`, `environment.yml`, and Linux explicit
 snapshot remain unchanged as provenance. Some are hashed inputs to retained
@@ -115,8 +118,8 @@ locked Bonsai environment and fetch the exact upstream Git revision into a
 private source cache. The frozen historical shell runners remain as evidence.
 
 ```bash
-pixi run --locked --no-install -e bonsai bonsai-rerun --run-dir /absolute/path/to/new-fit
-pixi run --locked --no-install -e bonsai bonsai-bootstrap-rerun --run-dir /absolute/path/to/new-bootstrap
+pixi run --clean-env --locked --no-install -e bonsai bonsai-rerun --run-dir /absolute/path/to/new-fit
+pixi run --clean-env --locked --no-install -e bonsai bonsai-bootstrap-rerun --run-dir /absolute/path/to/new-bootstrap
 ```
 
 The bootstrap defaults to the retained 200-replicate campaign. A bounded run
@@ -196,6 +199,13 @@ its synchronized Markdown companion provide the collaborator-facing narrative
 without audit tags, internal paths, or action-item placeholders. The verification
 target does not overwrite Word edits. Remaining author inputs are
 tracked separately and must be resolved before submission.
+
+Local Methods audits are registered as `specimen-records` in the default
+environment and `standard-qc` in `image-qc`. See the
+[specimen audit](docs/submission_work_20261013/specimen_records/README.md) and
+[standard-review workflow](docs/STANDARD_QC.md) for source requirements and
+fresh output directories. The image audit requires the preserved microscopy
+archive; the small review gallery is included in the repository.
 
 The focal 46-tip collaborator tree is preserved, but its final source and
 calibration citation is still unresolved. That is a publication blocker, not a

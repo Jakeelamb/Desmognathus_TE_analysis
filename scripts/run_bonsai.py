@@ -90,7 +90,7 @@ def require_pixi_environment() -> None:
     git = shutil.which("git")
     if git is None or not Path(git).resolve().is_relative_to(prefix):
         raise ValueError("Bonsai requires Git from the active Pixi environment")
-    if shutil.which("pixi") is None:
+    if shutil.which(os.environ.get("PIXI_EXE", "pixi")) is None:
         raise ValueError("Pixi is required for locked default-environment preparation and analysis")
     if not (ROOT / ".pixi/envs/default/bin/python").is_file():
         raise ValueError("Install the locked default Pixi environment before running Bonsai")
@@ -154,12 +154,13 @@ def manifest_identity(run_dir: Path, mode: str, replicates: int) -> dict[str, ob
 def local_helper(name: str, *args: str) -> None:
     execute(
         [
-            "pixi",
+            os.environ.get("PIXI_EXE", "pixi"),
             "run",
             "--manifest-path",
             str(ROOT / "pixi.toml"),
             "--environment",
             "default",
+            "--clean-env",
             "--locked",
             "--no-install",
             "--executable",
@@ -168,6 +169,8 @@ def local_helper(name: str, *args: str) -> None:
             *args,
         ],
         cwd=ROOT,
+        # Pixi's host glibc probe needs system tools even in --clean-env.
+        env={**os.environ, "PATH": os.environ.get("PATH", "") + os.pathsep + os.defpath},
     )
 
 

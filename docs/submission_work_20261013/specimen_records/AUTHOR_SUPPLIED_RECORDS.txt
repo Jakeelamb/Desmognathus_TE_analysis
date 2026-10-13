@@ -1,0 +1,145 @@
+https://docs.google.com/spreadsheets/d/1qmsaXn9pffPq68fphp9Wz5Tcvup43oas2AN8DKQh8QY/edit?gid=0#gid=0 Date	Species	Suggested Species	MVZ:ID	Asserted Country	Asserted State	Specific Locality	Verbatim Date	Decimal Latitude	Decimal Longitude	Coordinate Error (m)
+1/11/23	D. marmoratus	D. intermedius	192787	United States	North Carolina	tributary Straight Fork, ca. 1 mi above boundary, Great Smoky Mt. National Park	20 Jul 1983	35.4657	-83.5781	32253
+1/11/23	D. marmoratus	D. intermedius	226963	United States	North Carolina	confluence of Big and Little Snowbird Rivers	23 Jun 1996	35.2975	-83.8857	27
+1/11/23	D. marmoratus	D. intermedius	226962	United States	North Carolina	confluence of Big and Little Snowbird Rivers	23 Jun 1996	35.2975	-83.8857	27
+1/11/23	D. marmoratus	D. intermedius	226965	United States	North Carolina	confluence of Big and Little Snowbird Rivers	23 Jun 1996	35.2975	-83.8857	27
+1/11/23	D. marmoratus	D. intermedius	226964	United States	North Carolina	confluence of Big and Little Snowbird Rivers	23 Jun 1996	35.2975	-83.8857	27
+1/11/23	D. marmoratus	D. intermedius	227091	United States	North Carolina	Deep Gap	28 Jun 1992	35.1142	-83.2215	188
+1/11/23	D. marmoratus	D. marmoratus	201239	United States	North Carolina	Linville region	August 1964	36.0664	-81.8706	832
+1/11/23	D. marmoratus	D. marmoratus	209455	United States	North Carolina	E slope Grandfather Mt.	not recorded	36.1249	-81.8028	1675
+1/11/23	D. marmoratus	D. marmoratus	109595	United States	Virginia	Hwy. 58, 4.8 mi WSW Konnarock	2 Jul 1972	36.6499	-81.7055	2280
+1/11/23	D. marmoratus	D. aureatus	92227	United States	Georgia	Coleman River	not recorded	34.9577	-83.5114	4894
+1/11/23	D. marmoratus	D. aureatus	92228	United States	Georgia	Coleman River	not recorded	34.9577	-83.5114	4894
+1/11/23	D. marmoratus	D. aureatus	92229	United States	Georgia	Coleman River	not recorded	34.9577	-83.5114	4894
+1/11/23	D. marmoratus	D. aureatus	92232	United States	Georgia	Coleman River	not recorded	34.9577	-83.5114	4894
+1/11/23	D. marmoratus	D. aureatus	282346	United States	Georgia	Tallulah River	11 May 1963	34.969677	-83.556194	2500
+1/11/23	D. wrighti	D. organi	141811	United States	North Carolina	Grandfather Mt., Raven Rocks	5 Jul 1971	36.1014	-81.8225	188
+1/11/23	D. wrighti	D. organi	169222	United States	North Carolina	Grandfather Mt., above Linville Gap	21 Jun 1969	36.107	-81.8268	510
+1/11/23	D. wrighti	D. organi	169225	United States	North Carolina	6.0 mi NE Linville on Rte. 211, ca. 1 mi E Peak Grandfather Mt.	20 Jun 1969	36.0899	-81.811	993
+1/11/23	D. wrighti	D. organi	169226	United States	North Carolina	6.0 mi NE Linville on Rte. 211, ca. 1 mi E Peak Grandfather Mt.	20 Jun 1969	36.0899	-81.811	993
+1/11/23	D. wrighti	D. wrighti	206558	United States	North Carolina	Devil's Courthouse	31 May 1987	35.3029	-82.8957	805
+1/11/23	D. wrighti	D. wrighti	220829	United States	North Carolina	vicinity of Courthouse Valley Overlook, Blue Ridge Parkway, near Beech Gap, 0.2 mi W junction Hwy. 215	7 Jun 1992	35.2581	-82.9135	43
+1/11/23	D. wrighti	D. wrighti	220830	United States	North Carolina	Pisgah Ridge, between Beech Gap and Devil's Courthouse	7 Jun 1992	35.3026	-82.9024	980
+1/11/23	D. wrighti	D. wrighti	220831	United States	North Carolina	vicinity of Courthouse Valley Overlook	7 Jun 1992	35.2581	-82.9135	43
+1/11/23	D. wrighti	D. wrighti	225129	United States	North Carolina	vicinity of Courthouse Valley Overlook off Blue Ridge Parkway near Beech Gap, 0.2 mi W junction Hwy. 215	7 Jun 1992	35.2581	-82.9135	43
+1/11/23	D. santeetlah	D. santeetlah	52730	United States	North Carolina	9.7 mi NW (by road) Smokemont	29 Apr 1950	35.5992	-83.4233	980
+1/11/23	D. santeetlah	D. santeetlah	222609	United States	North Carolina	Fie Creek near Pine Tree Gap on Hemphill Bald	7 Jun 1993	35.56	-83.0999	1637
+1/11/23	D. santeetlah	D. santeetlah	222615	United States	North Carolina	Fie Creek Headwaters near Pine Tree Gap on Hemphill Bald	7 Jun 1993	35.56	-83.0999	1637
+1/11/23	D. santeetlah	D. santeetlah	222616	United States	North Carolina	Fie Creek Headwaters near Pine Tree Gap on Hemphill Bald	7 Jun 1993	35.56	-83.0999	1637
+1/11/23	D. santeetlah	D. santeetlah	222617	United States	North Carolina	Fie Creek Headwaters near Pine Tree Gap on Hemphill Bald	7 Jun 1993	35.56	-83.0999	1637
+1/11/23	D. brimleyorum	D. brimleyorum	110793	United States	Arkansas	Caddo Mts., 4 mi SE Big Fork, U.S. Forest Service Rd. 38, 2 mi S junction Hwy. 8	18 Jul 1973	34.4439	-93.9215	819
+1/11/23	D. brimleyorum	D. brimleyorum	112421	United States	Arkansas	Caddo Mts., 4 mi SE Big Fork, U.S. Forest Service Rd. 38, 2 mi S junction Hwy. 8	18 Jul 1973	34.4439	-93.9215	819
+1/11/23	D. brimleyorum	D. brimleyorum	168405	United States	Arkansas	Cossatot Mts., Bard Spring Recreation Area	27 Jun 1970	34.4864	-94.0072	819
+1/11/23	D. brimleyorum	D. brimleyorum	168407	United States	Arkansas	Cossatot Mts., Bard Spring Recreation Area	27 Jun 1970	34.4864	-94.0072	819
+1/11/23	D. brimleyorum	D. brimleyorum	215258	United States	Arkansas	1 km up Forst Service Rd. 798 Ouachita National Forest	21 Mar 1987	34.8613	-94.0789	33862
+1/11/23	D. welteri	D. welteri	215260	United States	Kentucky	3.7 mi up Hwy. 392 off Hwy. 119	17 May 1987	37.068	-82.7493	4783
+1/11/23	D. welteri	D. welteri	141144	United States	Virginia	High Knob Recreation Area, 2 mi SE Norton	8 Jul 1971	36.8875	-82.6142	1785
+1/11/23	D. welteri	D. welteri	141145	United States	Virginia	High Knob Recreation Area, 2 mi SE Norton	8 Jul 1971	36.8875	-82.6142	1785
+1/11/23	D. welteri	D. welteri	141776	United States	Virginia	High Knob Recreation Area, stream at picnic area	7 Jul 1971	36.8875	-82.6142	1785
+1/11/23	D. imitator	D. imitator	32512	United States	North Carolina	Mingus Mill Creek, 5 mi NW Smokemont	2 Jun 1934	35.5197	-83.3383	2428
+1/11/23	D. imitator	D. imitator	32515	United States	North Carolina	Mingus Mill Creek, 5 mi NW Smokemont	2 Jun 1934	35.5197	-83.3383	2428
+1/11/23	D. imitator	D. imitator	32524	United States	North Carolina	Mingus Mill Creek, 5 mi NW Smokemont	2 Jun 1934	35.5197	-83.3383	2428
+1/11/23	D. imitator	D. imitator	147394	United States	North Carolina	Great Smoky Mt. trail to Andrews Bald from Clingman's Dome	June 1975	35.5525	-83.4942	510
+1/11/23	D. imitator	D. imitator	220651	United States	North Carolina	Indian Gap	3 Jun 1992	35.6108	-83.4386	188
+1/11/23	D. aeneus	D. aeneus	100221	United States	Alabama	NE slope Mt. Cheaha, 15-20 yds E Pumphouse	18 Sep 1965	33.4767	-85.8095	3246
+1/11/23	D. aeneus	D. aeneus	100219	United States	Alabama	NE slope Mt. Cheaha, 15-20 yds E Pumphouse	18 Sep 1965	33.4767	-85.8095	3246
+1/11/23	D. aeneus	D. aeneus	168277	United States	Georgia	Warwoman Dell Recreation Area	26 Jun 1972	34.8819	-83.3511	3285
+1/11/23	D. aeneus	D. aeneus	100215	United States	Alabama	NE slope Mt. Cheaha, 15-20 yds E Pumphouse	18 Sep 1965	33.4767	-85.8095	3246
+1/11/23	D. aeneus	D. aeneus	166183	United States	Georgia	Warwoman Dell Recreation Area	26 Jun 1972	34.8819	-83.3511	3285
+1/12/23	D. quadramaculatus	D. kanawa	169201	United States	Virginia	Blue Ridge Parkway mi 174.3	19 Jun 1969	36.7715	-80.4056	47
+1/12/23	D. quadramaculatus	D. kanawa	169202	United States	Virginia	Blue Ridge Parkway mi 174.3	19 Jun 1969	36.7715	-80.4056	47
+1/12/23	D. quadramaculatus	D. kanawa	169203	United States	Virginia	Blue Ridge Parkway mi 174.3	19 Jun 1969	36.7715	-80.4056	47
+1/12/23	D. quadramaculatus	D. kanawa	169204	United States	Virginia	Blue Ridge Parkway mi 174.3	19 Jun 1969	36.7715	-80.4056	47
+1/12/23	D. quadramaculatus	D. kanawa	169205	United States	Virginia	Blue Ridge Parkway mi 174.3	19 Jun 1969	36.7715	-80.4056	47
+1/12/23	D. quadramaculatus	D. makavoilius	141510	United States	North Carolina	Hwy. 221, 9.7 mi E Linville	5 Jul 1971	36.1086	-81.7785	993
+1/12/23	D. quadramaculatus	D. makavoilius	141511	United States	North Carolina	Hwy. 221, 9.7 mi E Linville	5 Jul 1971	36.1086	-81.7785	993
+1/12/23	D. quadramaculatus	D. makavoilius	169496	United States	North Carolina	15 mi SW Asheville, Blue Ridge Parkway mi 408 slope of Mt. Pisgah	25 Jun 1972	35.4533	-82.6563	993
+1/12/23	D. quadramaculatus	D. makavoilius	169497	United States	North Carolina	15 mi SW Asheville, Blue Ridge Parkway mi 408 slope of Mt. Pisgah	25 Jun 1972	35.4533	-82.6563	993
+1/12/23	D. quadramaculatus	D. makavoilius	169498	United States	North Carolina	15 mi SW Asheville, Blue Ridge Parkway mi 408 slope of Mt. Pisgah	25 Jun 1972	35.4533	-82.6563	993
+1/12/23	D. quadramaculatus	D. gvingeusgwotli	52825	United States	North Carolina	9.7 mi NW Smokemont	29 Apr 1950	35.5992	-83.4233	980
+1/12/23	D. quadramaculatus	D. gvingeusgwotli	52826	United States	North Carolina	9.7 mi NW Smokemont	29 Apr 1950	35.5992	-83.4233	980
+1/12/23	D. quadramaculatus	D. amphileucius	58373	United States	North Carolina	Glade Gap, 38 mi E Murphy, Hwy. 64	31 Jul 1952	35.0669	-83.6294	188
+1/12/23	D. quadramaculatus	D. amphileucius	91682	United States	North Carolina	upper falls of Whitewater River, Jackson/Transylvania County	19 Jul 1960	35.0371	-83.0183	188
+1/12/23	D. quadramaculatus	D. amphileucius	137275	United States	North Carolina	Smokemont Horse Trail, 5 mi N Cherokee, Great Smoky Mts.	6 Sep 1975	35.5576	-83.3161	7448
+1/12/23	D. auriculatus	D. valtos	168375	United States	South Carolina	0.5 mi S Tillman	27 Mar 1970	32.4565	-81.1082	1355
+1/12/23	D. auriculatus	D. auriculatus	166184	United States	Florida	1 mi E Marianna on Rte. 90, at Chipola River	30 Mar 1970	30.7712	-85.2102	3246
+1/12/23	D. auriculatus	D. auriculatus	166185	United States	Florida	1 mi E Marianna on Rte. 90, at Chipola River	30 Mar 1970	30.7712	-85.2102	3246
+1/12/23	D. auriculatus	D. auriculatus	166187	United States	Florida	1 mi E Marianna on Rte. 90, at Chipola River	30 Mar 1970	30.7712	-85.2102	3246
+1/12/23	D. auriculatus	D. auriculatus	166189	United States	Florida	1 mi E Marianna on Rte. 90, at Chipola River	30 Mar 1970	30.7712	-85.2102	3246
+1/12/23	D. auriculatus	D. valentinia	64630	United States	Louisiana	near Westwego	4 Feb 1954	29.9055	-90.1421	2480
+1/12/23	D. auriculatus	D. valentinia	64631	United States	Louisiana	near Westwego	4 Feb 1954	29.9055	-90.1421	2480
+1/12/23	D. auriculatus	D. valentinia	64632	United States	Louisiana	near Westwego	4 Feb 1954	29.9055	-90.1421	2480
+1/12/23	D. auriculatus	D. valentinia	64633	United States	Louisiana	near Westwego	4 Feb 1954	29.9055	-90.1421	2480
+1/12/23	D. auriculatus	D. valentinia	64634	United States	Louisiana	near Westwego	4 Feb 1954	29.9055	-90.1421	2480
+1/12/23	D. monticola	D. cheaha	92122	United States	Alabama	at Pumphouse on NE slope of Mt. Cheaha	18 Sep 1965	33.4767	-85.8095	3246
+1/12/23	D. monticola	D. cheaha	92190	United States	Alabama	3 mi NW McKenzie on U.S. Rte. 31	1 Aug 1967	31.5852	-86.7163	2850
+1/12/23	D. monticola	D. cheaha	92195	United States	Alabama	3 mi NW McKenzie on U.S. Rte. 31	1 Aug 1967	31.5852	-86.7163	2850
+1/12/23	D. monticola	D. cheaha	92196	United States	Alabama	3 mi NW McKenzie on U.S. Rte. 31	1 Aug 1967	31.5852	-86.7163	2850
+1/12/23	D. monticola	D. cheaha	92198	United States	Alabama	3 mi NW McKenzie on U.S. Rte. 31	1 Aug 1967	31.5852	-86.7163	2850
+1/12/23	D. monticola	D. monticola	197771	United States	North Carolina	Highlands	9 Aug 1982	35.0532	-83.1973	832
+1/12/23	D. monticola	D. monticola	146175	United States	North Carolina	SW corner of Highlands	25 Jun 1977	35.0522	-83.2027	188
+1/12/23	D. monticola	D. monticola	52805	United States	North Carolina	W side Grandmother Mt.	30 Apr 1950	36.0627	-81.8446	188
+1/12/23	D. monticola	D. monticola	269763	United States	West Virginia	Bear Heaven Recreation Area, 10 miles east (airline) Elkins	21 Aug 2005	38.917	-79.6533	30
+1/12/23	D. monticola	D. monticola	269760	United States	West Virginia	Bear Heaven Recreation Area, 10 miles east (airline) Elkins	21 Aug 2005	38.917	-79.6533	30
+1/12/23	D. fuscus	D. fuscus	32469	United States	Tennessee	6 mi E Calderwood	7 Apr 1937	35.5092	-83.894	8653
+1/12/23	D. fuscus	D. fuscus	32470	United States	Tennessee	6 mi E Calderwood	7 Apr 1937	35.5092	-83.894	8653
+1/12/23	D. fuscus	D. fuscus	32471	United States	Tennessee	6 mi E Calderwood	7 Apr 1937	35.5092	-83.894	8653
+1/12/23	D. fuscus	D. fuscus	40947	United States	Tennessee	slopes of Mt. Leconte, 3 mi NW of Peak on Margin of Cherokee Orchard, 0.25 mi NE of Benchmark	17 Aug 1944	35.6542	-83.4369	1624
+1/12/23	D. fuscus	D. fuscus	59842	United States	Tennessee	S Fork Holston River, 1 mi SW Holston Dam	24 Oct 1953	36.5136	-82.1012	2054
+1/12/23	D. ocoee	D. ocoee	52717	United States	South Carolina	Jocassee	26 Apr 1950	34.9716	-82.9379	188
+1/12/23	D. ocoee	D. ocoee	52718	United States	South Carolina	Jocassee	26 Apr 1950	34.9716	-82.9379	188
+1/12/23	D. ochrophaeus	D. orestes	91572	United States	Tennessee	Carter (Tennessee) and Mitchell (North Carolina) County line, on road to Roan High Knob, 12 mi from Roan Mt.	8 Dec 1966	36.1044	-82.1222	24206
+1/12/23	D. ochrophaeus	D. orestes	109787	United States	North Carolina	Grandfather Mt.	1 Jul 1972	36.1114	-81.8125	3246
+1/12/23	D. ochrophaeus	D. orestes	91510	United States	Georgia	Warwoman Dell, Chattahoochee National Forest, 3.4 mi NW Clayton	26 Jul 1960	34.8819	-83.3511	3285
+1/12/23	D. ochrophaeus	D. orestes	169445	United States	North Carolina	6 mi NE Linville on Rte. 221, Grandfather Mt.	20 Jun 1969	36.0957	-81.7908	993
+1/12/23	P. waltl	P. waltl	186097	Morocco	Tangier-Tetouan-Al Hoceima	ca. 14 km S Asilah via coastal road, Tetouan	16 Mar 1983	35.46556	-6.04028	4140
+1/12/23	P. waltl	P. waltl	186085	Morocco	Rabat-Sale-Kenitra	ca. 10 km E Rabat-Sale Bridge, Rabat	January 1977	34.02528	-6.83611	9365
+1/12/23	P. waltl	P. waltl	186083	Morocco	Rabat-Sale-Kenitra	ca. 10 km E Rabat-Sale Bridge, Rabat	January 1977	34.02528	-6.83611	9365
+1/12/23	A. mexicanum	A. mexicanum	162037							 Field Series	Genus	Species	Clade	State/Country	County/Parish	Detailed Locality 	LatDD	LongDD	Elevation	Day	Month	Year	Collector	Permit	Specimen	
+RAP3374	Desmognathus	monticola	monticola B	West Virginia	Randolph	Oxley Run	38.641692	-80.080508	1000	24	September	2023	RAP, MAS, JMH	WVDNR 2023.001	Whole + Tissue	
+RAP3375	Desmognathus	monticola	monticola B	West Virginia	Randolph	Mill Creek Tributary	38.645471	-80.080681	959	24	September	2023	RAP, MAS, JMH	WVDNR 2023.001	Whole + Tissue	
+RAP3372	Desmognathus	fuscus	fuscus B	West Virginia	Randolph	Mill Creek Tributary	38.645471	-80.080681	959	24	September	2023	RAP, MAS, JMH	WVDNR 2023.001	Whole + Tissue	
+RAP3373	Desmognathus	fuscus	fuscus B	West Virginia	Randolph	Meatbox Run	38.650318	-80.079156	939	24	September	2023	RAP, MAS, JMH	WVDNR 2023.001	Whole + Tissue	
+RAP3371	Desmognathus	ochrophaeus	ochrophaeus	West Virginia	Randolph	Oxley Run	38.641692	-80.080508	1000	24	September	2023	RAP, MAS, JMH	WVDNR 2023.001	Whole + Tissue	
+RAP3355	Desmognathus	mavrokoilius	quadramaculatus C	North Carolina	Haywood	Big Creek	35.765937	-83.102913	472	31	July	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3392	Desmognathus	welteri	welteri	Kentucky	Bell	Caney Creek	36.680953	-83.825428	414	11	October	2023	RAP, MAS, JMH	KDFWR SC2311207	Whole + Tissue	
+RAP3393	Desmognathus	welteri	welteri	Kentucky	Bell	Furnace Branch	36.701003	-83.819429	499	11	October	2023	RAP, MAS, JMH	KDFWR SC2311207	Whole + Tissue	
+RAP3401	Desmognathus	fuscus	fuscus A	Kentucky	Clay	Beech Creek	37.166836	-83.703627	305	12	October	2023	RAP, MAS, JMH	KDFWR SC2311207	Whole + Tissue	
+RAP3402	Desmognathus	fuscus	fuscus A	Kentucky	Clay	Beech Creek	37.166836	-83.703627	305	12	October	2023	RAP, MAS, JMH	KDFWR SC2311207	Whole + Tissue	
+RAP3416	Desmognathus	ochrophaeus	ochrophaeus	Kentucky	Harlan	Stillhouse Branch	36.929769	-83.201436	718	13	October	2023	RAP, JMH	KDFWR SC2311207	Whole + Tissue	
+RAP3462	Desmognathus	auriculatus	auriculatus A	Florida	Wakulla	Oak Park Cemetery	30.12944	-84.48822	13	15	May	2018	CRH	FWC LSSC-17-00031 	Whole + Tissue	
+RAP3444	Desmognathus	marmoratus	marmoratus E	North Carolina	Burke	Hall Creek	35.60369586	-81.78139363	451	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3445	Desmognathus	marmoratus	marmoratus E	North Carolina	Burke	Hall Creek	35.60369586	-81.78139363	451	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3426	Desmognathus	intermedius	marmoratus C	North Carolina	Haywood	Wycle Fork	35.524583	-83.156778	1218	19	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3428	Desmognathus	intermedius	marmoratus C	North Carolina	Haywood	Wycle Fork	35.524583	-83.156778	1218	19	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3442	Desmognathus	amphileucus	quadramaculatus A	North Carolina	Polk	White Oak Creek	35.27939612	-82.19207628	347	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3437	Desmognathus	amphileucus	quadramaculatus A	North Carolina	Polk	Green River Cove	35.28280102	-82.30021127	345	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3422	Desmognathus	kanawha	quadramaculatus D	North Carolina	Wilkes	Bell Branch	36.373328	-81.159059	493	18	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3423	Desmognathus	kanawha	quadramaculatus D	North Carolina	Wilkes	Bell Branch	36.373328	-81.159059	493	18	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3440	Desmognathus	anicetus	conanti F	North Carolina	Polk	White Oak Creek	35.27939612	-82.19207628	347	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3441	Desmognathus	anicetus	conanti F	North Carolina	Polk	White Oak Creek	35.27939612	-82.19207628	347	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3421	Desmognathus	mavrokoilius	quadramaculatus E	North Carolina	Ashe	Three Top Mountain	36.42017	-81.60687	1107	18	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3419	Desmognathus	mavrokoilius	quadramaculatus E	North Carolina	Ashe	Three Top Mountain	36.42017	-81.60687	1107	18	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3429	Desmognathus	gvnigeusgwotli	quadramaculatus F	North Carolina	Haywood	Wycle Fork	35.524583	-83.156778	1218	19	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3431	Desmognathus	campi	conanti A	North Carolina	Transylvania	White Oak Bridge	35.08195467	-82.76524062	866	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3432	Desmognathus	campi	conanti A	North Carolina	Transylvania	White Oak Bridge	35.08195467	-82.76524062	866	21	December	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3464	Desmognathus	brimleyorum	brimleyorum	Arkansas	Garland	Hot Springs	34.51858875	-93.06887094	213	5	May	2024	RAP, MAS, CRH	AGFC 053020233	Whole + Tissue	
+RAP3468	Desmognathus	brimleyorum	brimleyorum	Arkansas	Howard	Cossatot River	34.33655642	-94.24842893	230	6	May	2024	RAP, MAS	AGFC 053020233	Whole + Tissue	
+RAP3360	Desmognathus	tilleyi	conanti Beta	North Carolina	Haywood	Stinking Camp Branch	35.731729	-83.05874	900	31	July	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3356	Desmognathus	tilleyi	conanti Beta	North Carolina	Haywood	Laurel Creek	35.752419	-83.087774	592	31	July	2023	RAP	NCWRC 23-SC00374	Whole + Tissue	
+RAP3498	Desmognathus	ocoee	apalachicolae A2	Georgia	Cherokee	Long Swamp Creek	34.33902739	-84.36215138	301	12	May	2024	RAP, MAS	GADNR 124431310	Whole + Tissue	
+RAP3513	Desmognathus	ocoee	apalachicolae A2	Georgia	Dawson	Amicalola Creek	34.42532611	-84.21105634	381	15	May	2024	RAP	GADNR 124431310	Whole + Tissue	
+RAP3517	Desmognathus	perlapsus	ocoee D	Georgia	Habersham	Camp Creek trib.	34.5586731	-83.54350398	407	16	May	2024	RAP, CDC	GADNR 124431310	Whole + Tissue	
+RAP3518	Desmognathus	perlapsus	ocoee D	Georgia	Habersham	Camp Creek trib.	34.5586731	-83.54350398	407	16	May	2024	RAP, CDC	GADNR 124431310	Whole + Tissue	Contaminated???
+RAP3471	Desmognathus	apalachicolae	apalachicolae A1	Georgia	Stewart	Hannahatchee Creek trib.	32.12388551	-84.76751054	150	10	May	2024	RAP, MAS	GADNR 124431310	Whole + Tissue	
+RAP3472	Desmognathus	apalachicolae	apalachicolae A1	Georgia	Stewart	Hannahatchee Creek trib.	32.12388551	-84.76751054	150	10	May	2024	RAP, MAS	GADNR 124431310	Whole + Tissue	
+RAP3599	Desmognathus	perlapsus	ocoee D	North Carolina	Macon	Clear Creek	35.03877756	-83.20372263	1121	22	June	2024	RAP, SMK	NCWRC SWC-24-000073	Whole + Tissue	
+RAP3455	Desmognathus	bairdi	fuscus D	North Carolina	Scotland	Camerons Lake	34.9957	-79.54522	102.97	15	January	2024	DAB	NCWRC SWC-24-000073	Whole + Tissue	
+RAP3456	Desmognathus	lycos	fuscus C	North Carolina	Pitt	Otter Creek	35.71829	-77.52219	6.84	12	March	2024	RAP, DAB, MAS	NCWRC SWC-24-000073	Whole + Tissue	
+RAP3457	Desmognathus	lycos	fuscus C	North Carolina	Pitt	Otter Creek	35.71829	-77.52219	6.84	12	March	2024	RAP, DAB, MAS	NCWRC SWC-24-000073	Whole + Tissue	
+RAP3458	Desmognathus	valtos	auriculatus C	North Carolina	Pitt	Kitten Creek	35.71978	-77.52962	8.22	12	March	2024	RAP, DAB, MAS	NCWRC SWC-24-000073	Whole + Tissue	
+RAP3459	Desmognathus	valtos	auriculatus C	North Carolina	Pitt	Kitten Creek	35.71978	-77.52962	8.22	12	March	2024	RAP, DAB, MAS	NCWRC SWC-24-000073	Whole + Tissue	
+RAP3506	Desmognathus	ocoee	ocoee FGH	Georgia	Dade	Murphy Spring	34.9592081	-85.5072141	283	13	May	2024	RAP	GADNR 124431310	Whole + Tissue	
+RAP3507	Desmognathus	ocoee	ocoee FGH	Georgia	Dade	Murphy Spring	34.9592081	-85.5072141	283	13	May	2024	RAP	GADNR 124431310	Whole + Tissue	
+RAP3521	Desmognathus	folkertsi	folkertsi	Georgia	Towns	Burnt Cabin Branch	34.99007276	-83.55997562	782	16	May	2024	RAP, CDC	GADNR 124431310	Whole + Tissue	
+RAP3520	Desmognathus	folkertsi	folkertsi	Georgia	Towns	Burnt Cabin Branch	34.99007276	-83.55997562	782	16	May	2024	RAP, CDC	GADNR 124431310	Whole + Tissue

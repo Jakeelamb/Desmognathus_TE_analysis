@@ -110,7 +110,9 @@ def campaign(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Pat
         f"#!{sys.executable}\nimport json, os, subprocess, sys\n"
         "from pathlib import Path\n"
         "assert '--locked' in sys.argv and '--no-install' in sys.argv\n"
+        "assert '--clean-env' in sys.argv\n"
         "assert sys.argv[sys.argv.index('--environment') + 1] == 'default'\n"
+        "subprocess.run(['getconf', 'GNU_LIBC_VERSION'], check=True, stdout=subprocess.DEVNULL)\n"
         "with Path(os.environ['FIXTURE_PIXI_CALLS']).open('a') as log:\n"
         "    log.write(json.dumps(sys.argv[1:]) + '\\n')\n"
         "index = sys.argv.index('--executable')\n"
@@ -118,12 +120,15 @@ def campaign(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Pat
     )
     pixi.chmod(0o755)
     monkeypatch.setenv("PATH", f"{tools}:{os.environ['PATH']}")
+    monkeypatch.setenv("PIXI_EXE", str(pixi))
     monkeypatch.setenv("FIXTURE_PIXI_CALLS", str(tmp_path / "pixi calls.jsonl"))
     source = tmp_path / "upstream with spaces"
     (source / "bonsai").mkdir(parents=True)
     (source / "requirements.txt").write_text("# mpi4py\n" + "\n".join(sorted(RUNNER.REQUIREMENTS)))
     (source / "bonsai/bonsai_main.py").write_text(UPSTREAM_PROGRAM)
     git(source, "init", "-q")
+    git(source, "config", "core.hooksPath", "/dev/null")
+    git(source, "config", "commit.gpgsign", "false")
     git(source, "add", ".")
     git(
         source,
@@ -396,6 +401,53 @@ def test_environment_guard_accepts_realpath_alias_of_project_prefix(
     prefix.symlink_to(actual, target_is_directory=True)
     monkeypatch.setenv("CONDA_PREFIX", str(actual))
     RUNNER.require_pixi_environment()
+
+
+def test_environment_guard_uses_pixi_exe_when_pixi_is_absent_from_path(
+    bonsai_environment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pixi = "/host-tools/pixi"
+    monkeypatch.setenv("PIXI_EXE", pixi)
+    monkeypatch.setattr(
+        RUNNER.shutil,
+        "which",
+        lambda name: str(bonsai_environment / "bin/git")
+        if name == "git"
+        else pixi if name == pixi else None,
+    )
+    RUNNER.require_pixi_environment()
+    monkeypatch.delenv("PIXI_EXE")
+    with pytest.raises(ValueError, match="Pixi is required"):
+        RUNNER.require_pixi_environment()
+
+
+@pytest.mark.parametrize("explicit_executable", [True, False])
+def test_local_helper_supports_clean_path_and_pixi_path_fallback(
+    campaign: tuple[Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    explicit_executable: bool,
+) -> None:
+    project, _ = campaign
+    if explicit_executable:
+        prefix_bin = project / ".pixi/envs/bonsai/bin"
+        prefix_bin.mkdir(parents=True)
+        probe_record = tmp_path / "prefix probe.txt"
+        probe = prefix_bin / "getconf"
+        probe.write_text(
+            f"#!{sys.executable}\nfrom pathlib import Path\n"
+            f"Path({str(probe_record)!r}).write_text('prefix tool used')\n"
+        )
+        probe.chmod(0o755)
+        monkeypatch.setenv("PATH", str(prefix_bin))
+    else:
+        monkeypatch.delenv("PIXI_EXE")
+    run_dir = tmp_path / "prepared helper input"
+    RUNNER.local_helper("compare_bonsai_to_pca.py", "prepare", "--run-dir", str(run_dir))
+    assert (run_dir / "input/features.txt").read_text() == "fixture input\n"
+    assert (run_dir / "bonsai_config.yaml").is_file()
+    if explicit_executable:
+        assert probe_record.read_text() == "prefix tool used"
 
 
 @pytest.mark.parametrize("environment_key", ["PIXI_ENVIRONMENT_NAME", "PIXI_ENV_NAME"])
