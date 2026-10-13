@@ -203,52 +203,8 @@ if (any(!is.finite(figure_manifest$width_mm)) || any(figure_manifest$width_mm <=
   stop("Every figure must declare a positive final width")
 }
 
-required_auxiliary_columns <- c(
-  "auxiliary_id", "title", "basename", "width_mm", "height_mm",
-  "final_font_family", "minimum_target_text_pt", "datasets",
-  "release_status", "boundary", "legend", "alt_text", "pdf", "png", "tiff"
-)
-expected_auxiliary_ids <- c(
-  "Auxiliary_Wang_style_integrated_te_history_candidate",
-  "Auxiliary_Wang_style_diversity_genome_size_candidate",
-  "Auxiliary_Path24_development_traits_reference",
-  "Auxiliary_Path_DAG_reference",
-  "Auxiliary_Wang2025_cross_study_te_diversity_reference"
-)
-expected_auxiliary_titles <- c(
-  "Wang-style integrated TE content and proliferation candidate",
-  "Wang-style TE diversity and genome-size candidate",
-  "Path24 development and phenotype reference",
-  "Path DAG equivalence-class reference",
-  "Cross-study TE-diversity reference (Wang et al. 2025)"
-)
-
-if (!all(required_auxiliary_columns %in% names(auxiliary_manifest))) {
-  stop(
-    "Auxiliary figure manifest is missing required columns: ",
-    paste(setdiff(required_auxiliary_columns, names(auxiliary_manifest)), collapse = ", ")
-  )
-}
-if (!identical(auxiliary_manifest$auxiliary_id, expected_auxiliary_ids)) {
-  stop(
-    "Auxiliary figure manifest must contain exactly these ordered records: ",
-    paste(expected_auxiliary_ids, collapse = ", ")
-  )
-}
-if (!identical(auxiliary_manifest$title, expected_auxiliary_titles)) {
-  stop(
-    "Auxiliary figure manifest titles must match the ordered review contract: ",
-    paste(expected_auxiliary_titles, collapse = "; ")
-  )
-}
-if (
-  any(!is.finite(auxiliary_manifest$width_mm)) ||
-    any(auxiliary_manifest$width_mm <= 0) ||
-    any(!is.finite(auxiliary_manifest$height_mm)) ||
-    any(auxiliary_manifest$height_mm <= 0)
-) {
-  stop("Every auxiliary figure must declare positive final dimensions")
-}
+source(file.path(ROOT, "scripts/publication/auxiliary_figure_contract.R"))
+auxiliary_contract <- validate_auxiliary_figure_manifest(auxiliary_manifest)
 
 figure_paths <- file.path(FIGURE_DIR, figure_manifest$png)
 if (any(!file.exists(figure_paths))) {
@@ -322,79 +278,6 @@ for (phrase in c("S42", "S43", "Bonsai", "not a species phylogeny", "feature res
   }
 }
 
-auxiliary_evidence <- function(auxiliary_id) {
-  row <- auxiliary_manifest[
-    auxiliary_manifest$auxiliary_id == auxiliary_id,
-    ,
-    drop = FALSE
-  ]
-  paste(row$boundary, row$legend, row$alt_text, collapse = " ")
-}
-
-required_auxiliary_phrases <- list(
-  Auxiliary_Wang_style_integrated_te_history_candidate = c(
-    "Review candidate, not a numbered manuscript figure",
-    "Six representatives are selected",
-    "fractions of aligned RepeatMasker hit bp",
-    "divergence bins are not insertion ages"
-  ),
-  Auxiliary_Wang_style_diversity_genome_size_candidate = c(
-    "Review candidate, not a numbered manuscript figure",
-    "Reproductive-strategy panels are post-hoc descriptive strata",
-    "without a regression because n = 2",
-    "Pagel-lambda PGLS fits"
-  ),
-  Auxiliary_Path24_development_traits_reference = c(
-    "Descriptive review only",
-    "D. organi is absent",
-    "conditional D. fuscus assembly-anchored pg/1C estimates",
-    "not direct independently measured species C-values"
-  ),
-  Auxiliary_Path_DAG_reference = c(
-    "Not a numbered manuscript figure.",
-    "10 testable equivalence classes",
-    "saturated 6-member class is not shown",
-    "remains unscored because it has no d-separation claim",
-    "Genome size",
-    "conditional D. fuscus assembly-anchored pg/1C analysis",
-    "not a direct species C-value measurement",
-    "same released genome-size scale is used consistently",
-    "do not orient a unique causal arrow"
-  ),
-  Auxiliary_Wang2025_cross_study_te_diversity_reference = c(
-    "Descriptive cross-study context only",
-    "no pooled regression or hypothesis test",
-    "10.5061/dryad.zpc866tkv",
-    "10.1038/s42003-025-08127-3",
-    "CC0-1.0",
-    "published top-10 TE-superfamily indices",
-    "RepeatModeler/RepeatMasker",
-    "reclosed calculations from dnaPipeTE compositions",
-    "pipelines are different and not method-harmonized",
-    "conditional D. fuscus assembly-anchored estimates",
-    "not direct species C-values"
-  )
-)
-
-for (auxiliary_id in names(required_auxiliary_phrases)) {
-  evidence <- auxiliary_evidence(auxiliary_id)
-  missing_phrases <- required_auxiliary_phrases[[auxiliary_id]][
-    !vapply(
-      required_auxiliary_phrases[[auxiliary_id]],
-      grepl,
-      logical(1),
-      x = evidence,
-      fixed = TRUE
-    )
-  ]
-  if (length(missing_phrases) > 0L) {
-    stop(
-      auxiliary_id,
-      " is missing required review-boundary text: ",
-      paste(missing_phrases, collapse = "; ")
-    )
-  }
-}
 ```
 
 <div class="gallery-summary">
@@ -451,14 +334,13 @@ rather than resampling biological specimens. S09–S11 retain the PCA geometry a
 a supplementary audit.
 </div>
 
-<div class="review-callout info">
-<strong>Wang-style integrated TE-history candidate boundary.</strong> This is a
-review candidate, not a numbered manuscript figure. Six representatives are
-selected deterministically from the overlap21 genome-size distribution plus
-the <em>D. fuscus</em> anchor. Repeat proportions are fractions of aligned
-RepeatMasker hit bp, not genome occupancy; divergence bins are not insertion
-ages.
-</div>
+```{r integrated-history-boundary, echo=FALSE, results='asis'}
+cat(sprintf(
+  '<div class="review-callout info"><strong>Wang-style integrated TE-history candidate boundary.</strong> %s <p>%s</p></div>\n',
+  format_inline(auxiliary_manifest$boundary[[1]]),
+  format_inline(auxiliary_manifest$legend[[1]])
+))
+```
 
 <div class="review-callout info">
 <strong>Wang-style TE-diversity candidate boundary.</strong> Conditional genome
@@ -637,4 +519,25 @@ for (index in seq_len(nrow(auxiliary_manifest))) {
   ))
   cat("</div>\n</section>\n")
 }
+```
+
+# Source fingerprints
+
+```{r source-fingerprint-records, echo=FALSE, results='asis'}
+for (artifact in c("Publication/Desmognathus_figure_review.Rmd",
+                   "scripts/publication/auxiliary_figure_contract.R")) {
+  cat(report_source_fingerprint_html(file.path(ROOT, artifact), artifact), "\n")
+}
+```
+
+```{r review-source-fingerprints, echo=FALSE}
+fingerprint_paths <- c(
+  "Publication/Desmognathus_figure_review.Rmd",
+  "scripts/publication/auxiliary_figure_contract.R",
+  "Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv"
+)
+knitr::kable(data.frame(
+  artifact = fingerprint_paths,
+  sha256 = vapply(file.path(ROOT, fingerprint_paths), figure_source_sha256, character(1))
+))
 ```

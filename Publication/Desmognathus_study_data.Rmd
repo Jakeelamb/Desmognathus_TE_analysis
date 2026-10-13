@@ -70,38 +70,8 @@ auxiliary_manifest <- read_csv(
   progress = FALSE
 )
 
-required_auxiliary_columns <- c(
-  "auxiliary_id", "title", "basename", "width_mm", "height_mm",
-  "final_font_family", "minimum_target_text_pt", "datasets",
-  "release_status", "boundary", "legend", "alt_text", "pdf", "png", "tiff"
-)
-expected_auxiliary_ids <- c(
-  "Auxiliary_Wang_style_integrated_te_history_candidate",
-  "Auxiliary_Wang_style_diversity_genome_size_candidate",
-  "Auxiliary_Path24_development_traits_reference",
-  "Auxiliary_Path_DAG_reference",
-  "Auxiliary_Wang2025_cross_study_te_diversity_reference"
-)
-expected_auxiliary_titles <- c(
-  "Wang-style integrated TE content and proliferation candidate",
-  "Wang-style TE diversity and genome-size candidate",
-  "Path24 development and phenotype reference",
-  "Path DAG equivalence-class reference",
-  "Cross-study TE-diversity reference (Wang et al. 2025)"
-)
-
-if (!all(required_auxiliary_columns %in% names(auxiliary_manifest))) {
-  stop(
-    "Auxiliary figure manifest is missing required columns: ",
-    paste(setdiff(required_auxiliary_columns, names(auxiliary_manifest)), collapse = ", ")
-  )
-}
-if (
-  !identical(auxiliary_manifest$auxiliary_id, expected_auxiliary_ids) ||
-    !identical(auxiliary_manifest$title, expected_auxiliary_titles)
-) {
-  stop("Auxiliary figure manifest records or order do not match the report contract")
-}
+source(file.path(ROOT, "scripts/publication/auxiliary_figure_contract.R"))
+auxiliary_contract <- validate_auxiliary_figure_manifest(auxiliary_manifest)
 
 manifest_row <- function(supplement_id) {
   row <- manifest %>% filter(.data$supplement_id == .env$supplement_id)
@@ -1052,11 +1022,10 @@ These unnumbered figures are displayed in the exact order declared by
 `Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv` and remain outside the
 numbered manuscript-figure sequence.
 
-**Wang-style integrated TE-history candidate boundary.** Review candidate, not
-a numbered manuscript figure. Six representatives are selected deterministically
-from overlap21 conditional genome-size quantiles plus the *D. fuscus* anchor.
-Repeat proportions are fractions of aligned RepeatMasker hit bp, not genome
-occupancy; divergence bins are not insertion ages.
+**Wang-style integrated TE-history candidate boundary.**
+`r format_inline(auxiliary_manifest$boundary[[1]])`
+
+`r format_inline(auxiliary_manifest$legend[[1]])`
 
 **Wang-style TE-diversity candidate boundary.** Reproductive-strategy panels
 are post-hoc descriptive strata. Conditional genome sizes are assembly-anchored
@@ -1166,6 +1135,13 @@ is [DATASET_MANIFEST.csv](datasets/DATASET_MANIFEST.csv).
 
 ### Report and input fingerprints
 
+```{r source-fingerprint-records, echo=FALSE, results='asis'}
+for (artifact in c("Publication/Desmognathus_study_data.Rmd",
+                   "scripts/publication/auxiliary_figure_contract.R")) {
+  cat(report_source_fingerprint_html(file.path(ROOT, artifact), artifact), "\n")
+}
+```
+
 ```{r report-fingerprints}
 tibble(
   artifact = c(
@@ -1173,7 +1149,8 @@ tibble(
     "Publication/datasets/DATASET_MANIFEST.csv",
     "Publication/figures/FIGURE_MANIFEST.csv",
     "Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv",
-    "scripts/publication/build_gbe_figures.R"
+    "scripts/publication/build_gbe_figures.R",
+    "scripts/publication/auxiliary_figure_contract.R"
   ),
   sha256 = vapply(
     c(
@@ -1181,7 +1158,8 @@ tibble(
       file.path(DATA, "DATASET_MANIFEST.csv"),
       file.path(FIGURES, "FIGURE_MANIFEST.csv"),
       AUXILIARY_MANIFEST_PATH,
-      file.path(ROOT, "scripts", "publication", "build_gbe_figures.R")
+      file.path(ROOT, "scripts", "publication", "build_gbe_figures.R"),
+      file.path(ROOT, "scripts", "publication", "auxiliary_figure_contract.R")
     ),
     sha256_file,
     character(1)

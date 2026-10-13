@@ -1,8 +1,14 @@
 from __future__ import annotations
 
 import csv
-import hashlib
+import json
 from pathlib import Path
+
+from test_auxiliary_figure_contract import (
+    assert_report_lineage,
+    normalize_report_text,
+    rendered_report_text,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Publication/Desmognathus_study_data.Rmd"
@@ -10,6 +16,10 @@ OUTPUT = ROOT / "Publication/Desmognathus_study_data.html"
 PATH_README = ROOT / "analyses/03_phylogenetic_path/README.md"
 FIGURE_MANIFEST = ROOT / "Publication/figures/FIGURE_MANIFEST.csv"
 AUXILIARY_MANIFEST = ROOT / "Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv"
+CONTRACT = ROOT / "scripts/publication/auxiliary_figure_contract.R"
+HISTORICAL_CHECKSUMS = (
+    ROOT / "outputs/manuscript_story_20260924_01/qa/original_checksums.json"
+)
 
 EXPECTED_AUXILIARY_IDS = [
     "Auxiliary_Wang_style_integrated_te_history_candidate",
@@ -25,6 +35,11 @@ EXPECTED_AUXILIARY_TITLES = [
     "Path DAG equivalence-class reference",
     "Cross-study TE-diversity reference (Wang et al. 2025)",
 ]
+
+
+CURRENT_AUXILIARY_TITLES = [*EXPECTED_AUXILIARY_TITLES]
+CURRENT_AUXILIARY_TITLES[0] = "Wang-style integrated TE history across all 34 species"
+CURRENT_AUXILIARY_TITLES[2] = "Path24 phylogeny and phenotype reference"
 
 
 def read_csv_rows(path: Path) -> list[dict[str, str]]:
@@ -91,8 +106,11 @@ def test_study_report_exposes_current_release_contract() -> None:
     assert "write.csv(" not in source
     assert "ggsave(" not in source
 
-    source_sha256 = hashlib.sha256(SOURCE.read_bytes()).hexdigest()
-    assert source_sha256 in rendered
+    assert_report_lineage(
+        ROOT, SOURCE, OUTPUT, CONTRACT, json.loads(HISTORICAL_CHECKSUMS.read_text()),
+        "4f69183df61bd6b8c5c4ba760bdef04d81c55501e2e75bbb54100a6cfdda5f48",
+        historical_source_record=True,
+    )
     for expected in [
         "TE34",
         "Path24",
@@ -114,21 +132,30 @@ def test_study_report_exposes_current_release_contract() -> None:
 
 def test_study_report_auxiliary_manifest_contract() -> None:
     source = SOURCE.read_text()
-    normalized_source = " ".join(source.split())
+    normalized_source = " ".join((source + CONTRACT.read_text()).split())
     renderer = (ROOT / "scripts/publication/render_study_report.R").read_text()
+    assert "validate_auxiliary_figure_manifest(auxiliary_manifest)" in renderer
+    assert "validate_auxiliary_rendered_html(auxiliary_contract, html)" in renderer
+    assert "validate_report_source_fingerprint(source_path, html)" in renderer
+    assert "Six representatives are selected" not in source
+    assert "auxiliary_manifest$boundary[[1]]" in source
+    assert "auxiliary_manifest$legend[[1]]" in source
+    renderer += CONTRACT.read_text()
 
     assert AUXILIARY_MANIFEST.exists()
     assert len(read_csv_rows(FIGURE_MANIFEST)) == 7
     rows = read_csv_rows(AUXILIARY_MANIFEST)
     assert [row["auxiliary_id"] for row in rows] == EXPECTED_AUXILIARY_IDS
-    assert [row["title"] for row in rows] == EXPECTED_AUXILIARY_TITLES
+    assert [row["title"] for row in rows] in (
+        EXPECTED_AUXILIARY_TITLES, CURRENT_AUXILIARY_TITLES
+    )
 
     required_source_phrases = {
         '"AUXILIARY_FIGURE_MANIFEST.csv"',
         "for (index in seq_len(nrow(auxiliary_manifest)))",
         "Wang-style integrated TE-history candidate boundary",
         "Review candidate, not a numbered manuscript figure",
-        "Six representatives are selected deterministically",
+        "Six representatives are selected",
         "fractions of aligned RepeatMasker hit bp",
         "divergence bins are not insertion ages",
         "Wang-style TE-diversity candidate boundary",
@@ -147,7 +174,8 @@ def test_study_report_auxiliary_manifest_contract() -> None:
         "same genome-size scale is used across all scored classes",
         "not direct species C-value measurements",
         "representative only and do not orient unique causal arrows",
-        "Descriptive cross-study context only; no pooled regression or hypothesis test",
+        "Descriptive cross-study context only",
+        "no pooled regression or hypothesis test",
         "10.5061/dryad.zpc866tkv",
         "10.1038/s42003-025-08127-3",
         "CC0-1.0",
@@ -183,8 +211,8 @@ def test_study_report_auxiliary_manifest_contract() -> None:
         "Figure_2_te_diversity_and_bonsai",
         "not a species phylogeny",
         "feature resampling",
-        "Genome size node",
-        "same genome-size scale is used across all scored classes",
+        "Genome size",
+        "same released genome-size scale is used consistently",
         "10.5061/dryad.zpc866tkv",
         "10.1038/s42003-025-08127-3",
         "CC0-1.0",
@@ -271,6 +299,8 @@ def test_rendered_study_report_has_ordered_auxiliary_figures_if_present() -> Non
     assert rendered.count("data:image/png;base64") == 12
     positions = [rendered.index(auxiliary_id) for auxiliary_id in EXPECTED_AUXILIARY_IDS]
     assert positions == sorted(positions)
-    for title in EXPECTED_AUXILIARY_TITLES:
-        assert title in rendered
+    rendered_text = rendered_report_text(rendered)
+    for row in auxiliary_rows:
+        for field in ("title", "boundary", "legend"):
+            assert normalize_report_text(row[field]) in rendered_text
     assert 'src="figures/' not in rendered

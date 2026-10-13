@@ -4,6 +4,8 @@ import math
 import re
 import runpy
 import subprocess
+import sys
+import tomllib
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
@@ -43,11 +45,7 @@ def _workbook_under_test(tmp_path: Path) -> Path:
     rebuilt = tmp_path / DEFAULT_OUTPUT.name
     subprocess.run(
         [
-            "uv",
-            "run",
-            "--frozen",
-            "--no-sync",
-            "python",
+            sys.executable,
             str(WORKBOOK_BUILDER),
             "--output",
             str(rebuilt),
@@ -58,6 +56,22 @@ def _workbook_under_test(tmp_path: Path) -> Path:
         text=True,
     )
     return rebuilt
+
+
+def test_open_canonical_workbook_uses_a_temporary_build(tmp_path: Path, monkeypatch) -> None:
+    opened = tmp_path / "editor" / DEFAULT_OUTPUT.name
+    opened.parent.mkdir()
+    opened.write_bytes(b"open workbook")
+    lock = opened.with_name(f".~lock.{opened.name}#")
+    lock.write_text("open")
+    monkeypatch.setitem(globals(), "DEFAULT_OUTPUT", opened)
+
+    rebuilt = _workbook_under_test(tmp_path)
+
+    assert rebuilt == tmp_path / opened.name
+    verify_workbook(rebuilt)
+    assert opened.read_bytes() == b"open workbook"
+    assert lock.read_text() == "open"
 
 
 def test_workbook_scope_matches_non_tree_ggplot_inputs() -> None:
@@ -275,6 +289,15 @@ def test_workbook_exposes_boundaries_and_make_target(tmp_path: Path) -> None:
         assert phrase in readme
     assert len(index_rows) == 17  # header + 16 non-tree figure/validation inputs
 
-    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
-    assert "figure-data: validate" in makefile
-    assert "build_figure_data_workbook.py" in makefile
+    manifest = tomllib.loads((ROOT / "pixi.toml").read_text(encoding="utf-8"))
+    task = manifest["feature"]["analysis"]["tasks"]["figure-data"]
+    assert "validate" in task["depends-on"]
+    assert "build_figure_data_workbook.py" in task["cmd"]
+    dry_run = subprocess.run(
+        ["make", "--dry-run", "figure-data"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "--locked --no-install figure-data" in dry_run.stdout

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import csv
 import json
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -12,7 +11,6 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = "scripts/publication/build_gbe_figures.R"
 RUN_R = ROOT / "scripts/run_r.sh"
 
-pytestmark = pytest.mark.skipif(shutil.which("conda") is None, reason="Requires the project R environment")
 
 
 def _run_r(*args: str) -> subprocess.CompletedProcess[str]:

@@ -5,6 +5,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from test_figure_visual_system import (
+    assert_known_figure_record,
+    current_figure_record,
+    retained_figure_record,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURE_SOURCE = ROOT / "scripts/publication/build_gbe_figures.R"
@@ -72,8 +77,7 @@ def test_figure4_element_counts_and_summaries_are_exact() -> None:
 
 
 def test_figure4_root_release_manifest_preserves_its_original_marks() -> None:
-    manifest = pd.read_csv(FIGURE_MANIFEST).set_index("figure_id")
-    row = manifest.loc["Figure_4"]
+    row = retained_figure_record("Figure_4")
 
     assert row["release_status"] == "sensitivity_only_not_ectopic_rate"
     assert "element-level observations" in row["legend"]
@@ -86,6 +90,37 @@ def test_figure4_root_release_manifest_preserves_its_original_marks() -> None:
     assert "380 hollow element observations" in row["alt_text"]
     assert "horizontal bootstrap intervals" in row["alt_text"]
     assert "dotted vertical line" in row["alt_text"]
+
+
+def test_figure4_active_manifest_matches_known_release_or_current_producer() -> None:
+    manifest = pd.read_csv(FIGURE_MANIFEST, dtype=str).set_index("figure_id", drop=False)
+    assert manifest.index.is_unique
+    assert_known_figure_record(manifest.loc["Figure_4"].to_dict(), "Figure_4")
+
+
+def test_figure4_current_manifest_describes_marks_and_scientific_limits() -> None:
+    row = current_figure_record("Figure_4")
+    assert row["release_status"] == "sensitivity_only_not_ectopic_rate"
+    for phrase in (
+        "exact 380-element primary branch",
+        "Light gray violin outlines",
+        "short vertical blue bars are released species medians of untransformed ratios",
+        "Thin horizontal blue intervals are 95% percentile intervals from 2,000 within-species element-bootstrap replicates",
+        "one bandwidth selected from the pooled log2 observations",
+        "not independently measured species C-values",
+        "n/a marks unavailable values without imputation",
+        "Elements are not biological replicates",
+        "intervals are conditional on the recovered elements and sequencing resources",
+        "left LTR, right LTR, and internal region each had at least 80% positive-depth coverage",
+        "408 LTR/Gypsy candidates at least 3,000 bp long",
+        "at least five correctly parsed TEsorter domain annotations",
+        "not a phylogenetic analysis or an estimate of an ectopic-recombination, solo-LTR, or DNA-loss rate",
+    ):
+        assert phrase in row["legend"]
+    for phrase in ("same 30 phylogenetic rows", "light gray horizontal violins",
+                   "380 hollow element observations", "short vertical blue median bars",
+                   "thin horizontal bootstrap intervals", "dotted vertical line"):
+        assert phrase in row["alt_text"]
 
 
 def test_figure4_candidate_export_text_describes_violin_and_median_bar_marks() -> None:

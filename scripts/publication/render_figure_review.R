@@ -3,6 +3,7 @@
 suppressPackageStartupMessages(library(rmarkdown))
 
 root <- normalizePath(getwd(), mustWork = TRUE)
+source(file.path(root, "scripts/publication/auxiliary_figure_contract.R"))
 source_path <- file.path(root, "Publication", "Desmognathus_figure_review.Rmd")
 output_dir <- file.path(root, "Publication")
 output_file <- "Desmognathus_figure_review.html"
@@ -31,35 +32,10 @@ auxiliary_manifest <- utils::read.csv(
   stringsAsFactors = FALSE,
   check.names = FALSE
 )
-expected_auxiliary_ids <- c(
-  "Auxiliary_Wang_style_integrated_te_history_candidate",
-  "Auxiliary_Wang_style_diversity_genome_size_candidate",
-  "Auxiliary_Path24_development_traits_reference",
-  "Auxiliary_Path_DAG_reference",
-  "Auxiliary_Wang2025_cross_study_te_diversity_reference"
-)
-expected_auxiliary_titles <- c(
-  "Wang-style integrated TE content and proliferation candidate",
-  "Wang-style TE diversity and genome-size candidate",
-  "Path24 development and phenotype reference",
-  "Path DAG equivalence-class reference",
-  "Cross-study TE-diversity reference (Wang et al. 2025)"
-)
 if (nrow(manifest) != 7L) {
   stop("Expected exactly 7 numbered figures")
 }
-if (nrow(auxiliary_manifest) != 5L) {
-  stop("Expected exactly 5 auxiliary review figures")
-}
-if (
-  !identical(auxiliary_manifest$auxiliary_id, expected_auxiliary_ids) ||
-    !identical(auxiliary_manifest$title, expected_auxiliary_titles)
-) {
-  stop(
-    "Auxiliary figure manifest must contain exactly these ordered IDs and titles: ",
-    paste(expected_auxiliary_ids, collapse = ", ")
-  )
-}
+auxiliary_contract <- validate_auxiliary_figure_manifest(auxiliary_manifest)
 
 expected_genome_size_figures <- c(
   Figure_6 = "Figure_6_genome_size_pairwise_pgls"
@@ -123,9 +99,6 @@ if (!identical(normalizePath(rendered, mustWork = TRUE), normalizePath(expected,
 }
 
 html <- paste(readLines(expected, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
-plain_html <- gsub("<[^>]+>", "", html)
-plain_html <- gsub("[[:space:]]+", " ", plain_html)
-plain_html <- chartr("\u00A0", " ", plain_html)
 
 count_fixed <- function(pattern, text) {
   matches <- gregexpr(pattern, text, fixed = TRUE)[[1]]
@@ -149,47 +122,8 @@ if (!all(vapply(manifest$figure_id, grepl, logical(1), x = html, fixed = TRUE)))
 if (!grepl("Unresolved tree provenance", html, fixed = TRUE)) {
   stop("Rendered review is missing the tree-provenance warning")
 }
-for (phrase in c(
-  "Wang-style integrated TE content and proliferation candidate",
-  "Review candidate, not a numbered manuscript figure",
-  "Six representatives are selected",
-  "fractions of aligned RepeatMasker hit bp",
-  "divergence bins are not insertion ages",
-  "Wang-style TE diversity and genome-size candidate",
-  "Reproductive-strategy panels are post-hoc descriptive strata",
-  "without a regression because n = 2",
-  "Pagel-lambda PGLS fits",
-  "Path24 development and phenotype reference",
-  "Descriptive review only",
-  "D. organi is absent",
-  "conditional D. fuscus assembly-anchored pg/1C estimates",
-  "not direct independently measured species C-values",
-  "Path DAG equivalence-class reference",
-  "Not a numbered manuscript figure.",
-  "10 testable equivalence classes",
-  "saturated 6-member class is not shown",
-  "remains unscored because it has no d-separation claim",
-  "Genome size",
-  "conditional D. fuscus assembly-anchored pg/1C analysis",
-  "not a direct species C-value measurement",
-  "same released genome-size scale is used consistently",
-  "do not orient a unique causal arrow",
-  "Cross-study TE-diversity reference (Wang et al. 2025)",
-  "Descriptive cross-study context only; no pooled regression or hypothesis test",
-  "10.5061/dryad.zpc866tkv",
-  "10.1038/s42003-025-08127-3",
-  "CC0-1.0",
-  "published top-10 TE-superfamily indices",
-  "RepeatModeler/RepeatMasker",
-  "reclosed calculations from dnaPipeTE compositions",
-  "pipelines are different and not method-harmonized",
-  "conditional D. fuscus assembly-anchored estimates",
-  "not direct species C-values"
-)) {
-  if (!grepl(phrase, plain_html, fixed = TRUE)) {
-    stop("Rendered review is missing an auxiliary review boundary phrase: ", phrase)
-  }
-}
+validate_auxiliary_rendered_html(auxiliary_contract, html)
+validate_report_source_fingerprint(source_path, html)
 
 figure_one <- manifest[manifest$figure_id == "Figure_1", , drop = FALSE]
 figure_one_evidence <- if (nrow(figure_one) == 1L) {

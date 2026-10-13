@@ -16,9 +16,6 @@ SUMMARIES = DATA / "Supplementary_Data_S15_ltr_terminal_internal_species_robustn
 RATIO = "ratio_terminal_internal_all_positions"
 PRIMARY = "primary_iqr_filtered_coverage_ge_80pct"
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("conda") is None, reason="Requires the project R environment"
-)
 
 
 def read_csv(path: Path) -> pd.DataFrame:

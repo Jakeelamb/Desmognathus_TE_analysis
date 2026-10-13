@@ -4,6 +4,7 @@ import hashlib
 import json
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import numpy as np
@@ -224,12 +225,24 @@ def test_compact_te_inputs_reproduce_released_pca() -> None:
         "clr_value",
     ]
 
-    makefile = (ROOT / "Makefile").read_text()
-    assert "\nte-pca:\n" in makefile
-    assert "\nreport: figures validate\n" in makefile
-    assert "\nfigure-review: figures validate\n" in makefile
-    assert "\nte-pca-view:\n" not in makefile
-    assert "\nte-structure:\n" not in makefile
+    manifest = tomllib.loads((ROOT / "pixi.toml").read_text())
+    tasks = manifest["feature"]["analysis"]["tasks"]
+    assert tasks["te-pca"]["cmd"] == (
+        "python analyses/01_transposable_elements/recompute_pca.py && "
+        "bash scripts/run_r.sh Rscript analyses/01_transposable_elements/analyze_pca_structure.R"
+    )
+    for target in ("report", "figure-review"):
+        assert set(tasks[target]["depends-on"]) == {"figures", "validate"}
+    assert "te-pca-view" not in tasks
+    assert "te-structure" not in tasks
+    dry_run = subprocess.run(
+        ["make", "--dry-run", "te-pca"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "--locked --no-install te-pca" in dry_run.stdout
 
 
 def test_final_pca_structure_audit_rejects_discrete_clusters_but_preserves_signal() -> None:

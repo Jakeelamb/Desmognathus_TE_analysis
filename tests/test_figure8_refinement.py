@@ -1,16 +1,10 @@
 from __future__ import annotations
 
-import shutil
 import subprocess
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parents[1]
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("conda") is None, reason="Requires the project R environment"
-)
 
 # Run the real Figure 8 preparation and plot expressions against the released
 # data, without exporting figures or executing the other candidate blocks.

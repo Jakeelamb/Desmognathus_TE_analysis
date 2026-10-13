@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 
-import shutil
 import subprocess
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parents[1]
 CLIENT = ROOT / "scripts/publication/candidate_review_notes.js"
-NODE = shutil.which("node")
 
 HARNESS = r"""
 const assert = require("node:assert/strict");
@@ -108,10 +104,8 @@ function page(handler, storage = new Map(), storageBlocked = false) {
 
 
 def run_client(scenario: str) -> None:
-    if NODE is None:
-        pytest.skip("Node is required for the browser notes state checks")
     result = subprocess.run(
-        [NODE, "-e", HARNESS + "\n(async () => {\n" + scenario + "\n})().catch(error => {\n"
+        ["node", "-e", HARNESS + "\n(async () => {\n" + scenario + "\n})().catch(error => {\n"
          "console.error(error); process.exitCode = 1;\n});", str(CLIENT)],
         check=False,
         capture_output=True,

@@ -1,0 +1,33 @@
+# Local runtime and preservation
+
+Use Pixi for this repository. `pixi.toml` is the task and dependency authority,
+and `pixi.lock` is the active lockfile. This project policy replaces the older
+UV and Conda setup instructions for local work.
+
+- Run `make setup` to install both locked environments and prepare the private
+  checksum-verified R library. Do not select a host Conda or UV environment.
+- Run `make check-env`, `make test`, and `make lint` for the maintained checks.
+  Make delegates to Pixi with `--locked --no-install`. New local workflows
+  belong in the Pixi task registry.
+- Use the default environment for the paper analyses and the `bonsai`
+  environment for the pinned upstream Bonsai runner.
+- Keep `pyproject.toml`, `uv.lock`, `environment.yml`, and
+  `environment-linux-64.explicit.txt` unchanged. They are retained dependency
+  snapshots; scientific manifests hash several of them.
+- Preserve data, Methods, figures, manifests, and existing analysis outputs.
+  Exercise artifact-writing tasks in a complete scratch checkout when checking
+  infrastructure changes. Do not regenerate the retained release as a side
+  effect of a dependency migration.
+- The report Rmd templates are maintained source code. Retained HTML records
+  its historical template lineage; a fresh rendering must carry the current
+  template and shared-contract fingerprints.
+- Preserve hash-bound scientific scripts and historical runners. Check their
+  manifests before editing them. The new Pixi Bonsai runner lives in
+  `scripts/run_bonsai.py`; the historical shell runners remain evidence.
+- Missing HPC scripts, the custom TE library, raw microscopy inputs, and
+  upstream run provenance remain explicit reproducibility gaps. Do not invent
+  replacements or execute HPC discovery workflows during local setup.
+
+The verified platform is Linux x86-64 with glibc 2.39 or newer. Arial remains
+an external font prerequisite checked by the actual project font resolver.
+See `docs/REPRODUCIBILITY.md` for the verification scope and upstream boundary.

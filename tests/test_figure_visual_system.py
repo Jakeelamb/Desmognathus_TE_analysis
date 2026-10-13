@@ -1,13 +1,18 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import json
 import re
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME_SOURCE = ROOT / "scripts/publication/gbe_theme.R"
 FIGURE_SOURCE = ROOT / "scripts/publication/build_gbe_figures.R"
 FIGURE_MANIFEST = ROOT / "Publication/figures/FIGURE_MANIFEST.csv"
+RETAINED_MANIFEST = ROOT / "tests/fixtures/numbered_figure_manifest_retained.csv"
 ENVIRONMENT = ROOT / "environment.yml"
 
 PATH24_TREE = "trees/desmognathus_time_tree_path24_v1.nwk"
@@ -111,6 +116,72 @@ def _named_arguments(call: str) -> dict[str, str]:
         if match:
             named[match.group(1)] = match.group(2).strip()
     return named
+
+
+def retained_figure_record(figure_id: str) -> dict[str, str]:
+    assert hashlib.sha256(RETAINED_MANIFEST.read_bytes()).hexdigest() == (
+        "362b1ae6a3bb57ed81b7f28883ef01e4eaf2027e6f9d9b5488f32f7ff53c1319"
+    )
+    with RETAINED_MANIFEST.open(newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    assert [row["figure_id"] for row in rows] == ["Figure_1", "Figure_4"]
+    return next(row for row in rows if row["figure_id"] == figure_id)
+
+
+def current_figure_record(figure_id: str) -> dict[str, str]:
+    calls = [
+        call for call in _extract_calls(FIGURE_SOURCE.read_text(), "record_figure")
+        if _top_level_arguments(call)[0] == json.dumps(figure_id)
+    ]
+    assert len(calls) == 1
+    arguments = _top_level_arguments(calls[0])
+    assert len(arguments) == 8
+    assert arguments[2:4] == ["GBE_DOUBLE_COLUMN_MM", "190"]
+    fields = ("figure_id", "basename", "datasets", "legend", "alt_text", "release_status")
+    record = dict(zip(
+        fields, (json.loads(arguments[i]) for i in (0, 1, 4, 5, 6, 7)), strict=True,
+    ))
+    record.update(
+        width_mm="180", height_mm="190", final_font_family="Arial",
+        minimum_target_text_pt="7",
+    )
+    record.update({
+        extension: record["basename"] + suffix
+        for extension, suffix in (("pdf", ".pdf"), ("png", ".png"), ("tiff", ".tif"))
+    })
+    return record
+
+
+def assert_known_figure_record(row: dict[str, str], figure_id: str) -> None:
+    retained = retained_figure_record(figure_id)
+    if row == retained:
+        return
+    assert row == current_figure_record(figure_id), (
+        f"{figure_id} must match the exact retained release or current producer metadata"
+    )
+
+
+@pytest.mark.parametrize("figure_id", ["Figure_1", "Figure_4"])
+def test_numbered_manifest_accepts_exact_history_and_current_metadata_only(
+    figure_id: str,
+) -> None:
+    caveat = {
+        "Figure_1": "not independently measured species C-values",
+        "Figure_4": "not a phylogenetic analysis",
+    }[figure_id]
+    for row in (retained_figure_record(figure_id), current_figure_record(figure_id)):
+        assert_known_figure_record(row, figure_id)
+        assert caveat in row["legend"]
+        for field, invalid in (
+            ("legend", row["legend"].replace(caveat, "unsupported scientific claim")),
+            ("alt_text", "unverified caption"),
+            ("height_mm", "191"),
+            ("release_status", "publication_ready"),
+        ):
+            changed = dict(row, **{field: invalid})
+            assert changed != row
+            with pytest.raises(AssertionError, match="exact retained release or current producer"):
+                assert_known_figure_record(changed, figure_id)
 
 
 def _figure_1_block(source: str) -> str:
@@ -234,14 +305,41 @@ def test_figure1_source_and_manifest_declare_the_integrated_topology_inputs() ->
     figure_rows = [row for row in rows if row["figure_id"] == "Figure_1"]
     assert len(figure_rows) == 1
     row = figure_rows[0]
+    assert_known_figure_record(row, "Figure_1")
     manifest_ids = set(row["datasets"].split(";"))
     assert FIGURE_1_DATASETS <= manifest_ids
     manifest_language = f"{row['legend']} {row['alt_text']}".lower()
     assert row["basename"] == "Figure_1_integrated_TE_landscape"
     assert "topology-only" in manifest_language
-    assert "conditional genome" in manifest_language
+    assert "D. fuscus assembly-anchored IOD-derived pg/1C estimates" in row["legend"]
+    assert "not independently measured species C-values" in row["legend"]
+    assert "intervals exclude anchor uncertainty" in row["legend"]
     assert "dnaPipeTE".lower() in manifest_language
     assert "repeatmasker" in manifest_language
+
+
+def test_figure1_retained_manifest_keeps_its_original_conditional_genome_language() -> None:
+    row = retained_figure_record("Figure_1")
+    assert "conditional genome size" in row["legend"]
+    assert "conditional genome-size intervals" in row["alt_text"]
+    assert "crosses flag the prespecified image-quality balance caution" in row["legend"]
+    assert "triangles flag one-image, one-animal support" in row["legend"]
+
+
+def test_figure1_current_manifest_keeps_measurement_and_denominator_cautions() -> None:
+    row = current_figure_record("Figure_1")
+    for phrase in (
+        "conditional 95% measurement-bootstrap intervals",
+        "Image-quality and specimen-support cautions remain in S24",
+        "intervals are conditional on the observed support",
+        "not independently measured species C-values",
+        "intervals exclude anchor uncertainty",
+        "Absent order/bin combinations are zero-filled without renormalizing the displayed subset",
+        "dnaPipeTE composition and RepeatMasker landscape denominators are distinct",
+        "neither is genome occupancy, and divergence is not insertion age",
+    ):
+        assert phrase in row["legend"]
+    assert row["release_status"] == "review_candidate_wang_aligned_profiles_overlap21"
 
 
 def test_figure2_uses_the_validated_bonsai_and_strategy_release() -> None:

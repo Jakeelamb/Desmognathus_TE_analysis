@@ -35,57 +35,97 @@ distinguish runnable code, frozen evidence, and material held in the archive.
   Dryad snapshot plus current top-ten-superfamily recomputation; this is a
   descriptive non-harmonized comparison with no pooled inference.
 
-### Environment setup and checks
+### Pixi setup and checks
 
-Python 3.13.11 is pinned in `.python-version`. `make setup-python` installs all
-runtime and development dependencies from `uv.lock` without updating the lock.
-Ordinary Make targets use `uv run --locked --no-sync`. `make check-python`
-checks the interpreter and uses UV's offline lock-parity check without
-installing packages.
+`pixi.toml` and `pixi.lock` are the active local environment and task definitions.
+Install Pixi 0.77.1 or newer. The verified platform is Linux x86-64 with glibc
+2.39 or newer. Other platforms are not declared. Arial is an external font
+prerequisite checked by the project font resolver.
 
-`make setup-r` creates a missing R environment, or validates an existing one
-without updating or pruning it. Linux x86-64 creation uses the exact package
-builds and SHA-256 hashes in `environment-linux-64.explicit.txt`. Other platforms
-resolve the original `environment.yml`, so their transitive package builds are
-not fully pinned. New environments also receive checksum-verified CRAN
-`phylopath` 1.3.1. R checks cover the declared packages, pinned versions, Cairo,
-the project Arial font resolver, and environment-local figure converters.
-Existing-environment validation checks those requirements; create a new prefix
-to reproduce every locked Linux package build.
+```bash
+pixi install --locked --all
+pixi run --locked --no-install setup
+make check-env
+make test
+```
 
-In a fresh checkout, run `make setup`, `make check-env`, then `make test`.
-To preserve an older Python environment, set `UV_PROJECT_ENVIRONMENT` to a new
-absolute path before setup. `DESMOGNATHUS_R_ENV` selects a Conda name or prefix;
-use a new destination if an existing R environment fails validation. `--check`
-never creates or repairs an R environment.
+The default environment contains Python 3.13.11, R 4.4.3, the paper-analysis
+packages, Node, GNU utilities, Pandoc, and figure converters. The separate
+`bonsai` environment contains Python 3.14 and the upstream requirements at the
+pinned Git revision.
+Its NumPy and pandas versions differ from the main environment, so the two
+Python dependency sets are solved separately in the same lockfile. They share
+the retained R package builds.
 
-The Linux R lock records the installed research environment. Fresh Python and
-Linux x86-64 R environments were created in separate destinations during the
-2026-10-13 cleanup. Both passed their environment checks, including installation
-of checksum-verified `phylopath`. Other platforms have not been tested. Arial
-is an external font prerequisite. HPC execution and access to missing upstream
-inputs are outside these setup commands.
+`setup` checksum-verifies CRAN `phylopath` 1.3.1 and installs it into a private
+`.pixi/r-library` directory. Setup checks a staged library before publishing it.
+Existing completed libraries are checked without reinstalling. Incomplete or
+damaged libraries fail without being overwritten. Neither setup nor the R
+wrapper selects a legacy UV or Conda environment.
 
-`pyproject.toml`, `uv.lock`, and `environment.yml` are themselves hashed inputs
-to retained scientific evidence. They remain unchanged. The interpreter pin,
-Linux R lock, and safer launchers add setup information without rewriting
-those evidence records.
+Activation isolates Python imports and R startup files from user settings.
+Both `R_LIBS_USER` and `R_LIBS_SITE` point to the private R library. The site
+setting preserves access to `phylopath` when the frozen path script resets its
+library search path. R and Python executables must belong to the selected
+project Pixi prefix.
 
-Validation commands and regeneration commands are listed separately in the
-[README](../README.md). Publication, figure, report, workbook, PCA, and path
-generation can write retained artifacts; use a separate checkout for reruns.
+`make check-env` guards the installed prefix and invokes Pixi with
+`--locked --no-install --offline`. It compares actual installed Conda metadata
+and Python distributions with the lock inventory, then checks R package pins,
+Cairo, Arial, the private library, and environment-local converters. It cannot
+create or repair an environment. A plain `pixi run --locked check-env` may
+install packages before the check. Other Make targets also use
+`--locked --no-install`; `make setup` is the explicit provisioning command.
 
-### Cleanup verification, 2026-10-13
+The older `pyproject.toml`, `uv.lock`, `environment.yml`, and
+`environment-linux-64.explicit.txt` are retained snapshots. Scientific manifests
+hash several of them, so they remain byte-for-byte unchanged. The old local
+`.venv` and Conda environments are also preserved. Local command policy is
+recorded in [AGENTS.md](../AGENTS.md).
 
-An exported checkout containing only the staged repository files passed
-`make check-env test lint` with a fresh locked Python environment: 282 tests
-passed. Separate fresh Python and R environments passed `make check-env`, and
-all 261 Conda package URLs and hashes matched the Linux lock exactly. No retained
-scientific analysis or figure outputs were regenerated during cleanup. All 2,474
-protected scientific and dependency files retained their hashes, sizes, and
-symlink targets; the 18 files and links in the older local `.venv` were also
-preserved. That older environment uses Python 3.15; the separate-environment
-setup above avoids replacing it.
+The [README](../README.md) distinguishes checks from artifact writers. Use a
+complete scratch checkout for publication exports, figures, reports, workbooks,
+path output, and new Bonsai fits. `make te-pca` checks the reconstructed PCA
+audit without promoting its results. Its resampling settings remain those in
+the frozen script.
+
+Bonsai refits use `scripts/run_bonsai.py` in the `bonsai` environment. It fetches
+and checks the exact upstream revision, or accepts an explicit clean pinned
+checkout. Run directories must be new, outside the scientific directories, or
+below `.pixi/runs`. Bootstrap resume requires a matching run manifest and an
+exclusive run lock. The default is the retained 200-replicate campaign. Bounded
+runs are execution smoke checks and omit final campaign analysis.
+
+### Migration verification
+
+The migration was exercised on 13 October 2026 in a fresh, complete export of
+the tracked repository, with separate Pixi prefixes and a new private R
+library. Both environments passed installed-package checks. All 261 historical
+R-environment package URLs and SHA-256 hashes matched the default Pixi lock.
+Repeated setup left all 38 files in the completed `phylopath` library unchanged.
+
+| Workflow | Observed result |
+| --- | --- |
+| Environment and test gates | Both locked environments passed installed-package checks; the final scratch suite passed all 337 tests with no skips, and Ruff passed |
+| Publication exports and catalog | S01–S43 validated; TE34, Path24, and overlap21 membership preserved |
+| Figure-input workbook | 16 input tables and 19 sheets; exact retained workbook hash reproduced |
+| Figure generation | Seven numbered figures and five auxiliary figures generated in scratch |
+| Study report and figure-review gallery | Both fresh HTML renders passed source-fingerprint, manifest-order, narrative-boundary, and twelve-embedded-PNG checks |
+| Read-only release checks | Identity, status, Methods Word parity, and retained Bonsai reconstruction checks passed |
+| TE PCA | Complete reconstruction and formal permutation/resampling audit passed |
+| Path24 | Default full analysis completed: 250 measurement bootstraps, 200 published bootstrap trees, 24 leave-one-species-out fits, and 800 simulations; zero failed fits |
+| Bonsai | Default full refit and all 200 feature-bootstrap refits, plus matched calibration, completed with their analysis and plots; retained strategy-support fractions reproduced |
+
+All artifact-writing commands ran in scratch directories. Retained datasets,
+Methods, figures, HTML reports, workbooks, and analysis outputs were checked
+against the pre-migration SHA-256 inventory rather than replaced by these runs.
+Independent review confirmed 12,280 protected entries unchanged, with no missing
+or added entries; the only two source exceptions were the report templates.
+The two maintained R Markdown templates were corrected to accept both the
+retained auxiliary-figure manifest and the current figure builder's manifest.
+They now read the selected panel's narrative from that manifest and record
+explicit source fingerprints. Historical rendered reports and their checksum
+records remain unchanged.
 
 ## 2. Frozen analysis evidence
 
@@ -117,9 +157,9 @@ fabricating a rerun path.
 
 The canonical diversity table itself can be promoted from the frozen
 superfamily composition matrix with
-`uv run --frozen --no-sync python analyses/01_transposable_elements/recompute_pca.py --write`;
-`make te-pca` must then pass as the end-to-end reconstruction gate. It writes
-the audit artifacts, so use a separate checkout to compare a reconstruction.
+`pixi run --locked --no-install --executable python analyses/01_transposable_elements/recompute_pca.py --write`.
+`make te-pca` must then pass as the read-only reconstruction gate. Promotion
+with `--write` belongs in a separate checkout when comparing reconstructions.
 
 This upstream boundary does not prevent local PCA verification: `make te-pca`
 starts at the frozen, species-level composition matrices and reconstructs the

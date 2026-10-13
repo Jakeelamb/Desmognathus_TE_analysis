@@ -6,39 +6,49 @@ products and the earlier working tree are preserved in a separate archive.
 
 ## Start here
 
-Install `uv` and Conda, then run these commands from a fresh checkout. Figure
-rendering also requires Arial; the environment check verifies that R can find
-the font used by the retained figures.
+Install Pixi 0.77.1 or newer, then run these commands from the repository root.
+The locked environments support Linux x86-64 with glibc 2.39 or newer. Figure
+rendering requires Arial; the environment check verifies that R can find it.
 
 ```bash
-make setup          # Install locked Python dependencies and create a missing R environment
-make check-env      # Check the installed environments without changing packages
-make test           # Validate the release and run the tests
-make identity       # Inspect taxonomy, accession exceptions, and tree representatives
-make te-bonsai      # Check retained TE34 Bonsai artifacts
-make methods-word   # Check the Methods Word draft against its Markdown companion
-make status         # Inspect the data inventory
+pixi install --locked --all
+pixi run --locked --no-install setup
+pixi run --locked --no-install test
+pixi run --locked --no-install identity
+pixi run --locked --no-install te-bonsai
+pixi run --locked --no-install methods-word
+pixi run --locked --no-install status
 ```
 
-Python is pinned to 3.13.11 in `.python-version`; `uv.lock` pins its packages.
-The R environment defaults to `desmognathus`. On Linux x86-64, setup uses
-`environment-linux-64.explicit.txt`, which pins the Conda package builds and
-their SHA-256 hashes. Other platforms resolve `environment.yml`. Setup installs
-checksum-verified CRAN `phylopath` 1.3.1 only when creating an environment.
-An existing R environment is validated and left unchanged.
+`pixi.toml` defines the local tasks and dependencies. `pixi.lock` pins both
+environments. The default environment contains Python 3.13.11, R 4.4.3, the
+analysis packages, Node, GNU utilities, Pandoc, and figure converters. The
+Bonsai environment uses Python 3.14 and the pinned upstream requirements, which
+differ from the main analysis packages. Both environments share the retained R
+package builds.
 
-To preserve an older environment, choose separate destinations before setup:
+`setup` installs checksum-verified CRAN `phylopath` 1.3.1 into the private
+`.pixi/r-library` directory. It leaves existing UV and Conda environments
+unchanged. Repeated setup validates the completed installation. A damaged or
+incomplete private library fails validation without being overwritten.
 
 ```bash
-export UV_PROJECT_ENVIRONMENT=/absolute/path/to/new/python-environment
-export DESMOGNATHUS_R_ENV=/absolute/path/to/new/r-environment
-make setup
-make check-env
+make setup       # Install both locked Pixi environments and prepare phylopath
+make check-env   # Check the installed default environment without installing packages
+make test        # Run the same Pixi test task
 ```
 
-`DESMOGNATHUS_R_ENV` also accepts a Conda environment name. Routine Make targets
-use the installed Python environment without syncing packages. If a check
-fails, read its diagnostic before running setup or changing environments.
+Make targets delegate to the tasks in `pixi.toml`; they do not maintain separate
+command definitions. Routine Make targets use `--locked --no-install` and
+refuse missing environments. A plain `pixi run --locked <task>` may install
+locked packages before running the task. Use `make check-env` or
+`pixi run --locked --no-install --offline check-env` for a check that cannot
+install or repair packages.
+
+The older `pyproject.toml`, `uv.lock`, `environment.yml`, and Linux explicit
+snapshot remain unchanged as provenance. Some are hashed inputs to retained
+scientific manifests. They are not the active setup. The local workflow rules
+are recorded in [AGENTS.md](AGENTS.md).
 
 The active scientific contract is:
 
@@ -73,7 +83,7 @@ figures without becoming a second data authority. The companion
 `Publication/Desmognathus_figure_review.Rmd` is a manifest-driven gallery for
 critiquing every current figure, legend, alt text, and final-size layout.
 `Publication/Desmognathus_figure_data.xlsx` is the single indexed workbook of
-the 20 non-tree CSV tables directly consumed by those figures. Tree inputs stay
+the non-tree CSV tables directly consumed by those figures. Tree inputs stay
 under `Publication/datasets/` in Newick and reviewer-readable CSV formats rather
 than being forced into spreadsheet tabs. The workbook is a generated
 convenience view; the manifest-bound release files remain authoritative.
@@ -83,7 +93,9 @@ convenience view; the manifest-bound release files remain authoritative.
 `make validate`, `make identity`, `make status`, `make methods-word`, and
 `make te-bonsai` inspect retained artifacts. `make lint` checks Python source.
 `make test` runs validation and the test suite; test-generated artifacts use
-temporary directories.
+temporary directories. `make te-pca` recomputes and checks the retained PCA
+audit without promoting data; its permutation and resampling checks are
+substantial and are separate from the quick checks above.
 
 The following commands write analysis or publication artifacts. Run them in a
 separate checkout when comparing a reconstruction with the retained release.
@@ -92,18 +104,31 @@ separate checkout when comparing a reconstruction with the retained release.
 | --- | --- |
 | `make publication` | Supplementary exports, their manifest, and the data catalog |
 | `make catalog` | The canonical data catalog |
-| `make te-pca` | The reconstructed CLR/PCA audit |
-| `make path-quick` / `make path` | Path24 release inputs and model output |
+| `make path-quick` / `make path` | Path24 model output after checking release inputs |
 | `make figures` | GBE figure files |
 | `make report` | Figures and the study-data HTML report |
 | `make figure-review` | Figures and the figure-review HTML gallery |
 | `make figure-data` | The figure-input workbook |
 
-The retained analyses start from frozen tables and upstream outputs. They do
-not rerun dnaPipeTE, RepeatModeler, RepeatMasker, segmentation, or image review.
-See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for the available inputs
-and remaining gaps. Historical `Dusky` and figure-only environments are not
-required by the local entrypoints.
+For new Bonsai fits, supply a new run directory. These tasks use the separate
+locked Bonsai environment and fetch the exact upstream Git revision into a
+private source cache. The frozen historical shell runners remain as evidence.
+
+```bash
+pixi run --locked --no-install -e bonsai bonsai-rerun --run-dir /absolute/path/to/new-fit
+pixi run --locked --no-install -e bonsai bonsai-bootstrap-rerun --run-dir /absolute/path/to/new-bootstrap
+```
+
+The bootstrap defaults to the retained 200-replicate campaign. A bounded run
+with `--replicates 2 --jobs 1` tests execution only and does not produce the
+final campaign analysis. Resume requires `--resume` and a matching run manifest.
+After a forced termination, a retained `.bonsai-run.lock` prevents concurrent
+resume; verify that the run has stopped before removing that scratch lock.
+
+The retained analyses start from frozen tables and upstream outputs. Local
+setup does not rerun dnaPipeTE, RepeatModeler, RepeatMasker, segmentation, or
+image review. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for available
+inputs and gaps. Historical `Dusky` and figure-only environments are not used.
 
 ## Evidence boundaries
 

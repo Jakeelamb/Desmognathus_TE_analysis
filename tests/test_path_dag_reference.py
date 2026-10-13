@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import csv
-import shutil
 import subprocess
 from pathlib import Path
 
 import pandas as pd
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 CANDIDATES = ROOT / "analyses/03_phylogenetic_path/data/candidate_dags.csv"
@@ -83,7 +81,6 @@ def test_dag_reference_assets_exist_in_all_release_formats() -> None:
         assert path.stat().st_size > 10_000
 
 
-@pytest.mark.skipif(shutil.which("conda") is None, reason="Requires the project R environment")
 def test_independent_dag_keeps_three_nodes_without_arrows_or_extra_annotation() -> None:
     code = r'''
 suppressPackageStartupMessages({library(dplyr); library(tidyr); library(readr)})

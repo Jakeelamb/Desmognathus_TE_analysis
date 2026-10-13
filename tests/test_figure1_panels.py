@@ -1,17 +1,11 @@
 from __future__ import annotations
 
-import shutil
 import subprocess
 from pathlib import Path
-
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN_R = ROOT / "scripts/run_r.sh"
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("conda") is None, reason="Requires the project R environment"
-)
 
 
 def test_isolated_panels_preserve_data_scales_and_species_identity() -> None:

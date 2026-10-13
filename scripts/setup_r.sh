@@ -1,89 +1,56 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source "$project_root/scripts/r_environment.sh"
-phylopath_version="1.3.1"
-phylopath_sha256="fbbfe6ffe78fe4b6d59c98202e3c6e03332d379b4a18aed62008bc6944d5227f"
+source "$(dirname "${BASH_SOURCE[0]}")/activate_pixi.sh"
 
 check_only=false
 if [[ "${1:-}" == --check && "$#" == 1 ]]; then
   check_only=true
 elif [[ "$#" != 0 ]]; then
-  echo "Usage: scripts/setup_r.sh [--check]" >&2
+  echo 'Usage: scripts/setup_r.sh [--check]' >&2
   exit 2
 fi
-
-if resolve_r_environment; then
-  cd "$project_root"
-  isolate_r_environment
-  if ! validate_r_environment; then
-    echo "Existing environment was not changed. Create a separate environment with DESMOGNATHUS_R_ENV=<new-name-or-prefix> scripts/setup_r.sh." >&2
-    exit 1
-  fi
-  exit 0
-else
-  status=$?
-  [[ "$status" == 3 ]] || exit 1
+resolve_pixi_environment || exit 1
+if [[ "${PIXI_PROJECT_ROOT:-}" != "$project_root" || "${CONDA_PREFIX:-}" != "$environment_prefix" ]]; then
+  echo 'Run setup-r inside this project Pixi environment: make setup-r (or make check-env).' >&2
+  exit 1
 fi
 cd "$project_root"
-
-if [[ "$check_only" == true ]]; then
-  echo "Missing R environment '$environment_name'; --check does not create environments." >&2
-  exit 1
+isolate_pixi_environment
+checker=("$environment_prefix/bin/python" -B "$project_root/scripts/check_environment.py" --r-only)
+overlay="$project_root/.pixi/r-library"
+if [[ "$check_only" == true || -e "$overlay" || -L "$overlay" ]]; then
+  "${checker[@]}"
+  exit "$?"
 fi
-if ! command -v conda >/dev/null 2>&1; then
-  echo "Conda is required to create R environment '$environment_name'." >&2
-  exit 1
-fi
-creation_command=(conda env create)
-environment_spec="$project_root/environment.yml"
-if [[ "$(uname -s)" == Linux && "$(uname -m)" == x86_64 ]]; then
-  creation_command=(conda create --yes)
-  environment_spec="$project_root/environment-linux-64.explicit.txt"
-  if [[ ! -f "$environment_spec" ]]; then
-    echo "Missing Linux x86_64 package lock: $environment_spec" >&2
-    exit 1
-  fi
-fi
-if [[ "$environment_name" == */* ]]; then
-  "${creation_command[@]}" --prefix "$environment_prefix" --file "$environment_spec"
-else
-  "${creation_command[@]}" --name "$environment_name" --file "$environment_spec"
-fi
-if ! resolve_r_environment; then
-  echo "Conda did not create R environment '$environment_name'." >&2
-  exit 1
-fi
-isolate_r_environment
-
-setup_temp="$(mktemp -d)"
-trap 'find "$setup_temp" -depth -delete' EXIT
-source_tarball="$setup_temp/phylopath_${phylopath_version}.tar.gz"
+# Validate the immutable runtime before downloading or creating an overlay.
+"${checker[@]}" --without-phylopath
+setup_lock="$project_root/.pixi/r-overlay.setup.lock"
+mkdir "$setup_lock" 2>/dev/null || { echo "R overlay setup is already running (lock: $setup_lock)." >&2; exit 1; }
+trap 'rmdir -- "$setup_lock"' EXIT
+[[ ! -e "$overlay" && ! -L "$overlay" ]] || { echo 'R overlay appeared during setup; refusing to overwrite it.' >&2; exit 1; }
+setup_temp="$(mktemp -d "$project_root/.pixi/phylopath-setup.XXXXXXXX")"
+trap 'rm -rf -- "$setup_temp"; rmdir -- "$setup_lock"' EXIT
+source_tarball="$setup_temp/phylopath_1.3.1.tar.gz"
 source_urls=(
-  "https://cran.r-project.org/src/contrib/phylopath_${phylopath_version}.tar.gz"
-  "https://cran.r-project.org/src/contrib/Archive/phylopath/phylopath_${phylopath_version}.tar.gz"
+  'https://cran.r-project.org/src/contrib/phylopath_1.3.1.tar.gz'
+  'https://cran.r-project.org/src/contrib/Archive/phylopath/phylopath_1.3.1.tar.gz'
 )
-
 downloaded=false
 for source_url in "${source_urls[@]}"; do
-  if curl -fsSL "$source_url" -o "$source_tarball"; then
-    downloaded=true
-    break
-  fi
+  if curl -fsSL "$source_url" -o "$source_tarball"; then downloaded=true; break; fi
 done
-if [[ "$downloaded" != true ]]; then
-  echo "Could not download phylopath $phylopath_version from CRAN." >&2
-  exit 1
-fi
-
+[[ "$downloaded" == true ]] || { echo 'Could not download phylopath 1.3.1 from CRAN.' >&2; exit 1; }
 observed_sha256="$(sha256sum "$source_tarball" | cut -d ' ' -f 1)"
-if [[ "$observed_sha256" != "$phylopath_sha256" ]]; then
-  echo "phylopath source checksum mismatch: $observed_sha256" >&2
-  exit 1
-fi
-
-"$environment_prefix/bin/R" CMD INSTALL --no-multiarch \
-  --library="$environment_prefix/lib/R/library" "$source_tarball"
-echo "Installed checksum-verified CRAN phylopath $phylopath_version"
-validate_r_environment
+expected_sha256=fbbfe6ffe78fe4b6d59c98202e3c6e03332d379b4a18aed62008bc6944d5227f
+[[ "$observed_sha256" == "$expected_sha256" ]] || { echo "phylopath source checksum mismatch: $observed_sha256" >&2; exit 1; }
+mkdir "$setup_temp/library"
+"$environment_prefix/bin/R" CMD INSTALL --no-multiarch --library="$setup_temp/library" "$source_tarball"
+cat > "$setup_temp/library/.phylopath-source.json" <<'RECEIPT'
+{"package":"phylopath","version":"1.3.1","r_version":"4.4.3","source_sha256":"fbbfe6ffe78fe4b6d59c98202e3c6e03332d379b4a18aed62008bc6944d5227f"}
+RECEIPT
+# Test the staged library before exposing it. Never overwrite an existing overlay.
+R_LIBS_USER="$setup_temp/library" "${checker[@]}" --overlay "$setup_temp/library"
+[[ ! -e "$overlay" && ! -L "$overlay" ]] || { echo 'R overlay appeared during setup; refusing to overwrite it.' >&2; exit 1; }
+mv -T -- "$setup_temp/library" "$overlay"
+echo 'Installed checksum-verified CRAN phylopath 1.3.1 in private Pixi R overlay.'
+"${checker[@]}"

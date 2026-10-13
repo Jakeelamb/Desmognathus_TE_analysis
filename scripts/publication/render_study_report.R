@@ -3,6 +3,7 @@
 suppressPackageStartupMessages(library(rmarkdown))
 
 root <- normalizePath(getwd(), mustWork = TRUE)
+source(file.path(root, "scripts/publication/auxiliary_figure_contract.R"))
 source_path <- file.path(root, "Publication", "Desmognathus_study_data.Rmd")
 output_dir <- file.path(root, "Publication")
 output_file <- "Desmognathus_study_data.html"
@@ -13,21 +14,6 @@ auxiliary_manifest_path <- file.path(
   root, "Publication", "figures", "AUXILIARY_FIGURE_MANIFEST.csv"
 )
 figure_dir <- file.path(root, "Publication", "figures")
-
-expected_auxiliary_ids <- c(
-  "Auxiliary_Wang_style_integrated_te_history_candidate",
-  "Auxiliary_Wang_style_diversity_genome_size_candidate",
-  "Auxiliary_Path24_development_traits_reference",
-  "Auxiliary_Path_DAG_reference",
-  "Auxiliary_Wang2025_cross_study_te_diversity_reference"
-)
-expected_auxiliary_titles <- c(
-  "Wang-style integrated TE content and proliferation candidate",
-  "Wang-style TE diversity and genome-size candidate",
-  "Path24 development and phenotype reference",
-  "Path DAG equivalence-class reference",
-  "Cross-study TE-diversity reference (Wang et al. 2025)"
-)
 
 if (!file.exists(source_path)) {
   stop("Missing study-data report source: ", source_path)
@@ -56,12 +42,7 @@ if (nrow(numbered_manifest) != 7L) {
 if (nrow(auxiliary_manifest) != 5L) {
   stop("Expected exactly 5 auxiliary review figures")
 }
-if (
-  !identical(auxiliary_manifest$auxiliary_id, expected_auxiliary_ids) ||
-    !identical(auxiliary_manifest$title, expected_auxiliary_titles)
-) {
-  stop("Auxiliary figure identifiers, titles, or row order do not match the report contract")
-}
+auxiliary_contract <- validate_auxiliary_figure_manifest(auxiliary_manifest)
 
 expected_genome_size_figures <- c(
   Figure_6 = "Figure_6_genome_size_pairwise_pgls"
@@ -99,16 +80,6 @@ for (phrase in c("Bonsai", "not a species phylogeny", "feature resampling")) {
   if (!grepl(tolower(phrase), tolower(figure_two_copy), fixed = TRUE)) {
     stop("Figure_2 is missing its Bonsai boundary phrase: ", phrase)
   }
-}
-
-required_auxiliary_columns <- c(
-  "auxiliary_id", "title", "boundary", "legend", "alt_text", "png"
-)
-if (!all(required_auxiliary_columns %in% names(auxiliary_manifest))) {
-  stop(
-    "Auxiliary figure manifest is missing required columns: ",
-    paste(setdiff(required_auxiliary_columns, names(auxiliary_manifest)), collapse = ", ")
-  )
 }
 
 numbered_png_paths <- file.path(figure_dir, numbered_manifest$png)
@@ -168,24 +139,11 @@ if (grepl('src="figures/', html, fixed = TRUE)) {
   stop("Study report contains non-embedded figure references")
 }
 
-for (value in c(expected_auxiliary_ids, expected_auxiliary_titles)) {
-  if (!grepl(value, html, fixed = TRUE)) {
-    stop("Rendered report is missing auxiliary figure record: ", value)
-  }
-}
-
-auxiliary_positions <- vapply(
-  expected_auxiliary_ids,
-  function(auxiliary_id) regexpr(auxiliary_id, html, fixed = TRUE)[[1]],
-  integer(1)
-)
-if (any(auxiliary_positions < 0L) || is.unsorted(auxiliary_positions)) {
-  stop("Rendered auxiliary figures do not preserve manifest row order")
-}
+validate_auxiliary_rendered_html(auxiliary_contract, html)
+validate_report_source_fingerprint(source_path, html)
 
 required_boundary_phrases <- c(
   "Review candidate, not a numbered manuscript figure",
-  "Six representatives are selected",
   "fractions of aligned RepeatMasker hit bp",
   "divergence bins are not insertion ages",
   "Reproductive-strategy panels are post-hoc descriptive strata",

@@ -1,15 +1,25 @@
 from __future__ import annotations
 
 import csv
-import html
+import json
 import re
 from pathlib import Path
+
+from test_auxiliary_figure_contract import (
+    assert_report_lineage,
+    normalize_report_text,
+    rendered_report_text,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Publication/Desmognathus_figure_review.Rmd"
 RENDERER = ROOT / "scripts/publication/render_figure_review.R"
 MANIFEST = ROOT / "Publication/figures/FIGURE_MANIFEST.csv"
 AUXILIARY_MANIFEST = ROOT / "Publication/figures/AUXILIARY_FIGURE_MANIFEST.csv"
+CONTRACT = ROOT / "scripts/publication/auxiliary_figure_contract.R"
+HISTORICAL_CHECKSUMS = (
+    ROOT / "outputs/manuscript_story_20260924_01/qa/original_checksums.json"
+)
 OUTPUT = ROOT / "Publication/Desmognathus_figure_review.html"
 EXPECTED_AUXILIARY_IDS = [
     "Auxiliary_Wang_style_integrated_te_history_candidate",
@@ -25,6 +35,11 @@ EXPECTED_AUXILIARY_TITLES = [
     "Path DAG equivalence-class reference",
     "Cross-study TE-diversity reference (Wang et al. 2025)",
 ]
+
+
+CURRENT_AUXILIARY_TITLES = [*EXPECTED_AUXILIARY_TITLES]
+CURRENT_AUXILIARY_TITLES[0] = "Wang-style integrated TE history across all 34 species"
+CURRENT_AUXILIARY_TITLES[2] = "Path24 phylogeny and phenotype reference"
 
 
 def read_manifest() -> list[dict[str, str]]:
@@ -64,14 +79,17 @@ def test_review_source_is_self_contained_and_manifest_driven() -> None:
     assert "row$legend" in source
     assert "row$alt_text" in source
     assert "row$png" in source
-    assert "required_auxiliary_columns" in source
-    assert "expected_auxiliary_ids" in source
+    assert "validate_auxiliary_figure_manifest(auxiliary_manifest)" in source
     assert "write_csv(" not in source
     assert "ggsave(" not in source
 
 
 def test_review_exposes_critique_and_tree_boundaries() -> None:
     source = SOURCE.read_text(encoding="utf-8")
+    assert "Six representatives are selected" not in source
+    assert "auxiliary_manifest$boundary[[1]]" in source
+    assert "auxiliary_manifest$legend[[1]]" in source
+    source += CONTRACT.read_text()
 
     for phrase in [
         "Narrative and material",
@@ -101,7 +119,7 @@ def test_review_exposes_critique_and_tree_boundaries() -> None:
         "Path24 development and phenotype reference",
         "Descriptive review only",
         "D. organi is absent",
-        "conditional D. fuscus assembly-anchored pg/1C estimates",
+        "D. fuscus assembly-anchored pg/1C estimates",
         "not direct independently measured species C-values",
         "Path DAG equivalence-class reference",
         "Not a numbered manuscript figure.",
@@ -109,7 +127,7 @@ def test_review_exposes_critique_and_tree_boundaries() -> None:
         "saturated 6-member class is not shown",
         "remains unscored because it has no d-separation claim",
         "Genome size",
-        "conditional D. fuscus assembly-anchored pg/1C analysis",
+        "D. fuscus assembly-anchored pg/1C analysis",
         "not a direct species C-value measurement",
         "same released genome-size scale is used consistently",
         "do not orient a unique causal arrow",
@@ -165,7 +183,9 @@ def test_manifest_assets_are_complete_for_the_gallery() -> None:
 
     auxiliary_rows = read_auxiliary_manifest()
     assert [row["auxiliary_id"] for row in auxiliary_rows] == EXPECTED_AUXILIARY_IDS
-    assert [row["title"] for row in auxiliary_rows] == EXPECTED_AUXILIARY_TITLES
+    assert [row["title"] for row in auxiliary_rows] in (
+        EXPECTED_AUXILIARY_TITLES, CURRENT_AUXILIARY_TITLES
+    )
     for row in auxiliary_rows:
         assert float(row["width_mm"]) > 0
         assert float(row["height_mm"]) > 0
@@ -178,6 +198,10 @@ def test_manifest_assets_are_complete_for_the_gallery() -> None:
 def test_renderer_targets_and_validates_the_review_html() -> None:
     assert RENDERER.exists()
     renderer = RENDERER.read_text(encoding="utf-8")
+    assert "validate_auxiliary_figure_manifest(auxiliary_manifest)" in renderer
+    assert "validate_auxiliary_rendered_html(auxiliary_contract, html)" in renderer
+    assert "validate_report_source_fingerprint(source_path, html)" in renderer
+    renderer += CONTRACT.read_text()
 
     assert 'output_file <- "Desmognathus_figure_review.html"' in renderer
     assert "knit_root_dir = root" in renderer
@@ -185,7 +209,7 @@ def test_renderer_targets_and_validates_the_review_html() -> None:
     assert "expected_embedded_png_count <- nrow(manifest) + nrow(auxiliary_manifest)" in renderer
     assert "expected_embedded_png_count != 12L" in renderer
     assert "nrow(manifest) != 7L" in renderer
-    assert "nrow(auxiliary_manifest) != 5L" in renderer
+    assert "five ordered IDs" in renderer
     assert 'stop("Missing auxiliary figure manifest: ", auxiliary_manifest_path)' in renderer
     assert "Missing auxiliary review PNG files" in renderer
     assert "embedded_png_count != expected_embedded_png_count" in renderer
@@ -206,20 +230,21 @@ def test_renderer_targets_and_validates_the_review_html() -> None:
     assert "Path24 development and phenotype reference" in renderer
     assert "Descriptive review only" in renderer
     assert "D. organi is absent" in renderer
-    assert "conditional D. fuscus assembly-anchored pg/1C estimates" in renderer
+    assert "D. fuscus assembly-anchored pg/1C estimates" in renderer
     assert "Path DAG equivalence-class reference" in renderer
     assert "Not a numbered manuscript figure." in renderer
     assert "10 testable equivalence classes" in renderer
     assert "saturated 6-member class is not shown" in renderer
     assert "remains unscored because it has no d-separation claim" in renderer
     assert "Genome size" in renderer
-    assert "conditional D. fuscus assembly-anchored pg/1C analysis" in renderer
+    assert "D. fuscus assembly-anchored pg/1C analysis" in renderer
     assert "not a direct species C-value measurement" in renderer
     assert "same released genome-size scale is used consistently" in renderer
     assert "do not orient a unique causal arrow" in renderer
     assert "Auxiliary_Wang2025_cross_study_te_diversity_reference" in renderer
     assert "Cross-study TE-diversity reference (Wang et al. 2025)" in renderer
-    assert "Descriptive cross-study context only; no pooled regression or hypothesis test" in renderer
+    assert "Descriptive cross-study context only" in renderer
+    assert "no pooled regression or hypothesis test" in renderer
     assert "10.5061/dryad.zpc866tkv" in renderer
     assert "10.1038/s42003-025-08127-3" in renderer
     assert "CC0-1.0" in renderer
@@ -244,56 +269,24 @@ def test_rendered_review_if_present() -> None:
     if not all((ROOT / "Publication/figures" / row["png"]).exists() for row in auxiliary_rows):
         return
     rendered = OUTPUT.read_text(encoding="utf-8")
-    if "Path24 development and phenotype reference" not in rendered:
-        return
-    rendered_text = re.sub(
-        r"\s+",
-        " ",
-        re.sub(r"<[^>]+>", "", html.unescape(rendered)).replace("\xa0", " "),
+    assert_report_lineage(
+        ROOT, SOURCE, OUTPUT, CONTRACT, json.loads(HISTORICAL_CHECKSUMS.read_text()),
+        "a78148a279e4e77a4a409b45dccfe4a297f84896e1ee40dba8511347ba0bfa68",
+        historical_source_record=False,
     )
+    rendered_text = rendered_report_text(rendered)
 
     assert rendered.count("data:image/png;base64") == len(rows) + len(auxiliary_rows)
     assert 'src="figures/' not in rendered
     assert "Unresolved tree provenance" in rendered
-    for phrase in [
-        "Wang-style integrated TE content and proliferation candidate",
-        "Review candidate, not a numbered manuscript figure",
-        "Six representatives are selected",
-        "fractions of aligned RepeatMasker hit bp",
-        "divergence bins are not insertion ages",
-        "Wang-style TE diversity and genome-size candidate",
-        "Reproductive-strategy panels are post-hoc descriptive strata",
-        "without a regression because n = 2",
-        "Pagel-lambda PGLS fits",
-        "Path24 development and phenotype reference",
-        "Descriptive review only",
-        "D. organi is absent",
-        "conditional D. fuscus assembly-anchored pg/1C estimates",
-        "not direct independently measured species C-values",
-        "Path DAG equivalence-class reference",
-        "Not a numbered manuscript figure.",
-        "10 testable equivalence classes",
-        "saturated 6-member class is not shown",
-        "remains unscored because it has no d-separation claim",
-        "Genome size",
-        "conditional D. fuscus assembly-anchored pg/1C analysis",
-        "not a direct species C-value measurement",
-        "same released genome-size scale is used consistently",
-        "do not orient a unique causal arrow",
-        "Cross-study TE-diversity reference (Wang et al. 2025)",
-        "Descriptive cross-study context only",
-        "no pooled regression or hypothesis test",
-        "10.5061/dryad.zpc866tkv",
-        "10.1038/s42003-025-08127-3",
-        "CC0-1.0",
-        "published top-10 TE-superfamily indices",
-        "RepeatModeler/RepeatMasker",
-        "reclosed calculations from dnaPipeTE compositions",
-        "pipelines are different and not method-harmonized",
-        "conditional D. fuscus assembly-anchored estimates",
-        "not direct species C-values",
-    ]:
-        assert phrase in rendered_text
+    for row in auxiliary_rows:
+        for field in ("title", "boundary", "legend"):
+            assert normalize_report_text(row[field]) in rendered_text
+    if auxiliary_rows[0]["title"] == CURRENT_AUXILIARY_TITLES[0]:
+        assert "All 34 TE species are included" in rendered_text
+        assert "Six representatives are selected" not in rendered_text
+    else:
+        assert "Six representatives are selected" in rendered_text
 
     positions = [rendered.index(f'data-figure-id="{row["figure_id"]}"') for row in rows]
     assert positions == sorted(positions)

@@ -1,17 +1,11 @@
 from __future__ import annotations
 
-import shutil
 import subprocess
 from pathlib import Path
-
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN_R = ROOT / "scripts/run_r.sh"
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("conda") is None, reason="Requires the project R environment"
-)
 
 # Evaluate the actual preparation and ggplot expressions without rendering PDFs
 # or executing other figures. The source data and species tree are the release.
