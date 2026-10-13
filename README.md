@@ -1,41 +1,44 @@
 # Desmognathus transposable elements, morphology, and phylogenetic path analysis
 
-This is the compact working repository for finishing the paper. It contains the
-analysis-ready datasets, the decisions needed to interpret them, one shareable
-R Markdown data report, the current R analyses, and the controlled publication package. The
-large HPC products and the complete pre-cleanup working tree are preserved in a
-separate archival checkout rather than mixed into the paper workspace.
+This repository contains the analysis-ready datasets, local analysis code,
+Methods, figures, and publication tables for the Desmognathus study. Large HPC
+products and the earlier working tree are preserved in a separate archive.
 
 ## Start here
 
+Install `uv` and Conda, then run these commands from a fresh checkout. Figure
+rendering also requires Arial; the environment check verifies that R can find
+the font used by the retained figures.
+
 ```bash
-# Install the Python environment and the single R environment
-make setup
-
-# Check the scientific panel contract and every publication-table hash
-make test
-
-# Inspect every source alias, exact tree representative, and accession exception
-make identity
-
-# Verify the publication-facing TE34 Bonsai representation and validation
-make te-bonsai
-
-# Reconstruct the retained supplementary PCA geometry audit
-make te-pca
-
-# See the compact data inventory
-make status
-
-# Render the shareable data, code, methods, and ggplot report
-make report
-
-# Build the single indexed workbook of exact ggplot figure inputs
-make figure-data
-
-# Verify the author-edited Methods Word draft matches its Markdown companion
-make methods-word
+make setup          # Install locked Python dependencies and create a missing R environment
+make check-env      # Check the installed environments without changing packages
+make test           # Validate the release and run the tests
+make identity       # Inspect taxonomy, accession exceptions, and tree representatives
+make te-bonsai      # Check retained TE34 Bonsai artifacts
+make methods-word   # Check the Methods Word draft against its Markdown companion
+make status         # Inspect the data inventory
 ```
+
+Python is pinned to 3.13.11 in `.python-version`; `uv.lock` pins its packages.
+The R environment defaults to `desmognathus`. On Linux x86-64, setup uses
+`environment-linux-64.explicit.txt`, which pins the Conda package builds and
+their SHA-256 hashes. Other platforms resolve `environment.yml`. Setup installs
+checksum-verified CRAN `phylopath` 1.3.1 only when creating an environment.
+An existing R environment is validated and left unchanged.
+
+To preserve an older environment, choose separate destinations before setup:
+
+```bash
+export UV_PROJECT_ENVIRONMENT=/absolute/path/to/new/python-environment
+export DESMOGNATHUS_R_ENV=/absolute/path/to/new/r-environment
+make setup
+make check-env
+```
+
+`DESMOGNATHUS_R_ENV` also accepts a Conda environment name. Routine Make targets
+use the installed Python environment without syncing packages. If a check
+fails, read its diagnostic before running setup or changing environments.
 
 The active scientific contract is:
 
@@ -75,50 +78,32 @@ under `Publication/datasets/` in Newick and reviewer-readable CSV formats rather
 than being forced into spreadsheet tabs. The workbook is a generated
 convenience view; the manifest-bound release files remain authoritative.
 
-## What can be rerun here
+## Local checks and regeneration
 
-```bash
-# Rebuild Publication/datasets from the canonical analysis tables
-make publication
+`make validate`, `make identity`, `make status`, `make methods-word`, and
+`make te-bonsai` inspect retained artifacts. `make lint` checks Python source.
+`make test` runs validation and the test suite; test-generated artifacts use
+temporary directories.
 
-# Rebuild the catalog after a deliberate data edit, then validate the release
-make catalog
-make validate
+The following commands write analysis or publication artifacts. Run them in a
+separate checkout when comparing a reconstruction with the retained release.
 
-# Show the identity decisions and verify them directly against raw sources
-make identity
+| Command | Artifacts it creates or updates |
+| --- | --- |
+| `make publication` | Supplementary exports, their manifest, and the data catalog |
+| `make catalog` | The canonical data catalog |
+| `make te-pca` | The reconstructed CLR/PCA audit |
+| `make path-quick` / `make path` | Path24 release inputs and model output |
+| `make figures` | GBE figure files |
+| `make report` | Figures and the study-data HTML report |
+| `make figure-review` | Figures and the figure-review HTML gallery |
+| `make figure-data` | The figure-input workbook |
 
-# Refit the Path24 analysis quickly, writing disposable output under analyses/.../output
-make path-quick
-
-# Verify the publication-facing Bonsai tree and strategy-localization artifacts
-make te-bonsai
-
-# Reconstruct the complete retained CLR/PCA audit trail
-make te-pca
-
-# Render the shareable study-data report
-make report
-
-# Render the visual critique gallery with every current figure
-make figure-review
-
-# Build and verify the labeled multi-sheet figure-data workbook
-make figure-data
-
-# Verify the researcher-facing Methods DOCX and Markdown remain synchronized
-make methods-word
-
-# Rebuild the current GBE ggplot figures
-make figures
-```
-
-Python is managed by `uv` from `pyproject.toml` and `uv.lock`. R and the system
-figure converters are defined in the single `desmognathus` Conda environment
-from `environment.yml`. Historical `Dusky` and figure-only environments are no
-longer repository dependencies. Because `phylopath` is not packaged by the
-configured Conda channels, `scripts/setup_r.sh` installs its checksum-pinned
-CRAN 1.3.1 source after Conda resolves the rest of the environment.
+The retained analyses start from frozen tables and upstream outputs. They do
+not rerun dnaPipeTE, RepeatModeler, RepeatMasker, segmentation, or image review.
+See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for the available inputs
+and remaining gaps. Historical `Dusky` and figure-only environments are not
+required by the local entrypoints.
 
 ## Evidence boundaries
 
@@ -131,10 +116,11 @@ CRAN 1.3.1 source after Conda resolves the rest of the environment.
   is not a direct rate of ectopic recombination, solo-LTR formation, or DNA loss.
 - The Path24 models are exploratory phylogenetic association and sensitivity
   analyses. They do not uniquely establish causal direction.
-- The implemented Path24 fit currently contains conditional genome size,
-  nucleus area, and cell area only. Positive IOD-to-pg rescaling leaves its
-  standardized fit unchanged. A potential final model integrating TE
-  composition and SVL has not yet been designed or fitted.
+- The original Path24 path suite contains conditional genome size, nucleus
+  area, and cell area. Later analyses include maximum SVL, an eight-class
+  body-role comparison, and TE-adjusted regressions in overlap21. These remain
+  exploratory comparisons, without a selected all-data causal network.
+  Positive IOD-to-pg rescaling leaves standardized cellular fits unchanged.
 - The two *D. orestes* dnaPipeTE runs are technical retries and are averaged
   with equal weight before species-level summaries.
 - Canonical TE diversity uses each species' ten most abundant positive

@@ -1,11 +1,11 @@
 # Reproducibility boundary
 
-The project now has three explicit reproducibility lanes. This distinction is
-scientific provenance, not merely storage policy.
+Local analyses start from retained upstream outputs. The sections below
+distinguish runnable code, frozen evidence, and material held in the archive.
 
 ## 1. Locally rerunnable
 
-- data catalog, hash validation, and S01–S41 publication exports;
+- data catalog, hash validation, and S01–S43 publication exports;
 - the R Markdown study-data report and manifest-driven figure-review gallery,
   each with a self-contained HTML rendering;
 - the single labeled figure-data workbook, rebuilt from the manifest-bound CSV
@@ -35,10 +35,57 @@ scientific provenance, not merely storage policy.
   Dryad snapshot plus current top-ten-superfamily recomputation; this is a
   descriptive non-harmonized comparison with no pooled inference.
 
-Python uses one UV lock. R and figure conversion use one Conda environment.
-Run `make setup`, then `make test`. The R setup checksum-verifies the exact
-`phylopath` 1.3.1 CRAN source because that package is not available from the
-configured Conda channels.
+### Environment setup and checks
+
+Python 3.13.11 is pinned in `.python-version`. `make setup-python` installs all
+runtime and development dependencies from `uv.lock` without updating the lock.
+Ordinary Make targets use `uv run --locked --no-sync`. `make check-python`
+checks the interpreter and uses UV's offline lock-parity check without
+installing packages.
+
+`make setup-r` creates a missing R environment, or validates an existing one
+without updating or pruning it. Linux x86-64 creation uses the exact package
+builds and SHA-256 hashes in `environment-linux-64.explicit.txt`. Other platforms
+resolve the original `environment.yml`, so their transitive package builds are
+not fully pinned. New environments also receive checksum-verified CRAN
+`phylopath` 1.3.1. R checks cover the declared packages, pinned versions, Cairo,
+the project Arial font resolver, and environment-local figure converters.
+Existing-environment validation checks those requirements; create a new prefix
+to reproduce every locked Linux package build.
+
+In a fresh checkout, run `make setup`, `make check-env`, then `make test`.
+To preserve an older Python environment, set `UV_PROJECT_ENVIRONMENT` to a new
+absolute path before setup. `DESMOGNATHUS_R_ENV` selects a Conda name or prefix;
+use a new destination if an existing R environment fails validation. `--check`
+never creates or repairs an R environment.
+
+The Linux R lock records the installed research environment. Fresh Python and
+Linux x86-64 R environments were created in separate destinations during the
+2026-10-13 cleanup. Both passed their environment checks, including installation
+of checksum-verified `phylopath`. Other platforms have not been tested. Arial
+is an external font prerequisite. HPC execution and access to missing upstream
+inputs are outside these setup commands.
+
+`pyproject.toml`, `uv.lock`, and `environment.yml` are themselves hashed inputs
+to retained scientific evidence. They remain unchanged. The interpreter pin,
+Linux R lock, and safer launchers add setup information without rewriting
+those evidence records.
+
+Validation commands and regeneration commands are listed separately in the
+[README](../README.md). Publication, figure, report, workbook, PCA, and path
+generation can write retained artifacts; use a separate checkout for reruns.
+
+### Cleanup verification, 2026-10-13
+
+An exported checkout containing only the staged repository files passed
+`make check-env test lint` with a fresh locked Python environment: 282 tests
+passed. Separate fresh Python and R environments passed `make check-env`, and
+all 261 Conda package URLs and hashes matched the Linux lock exactly. No retained
+scientific analysis or figure outputs were regenerated during cleanup. All 2,474
+protected scientific and dependency files retained their hashes, sizes, and
+symlink targets; the 18 files and links in the older local `.venv` were also
+preserved. That older environment uses Python 3.15; the separate-environment
+setup above avoids replacing it.
 
 ## 2. Frozen analysis evidence
 
@@ -71,7 +118,8 @@ fabricating a rerun path.
 The canonical diversity table itself can be promoted from the frozen
 superfamily composition matrix with
 `uv run --frozen --no-sync python analyses/01_transposable_elements/recompute_pca.py --write`;
-`make te-pca` must then pass as the read-only end-to-end gate.
+`make te-pca` must then pass as the end-to-end reconstruction gate. It writes
+the audit artifacts, so use a separate checkout to compare a reconstruction.
 
 This upstream boundary does not prevent local PCA verification: `make te-pca`
 starts at the frozen, species-level composition matrices and reconstructs the
@@ -99,7 +147,7 @@ C-value; its denominator remains the reviewed target-species IOD estimate.
 
 `make test` verifies:
 
-- ordered S01–S41 files equal their canonical sources byte-for-byte;
+- ordered S01–S43 files equal their canonical sources byte-for-byte;
 - manifest hashes and dimensions are current;
 - natural-log Shannon entropy and the Gini-Simpson index reproduce for all 34
   TE34 species after deterministic selection and explicit reclosure of each

@@ -2,31 +2,60 @@
 set -euo pipefail
 
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-environment_name="desmognathus"
+source "$project_root/scripts/r_environment.sh"
 phylopath_version="1.3.1"
 phylopath_sha256="fbbfe6ffe78fe4b6d59c98202e3c6e03332d379b4a18aed62008bc6944d5227f"
 
-conda env update --file "$project_root/environment.yml" --prune
+check_only=false
+if [[ "${1:-}" == --check && "$#" == 1 ]]; then
+  check_only=true
+elif [[ "$#" != 0 ]]; then
+  echo "Usage: scripts/setup_r.sh [--check]" >&2
+  exit 2
+fi
 
-conda_base="$(conda info --base)"
-environment_prefix="$conda_base/envs/$environment_name"
-rscript="$environment_prefix/bin/Rscript"
-if [[ ! -x "$rscript" ]]; then
-  echo "Conda did not create the '$environment_name' environment." >&2
+if resolve_r_environment; then
+  cd "$project_root"
+  isolate_r_environment
+  if ! validate_r_environment; then
+    echo "Existing environment was not changed. Create a separate environment with DESMOGNATHUS_R_ENV=<new-name-or-prefix> scripts/setup_r.sh." >&2
+    exit 1
+  fi
+  exit 0
+else
+  status=$?
+  [[ "$status" == 3 ]] || exit 1
+fi
+cd "$project_root"
+
+if [[ "$check_only" == true ]]; then
+  echo "Missing R environment '$environment_name'; --check does not create environments." >&2
   exit 1
 fi
-
-export CONDA_PREFIX="$environment_prefix"
-export PATH="$environment_prefix/bin:$PATH"
-export R_ENVIRON_USER=/dev/null
-export R_PROFILE_USER=/dev/null
-
-installed_version="$($rscript --vanilla -e \
-  "cat(if (requireNamespace('phylopath', quietly=TRUE)) as.character(packageVersion('phylopath')) else '')")"
-if [[ "$installed_version" == "$phylopath_version" ]]; then
-  echo "phylopath $phylopath_version is already installed"
-  exit 0
+if ! command -v conda >/dev/null 2>&1; then
+  echo "Conda is required to create R environment '$environment_name'." >&2
+  exit 1
 fi
+creation_command=(conda env create)
+environment_spec="$project_root/environment.yml"
+if [[ "$(uname -s)" == Linux && "$(uname -m)" == x86_64 ]]; then
+  creation_command=(conda create --yes)
+  environment_spec="$project_root/environment-linux-64.explicit.txt"
+  if [[ ! -f "$environment_spec" ]]; then
+    echo "Missing Linux x86_64 package lock: $environment_spec" >&2
+    exit 1
+  fi
+fi
+if [[ "$environment_name" == */* ]]; then
+  "${creation_command[@]}" --prefix "$environment_prefix" --file "$environment_spec"
+else
+  "${creation_command[@]}" --name "$environment_name" --file "$environment_spec"
+fi
+if ! resolve_r_environment; then
+  echo "Conda did not create R environment '$environment_name'." >&2
+  exit 1
+fi
+isolate_r_environment
 
 setup_temp="$(mktemp -d)"
 trap 'find "$setup_temp" -depth -delete' EXIT
@@ -56,6 +85,5 @@ fi
 
 "$environment_prefix/bin/R" CMD INSTALL --no-multiarch \
   --library="$environment_prefix/lib/R/library" "$source_tarball"
-"$rscript" --vanilla -e \
-  "stopifnot(as.character(packageVersion('phylopath')) == '$phylopath_version')"
 echo "Installed checksum-verified CRAN phylopath $phylopath_version"
+validate_r_environment
