@@ -1,0 +1,411 @@
+{
+  "kind": "AI_authored_unaccepted_contour_trials",
+  "timestamp_utc": "2026-10-14T15:23:47.668854+00:00",
+  "packet_sha256": "fd9afdd0fc827d304553d31a003dc9cef6c46a0caaeed0680bbed106650baa94",
+  "imagej_version": "1.54p",
+  "toolchain_identity": "5c35cb7aaba13706e1a11c0c819a65c841b964d735aa0ea9ab28a243e2c1aae5",
+  "report_sha256": "1126cdc16edc618795f00d00753b07a8968337a1699cf7ea3cd78d0da00eb257",
+  "comparison_image_sha256": "354ea52f4c0009c7eb1949ccfdd1097c6ea139d8cd44723aaa4d20f8493b7543",
+  "authored_proposals": 2,
+  "authored_decisions": 0,
+  "review_counts": {
+    "conflict": 0,
+    "keep": 0,
+    "missing": 82,
+    "problem": 0,
+    "unsure": 0
+  },
+  "review_approved_subset": {
+    "case_ids": [],
+    "name": "AI_unaccepted_contour_sensitivity_v1:unanimous_explicit_keep"
+  },
+  "scientific_status": "diagnostic sensitivity only; no pg/1C, pooled denominator, calibration or promotion",
+  "human_accepted": false,
+  "existing_release_changed": false,
+  "selection_basis": "Visible morphology on original uint8 crops, before candidate IOD calculation; no desired calibration value used.",
+  "command_receipts": [
+    {
+      "command": [
+        "/home/jake/Projects/Desmognathus_TE/.pixi/envs/recovery/bin/python",
+        "scripts/microscopy/recovery.py",
+        "import-roi",
+        "--packet",
+        ".pixi/runs/microscopy-recovery/pilot-v1/packet",
+        "--roi",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/nucleus.roi",
+        "--sidecar",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/authorship.json",
+        "--out",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/proposal"
+      ],
+      "started_utc": "2026-10-14T15:15:48.627637+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-14T15:15:56.057955+00:00",
+      "log_sha256": "5b7890523c97127b8fe3e155529c2b76518806200f8559a38c3225bb384efbb2"
+    },
+    {
+      "command": [
+        "/home/jake/Projects/Desmognathus_TE/.pixi/envs/recovery/bin/python",
+        "scripts/microscopy/recovery.py",
+        "import-roi",
+        "--packet",
+        ".pixi/runs/microscopy-recovery/pilot-v1/packet",
+        "--roi",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/nucleus.roi",
+        "--sidecar",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/authorship.json",
+        "--out",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/proposal"
+      ],
+      "started_utc": "2026-10-14T15:15:56.059555+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-14T15:16:06.189460+00:00",
+      "log_sha256": "19044e0925742da798f7ed0c366ef99cd8ba0aee6930b38109769712541c110f"
+    },
+    {
+      "command": [
+        "/home/jake/Projects/Desmognathus_TE/.pixi/envs/recovery/bin/python",
+        "scripts/microscopy/recovery.py",
+        "report",
+        "--packet",
+        ".pixi/runs/microscopy-recovery/pilot-v1/packet",
+        "--proposals",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/proposal",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/proposal",
+        "--policy",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/policy.json",
+        "--out",
+        ".pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/sensitivity-report"
+      ],
+      "started_utc": "2026-10-14T15:16:06.191124+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-14T15:16:14.164094+00:00",
+      "log_sha256": "bfe858d26976e85ce039d6a5b2d555c4d3d14f92ac8762179f6db94e019a7191"
+    }
+  ],
+  "native_producer_source_sha256": "66efa5ca03b0cf5309e198a08be62c2d1a7e7dc9fc5df4cd5ec3d223caa59cc8",
+  "assembly_attempts": [
+    {
+      "exit": 1,
+      "diagnostic": "Projection initially expected review_approved_subset to be a list; preserved report actually contains a mapping with an empty case_ids list. No producer repeated; projection corrected from the existing report."
+    },
+    {
+      "exit": 0,
+      "diagnostic": "Validated mapping and empty accepted case_ids; projection completed."
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "proposal_id": "Pc623d93e85cf3f5b435c",
+      "author": "AI: gpt-6.1-sol coordinator",
+      "rationale": "AI-authored diagnostic contour around the visible isolated dark region, including its pointed lower tip; selected from image morphology before any candidate IOD was calculated. Not human reviewed or accepted. Soft boundary and biological identity remain limitations.",
+      "time": "2026-10-14T15:15:09.979815+00:00",
+      "parent_state_sha256": "81ba0f51620aca2a9526e4252d53f7a84e03851d8b0eb6d4bad92f487e95328c",
+      "state_sha256": "c623d93e85cf3f5b435cc1b9dd41e5d62d977053987b5d87eb300c3e38855ab3",
+      "crop_sha256": "67b8a4cd46d1ae771727dc8a647236f6b93c7fc385464e00a4ba8c027a980ee9",
+      "nucleus_sha256": "66faba48fac6876c9e0162d5af5ac370dc17b4662b0f704bb148f6b9d1900888",
+      "roi_sha256": "ed84d409246a59861bcab567e6d3bf5ed040a8beb64bd776a2ca6ce3f907c798",
+      "geometry": {
+        "added_px": 173,
+        "original_area_px": 1682,
+        "proposed_area_px": 1810,
+        "removed_px": 45
+      },
+      "recorded_background": {
+        "background": 255,
+        "count": 1810,
+        "iod": 334.6165321702914,
+        "max_pixel": 209,
+        "mean_od": 0.18487101224877978,
+        "median_pixel": 164,
+        "min_pixel": 152,
+        "one_pixels": 0,
+        "raw_sum": 302066,
+        "saturated_pixels": 0,
+        "zero_pixels": 0
+      },
+      "shared_255_sensitivity": {
+        "background": 255,
+        "count": 1810,
+        "iod": 334.6165321702914,
+        "max_pixel": 209,
+        "mean_od": 0.18487101224877978,
+        "median_pixel": 164,
+        "min_pixel": 152,
+        "one_pixels": 0,
+        "raw_sum": 302066,
+        "saturated_pixels": 0,
+        "zero_pixels": 0
+      },
+      "decision": null,
+      "proposal_json_sha256": "b96ab013d44883b1f55988aa3e612e592f0c980dea87f81cf307f3296b303896",
+      "producer_receipt": {
+        "start_utc": "2026-10-14T15:15:09.979943+00:00",
+        "command": [
+          "/home/jake/Projects/Desmognathus_TE/.pixi/envs/recovery/lib/jvm/bin/java",
+          "-Duser.home=/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/editor/.imagej-home",
+          "-Djava.util.prefs.userRoot=/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/editor/.imagej-prefs",
+          "-Dsun.awt.disableGtkFileDialogs=true",
+          "-Djava.awt.headless=true",
+          "-cp",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/recovery-tools/5c35cb7aaba13706e1a11c0c819a65c841b964d735aa0ea9ab28a243e2c1aae5/ij.jar",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/AIContourProducer.java",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/nucleus.roi",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N11f41a0edb7dac8d23bb/vertices.tsv"
+        ],
+        "source_sha256": "66efa5ca03b0cf5309e198a08be62c2d1a7e7dc9fc5df4cd5ec3d223caa59cc8",
+        "exit": 0,
+        "end_utc": "2026-10-14T15:15:10.464155+00:00",
+        "roi_sha256": "fd88c20aa9fc1ac011f41e89a695ac2040051bc0b263024b85b6e7c2d93425ee"
+      },
+      "integer_vertices_xy": [
+        [
+          32,
+          39
+        ],
+        [
+          35,
+          32
+        ],
+        [
+          47,
+          29
+        ],
+        [
+          58,
+          29
+        ],
+        [
+          70,
+          33
+        ],
+        [
+          77,
+          40
+        ],
+        [
+          82,
+          49
+        ],
+        [
+          81,
+          60
+        ],
+        [
+          75,
+          66
+        ],
+        [
+          64,
+          72
+        ],
+        [
+          60,
+          80
+        ],
+        [
+          54,
+          75
+        ],
+        [
+          44,
+          69
+        ],
+        [
+          36,
+          61
+        ],
+        [
+          31,
+          52
+        ],
+        [
+          30,
+          43
+        ]
+      ],
+      "original_recorded_background_replay": {
+        "background": 255,
+        "count": 1682,
+        "iod": 316.0536156387719,
+        "max_pixel": 202,
+        "mean_od": 0.18790345757358612,
+        "median_pixel": 163,
+        "min_pixel": 152,
+        "one_pixels": 0,
+        "raw_sum": 278627,
+        "saturated_pixels": 0,
+        "zero_pixels": 0
+      },
+      "coordinator_disposition": "promising_unaccepted_trial"
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "proposal_id": "P52a4b038618c4512ac81",
+      "author": "AI: gpt-6.1-sol coordinator",
+      "rationale": "AI-authored diagnostic contour joining the dense central region and contiguous upper-left dark lobe; selected from image morphology before any candidate IOD was calculated. Not human reviewed or accepted. The irregular boundary and nearby streaks make this a low-confidence trial, not a validated repair.",
+      "time": "2026-10-14T15:15:10.464525+00:00",
+      "parent_state_sha256": "d4704d6de72f86c8783fb1050bd284c73ba9b782834f0f937f9ac348305daed4",
+      "state_sha256": "52a4b038618c4512ac81a3b2dcaa0ca74b6ac3bd0925404a8c24012bc73f685b",
+      "crop_sha256": "e109c35613283f1719d074621505fc75fc69c314c019dc26c8e73c0bec681a25",
+      "nucleus_sha256": "ad8e42030c9d62ef1e04c38b80f675b79f2adfed927d4f7f1af824a1e4b11d96",
+      "roi_sha256": "f576638e6b9dc215a0c7ec73df93b22a5eba282ab683167f5005e905db6b2bff",
+      "geometry": {
+        "added_px": 372,
+        "original_area_px": 842,
+        "proposed_area_px": 1136,
+        "removed_px": 78
+      },
+      "recorded_background": {
+        "background": 255,
+        "count": 1136,
+        "iod": 289.11960231186004,
+        "max_pixel": 180,
+        "mean_od": 0.25450669217593314,
+        "median_pixel": 138,
+        "min_pixel": 126,
+        "one_pixels": 0,
+        "raw_sum": 161674,
+        "saturated_pixels": 0,
+        "zero_pixels": 0
+      },
+      "shared_255_sensitivity": {
+        "background": 255,
+        "count": 1136,
+        "iod": 289.11960231186004,
+        "max_pixel": 180,
+        "mean_od": 0.25450669217593314,
+        "median_pixel": 138,
+        "min_pixel": 126,
+        "one_pixels": 0,
+        "raw_sum": 161674,
+        "saturated_pixels": 0,
+        "zero_pixels": 0
+      },
+      "decision": null,
+      "proposal_json_sha256": "82ec269807476c67589a9bc365602277b62cd6c531c7fa4594f979c54a7d560b",
+      "producer_receipt": {
+        "start_utc": "2026-10-14T15:15:10.464646+00:00",
+        "command": [
+          "/home/jake/Projects/Desmognathus_TE/.pixi/envs/recovery/lib/jvm/bin/java",
+          "-Duser.home=/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/editor/.imagej-home",
+          "-Djava.util.prefs.userRoot=/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/editor/.imagej-prefs",
+          "-Dsun.awt.disableGtkFileDialogs=true",
+          "-Djava.awt.headless=true",
+          "-cp",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/recovery-tools/5c35cb7aaba13706e1a11c0c819a65c841b964d735aa0ea9ab28a243e2c1aae5/ij.jar",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/AIContourProducer.java",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/nucleus.roi",
+          "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/ai-contours/N7fce100ee144e5a90c39/vertices.tsv"
+        ],
+        "source_sha256": "66efa5ca03b0cf5309e198a08be62c2d1a7e7dc9fc5df4cd5ec3d223caa59cc8",
+        "exit": 0,
+        "end_utc": "2026-10-14T15:15:10.896751+00:00",
+        "roi_sha256": "7dda742ca64a5aaeb45d9de80ee1d8bcc68ac72a0a8cc943b98fcb745c557d60"
+      },
+      "integer_vertices_xy": [
+        [
+          18,
+          26
+        ],
+        [
+          25,
+          24
+        ],
+        [
+          32,
+          29
+        ],
+        [
+          33,
+          35
+        ],
+        [
+          40,
+          37
+        ],
+        [
+          47,
+          31
+        ],
+        [
+          52,
+          31
+        ],
+        [
+          56,
+          37
+        ],
+        [
+          65,
+          42
+        ],
+        [
+          68,
+          49
+        ],
+        [
+          65,
+          56
+        ],
+        [
+          58,
+          61
+        ],
+        [
+          44,
+          62
+        ],
+        [
+          37,
+          58
+        ],
+        [
+          33,
+          51
+        ],
+        [
+          29,
+          46
+        ],
+        [
+          22,
+          45
+        ],
+        [
+          16,
+          42
+        ],
+        [
+          14,
+          36
+        ],
+        [
+          15,
+          30
+        ]
+      ],
+      "original_recorded_background_replay": {
+        "background": 255,
+        "count": 842,
+        "iod": 221.3207124420438,
+        "max_pixel": 181,
+        "mean_od": 0.2628512024252302,
+        "median_pixel": 137,
+        "min_pixel": 126,
+        "one_pixels": 0,
+        "raw_sum": 117421,
+        "saturated_pixels": 0,
+        "zero_pixels": 0
+      },
+      "coordinator_disposition": "held_boundary_ambiguous"
+    }
+  ],
+  "sol_proposal_visual_review.json": {
+    "sha256": "3d8a2c27fdbe426b7f09e3b0c9b5d898d1c03804526fffe7a8e39e307337ac06"
+  },
+  "luna_proposal_visual_review.json": {
+    "sha256": "f4083ebef58023be5be085ec5b8872a765e23ed689619170879d7c933338139f"
+  }
+}

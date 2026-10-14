@@ -1,0 +1,786 @@
+{
+  "review_kind": "AI_visual_diagnostic",
+  "declared_model": "gpt-6-luna",
+  "reviewer_role": "pstack_helper",
+  "timestamp_utc": "2026-10-14T14:47:40Z",
+  "input_manifest_sha256": "a34ae12102a683c03398579479882137feac274d6dbb35f976a3d6f146dd2c38",
+  "all_pages_inspected": [
+    "page_01.png",
+    "page_02.png",
+    "page_03.png",
+    "page_04.png",
+    "page_05.png",
+    "page_06.png",
+    "page_07.png",
+    "page_08.png",
+    "page_09.png",
+    "page_10.png",
+    "page_11.png",
+    "page_12.png",
+    "page_13.png",
+    "page_14.png",
+    "page_15.png",
+    "page_16.png",
+    "page_17.png",
+    "page_18.png",
+    "page_19.png",
+    "page_20.png",
+    "page_21.png"
+  ],
+  "assessments": [
+    {
+      "case_id": "Nefac1c5fc91e85027c4c",
+      "state_sha256": "7a9931be58e7214c55892eee5a2c89663fb7232318bbd13dde56c9998749c5f2",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: compact dark interior is enclosed; no dark pixels clearly continue beyond overlay.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "Nf935a69b9f328ea47727",
+      "state_sha256": "590ea1177784e54467aa78dc176516950cdd621d915861b5646765ddf78e187f",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: oval dark interior is covered centrally; outer faint cell boundary remains outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N7948e625e26cb3a455e6",
+      "state_sha256": "125baef8a14777a8dfc730e3613bc3203a84d3f3eca03475683f2bbd53295ad4",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: mottled dark interior and nearby folds make the nuclear edge unclear.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N4ad3a84c730bac4926b1",
+      "state_sha256": "94aa774a828de1a4560678757a511a5d53cc7f2b4abf78ac616bd9c1683f6c62",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: faint central dark region has no crisp edge under the overlay.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N44a5ad4632ce0bd813ff",
+      "state_sha256": "10f80e0c6f41140375a9d39156688ee5afa17eff3201fd4b71058309b6e0db5f",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: low-contrast mottled interior; mask-to-dark boundary cannot be distinguished.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N152feefd34279af6bc19",
+      "state_sha256": "a7d0bd6910c39926c522a30472655d0f54c02dc95fad8bc7d14e6365827381bf",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: distinct oval dark region is covered; no clear exterior dark pixels.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N627dd1a362f1cb3159d9",
+      "state_sha256": "5e148d26d9bdb981662811a206af94a5ca0da85bea70b1eaa6087db7896a605e",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: diffuse interior and faint edge make the mask extent ambiguous.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N954f14bcca44c0ffc162",
+      "state_sha256": "3a73abb95bf24049eacce2f133506fbbfb57c2a17e05923ae68d51734ba3ad4c",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-right: elongated dark interior is enclosed by the overlay.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N6164d780b5622a659d0a",
+      "state_sha256": "c3fa61a9b54160fb7e8b02547d064b384efbdf9160b1ccdbce6450d87d611894",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: broad, uneven dark area blends into nearby structures; boundary is unclear.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "state_sha256": "81ba0f51620aca2a9526e4252d53f7a84e03851d8b0eb6d4bad92f487e95328c",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: small dark focus is covered centrally; faint outer ring remains outside.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N40616db5b21292b0c6cc",
+      "state_sha256": "cb804ee8bc3300babe64166de9623652e11d47c7f9392f098d0757ef245d7b4f",
+      "status": "visible_mask_defect",
+      "issues": [
+        "nonnuclear_included_space"
+      ],
+      "visual_evidence": "Panel lower-left: overlay extends down across a second dark body below the upper focus.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "Ndba5c17eee947cb05968",
+      "state_sha256": "91ef57955e45a85e70cdb449756c24389f55d0c32c7a3a0870385520ec9a91df",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: broad irregular dark pattern is not separable from surrounding structure.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nbd2058e0d9c492ae173b",
+      "state_sha256": "5786c22df6d99458708d2ac1e8bdd7f113ea6bc5961486a27b1a9c22bc9b1c23",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: central darkening is weak and fades into the surrounding texture.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nae473ad161b0d356b6bb",
+      "state_sha256": "501d7638485f5918eeafe2f94f7d1c4fa5a92d7898a1885ea0fe32544a9996d7",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: broad, soft dark region has no clear boundary at the overlay edge.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nf816b73e83bc3d3e7f61",
+      "state_sha256": "77067137942b0b9e1642dc3b5f61a7e0b1cb2441ea249e43528fccb3f9d2e8c5",
+      "status": "visible_mask_defect",
+      "issues": [
+        "nuclear_pixels_outside_mask"
+      ],
+      "visual_evidence": "Panel lower-left: dark focus continues below the rectangular overlay boundary.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "Nf6ab19c5db90f625ddf5",
+      "state_sha256": "d8c0347666b854adce28c9ce78513bd780499061b05848a2013c844a3888ff4e",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: interior is diffuse; the nuclear edge cannot be followed confidently.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N43c690b2793f7e4113f7",
+      "state_sha256": "a24397fad12555907c6d066804d0bb31f414553219d7955d9531eaa7fcbf91fd",
+      "status": "visible_mask_defect",
+      "issues": [
+        "nonnuclear_included_space"
+      ],
+      "visual_evidence": "Panel upper-left: overlay includes lower-right small dark marks beyond the main central focus.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N1a8d8ff2572e02cebe38",
+      "state_sha256": "fc1f7995e81453ffd23290cae92309af0c2a9bfaf8e7ff9f4e4f7709ff032c15",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: soft darkening is broad and its boundary is indistinct.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nb0db11f0c3dafe2d5003",
+      "state_sha256": "d290e90e205a64c57cc8d3ad02502374c9fd6c425d66ebee39d29b448ff72615",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-left: isolated dark oval is enclosed by the overlay.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N511af262e0ae5d062690",
+      "state_sha256": "168b08a2c4d8db737d9b01a31da042bfad074539cfc929291f5f356db395e208",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: elongated faint interior makes the lower mask edge difficult to judge.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N04f1dcc198a281d68115",
+      "state_sha256": "350ccf484642c972203f8f0d694c144c3ac5060d030f5b45c7b181ac0ccd4ba3",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: dark oval interior is covered with a visible pale margin around it.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N74aa2a4a14c09db41dfc",
+      "state_sha256": "8f28541b860092d6f93d720d73ba7630beafc958f610ed17bf7b00e01f77ce30",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: central dark focus is covered; neighboring brighter bands remain outside.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N815f697d43b9efed92c4",
+      "state_sha256": "ff5369792cf69fb9f0b61c39528fb50f21d26daa59fd21c835ccf7c6263692e1",
+      "status": "visible_mask_defect",
+      "issues": [
+        "source_edge_clipping"
+      ],
+      "visual_evidence": "Panel lower-left: crop truncates the dark focus at the top image edge; its full boundary is unavailable.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "Ne8d8eec245a90356dd94",
+      "state_sha256": "666b72352b26ba41b405fa74506b7360e38832a6e59fe36b419aeb2129121d94",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: central interior is faint and blends into the surrounding cell texture.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Ndbdd765045f1a8db099f",
+      "state_sha256": "ee69feb47f2cf81b8132b6c26a86556e40cbb525137947f3684a7bf66456a835",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: compact dark region is enclosed; faint outer cell rim is separate.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "Ndca5f722c05f5d0c0f53",
+      "state_sha256": "c95bac4299581b1b8776ce35caccde4af934c7c4ed66f9c4af9302242626f36c",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: broad dark interior fades into the rim, obscuring its boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N7aa65512c12e4f3f0217",
+      "state_sha256": "ffb6aa5bb4bbf6032cbf9a4e37e8af5875fde03c2677d8828512383a8490bd31",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: broad mottled dark area leaves the nuclear edge indistinct.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Ne7ab0b9d1e54d32f2792",
+      "state_sha256": "83f385412e58e95af146105009865065a96bb9ba700699dad144f19312b88796",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: only a faint central patch is visible beneath the small overlay.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N7df73e6dfa89f4429518",
+      "state_sha256": "4c33bfc0378eb3eff25c9f07aae80035801565c527c520c218a40d1be29cc4b9",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: no sharply bounded dark interior is visible; contrast is weak.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nf90a669267bea66d73fc",
+      "state_sha256": "653092239de036805af600458c53bb52fe6a20086811816af66ae007b9585dd5",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: mottled interior and faint surrounding rim make fit ambiguous.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Ndbf3ddf18d8f9e6f50bb",
+      "state_sha256": "8d60e35d6cc379ada3683cfb2d1dbd27e14ae71e105ca2c2a191b1ab3df30f61",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: several blurred neighboring structures merge around the masked area.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N38557eb0f414e2c02f1f",
+      "state_sha256": "e17573073aebd413ca5ac01bdabc2d970dabe84915d230a52a292fc882359b1b",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: broad dark interior is weakly separated from the outer boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nba94037081d6fbc3fb68",
+      "state_sha256": "6a3597f3f991e43bfb46c1fcd6a6b017e1dbdf749e5d52e2106dcc245eb44977",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: central region is very faint; dark nuclear boundary is not clear.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N70b651fae142cae02634",
+      "state_sha256": "075742d1fc5a25d0d0cd31e356678616b677e3d490e2efd7e61364be4b56aa5d",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: dark oval is covered; pale outer halo remains outside overlay.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N823287fa03ce457343f0",
+      "state_sha256": "7bf1c112d4212eeb68e3afe2d89eb8d8c684c751180e353d248beb8314ec9f79",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: diffuse dark region under square-edged overlay has indistinct limits.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N248500ef942d3a4416f6",
+      "state_sha256": "fef32d80bc817a0e56811222b52eee574247e07c273cf7fc46b9434aed7a34d1",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-right: elongated dark interior is enclosed with no obvious exterior dark extension.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "Ncf47a0f18f718c508252",
+      "state_sha256": "1a05133b7cb46837d08e00e08804e4fafb3de60ee54984a6ee1b5ef0e8194483",
+      "status": "visible_mask_defect",
+      "issues": [
+        "nonnuclear_included_space"
+      ],
+      "visual_evidence": "Panel upper-left: a separate tiny overlay island appears above-left of the main masked region.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N1530009dce49feda4b1f",
+      "state_sha256": "f0eed76fabecde27c58558051a94fc3c47d501bb3f28e3b34d1c086a15821b87",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: elongated dark focus is enclosed; brighter neighboring streaks remain outside.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N16c5621eaf5ba594460b",
+      "state_sha256": "5db9dded6c47903fac1d982829e3b7cc26eb53c61dfaae8b712439758b7bc907",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: broad interior is mottled and merges with surrounding structures.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N5cfeb409a96d1038864b",
+      "state_sha256": "9543a4c7360d575e91fb259aa8352b3100e341ee330594152369394a6a4b9af5",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: irregular dark area has weak contrast at the overlay boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N606bed8cded63febfc60",
+      "state_sha256": "9f264d94982ce8f11e0aa70a52f8985a4254256f774d7505af75e9ee55fbd3ec",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: dim interior lacks a clearly traceable nuclear edge.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Na30b4832d3a818d93db9",
+      "state_sha256": "33de72b22c4e6ad1071b030c285e76e014cce1d81dc3aca18ea96ec3981b1c9c",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: distinct dark oval is centered within the overlay.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N2d37a1aa57088dce0ac4",
+      "state_sha256": "ac4d2bd2cb9219d4a7bb13b2bb6d828adaef5f97397d73665f60ce9e0e86b433",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-left: elongated dark oval is enclosed by the mask.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N36d18e6fd8115581fd04",
+      "state_sha256": "34c7ac24e9a0a9dd388b73a1f6d6ff9ab6de35ed3815931a0f68e1554bad1dad",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: dark interior approaches the left overlay edge, but contrast is soft.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Ne9a071d9c3b753e97e73",
+      "state_sha256": "db05eb3a91a7e8816e9bf7d5cbca63f935b33ac2e3708be08b1e8c865c4656dd",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: isolated dark oval is covered; outer cell outline is separate.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N8b0094520272983eaf2f",
+      "state_sha256": "13d2800631846e6fe6fdb54de219d40e13d8a4b394295cb4b70a12e0115ea89e",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: overlay spans a broad heterogeneous center with no crisp nuclear boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Naba71edcf5d3d984ee8e",
+      "state_sha256": "d9a376110dbb047bd38522835e9425e0f9a6526e07e3ea51aa303d84eca3c479",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: central darkening is faint and merges with adjacent texture.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N1b1aecbf8105bfd20c78",
+      "state_sha256": "f721be042ab90a419ce23b16484b20d812fc95616452660569f38e4efc9be157",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-right: compact dark focus is covered with surrounding folds outside.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N3291d5e0a6bc3fe2af23",
+      "state_sha256": "ba6de0724d3faaaf3585f90594f5b7b9e3ddb6e154fd8f411b449dd751502d3d",
+      "status": "visible_mask_defect",
+      "issues": [
+        "source_edge_clipping"
+      ],
+      "visual_evidence": "Panel upper-left: dark target and overlay meet the bottom crop edge, truncating the visible region.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N912f4cd09385e4a0a599",
+      "state_sha256": "af58dcf4879a121d4027b4d268b38ba7f17a8a847dd4f794e0e8856cbf97ea39",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: broad mottled center makes the mask boundary difficult to assess.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Ncf78d625ec3a45641644",
+      "state_sha256": "6c8350e697727b637cb62bed769322462c67b426ae93bd5afcf57aff8c66dda8",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-left: distinct dark oval is covered; faint halo remains outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N00ad728e51771e39bda1",
+      "state_sha256": "deb93a05648dd6e688dd8fc34c3bc9ff1dbe84c6185226b2963ff9b72a756cbc",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: central darkening is diffuse and blends into the lower cell boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N1df22aec3e4ab44a7c50",
+      "state_sha256": "46fd2544034ba02e331e46d4a442f4dd67f6c369d821c72fc92e587591144431",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: isolated elongated dark interior is enclosed.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N768858b29e439be9b181",
+      "state_sha256": "85d24d144fdd2d20eb2a2da42e3a2559f54edc78dee428a5a2ee57695aa661c3",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: very weak central contrast; dark nuclear pixels cannot be distinguished clearly.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N96b77559f3811cd8c5a4",
+      "state_sha256": "9e37f806e5ba95c7c76d906aa1d2691e9dbd7c4ad4f997584218fa307ce1890c",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-left: distinct dark elongated focus is covered with a pale margin.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N972cc5fe29368f2d1fd6",
+      "state_sha256": "d361eabb238bec36301158e5144efbff32b6b2ffb863e744bd21834309f077ba",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-right: compact dark oval is enclosed; outer rim remains outside.",
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N4c5b1764c11aea452c5c",
+      "state_sha256": "c19705cef7ffb4446f1f0ebfbbb7ffd9da3f03a7c581ab470d58dccedd94dc28",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: dark elongated interior is enclosed; nearby bright texture lies outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N5c4109fbcd78cf9238b3",
+      "state_sha256": "c2c973426f4d8cb0fcd055e377e09d4f75cfc9b88ce727ef5162c7fa8601c4cb",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: central region is weak and broad with no clear dark boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N8ac9ee82119854eb5386",
+      "state_sha256": "9f4cbf979d3fdf0185524472883f2e1d2dc0ae9d0cfbd6c66fa55e44ff65be51",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-left: oval dark focus is centered within the mask.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N1d07d250f7cc26de59aa",
+      "state_sha256": "6881daa82a58340726893cc0f8a525c97f079f8aaf8108a4c04f957c4c42e58e",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-right: dark oval is enclosed; faint outer rim is not masked.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N7038e772cc44e6ad3383",
+      "state_sha256": "e427c2fa8a394c968ffee59594ad668c1e5a9feb2d6888b625ab70ddd293ffc2",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: dark oval interior is covered with outer pale margin visible.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N7aab81aa064e289741bf",
+      "state_sha256": "40b0ead4215593b52b6ff11201a5618f51f3f11a69ee5f5a220085087f703edc",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: irregular central darkening is weakly bounded beneath the overlay.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N8960ae75b3ff55dc6454",
+      "state_sha256": "463a6976cdbca153f3ce8e8deb73f65478e2d226a22b6f6dd7c353f104a0c233",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-left: elongated dark focus is enclosed; surrounding halo remains visible.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "Nc8aaf97985f1925d59af",
+      "state_sha256": "dfe4eaf24a7d543a32a61863b84d23f61399c2b107d3a72cd17a35b48b98e539",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: central dark patch is soft and overlaps complex cell texture.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N9557de1080f7b7434255",
+      "state_sha256": "9bdbf0d61cc16a924367aee1c31b3360bf003377453378c5d8a7e6a1282d921f",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: compact dark oval is enclosed; no clear dark continuation outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N5a3d600a18fd82a913ba",
+      "state_sha256": "3be651cea89fec1696d9e4bbcd789d2dea9b3fd489cee6f6a7e524af1cf50c91",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: dark oval is covered; faint outer border remains separate.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N42d46641b15eb6ee9b8b",
+      "state_sha256": "4a7ffc713a4431e4c957315deb13f7f750a65ec3e4f8a4228e8c0f4ec55ad2c6",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: broad mottled dark area blends into the outer cell structure.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nc0bce3097f61606c4b76",
+      "state_sha256": "73e5e34c190d764b1b6d142242cccff42f07bebccd7f4409519522712351c876",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel lower-right: oval dark interior is enclosed with the surrounding halo outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N1c4679042f0c833c637f",
+      "state_sha256": "c6ebac078b5e5e7b17e549f565a8f0dfb56d09ca2a464ba7fedd8ed844ad19b3",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: broad dark oval is covered; outer cell boundary stays outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N56dcc29cc96818a0cc8d",
+      "state_sha256": "dbb55ac52368924014db3f0ebf0389601545354c3da7a2015516c78150da7a59",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: distinct dark oval is enclosed; small lower bright feature remains outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N6282b7c6feb9d588a6f0",
+      "state_sha256": "3d0ea401a8c09709352c43006eef6cb613fce28aad571a064a2a43b296b7a959",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: large heterogeneous dark center has no crisp interior boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nf54a3a078e5a6e43932e",
+      "state_sha256": "4f292109371c9cc4d3686949f92869297f39ebf7005f5823ed1def66acedf665",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: central masked region is diffuse with neighboring folds close by.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nd84df65a5fb54c795314",
+      "state_sha256": "35907b827e38e5433b801e4f78c04b34e31f6b2e122c604a0d9e666630b0fad0",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: elongated dark focus is enclosed; surrounding cell boundary remains visible.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N39e47ca09bd013502754",
+      "state_sha256": "c0741c0363df4d6d446ec2d2deb8ff9f1336d00ddbb3f059803cd2e358219235",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-right: dark elongated focus is enclosed without obvious exterior dark pixels.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "state_sha256": "d4704d6de72f86c8783fb1050bd284c73ba9b782834f0f937f9ac348305daed4",
+      "status": "visible_mask_defect",
+      "issues": [
+        "nuclear_pixels_outside_mask"
+      ],
+      "visual_evidence": "Panel lower-left: dark irregular focus extends leftward beyond the small overlay.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "Nad614f3f27eef420be4e",
+      "state_sha256": "2e9331bf610370e2b7a16042b84f82526f3f6f6d284b5463ebffc1800e58533c",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: faint diffuse focus makes the lower and right mask edges hard to judge.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Na89ce497e7b09044350e",
+      "state_sha256": "5a07750db5e7acd3c66c4d3ef4e2738e1352427234a9bba0925bb045c104f519",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-left: broad mottled center and faint edges make mask fit ambiguous.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N1d98c27b555e2adcfff4",
+      "state_sha256": "1138871cb6ee8cc2e1110a260234878dc99b6b729ae18c89c4b90a1c406fdb94",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: elongated interior is faint; contrast does not define a clear boundary.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nd432f25398599130a987",
+      "state_sha256": "c955dd74a343ae23f21f0e5f509bba4e9aae4a83a744faae9e6427d651c0defd",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-left: soft central darkening blends into adjacent cell structures.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "Nfb1394a709d70a160e70",
+      "state_sha256": "1dd884715a09fb341f42e2052d0c90e8acef587ffe98300c4835f9179cd05a1a",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel lower-right: diffuse vertical dark area leaves the nuclear edge unclear.",
+      "confidence": "low"
+    },
+    {
+      "case_id": "N102331110a9f9d8a1b19",
+      "state_sha256": "80488a91f842fa7e610224c9538d5bf1863d46f5b340401679b04f113bf79348",
+      "status": "apparently_supported",
+      "issues": [],
+      "visual_evidence": "Panel upper-left: distinct dark vertical focus is covered; faint cell rim remains outside.",
+      "confidence": "high"
+    },
+    {
+      "case_id": "N244789c8ee703ac44088",
+      "state_sha256": "6506e3228aa4df65fbe9f999bd48e258034e998a44ebb6513a0f782d432e9980",
+      "status": "uncertain",
+      "issues": [
+        "unclear_contrast"
+      ],
+      "visual_evidence": "Panel upper-right: central darkening is faint and the overlay boundary cannot be matched confidently.",
+      "confidence": "low"
+    }
+  ]
+}

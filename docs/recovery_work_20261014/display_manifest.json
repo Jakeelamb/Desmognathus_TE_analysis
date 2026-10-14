@@ -1,0 +1,388 @@
+{
+  "kind": "AI visual assessment display only",
+  "created_utc": "2026-10-14T14:45:15.831264+00:00",
+  "source_reviewer_root": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/pilot-v1/packet/reviewer",
+  "source_pins": {
+    "cases.json": "6e91339a95ff3044a069193d832b7193a0b3aa6c4d72481dee516c6f822f4396",
+    "assets/Nefac1c5fc91e85027c4c/raw.png": "c0137b58542c39b7ddc2299b7b208890352d6ac139e6a4df78f8559d1c2d923e",
+    "assets/Nefac1c5fc91e85027c4c/mask.png": "bb2a1c3c723d73c2304b2b87ec0cd3370488f968f25435a4c660c099f8a3fae6",
+    "assets/Nf935a69b9f328ea47727/raw.png": "cce327c4c95db640fc9829d3079d6937c94c28baa0b696bc3734fb52c279944a",
+    "assets/Nf935a69b9f328ea47727/mask.png": "a878d73c20fa6593e820a7e6f81fa451ddf25ab89d7577189fd2e4341bc6d00f",
+    "assets/N7948e625e26cb3a455e6/raw.png": "04be59a139e8f5e7c10ed1252ddec007ce1a28b471b56028008bf1cb63dbbb5c",
+    "assets/N7948e625e26cb3a455e6/mask.png": "abc6a3e7f27b29034ea3d630a2fc92c0cb10c2c3cf45da4e38ec2bbc7b0dbf49",
+    "assets/N4ad3a84c730bac4926b1/raw.png": "9881b69d3531997de842d5a7fc5bb236f07d8b61f4c2b52abc51814fe1807716",
+    "assets/N4ad3a84c730bac4926b1/mask.png": "5ba9c63f68b62a298ba309cca213c6fda6886a7923a9eea91801e2ee8ea00145",
+    "assets/N44a5ad4632ce0bd813ff/raw.png": "08f2c94cb978952c486c997ba280bd2ea28c9a4956ae162792fb30f2a75604b7",
+    "assets/N44a5ad4632ce0bd813ff/mask.png": "06234400a4ad8660ce800f2db9a324f588b6e2e25c076915909d84f1351f5c78",
+    "assets/N152feefd34279af6bc19/raw.png": "82904d1c5e5e80525a75e236144957a5dcac8ab2bbdef4d4b7f2a2bdb15c10a8",
+    "assets/N152feefd34279af6bc19/mask.png": "54ccf49c6e0a4e01cf04becc59ac282f9c9a6a7c1210a3a0a16dd63870b4d04c",
+    "assets/N627dd1a362f1cb3159d9/raw.png": "c8a0c5e5b489cdef7ade79779d660e7a7a62b7028121ef0df7ee5773cb366c3b",
+    "assets/N627dd1a362f1cb3159d9/mask.png": "aa181e22eda96c88504af41f490efc9ba29b1e76272a727a4f85f074dc615aa5",
+    "assets/N954f14bcca44c0ffc162/raw.png": "701c0d1a3969c7dcd314d44c8350432f8b01807f3f78039293185c6407d30ab0",
+    "assets/N954f14bcca44c0ffc162/mask.png": "0c6b69ebcefb87d593d759b6813542b79b3271ca11e13b79eb15e7625daf424e",
+    "assets/N6164d780b5622a659d0a/raw.png": "05a9aae28ff31af2131f6928c3158264f91e32498c269546f484c957e81a5d26",
+    "assets/N6164d780b5622a659d0a/mask.png": "5e7a2a0d237d99449887adbbe1027f61ff3a15a6a6a05dca052a7d2464160db8",
+    "assets/N11f41a0edb7dac8d23bb/raw.png": "67b8a4cd46d1ae771727dc8a647236f6b93c7fc385464e00a4ba8c027a980ee9",
+    "assets/N11f41a0edb7dac8d23bb/mask.png": "9f454ccf4e20647df9dea921bc8852b3aebcb94ae536c088bd02a2e382887cf3",
+    "assets/N40616db5b21292b0c6cc/raw.png": "57a2f7bd3b1ee91ce7fc9728eb17d3881d7df68291c639917e240fafb30286c3",
+    "assets/N40616db5b21292b0c6cc/mask.png": "2323e0df767afd19ae4fe3ca77b87ddf11477673708cf4bb217de1893dcc1303",
+    "assets/Ndba5c17eee947cb05968/raw.png": "7fba932cd693232fca305bb32dca2bde5bbab08a61cd74c6e6684b0b8e7e6932",
+    "assets/Ndba5c17eee947cb05968/mask.png": "f26e8e318f3141fb6582c890487d209409e01981320385bd09688602f0007076",
+    "assets/Nbd2058e0d9c492ae173b/raw.png": "7d6d5575b0c1d49661ff848081c09e63f55e7183726bbaed351603c12ad5676d",
+    "assets/Nbd2058e0d9c492ae173b/mask.png": "3dcb57a2de33517502878ee93d5e9b8a4b086e4c000eae3d5e64186e07df7dea",
+    "assets/Nae473ad161b0d356b6bb/raw.png": "24f6d4543eb015d7bf12ba42a6ebd28b936c36f1ea193ff065b71fe386996b51",
+    "assets/Nae473ad161b0d356b6bb/mask.png": "65919436eda91ef302a0f8e4c11a5134c3ee846511fdd45c18289f17dff7039c",
+    "assets/Nf816b73e83bc3d3e7f61/raw.png": "84b59d206322c449475934fcf1bfa2a3813d1c259c75b744614b3fe28fac98ce",
+    "assets/Nf816b73e83bc3d3e7f61/mask.png": "030c64a50c9300d949ada1f546096a5cb79971ba6b3c19a686167a87b573f9d8",
+    "assets/Nf6ab19c5db90f625ddf5/raw.png": "366def93068cc7bd308015ddbe4ca934f8b8f4d892a16c4a9c4397d9472730c3",
+    "assets/Nf6ab19c5db90f625ddf5/mask.png": "7f50a86ce9da8126471b70289a93001686c0532eb205e3a82204ee556cec9d18",
+    "assets/N43c690b2793f7e4113f7/raw.png": "308aa4e7a2e2de25d9121864933658d7e6f38a8fa3eb78c31c24af177f9e4a29",
+    "assets/N43c690b2793f7e4113f7/mask.png": "99c4a3f1c5789692af8a1893c0065a82c4bca094a5b58f36dec55120bcffdb37",
+    "assets/N1a8d8ff2572e02cebe38/raw.png": "241a6ea55592509476e5c4453dcfbcda904d6f46fe5fcd8d108037e106a4e92b",
+    "assets/N1a8d8ff2572e02cebe38/mask.png": "0a77077a4262ff8b1342e45c9bc3019d38cf90732201c41bfda24c63e3393b3f",
+    "assets/Nb0db11f0c3dafe2d5003/raw.png": "5926827c18206ad7910a7815ef99467542c7f7b3770164f2dff7302c352f4e94",
+    "assets/Nb0db11f0c3dafe2d5003/mask.png": "ee3de4579faff11c5ba9eb9b041b0f5aecc7d96772b6bf059bf40e9491b758f2",
+    "assets/N511af262e0ae5d062690/raw.png": "fb2d069730cddd6ca7266d42cb312347fcf1519fc37f3147323dd632b8f31021",
+    "assets/N511af262e0ae5d062690/mask.png": "7b614a14a28fcab7b6d1c2e141756bd63d2ab45dc45954d0a590bb3ee49474a7",
+    "assets/N04f1dcc198a281d68115/raw.png": "f89f0c95bea764ef41247c077213d09979aecfcc208128ab7705c3c680f8953b",
+    "assets/N04f1dcc198a281d68115/mask.png": "26be9bbb004a2c7aecf12d86569d3708b8248743bb60d5330800b80144ff3760",
+    "assets/N74aa2a4a14c09db41dfc/raw.png": "7fd9ba85f7602451d1b6f9e2e11b957ad487d9e0fbf5a9ff70abbe5c382a9d45",
+    "assets/N74aa2a4a14c09db41dfc/mask.png": "82a75bc6201803c05419646d74ef194320dc7494f935ea769350bfc44b496cce",
+    "assets/N815f697d43b9efed92c4/raw.png": "28c2b3459f962210502547f3e56ec306907ee5294f5629e08f20275f48a770a3",
+    "assets/N815f697d43b9efed92c4/mask.png": "7d97c5392575bfade09106dcd3e16007cdfa690bdcbb3c2deb476709d5463e32",
+    "assets/Ne8d8eec245a90356dd94/raw.png": "1772561e100455418f5a1dfca784576c5bec882bd0e1d184b17d3b131cb6438e",
+    "assets/Ne8d8eec245a90356dd94/mask.png": "10aa8ade0d40d2bf506b79205221a467dd11dd2b3d9b5b1e86a9777357d74bb6",
+    "assets/Ndbdd765045f1a8db099f/raw.png": "25dc1b95ad868876df3783e06aeb37406af3bedbc165e2b1a0ede91b5daa61a1",
+    "assets/Ndbdd765045f1a8db099f/mask.png": "e144aeaef2e91fcbef52c818ca3e3469ca28b9d0a86ed8faaacb6c235904ea5b",
+    "assets/Ndca5f722c05f5d0c0f53/raw.png": "a5823a96dd01a8e68612dd06a90a966cd83672c18e1b4ffe2787a5d507e4d39c",
+    "assets/Ndca5f722c05f5d0c0f53/mask.png": "1247fb2ec7a613763d8345b4c4e2aa8fcc3e046e0413d45caf65aee76f4e2652",
+    "assets/N7aa65512c12e4f3f0217/raw.png": "910428f918d644417695fc76966678de6fdea56e0c374c4a6159b1252f56f5c5",
+    "assets/N7aa65512c12e4f3f0217/mask.png": "be254be54b0892418730387be73ee6b7af27e6c2ab4336ad7ef731f150b486ac",
+    "assets/Ne7ab0b9d1e54d32f2792/raw.png": "15069b4c7fede6412739bd11a76c09932d72ff5e90fda99c3dab1950ba0ce879",
+    "assets/Ne7ab0b9d1e54d32f2792/mask.png": "7244956d9bc258e84ca7871326f3dc3a29f8bb52e022df238710df9760fa58b8",
+    "assets/N7df73e6dfa89f4429518/raw.png": "fd9e99a80be46e6324b260ccbd0be6af1464959f3f99039dbe1cdad1256d99d6",
+    "assets/N7df73e6dfa89f4429518/mask.png": "50a6b648906dbc6da5fc6249cd7d9988ca35bb2629b91b47bd35ea0388756b63",
+    "assets/Nf90a669267bea66d73fc/raw.png": "d026cb95e65812dd6de118509594d122d2eb43569248a104a339c9ea6e4c4b60",
+    "assets/Nf90a669267bea66d73fc/mask.png": "741fff0f11b1a706426e05409f360ca7300214a055e9f8c730815e5afcda0a24",
+    "assets/Ndbf3ddf18d8f9e6f50bb/raw.png": "be3cd71e8cc9913bfc1ed1d7fe615516112b65569003bf9ea5b6a74a0867667f",
+    "assets/Ndbf3ddf18d8f9e6f50bb/mask.png": "be6185653eb7662684217cf0ea849e7982fb7f9fb55d8eaa68faa52e5db2be76",
+    "assets/N38557eb0f414e2c02f1f/raw.png": "b2881f2c92de61149133a5c418ce7912ec62e675019afad2ab7461dd3843c319",
+    "assets/N38557eb0f414e2c02f1f/mask.png": "281abc09823ac540a6ab527dcbeec6d34d6311f4326a1f5213c5d5fa575e6654",
+    "assets/Nba94037081d6fbc3fb68/raw.png": "7a55347a3b80741c580a50224661fccf8fa63f02654d342b7ec41e0442601d2e",
+    "assets/Nba94037081d6fbc3fb68/mask.png": "2b114aa06de2793fdc7b1354f89a0b185396fb91401b72195a0a54efd2ec1a5b",
+    "assets/N70b651fae142cae02634/raw.png": "b1ba057229751be1bcf7a228ddb75d136bccb74231e30d8b7f156aa1207c22c7",
+    "assets/N70b651fae142cae02634/mask.png": "4b8eaef09c103be3719d6b894c5e954707fba212c44ce33f67a9cdfcd6cdc446",
+    "assets/N823287fa03ce457343f0/raw.png": "3f651ff79cab18f05dd57386e928e253c74a3ba5ca670d659355daa2dbd700c9",
+    "assets/N823287fa03ce457343f0/mask.png": "8077a5c82fd06bf70e2c1df6343079928c11d9a6fb6e6dbad3e4dff73e9bacca",
+    "assets/N248500ef942d3a4416f6/raw.png": "0cdb54ea4c7a6f52dc9bfb8292bd359e00370243961a9929a99a376f8312175c",
+    "assets/N248500ef942d3a4416f6/mask.png": "8de53e0365c0faf491e33edde8c6e29c1f5904ac9bd510ba4670ee2dbf51d109",
+    "assets/Ncf47a0f18f718c508252/raw.png": "38a329c5a754407d19e6bef391dbadf2fa6e3d3e322aec940c8a4e1238f50e36",
+    "assets/Ncf47a0f18f718c508252/mask.png": "23a3b26ece304312a747f11d8773c9ab68afe2f3582eea8dad132c8d2d028e45",
+    "assets/N1530009dce49feda4b1f/raw.png": "e5aebdfeae09e39e3a7444d9f2762a03c3055384b8a90323d97fafb313083555",
+    "assets/N1530009dce49feda4b1f/mask.png": "b7658badf46caaab2d799929f8a541b7153649eb3594f1d7f517d03b35220177",
+    "assets/N16c5621eaf5ba594460b/raw.png": "bf71cd56f447706c415a36b6b1818b4adbbedd81ead0a84b79d1b31fba23a9c6",
+    "assets/N16c5621eaf5ba594460b/mask.png": "de482f78cb37edc12a0962d57ad194737097d7119c81f096b0d72800b06e6882",
+    "assets/N5cfeb409a96d1038864b/raw.png": "65d77349d8ad20d10d8ed26a6ce1ed704419d0122a6dd4ff116572f7bbbf2c5b",
+    "assets/N5cfeb409a96d1038864b/mask.png": "988714c99bd83e101677eef4b87e5de5f0d8daa6d6dfc18321c7043cec26b9c7",
+    "assets/N606bed8cded63febfc60/raw.png": "7344a7da917f2bc1081fa4ade3cae5fc7ff018d56260d200a7552e6944347392",
+    "assets/N606bed8cded63febfc60/mask.png": "c8d4324438cad9bb7c085986b476286b39625315197905582b5858a64cc505a6",
+    "assets/Na30b4832d3a818d93db9/raw.png": "294bfed079706e6534b5d506b9f5de548462b2936ca97f4c027e4e66bcc4edb8",
+    "assets/Na30b4832d3a818d93db9/mask.png": "3f17a7639c53125096a30c5f30dffa78fa3d62cfbffffa9fc2664f55e045740d",
+    "assets/N2d37a1aa57088dce0ac4/raw.png": "5a514eb9355210410ece944dab071cd4f7a01941c26c2dfc9c2e67f1acc4ef7c",
+    "assets/N2d37a1aa57088dce0ac4/mask.png": "186e421c1350ef2e80674fb483efe2b9bd1cab2522a81943a628af821d008e54",
+    "assets/N36d18e6fd8115581fd04/raw.png": "83116e00735bd6193d86d379e1dd92e665e01ca98278e58cee30b2e2dcb3b567",
+    "assets/N36d18e6fd8115581fd04/mask.png": "f040f355302ae7e337ffad4cc74ea773254524e99cac49a6b40c5bf1c9810242",
+    "assets/Ne9a071d9c3b753e97e73/raw.png": "cbe546cd3b410c37483149da2f51ee01ef5f7f51bd32edf1930346c6d0e2f19d",
+    "assets/Ne9a071d9c3b753e97e73/mask.png": "41bab0ae9db810017a3e814240a9017d2ff9a29116f30c1c443de69c13202fd5",
+    "assets/N8b0094520272983eaf2f/raw.png": "7f459499d6ee092f86b0a7cde80752699f2d091b15140e0c5fab20ffdbd1220a",
+    "assets/N8b0094520272983eaf2f/mask.png": "6a900aea7bae9b72f81c8f9e2ef526df88606b629b6270154dca7461af24f0b2",
+    "assets/Naba71edcf5d3d984ee8e/raw.png": "5527f11d075c8d05bec7578b49ab1c401d4c9e3052d45eeeddefd196b7a9e583",
+    "assets/Naba71edcf5d3d984ee8e/mask.png": "913af1d1c5c269eb1281c1430a837bf828b4fd7747c3a10ea2ba9c417fb292ec",
+    "assets/N1b1aecbf8105bfd20c78/raw.png": "76d1d484ec5d6b308799e8d0465bcef575b04e2adf6338b58405b9367cd6ec39",
+    "assets/N1b1aecbf8105bfd20c78/mask.png": "7afaf9fbb033b713062ba7ff4cd9e42f4be0117dd1a344532b042e26f5dde604",
+    "assets/N3291d5e0a6bc3fe2af23/raw.png": "b750eef6c84b11080a5be80acb007908326e79020d5f15f6a011bc2db515cc22",
+    "assets/N3291d5e0a6bc3fe2af23/mask.png": "69219845a859ad39c30de220f66cfeb5cc222ee00863c1026bb1029759420fa0",
+    "assets/N912f4cd09385e4a0a599/raw.png": "8737771730de7c445abf8d239adaacecc081c0d9c1f20309403c7b6434bc5766",
+    "assets/N912f4cd09385e4a0a599/mask.png": "5b45f0f65dabe438359d958b22776e38142460bd895e50cb5795982204af6066",
+    "assets/Ncf78d625ec3a45641644/raw.png": "7c5aae1b2bfa1970baae09b2c78f7ece2a11a57b1081abb67215db0ca9f79968",
+    "assets/Ncf78d625ec3a45641644/mask.png": "659d69938cf3ac027ef5f916874991a628ad268a66badce3ee8feff6438ebcdc",
+    "assets/N00ad728e51771e39bda1/raw.png": "33b671d936240ef6e0dc221d9d25d9635e50b95a97b49aae50b460e60b10ddd4",
+    "assets/N00ad728e51771e39bda1/mask.png": "6bc2a07a2d2c1dff734db3775cfa7ab4e49ee48cdb5c07dcebb32d25aa0ca7c3",
+    "assets/N1df22aec3e4ab44a7c50/raw.png": "05330b8ed4b6b5cddf1a98ab0de455033ecbd06192967cb871fd8c87af1e7283",
+    "assets/N1df22aec3e4ab44a7c50/mask.png": "2f38db6b5f8d0f8f3a9177074b050a0b866eec57a833498f0e9dd5033536bc4e",
+    "assets/N768858b29e439be9b181/raw.png": "6dc7c6a50edd31c97673ef9a57fb38e2697a00637f11357ddf7ee9ab9846696b",
+    "assets/N768858b29e439be9b181/mask.png": "fd7dcdc475bdda0055a43bc26e0e6bd4169aabe2d3d702dd5b9439101761788d",
+    "assets/N96b77559f3811cd8c5a4/raw.png": "f06e5feac202d3b3daa6492dccaf7040429ac44a9c28c851e7ee51b6201a9b01",
+    "assets/N96b77559f3811cd8c5a4/mask.png": "f2f9e18e75e1117b7d2b07a5c62cb736c7c11e4c113c01c8eaf3e9ffc806952b",
+    "assets/N972cc5fe29368f2d1fd6/raw.png": "ebc7897136049d04181eff9d106e440298fc95d1e00c29b563ed978d9ac2ea07",
+    "assets/N972cc5fe29368f2d1fd6/mask.png": "87ea89bbfd9fe6041081eb02cea88515d3749f79df39387586ca570c13da7a46",
+    "assets/N4c5b1764c11aea452c5c/raw.png": "898b189ff04bd8319a62f1eb29fc9da47b5f77130b1fe5ea1eec8aff7c79fd86",
+    "assets/N4c5b1764c11aea452c5c/mask.png": "7598123ad04707e558df0cb3196c09c787d8db8ac234e9fa5d0438c44da8c0db",
+    "assets/N5c4109fbcd78cf9238b3/raw.png": "5614d14fa1125ec552383db4d2222f4d1b6d1b1df78b1ac2fff5191fe6b1d6ea",
+    "assets/N5c4109fbcd78cf9238b3/mask.png": "0cbf41276a1f5092366870d17a4a981f6380d328c8e49491ee4ec36818944bae",
+    "assets/N8ac9ee82119854eb5386/raw.png": "713c9bc3778fb356929a05034dca3cf92dccfb6a99c29d1f59555ba4bd22d48c",
+    "assets/N8ac9ee82119854eb5386/mask.png": "51c0e87475da1978a7858d640db62a95adb5a4cbe5c76fb9d0b1e2ce0e00e300",
+    "assets/N1d07d250f7cc26de59aa/raw.png": "e6894a7d2f85691b453ce47bde69f1243bfe12f9d12d41b639d17f67306733aa",
+    "assets/N1d07d250f7cc26de59aa/mask.png": "af6d89120932eb0260ce39434ec8765385e16aebe96aa805014c58c3277dc94d",
+    "assets/N7038e772cc44e6ad3383/raw.png": "ec50ec96072ad014e8da778efdbec0bdeab84bba77d6768609ba1e828e96ca29",
+    "assets/N7038e772cc44e6ad3383/mask.png": "76228aeeee8912305d402f2574bb38229d82a5292408e61d432c5d08c3dd65d2",
+    "assets/N7aab81aa064e289741bf/raw.png": "66e51e1db234bf04bad97c63c9e28fa0eacfca5a713d5581e049488aee5e445b",
+    "assets/N7aab81aa064e289741bf/mask.png": "5f3ca802114b9ee345315abeda296e111ea999d7e6f3c96939770d251a51a191",
+    "assets/N8960ae75b3ff55dc6454/raw.png": "d3c829c148fad441106d1e90cc95c787b4aae9554fd1c67d213bf9bf88b5982f",
+    "assets/N8960ae75b3ff55dc6454/mask.png": "7f293070529d700a6552ea9dc6a64be2bec7662526a11973582d5471128035b2",
+    "assets/Nc8aaf97985f1925d59af/raw.png": "9a33dee986038f26d129ea15885b40e2e3df023d8c86013283270ea984642640",
+    "assets/Nc8aaf97985f1925d59af/mask.png": "8e53c7433999ff68bad8d0225ddd835bd7de5415de7916b468194aa1377af792",
+    "assets/N9557de1080f7b7434255/raw.png": "4e4b4edb9ce8d2b2fbfabd1397f44a46548bfb785301760340638bb8e87f7b0c",
+    "assets/N9557de1080f7b7434255/mask.png": "499b4c120e37404eec14f65d9ee9fab4a8625895579a63fc30c55396855d6e7b",
+    "assets/N5a3d600a18fd82a913ba/raw.png": "138db57673f190ab5f8fedab6e586396868788415485a5f77cf5ced1b5b3c286",
+    "assets/N5a3d600a18fd82a913ba/mask.png": "13c3ea29903c13963160548982ee2a27630bf1ffd722ddddfa0e22d4c84d58cf",
+    "assets/N42d46641b15eb6ee9b8b/raw.png": "61c5bc617f005c2d98d9bf80a5fa990fd3f3869e877b11b84929c32674753335",
+    "assets/N42d46641b15eb6ee9b8b/mask.png": "38db18ebcc92dd7f99d49846328ec1a678de26a089930a35e0db6ed35b539023",
+    "assets/Nc0bce3097f61606c4b76/raw.png": "de28d2232216162f17b4326c925d81efb7dcc35377feb34b7e9ec52390a99319",
+    "assets/Nc0bce3097f61606c4b76/mask.png": "ad4913280b5be72898865e3631287de64eb3eaeecbfa9e9afbe654b4cd84cc37",
+    "assets/N1c4679042f0c833c637f/raw.png": "ac800ccc567b770c9e5063bf55e52cac75656c51b17598ee1a3e1a6119362b0a",
+    "assets/N1c4679042f0c833c637f/mask.png": "483e1c3313df8fed5fa2f63a3318c1ed22f49883bd8aa7f92493c4faf2fa8d3e",
+    "assets/N56dcc29cc96818a0cc8d/raw.png": "fca4a8eca4c4433f02733df2806ed7aa6493706816e5ba7f57f05c5d605c72bc",
+    "assets/N56dcc29cc96818a0cc8d/mask.png": "ba2426f28c9e3cc9f1bd2c9b43f7acc9fa6c4682f3034e9846287bb5c078fabb",
+    "assets/N6282b7c6feb9d588a6f0/raw.png": "1ca57df57265d4179fd431e2f1bfcef97158467c2ea4612c4dce39b19de6a06f",
+    "assets/N6282b7c6feb9d588a6f0/mask.png": "c6c2ea47dd336bed24542698afc5dd9969c0d724ac66a5ef963b7680a8f40389",
+    "assets/Nf54a3a078e5a6e43932e/raw.png": "a9994dd10bc0e02015b7860177551d768d5a6500cbdc936c7a88b88ed0e36679",
+    "assets/Nf54a3a078e5a6e43932e/mask.png": "a2c677313c3f9acb00e325e39a017b1dfb109ccca3e3b4acb03d60a2b083aad9",
+    "assets/Nd84df65a5fb54c795314/raw.png": "5386ca082bf9a11087c0ca6833933b6332e50c5bb82c6e2f5bd428bae282aa6c",
+    "assets/Nd84df65a5fb54c795314/mask.png": "7cad71ffbfc9f9dc5bafaaa427e956be42b2b5b345490db32d5f9542d15d90d8",
+    "assets/N39e47ca09bd013502754/raw.png": "ce2fb480e752146c9a7c800f272c22361a3fe5435217c9df8b4e88cd0b303fbb",
+    "assets/N39e47ca09bd013502754/mask.png": "c46627afc2ddb7155d4249f06abc7ef8df4e981d6c28da6ab35afc515fbafbc9",
+    "assets/N7fce100ee144e5a90c39/raw.png": "e109c35613283f1719d074621505fc75fc69c314c019dc26c8e73c0bec681a25",
+    "assets/N7fce100ee144e5a90c39/mask.png": "9f02b532c4ef9653fbabf9c92bfee6f8d61a5dfb7ec30c17ca38aa202349c0ae",
+    "assets/Nad614f3f27eef420be4e/raw.png": "7ca175ebbe38e835a0982d8f3068cbe39f46dbca5b8563cfca74b78c691153f4",
+    "assets/Nad614f3f27eef420be4e/mask.png": "31fa49c38385513651be121749439770eb6350566595318f214bbdf151c9267e",
+    "assets/Na89ce497e7b09044350e/raw.png": "b9b71ae1f5b22307ef77b9768643064514ac38112bf410af5641048379ac80e7",
+    "assets/Na89ce497e7b09044350e/mask.png": "2f115800e28ac20791e43ea2c7afbdf93f4d40abc3dd6c325a32255eb73ef864",
+    "assets/N1d98c27b555e2adcfff4/raw.png": "eb725b1fb938ee8165c5d8360a3bb6e5f03fd068eb4d8d69b184be56f6364ebf",
+    "assets/N1d98c27b555e2adcfff4/mask.png": "7a186cd6cdaafba82b09ff61ffaee77823de2041869ef44cfd62c08ba1479d0f",
+    "assets/Nd432f25398599130a987/raw.png": "78fa30a5de62ee2783172dac91cf79784a84856345eab526f89d9065e41c8bd2",
+    "assets/Nd432f25398599130a987/mask.png": "56ea2cae5d012e1568351b23d6efcaf9b98f521ce86668243c6627c4f519dce1",
+    "assets/Nfb1394a709d70a160e70/raw.png": "acdf54b3ccfecdfa635369c5bfaf6377233802b7ee0f724a80082f4b3b6db69e",
+    "assets/Nfb1394a709d70a160e70/mask.png": "ee95365a1ff9b4f754bedefd768a4f1a8ea04517e753c920611cc9b4515c6114",
+    "assets/N102331110a9f9d8a1b19/raw.png": "f55c544d9abfd2a0b659c7835f3626d5a6448a8d41bbab8d200950f67052b439",
+    "assets/N102331110a9f9d8a1b19/mask.png": "5743e1e5bd8c8dafa2a3c0301bc584755b3b1c2a3c1530b703d99ef98330e5e6",
+    "assets/N244789c8ee703ac44088/raw.png": "60510c374687ac3f38fc4d86c084bfc3ad85d7e43b024faa248d1e1830e2dd3c",
+    "assets/N244789c8ee703ac44088/mask.png": "3690a23a7a9394914ec615ebea045afa9e4493b0fc9c0f068010fc735783f828"
+  },
+  "pages": [
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_01.png",
+      "sha256": "83bb7487c9e92ebf9495e6341a817e48f11207b95afae21828a23fb4e2cb5603",
+      "case_ids": [
+        "Nefac1c5fc91e85027c4c",
+        "Nf935a69b9f328ea47727",
+        "N7948e625e26cb3a455e6",
+        "N4ad3a84c730bac4926b1"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_02.png",
+      "sha256": "6d4e95cdec73a5b5dd2503ca968441e5d3526c9aa3a172da52e65417e6915f4d",
+      "case_ids": [
+        "N44a5ad4632ce0bd813ff",
+        "N152feefd34279af6bc19",
+        "N627dd1a362f1cb3159d9",
+        "N954f14bcca44c0ffc162"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_03.png",
+      "sha256": "1e90c5a4e86a5b83f917b6dd330443cea1a038a8ca499b6cab5dce3f433bb2b1",
+      "case_ids": [
+        "N6164d780b5622a659d0a",
+        "N11f41a0edb7dac8d23bb",
+        "N40616db5b21292b0c6cc",
+        "Ndba5c17eee947cb05968"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_04.png",
+      "sha256": "0ec1921b2dd52851897f3c0664f9ffec95a82729f7f6404c09a7406ba51a8ef4",
+      "case_ids": [
+        "Nbd2058e0d9c492ae173b",
+        "Nae473ad161b0d356b6bb",
+        "Nf816b73e83bc3d3e7f61",
+        "Nf6ab19c5db90f625ddf5"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_05.png",
+      "sha256": "1ed669fa9fec27d4042f5ebee012e39f8f4b7632f90fb33b4e4b522cb65ca501",
+      "case_ids": [
+        "N43c690b2793f7e4113f7",
+        "N1a8d8ff2572e02cebe38",
+        "Nb0db11f0c3dafe2d5003",
+        "N511af262e0ae5d062690"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_06.png",
+      "sha256": "009a1a8c5d80c2e6541d927a33b44b5a3b1eebf12d5bded067afb30b91e61fd5",
+      "case_ids": [
+        "N04f1dcc198a281d68115",
+        "N74aa2a4a14c09db41dfc",
+        "N815f697d43b9efed92c4",
+        "Ne8d8eec245a90356dd94"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_07.png",
+      "sha256": "6b300d4156ffe0ddb53d399fd25900062874d35c689b0fb60e0dfa810cbf4d79",
+      "case_ids": [
+        "Ndbdd765045f1a8db099f",
+        "Ndca5f722c05f5d0c0f53",
+        "N7aa65512c12e4f3f0217",
+        "Ne7ab0b9d1e54d32f2792"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_08.png",
+      "sha256": "76509982d2ef80ce60ab8319be11d14d365dc7bb6c259c97f5b89cea7e644856",
+      "case_ids": [
+        "N7df73e6dfa89f4429518",
+        "Nf90a669267bea66d73fc",
+        "Ndbf3ddf18d8f9e6f50bb",
+        "N38557eb0f414e2c02f1f"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_09.png",
+      "sha256": "660d6d14a5d9d7cc6a2e45f6c054959be7604677a324d9e07e621c3a9f9406c0",
+      "case_ids": [
+        "Nba94037081d6fbc3fb68",
+        "N70b651fae142cae02634",
+        "N823287fa03ce457343f0",
+        "N248500ef942d3a4416f6"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_10.png",
+      "sha256": "6070cda5addd82640b6286886eaf6236a0a3ba1068b4b232a7388fa47b31e558",
+      "case_ids": [
+        "Ncf47a0f18f718c508252",
+        "N1530009dce49feda4b1f",
+        "N16c5621eaf5ba594460b",
+        "N5cfeb409a96d1038864b"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_11.png",
+      "sha256": "16ed07a5b8d9279187951bdee860412a6dfbfe8319800f358b7d2e2315f8c824",
+      "case_ids": [
+        "N606bed8cded63febfc60",
+        "Na30b4832d3a818d93db9",
+        "N2d37a1aa57088dce0ac4",
+        "N36d18e6fd8115581fd04"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_12.png",
+      "sha256": "16fed1c2a7612bca16fc481a8cc3b436525b6f4da20430249a0bb660b46f0f36",
+      "case_ids": [
+        "Ne9a071d9c3b753e97e73",
+        "N8b0094520272983eaf2f",
+        "Naba71edcf5d3d984ee8e",
+        "N1b1aecbf8105bfd20c78"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_13.png",
+      "sha256": "6ef85252b43f25216a61bca69ff5fb68c7e816a8c2c8925dada3da6d3f818a45",
+      "case_ids": [
+        "N3291d5e0a6bc3fe2af23",
+        "N912f4cd09385e4a0a599",
+        "Ncf78d625ec3a45641644",
+        "N00ad728e51771e39bda1"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_14.png",
+      "sha256": "64a5af47b8abaa127bb00a51cb7635955d8c396a059b89136631f2c7b98665e3",
+      "case_ids": [
+        "N1df22aec3e4ab44a7c50",
+        "N768858b29e439be9b181",
+        "N96b77559f3811cd8c5a4",
+        "N972cc5fe29368f2d1fd6"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_15.png",
+      "sha256": "ab2a81abb369af1cf07af16ed6a6517257c8e25291cafd51c081bb7534780000",
+      "case_ids": [
+        "N4c5b1764c11aea452c5c",
+        "N5c4109fbcd78cf9238b3",
+        "N8ac9ee82119854eb5386",
+        "N1d07d250f7cc26de59aa"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_16.png",
+      "sha256": "8250887e65e8925cc0a091d06e8bcec0d883b9bb97d3232e23d67365971fe47c",
+      "case_ids": [
+        "N7038e772cc44e6ad3383",
+        "N7aab81aa064e289741bf",
+        "N8960ae75b3ff55dc6454",
+        "Nc8aaf97985f1925d59af"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_17.png",
+      "sha256": "49b5a16b58226e9580717d9be97ae277211975452942b706f3a890d50331eef5",
+      "case_ids": [
+        "N9557de1080f7b7434255",
+        "N5a3d600a18fd82a913ba",
+        "N42d46641b15eb6ee9b8b",
+        "Nc0bce3097f61606c4b76"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_18.png",
+      "sha256": "377ea72975337b42f61d6ffb10bf23d112887d5d9aedaf7b30c281146b6a5fcc",
+      "case_ids": [
+        "N1c4679042f0c833c637f",
+        "N56dcc29cc96818a0cc8d",
+        "N6282b7c6feb9d588a6f0",
+        "Nf54a3a078e5a6e43932e"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_19.png",
+      "sha256": "b21e870921c57a46f29fd25f964fa3b12a4645ac9dff99dcfb2561d170fb06ad",
+      "case_ids": [
+        "Nd84df65a5fb54c795314",
+        "N39e47ca09bd013502754",
+        "N7fce100ee144e5a90c39",
+        "Nad614f3f27eef420be4e"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_20.png",
+      "sha256": "f2986933d5e0ecbd8a0743886168b972040d65fd4fe0b3324fcb7c1aef7de263",
+      "case_ids": [
+        "Na89ce497e7b09044350e",
+        "N1d98c27b555e2adcfff4",
+        "Nd432f25398599130a987",
+        "Nfb1394a709d70a160e70"
+      ]
+    },
+    {
+      "path": "/home/jake/Projects/Desmognathus_TE/.pixi/runs/microscopy-recovery/ai-review-v1/page_21.png",
+      "sha256": "35c766c28f65b485ea2dfacfde2680eb1483e0c46383987508f7c06530360df2",
+      "case_ids": [
+        "N102331110a9f9d8a1b19",
+        "N244789c8ee703ac44088"
+      ]
+    }
+  ],
+  "case_count": 82,
+  "display_scale": 3,
+  "display_interpolation": "nearest",
+  "display_overlay_alpha": 0.35,
+  "quantitative_pixels_changed": false,
+  "no_original_case_decisions_authored": true
+}

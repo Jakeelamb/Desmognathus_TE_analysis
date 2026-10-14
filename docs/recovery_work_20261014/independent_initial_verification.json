@@ -1,0 +1,213 @@
+{
+  "kind": "independent_AI_diagnostic_artifact_verification",
+  "verdict": "PASS",
+  "scope": "Exact initial diagnostic AI review: 82 cases for each model, 21 pages, 20 coordinator cases and public acquisition/context summary. Subsequent wider-context followup and optional AI contour proposals are outside this receipt.",
+  "verifier": "/root/ai_review_verification",
+  "revision": "73fb1753b8b2ee0bb9dbe386801ea6640cc6147c",
+  "initial_report_sha256": "24715ad685534ba10068f95f28d6eb7552d54f7b178318696adb84030b0f26f7",
+  "started_utc": "2026-10-14T15:13:53.817300+00:00",
+  "artifact_check_finished_utc": "2026-10-14T15:15:38.119339+00:00",
+  "artifact_pins": {
+    "sol_assessment.json": "1d7b3bd51249057ee8adf8b6a79cb1b2126b33979a81189db27410266fecbf7a",
+    "luna_assessment.json": "7b9b8a0ee6b1108998786d6a68d6acfaa6da464cd5fd0d4960b220ce6b2a62b0",
+    "coordinator_findings.json": "4aa452eb8bed57432ab1a9d288237cbe1814cfc81e10323dd2e6be69a910bf59",
+    "display_manifest.json": "a34ae12102a683c03398579479882137feac274d6dbb35f976a3d6f146dd2c38",
+    "verification.json": "86ba8445e7eac4f513bebca06aea68e2fe9ab8767aac98dbd189cf2fe6318acc",
+    "AI_VISUAL_REVIEW.md": "24715ad685534ba10068f95f28d6eb7552d54f7b178318696adb84030b0f26f7"
+  },
+  "private_audit_pins": {
+    "acquisition_audit.json": "dd4e958fdd16aa72e59ff2d72bafd2ddb2656209349e2a052dea8e67b299c337",
+    "tile_context_audit.json": "84a27997fcf4a59995c33877fb636cb5bf4eaf461a1f76f66dd46ac8ba806de9",
+    "backup_context_audit.json": "78db451d07c5c5a26561823e84f7493c222d17323341439a07d673b5d527bd6f"
+  },
+  "independent_fresh_packet_validation": {
+    "command": "pixi run -e recovery --clean-env --locked --no-install microscopy-recovery validate --packet .pixi/runs/microscopy-recovery/pilot-v1/packet",
+    "clock_start": {
+      "current_time": "2026-10-14 15:16:14 UTC"
+    },
+    "clock_completion_observed": {
+      "current_time": "2026-10-14 15:17:00 UTC"
+    },
+    "initial_tool_result": {
+      "chunk_id": "bf7f86",
+      "wall_time_seconds": 1.000324564,
+      "session_id": 43304,
+      "original_token_count": 38,
+      "output": "\u2728 Pixi task (microscopy-recovery in recovery): python scripts/microscopy/recovery.py validate --packet .pixi/runs/microscopy-recovery/pilot-v1/packet\n"
+    },
+    "final_tool_result": {
+      "chunk_id": "3acf2d",
+      "wall_time_seconds": 2.0498e-05,
+      "exit_code": 0,
+      "original_token_count": 43,
+      "output": "{\"cases\": 82, \"mask_equality\": true, \"numeric_replay\": true, \"packet_sha256\": \"fd9afdd0fc827d304553d31a003dc9cef6c46a0caaeed0680bbed106650baa94\", \"pixel_equality\": true}\n"
+    }
+  },
+  "no_artifact_edits": true,
+  "configured_models": {
+    "tool_role_definition_source": "Current collaboration.spawn_agent tool instructions: pstack_deep gpt-6.1-sol/xhigh; pstack_helper gpt-6-luna/high.",
+    "coordinator_spawn_evidence": "Parent provided /root/ai_boundary_review_sol pstack_deep and /root/ai_boundary_review_luna pstack_helper; fork_turns none, no overrides. Live agent registry included the Luna task. Records declare matching distinct role/models.",
+    "exact_spawn_log_independently_reopened": false,
+    "backend_attestation": false,
+    "qualification": "Verified distinct configured role definitions and matching record declarations; full spawn transcript and backend model identity are not independently attested by this receipt."
+  },
+  "uncovered_risks": [
+    "Backend model identity is not attested; tool role definitions and model declarations establish configuration only.",
+    "Assessments and page coverage records alone do not prove physiological boundary correctness or calibrated confidence.",
+    "Full multi-gigabyte parent TIFF file hashes in acquisition audit were not recomputed; actual headers and embedded XML were reopened and compared.",
+    "Native source drive, missing tile neighbors, native RGB decode, camera response and absolute physical calibration remain unavailable/unqualified.",
+    "Wider-context interpretation and optional later proposal experiment are outside this receipt scope.",
+    "AI records' reported page coverage does not independently prove each model's internal visual attention; actual supplied displays and recorded complete coverage were verified.",
+    "The complete multi-gigabyte target TIFF data hashes in acquisition audit were not recomputed; fresh TIFF header/OME text and pinned small scripts/tables were verified. Original packet source pins and 82 actual crop/mask comparisons passed.",
+    "Original-generation receipts for target backgrounds and historical standard staging source/run identity remain absent; current-source consistency is not historical execution proof.",
+    "This is diagnostic artifact integrity, not authored human decisions, physical-camera calibration, source-data completeness, accepted replacement ROIs, or promoted absolute genome size.",
+    "Initial report is untracked at the checked revision. This receipt pins exact bytes so later documentation edits require separate verification."
+  ],
+  "broken_tools_or_missing_evidence": [
+    "Backup audit discloses findmnt unavailable in clean Pixi PATH; it retained prior host-shell observation. This verifier did not require findmnt.",
+    "The first XML supplemental probe output was truncated by the tool budget; the final precise probe reacquired compact complete evidence.",
+    "No broken execution tool prevented this verification. No full test suite or expensive producer rerun was performed."
+  ],
+  "complete_private_receipt_sha256": "3323366d38c9ad275de64a2542c1043f03a93c56af71557eb9c6de7a64482c7a",
+  "checks": [
+    {
+      "check": "public copies equal originals",
+      "pass": true
+    },
+    {
+      "check": "display complete exact case set",
+      "pass": true
+    },
+    {
+      "check": "source and display pins",
+      "pass": true
+    },
+    {
+      "check": "actual contact sheet pixels",
+      "pass": true
+    },
+    {
+      "check": "sol exact state/coverage/schema",
+      "pass": true
+    },
+    {
+      "check": "sol configured role declaration",
+      "pass": true
+    },
+    {
+      "check": "luna exact state/coverage/schema",
+      "pass": true
+    },
+    {
+      "check": "luna configured role declaration",
+      "pass": true
+    },
+    {
+      "check": "two distinct configured role models",
+      "pass": true
+    },
+    {
+      "check": "joint/disagreement/defect arithmetic",
+      "pass": true
+    },
+    {
+      "check": "comparison exact source evidence and pins",
+      "pass": true
+    },
+    {
+      "check": "coordinator exact 20 case union/state/actions",
+      "pass": true
+    },
+    {
+      "check": "retained verification matches recomputation",
+      "pass": true
+    },
+    {
+      "check": "original packet blank authored state and expected hash",
+      "pass": true
+    },
+    {
+      "check": "negative controls detect review failures",
+      "pass": true
+    },
+    {
+      "check": "fresh protected baseline comparison",
+      "pass": true
+    },
+    {
+      "check": "acquisition/tile audit source pins",
+      "pass": true
+    },
+    {
+      "check": "fresh parent/header metadata",
+      "pass": true
+    },
+    {
+      "check": "fresh missing-neighbor and extent arithmetic",
+      "pass": true
+    },
+    {
+      "check": "fresh bounded backup layout",
+      "pass": true
+    },
+    {
+      "check": "public report counts/links/case table",
+      "pass": true
+    },
+    {
+      "check": "diagnostic-only explicit human/calibration boundary",
+      "pass": true
+    },
+    {
+      "check": "identified artifacts unchanged during verification",
+      "pass": true
+    },
+    {
+      "check": "public acquisition summary matches actual XML",
+      "pass": true
+    },
+    {
+      "check": "no human review or physical calibration promotion claim",
+      "pass": true
+    }
+  ],
+  "negative_controls": [
+    {
+      "mutation": "stale_state",
+      "detected": true,
+      "errors": [
+        "state:Nefac1c5fc91e85027c4c"
+      ]
+    },
+    {
+      "mutation": "missing_case",
+      "detected": true,
+      "errors": [
+        "case set/order/uniqueness"
+      ]
+    },
+    {
+      "mutation": "duplicate_case",
+      "detected": true,
+      "errors": [
+        "case set/order/uniqueness"
+      ]
+    },
+    {
+      "mutation": "missing_page",
+      "detected": true,
+      "errors": [
+        "page coverage"
+      ]
+    },
+    {
+      "mutation": "wrong_manifest",
+      "detected": true,
+      "errors": [
+        "input manifest pin"
+      ]
+    }
+  ],
+  "retained_observation_attempts": 3,
+  "later_context_and_proposals_in_scope": false
+}

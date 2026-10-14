@@ -1,0 +1,674 @@
+{
+  "created_utc": "2026-10-14T15:07:08.025482+00:00",
+  "builder_sha256": "2610d01024219c9a1395137ae0ba951cbb7278e176d554bff217abf6113794d4",
+  "recovery_helper_sha256": "9aafedba21482498e23c02b95eef52b839d18740662991332d1a95dddbc15273",
+  "packet_sha256": "fd9afdd0fc827d304553d31a003dc9cef6c46a0caaeed0680bbed106650baa94",
+  "comparison_sha256": "99cc9b3c7a9cdb741ad1f1d8d8f0ff24921d7c430f70673e0e8fd6c32c47e971",
+  "read_limit": "One 4096x4096 uint8 raw tile (16 MiB) and one <=uint32 label tile (64 MiB) at a time; headers reject larger/multipage TIFFs. No full acquisition TIFF decode. Recovery read_array/save_png/group_cases helpers reused.",
+  "cases": [
+    {
+      "case_id": "Nefac1c5fc91e85027c4c",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1/prepare/tiles/Process_314_raw_green.ome/tile_y057344_x032768.png",
+      "source_sha256": "a87ccaa0c4dc3c511008a77b9d308dd880ca5cd4cc73c108da5b9a0d0ea81969",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/mixed_cellpose_yolo_full_dataset_v1_bgclean/pair_review_seed_repair_all_strict/applied_repairs/nucleus_masks/Process_314_raw_green.ome/tile_y057344_x032768__labels.tiff",
+      "mask_source_sha256": "5b7592b908def0b791165dd5c2a273288a8b6c232b93c59e1e653470fb432db6",
+      "original_label": 69,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        2975,
+        1614,
+        3246,
+        1864
+      ],
+      "crop_box_slide_xyxy": [
+        35743,
+        58958,
+        36014,
+        59208
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        3039,
+        1678,
+        3182,
+        1800
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        250,
+        271
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "0e1a22577f0d84371855111938365c6b34ce98f5b331a678a5e69ab93965ac3a",
+        "original_mask.png": "09a534fa9ce0c74c1c3a3672da542f50ca1e9f98cc5523b2d9461eac6ea144a5",
+        "overlay.png": "f8a628f5997048ce04420713a02effa4a1ad3a75440526ea803d99ac645cc883"
+      }
+    },
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y000000_x036864.tiff",
+      "source_sha256": "ea1fc09a196da8a2871919bea9c056481ad2243806a65a3d3b234b8d1bc8492d",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_413_green.ome/tile_y000000_x036864__labels.tiff",
+      "mask_source_sha256": "b9dc9b25039d98947a737d46b71783ca3db6da79f039416961eb13081733e4b9",
+      "original_label": 1,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        2060,
+        3552,
+        2302,
+        3785
+      ],
+      "crop_box_slide_xyxy": [
+        38924,
+        3552,
+        39166,
+        3785
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        2124,
+        3616,
+        2238,
+        3721
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        233,
+        242
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "491db0a7406aa029d9acb3405597968f7afef2be3fe734e4ee6af965bf353f7e",
+        "original_mask.png": "350e5de441dbbc33f23b6d0f9da82c3c1002c409ad29e32250edff9659b5e5cb",
+        "overlay.png": "a0edc302d6930f13f4e7da9c8e6f4b61e5d4e617ea1f9fe23774afc6200a5c41"
+      }
+    },
+    {
+      "case_id": "N40616db5b21292b0c6cc",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y000000_x032768.tiff",
+      "source_sha256": "fa67f3bad85570d0a664024104afe2f0fd5616389024d372d9144e73f4c1fefc",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_413_green.ome/tile_y000000_x032768__labels.tiff",
+      "mask_source_sha256": "38e6a3c88ade6fe2f12b53c7731e94bf5a16048ddb2704a79585717a1100c266",
+      "original_label": 2,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        2011,
+        3569,
+        2287,
+        3849
+      ],
+      "crop_box_slide_xyxy": [
+        34779,
+        3569,
+        35055,
+        3849
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        2075,
+        3633,
+        2223,
+        3785
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        280,
+        276
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "e5be59a45c323c2c7c29a7453c92ed770bf28450d60e8db914346a20ef427ce4",
+        "original_mask.png": "bd021d1bf671fc631658fae672cf487a6d8542201c79fd47a26dd118af0464e9",
+        "overlay.png": "2e69448849149750c084b58e6df1d6389f2b1f3e4806320b1342d0bc622fadaf"
+      }
+    },
+    {
+      "case_id": "Nf816b73e83bc3d3e7f61",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_414_green.ome/tile_y028672_x065536.tiff",
+      "source_sha256": "ee5d7fe7a2f81008ba0cb940de3e1bdcd2f105c0eb27be90b96e77ec2d6933a8",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_414_green.ome/tile_y028672_x065536__labels.tiff",
+      "mask_source_sha256": "911f348d647dc8898aeb28d4ab8be009c74702b0c534af0613a93755c43a3d8f",
+      "original_label": 1,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        548,
+        1925,
+        804,
+        2144
+      ],
+      "crop_box_slide_xyxy": [
+        66084,
+        30597,
+        66340,
+        30816
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        612,
+        1989,
+        740,
+        2080
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        219,
+        256
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "e1706fde3699971ac7f1e10a40ec62dbe960d722a38da18667b362903d3abaf4",
+        "original_mask.png": "140ef64f758f21af2dc0247f98696077749de43f5c0bbbfca1e0a437c49b3702",
+        "overlay.png": "5c14f64a1b03d0a478ca430b12b0e83f117c95c939ce153144887a9e7c700e40"
+      }
+    },
+    {
+      "case_id": "N43c690b2793f7e4113f7",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_414_green.ome/tile_y000000_x024576.tiff",
+      "source_sha256": "b3f0b4800e16f947a58155e8241c0b86f4351830b785512e013ee71ad1942afb",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_414_green.ome/tile_y000000_x024576__labels.tiff",
+      "mask_source_sha256": "07728a65b3be00cad6784c691a2ca6a54a9e590aa7bc51bc2e40be95d4d1b254",
+      "original_label": 4,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        2901,
+        3619,
+        3168,
+        3865
+      ],
+      "crop_box_slide_xyxy": [
+        27477,
+        3619,
+        27744,
+        3865
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        2965,
+        3683,
+        3104,
+        3801
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        246,
+        267
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "91a84a112b39e64a09ec5f2a36c4baf5ac64045b8c30b94f626f71081b196166",
+        "original_mask.png": "3e29294a29c3a495dbbc461f44aee7917f29a73dfa02b6fd1c4e090c810ca76b",
+        "overlay.png": "fee5ab25dd9d63891ecb4a820ce213bb90f750799ef4d8dbfe30c2e61f6966e5"
+      }
+    },
+    {
+      "case_id": "N815f697d43b9efed92c4",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_414_green.ome/tile_y020480_x040960.tiff",
+      "source_sha256": "254a822fa651e0d580914cffea7439b8a1f3e041636cd272ac25805468f67c2f",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_414_green.ome/tile_y020480_x040960__labels.tiff",
+      "mask_source_sha256": "831bd166374d31d769b66f846796b51535eccfa0b702cfaa951f504e14effee0",
+      "original_label": 1,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        1015,
+        0,
+        1252,
+        115
+      ],
+      "crop_box_slide_xyxy": [
+        41975,
+        20480,
+        42212,
+        20595
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        1079,
+        0,
+        1188,
+        51
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        0,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [
+        "top"
+      ],
+      "display_shape_yx": [
+        115,
+        237
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "ca51fe7ec884ae88d5491933a7d9685a97ea7625f3167288a746baddae47f806",
+        "original_mask.png": "d91433f7ffdf051f7093eb71c7c8e2a163613b834f73e871401a027dbfa5312d",
+        "overlay.png": "430f247bf8f22a2c51f5e0c397eb47567f95e2765d0efd341e9556fc739ec146"
+      }
+    },
+    {
+      "case_id": "Ne7ab0b9d1e54d32f2792",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_414_green.ome/tile_y000000_x024576.tiff",
+      "source_sha256": "b3f0b4800e16f947a58155e8241c0b86f4351830b785512e013ee71ad1942afb",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_414_green.ome/tile_y000000_x024576__labels.tiff",
+      "mask_source_sha256": "07728a65b3be00cad6784c691a2ca6a54a9e590aa7bc51bc2e40be95d4d1b254",
+      "original_label": 1,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        1672,
+        2956,
+        1906,
+        3168
+      ],
+      "crop_box_slide_xyxy": [
+        26248,
+        2956,
+        26482,
+        3168
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        1736,
+        3020,
+        1842,
+        3104
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        212,
+        234
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "8c707b2c4882985faaa23f4b2d8dbdd364918bee76486e3378bb622dde4b290c",
+        "original_mask.png": "3fb8ced4d89fee7df626d0f16ef5b97ba9eb5388fb6dc4436290315d45de094b",
+        "overlay.png": "9245ae8288e0936376b5c7375140fb85023a848cbb3a4307d1e4e0e9292cba69"
+      }
+    },
+    {
+      "case_id": "N823287fa03ce457343f0",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_414_green.ome/tile_y028672_x016384.tiff",
+      "source_sha256": "b2be84ca433128bb814e0772180969b08f06dd0ce989e44d09f1795931d23d9a",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_414_green.ome/tile_y028672_x016384__labels.tiff",
+      "mask_source_sha256": "0717bfdff7efdbd8ce45816016fc4dffbb0326e76a0e83b068a791c4f35cfa25",
+      "original_label": 2,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        2052,
+        1896,
+        2301,
+        2144
+      ],
+      "crop_box_slide_xyxy": [
+        18436,
+        30568,
+        18685,
+        30816
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        2116,
+        1960,
+        2237,
+        2080
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        248,
+        249
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "efe5d3f1560b75f35a2990d557a0e349a073ac9d65f318d9d186b2ba339297ef",
+        "original_mask.png": "6ff123c855faca14a6fcb64e70eab3513f8862e27b5cbc14e66a7e8986e09583",
+        "overlay.png": "759f91c5dc2979626bcfefff683484f5c2e7379879976a2043df9a782c2b63af"
+      }
+    },
+    {
+      "case_id": "Ncf47a0f18f718c508252",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y004096_x036864.tiff",
+      "source_sha256": "0d1bb86079beded2f975363905ef63013e926e253ba8cfd5314b26d7c2780029",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_413_green.ome/tile_y004096_x036864__labels.tiff",
+      "mask_source_sha256": "c50d72986d00c219aa5500f474fc321f718aaef6a3b308c5d98a803ee57378fe",
+      "original_label": 5,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        1952,
+        1844,
+        2226,
+        2109
+      ],
+      "crop_box_slide_xyxy": [
+        38816,
+        5940,
+        39090,
+        6205
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        2016,
+        1908,
+        2162,
+        2045
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        265,
+        274
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "0db27744b918ecb393a96d972d246305e726d774a1ccd99397e17c10f5557cf8",
+        "original_mask.png": "09b8721230ce4eadcceda4e330fc858e6883098a9b3e1e5de380df3851589a46",
+        "overlay.png": "3a83dfed147df124f8de813033bbe4bf0034210887e07232f27d6d268bd4a72d"
+      }
+    },
+    {
+      "case_id": "N8b0094520272983eaf2f",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_414_green.ome/tile_y020480_x012288.tiff",
+      "source_sha256": "14bb5286c508b9d194c62d4f983668484119b88ac8351fda7350911d9ca002f5",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_414_green.ome/tile_y020480_x012288__labels.tiff",
+      "mask_source_sha256": "f51d0df242710c180a551b522251839eea4562a577b1740e1a65e9e11f31edab",
+      "original_label": 1,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        996,
+        2649,
+        1281,
+        2910
+      ],
+      "crop_box_slide_xyxy": [
+        13284,
+        23129,
+        13569,
+        23390
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        1060,
+        2713,
+        1217,
+        2846
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        261,
+        285
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "0cd647dc74090d62608bb329564c7e7c1c381ebeddae9f81ff7a71f19023e906",
+        "original_mask.png": "b65b13869f51f95e921d6b26235d73f76f3db854f742886fa4e97ee01fb1e28f",
+        "overlay.png": "b0247d376e30dface94321b86bba26135d59a423afdd8c9e70d22e0e7127eb56"
+      }
+    },
+    {
+      "case_id": "N3291d5e0a6bc3fe2af23",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y008192_x045056.tiff",
+      "source_sha256": "f8e36e56fe57794237c4c577a67f9911a2c475999b98664dce90234a4bdfea22",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_413_green.ome/tile_y008192_x045056__labels.tiff",
+      "mask_source_sha256": "bb8078ef412e78c1be1d8a498e2ea8ff890f5859ef76532b1f712d7614f250fb",
+      "original_label": 4,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        497,
+        3952,
+        768,
+        4096
+      ],
+      "crop_box_slide_xyxy": [
+        45553,
+        12144,
+        45824,
+        12288
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        561,
+        4016,
+        704,
+        4096
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        0
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [
+        "bottom"
+      ],
+      "display_shape_yx": [
+        144,
+        271
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "87c282e25f085e80673d3c42a745ab3cf0939d8a364794c2a9851f64be97d655",
+        "original_mask.png": "a793cf5753877ee80dba4011b57f703440d1ea9cf52f6cb3496c36c31ec7cc7a",
+        "overlay.png": "9ec22645d841641f2fb77c744836ad61d43eede6cf5f809ef672dc8e25992e82"
+      }
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "purpose": "Diagnostic native-pixel display; no measurement, contour proposal or decision",
+      "source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/staging/tiles/Process_413_green.ome/tile_y004096_x036864.tiff",
+      "source_sha256": "0d1bb86079beded2f975363905ef63013e926e253ba8cfd5314b26d7c2780029",
+      "mask_source_path": "/home/jake/Projects/cellprofiler_test/output/runs/life_history_pmount_reference_v1/nucleus_measurements/masks/Process_413_green.ome/tile_y004096_x036864__labels.tiff",
+      "mask_source_sha256": "c50d72986d00c219aa5500f474fc321f718aaef6a3b308c5d98a803ee57378fe",
+      "original_label": 3,
+      "source_shape_yx": [
+        4096,
+        4096
+      ],
+      "crop_box_tile_xyxy": [
+        255,
+        1322,
+        481,
+        1543
+      ],
+      "crop_box_slide_xyxy": [
+        37119,
+        5418,
+        37345,
+        5639
+      ],
+      "old_packet_crop_box_tile_xyxy": [
+        319,
+        1386,
+        417,
+        1479
+      ],
+      "added_context_left_top_right_bottom_px": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "requested_added_context_px": 64,
+      "source_boundary_clipped_sides": [],
+      "display_shape_yx": [
+        221,
+        226
+      ],
+      "original_packet_raw_pixels_equal": true,
+      "original_packet_mask_pixels_equal": true,
+      "raw_export_pixel_equal": true,
+      "no_contrast_change": true,
+      "no_interpolation": true,
+      "overlay_style": "Cyan inner four-neighbor boundary of unchanged original label, one native pixel; raw intensities otherwise unchanged",
+      "missing_neighbor_context_recovered": false,
+      "outputs": {
+        "raw.png": "6a5c25fd38020ee235c995aa8056e6d0b14b8347447e2dfedd5f3dacc76e8c99",
+        "original_mask.png": "5e07320329ec652141103f3eb1e84dba06bd6b88812f04e3be7513081867d590",
+        "overlay.png": "690efa72fc26f6f3305ef5cff7ec478a4fce8344f39464f89ee9f09e0c442892"
+      }
+    }
+  ]
+}

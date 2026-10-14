@@ -1,0 +1,50 @@
+{
+  "started_utc": "2026-10-14T15:06:16.227094+00:00",
+  "sol_assessment.json": {
+    "sha256": "1d7b3bd51249057ee8adf8b6a79cb1b2126b33979a81189db27410266fecbf7a",
+    "rows": 82,
+    "status_counts": {
+      "visible_mask_defect": 10,
+      "apparently_supported": 33,
+      "uncertain": 39
+    }
+  },
+  "luna_assessment.json": {
+    "sha256": "7b9b8a0ee6b1108998786d6a68d6acfaa6da464cd5fd0d4960b220ce6b2a62b0",
+    "rows": 82,
+    "status_counts": {
+      "apparently_supported": 33,
+      "uncertain": 42,
+      "visible_mask_defect": 7
+    }
+  },
+  "source_asset_count": 165,
+  "source_changes": [],
+  "display_page_changes": [],
+  "coordinator_disposition_counts": {
+    "uncertain": 8,
+    "mask_repair_candidate": 5,
+    "apparently_supported": 5,
+    "missing_tile_context": 2
+  },
+  "protected_artifacts": {
+    "entries": 12282,
+    "bytes": 434825677,
+    "kinds": {
+      "file": 12276,
+      "symlink": 6
+    },
+    "changed": []
+  },
+  "packet_validation_command": [
+    "/home/jake/Projects/Desmognathus_TE/.pixi/envs/recovery/bin/python",
+    "scripts/microscopy/recovery.py",
+    "validate",
+    "--packet",
+    ".pixi/runs/microscopy-recovery/pilot-v1/packet"
+  ],
+  "packet_validation_exit": 0,
+  "packet_validation_log_sha256": "23d7946211ebd7162993884c5b8299d24e33ed5d30ddfc9cab60cae9efacd195",
+  "finished_utc": "2026-10-14T15:06:24.397367+00:00",
+  "pass": true
+}

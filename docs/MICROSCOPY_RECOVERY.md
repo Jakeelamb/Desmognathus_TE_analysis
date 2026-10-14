@@ -216,3 +216,7 @@ snapshots. See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for the broader boundary
 
 The [executed recovery verification](recovery_work_20261013/VERIFICATION.md)
 records native producer handoffs, GUI tests, explicit skips and preservation.
+
+The [AI pilot review](recovery_work_20261014/AI_VISUAL_REVIEW.md) records the
+82-object first pass, wider-context findings and two unaccepted contour trials.
+It keeps AI assessments separate from human decisions and the retained analysis.

@@ -1,0 +1,101 @@
+{
+  "review_kind": "AI_visual_diagnostic_wider_context",
+  "declared_model": "gpt-6.1-sol",
+  "scope": "All 12 objects flagged as defective by either initial model. Added context uses retained native source pixels; initial review records remain unchanged.",
+  "quantitative_measurements_used_for_contour_selection": false,
+  "human_acceptance_events": 0,
+  "assessments": [
+    {
+      "case_id": "Nefac1c5fc91e85027c4c",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "Wider context shows a dark lower crescent within the cell, but a pale pocket and soft connection leave the nuclear extent ambiguous.",
+      "action": "Keep the original as baseline; no contour proposal from this evidence.",
+      "original_state_sha256": "7a9931be58e7214c55892eee5a2c89663fb7232318bbd13dde56c9998749c5f2"
+    },
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "disposition": "roi_trial_candidate",
+      "visual_evidence": "The target dark region is isolated from the diagonal material to the lower right. Its pointed lower tip lies outside the original mask.",
+      "action": "Draft an AI contour trial around the visible dark region on unchanged original crop pixels.",
+      "original_state_sha256": "81ba0f51620aca2a9526e4252d53f7a84e03851d8b0eb6d4bad92f487e95328c"
+    },
+    {
+      "case_id": "N40616db5b21292b0c6cc",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "Wider context confirms several folded or overlapping cells surrounding the dark target. A complete separate nuclear outline is not recoverable with confidence.",
+      "action": "Do not manufacture a contour or remove the lower body as a second nucleus.",
+      "original_state_sha256": "cb804ee8bc3300babe64166de9623652e11d47c7f9392f098d0757ef245d7b4f"
+    },
+    {
+      "case_id": "Nf816b73e83bc3d3e7f61",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "Three overlapping cell profiles cross the target region. The small mask is incomplete, but extending it to all dark material would include unresolved overlap.",
+      "action": "Do not force a complete-contour repair. Preserve the initial defect finding and the wider-context limitation.",
+      "original_state_sha256": "77067137942b0b9e1642dc3b5f61a7e0b1cb2441ea249e43528fccb3f9d2e8c5"
+    },
+    {
+      "case_id": "N43c690b2793f7e4113f7",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "A faint mottled central region and smaller lower dark marks remain within a cell close to another profile. Wider context does not resolve a complete nuclear boundary.",
+      "action": "Keep the original as baseline; no contour proposal from this evidence.",
+      "original_state_sha256": "a24397fad12555907c6d066804d0bb31f414553219d7955d9531eaa7fcbf91fd"
+    },
+    {
+      "case_id": "N815f697d43b9efed92c4",
+      "disposition": "missing_tile_context",
+      "visual_evidence": "More context below and sideways does not restore the nucleus beyond the top tile edge.",
+      "action": "Recover original Process 414 north-neighbor pixels before a complete contour or remeasurement.",
+      "original_state_sha256": "ff5369792cf69fb9f0b61c39528fb50f21d26daa59fd21c835ccf7c6263692e1"
+    },
+    {
+      "case_id": "Ne7ab0b9d1e54d32f2792",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "An elongated cell contains diffuse dark material continuing below the small mask. Low contrast prevents a confident nuclear perimeter.",
+      "action": "Do not force a complete-contour repair from the retained pixels.",
+      "original_state_sha256": "83f385412e58e95af146105009865065a96bb9ba700699dad144f19312b88796"
+    },
+    {
+      "case_id": "N823287fa03ce457343f0",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "The vertical dark region continues beyond the mask, but its lower extent is faint and nearby overlapping cells obscure the context.",
+      "action": "Preserve the incomplete-mask candidate but do not invent a full contour.",
+      "original_state_sha256": "7bf1c112d4212eeb68e3afe2d89eb8d8c684c751180e353d248beb8314ec9f79"
+    },
+    {
+      "case_id": "Ncf47a0f18f718c508252",
+      "disposition": "mask_component_issue",
+      "visual_evidence": "The isolated cyan mask island persists in wider context. The main dark region is surrounded by folded and touching cell profiles, so island removal alone would not validate the main contour.",
+      "action": "Separate any component-removal trial from claims about a complete nuclear repair.",
+      "original_state_sha256": "1a05133b7cb46837d08e00e08804e4fafb3de60ee54984a6ee1b5ef0e8194483"
+    },
+    {
+      "case_id": "N8b0094520272983eaf2f",
+      "disposition": "boundary_uncertain",
+      "visual_evidence": "Two or more overlapping cell profiles surround a broad heterogeneous dark region. The visible lobes cannot all be confidently assigned to a single nucleus.",
+      "action": "Do not expand the mask across unresolved overlapping material.",
+      "original_state_sha256": "13d2800631846e6fe6fdb54de219d40e13d8a4b394295cb4b70a12e0115ea89e"
+    },
+    {
+      "case_id": "N3291d5e0a6bc3fe2af23",
+      "disposition": "missing_tile_context",
+      "visual_evidence": "More context above and sideways does not restore the lower nucleus beyond the bottom tile edge.",
+      "action": "Recover original Process 413 south-neighbor pixels before a complete contour or remeasurement.",
+      "original_state_sha256": "ba6de0724d3faaaf3585f90594f5b7b9e3ddb6e154fd8f411b449dd751502d3d"
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "disposition": "roi_trial_candidate",
+      "visual_evidence": "The dense central region has a contiguous upper-left dark lobe excluded by the original mask. Nearby streaks and the irregular shape limit confidence.",
+      "action": "Draft a low-confidence AI contour trial, with no human acceptance or validated-repair claim.",
+      "original_state_sha256": "d4704d6de72f86c8783fb1050bd284c73ba9b782834f0f937f9ac348305daed4"
+    }
+  ],
+  "timestamp_utc": "2026-10-14T15:17:51.706514+00:00",
+  "wider_context_receipt_sha256": "c9f850905bb2058ec1857f8355fe983590942f99ed926124cf2dfa7b13819156",
+  "disposition_counts": {
+    "boundary_uncertain": 7,
+    "roi_trial_candidate": 2,
+    "missing_tile_context": 2,
+    "mask_component_issue": 1
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "review_kind": "AI_visual_diagnostic_adjudication",
+  "declared_model": "gpt-6.1-sol",
+  "scope": "Every model disagreement and every case flagged as a visible defect by either model; the coordinator did not independently inspect all 82 cases.",
+  "pages_inspected": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    13,
+    18,
+    19,
+    21
+  ],
+  "review_criteria": "Inspect the dark inner nuclear region. Angular mask geometry alone is insufficient. Do not treat the outer erythrocyte rim or an ambiguous halo as nuclear material. Preserve uncertainty where overlap, folding, weak contrast, or missing context prevents a complete boundary.",
+  "authored_human_decisions": 0,
+  "source_mask_changes": 0,
+  "assessments": [
+    {
+      "case_id": "Nefac1c5fc91e85027c4c",
+      "disposition": "uncertain",
+      "visual_evidence": "The mask excludes a dark lower-right crescent around a pale pocket. Its connection to the main nucleus is ambiguous.",
+      "next_step": "Inspect wider retained context before drawing a replacement contour.",
+      "state_sha256": "7a9931be58e7214c55892eee5a2c89663fb7232318bbd13dde56c9998749c5f2"
+    },
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "disposition": "mask_repair_candidate",
+      "visual_evidence": "A dark pointed lower tip of the isolated nucleus extends below the rounded mask edge.",
+      "next_step": "Draft an AI contour proposal on unchanged pixels and compare geometry and signed IOD in a separate report.",
+      "state_sha256": "81ba0f51620aca2a9526e4252d53f7a84e03851d8b0eb6d4bad92f487e95328c"
+    },
+    {
+      "case_id": "N40616db5b21292b0c6cc",
+      "disposition": "uncertain",
+      "visual_evidence": "The large lower dark body joins dark structures above and to the right. The crop does not establish that the lower body is a different nucleus.",
+      "next_step": "Inspect wider context; do not remove the lower dark body based on the second model's interpretation.",
+      "state_sha256": "cb804ee8bc3300babe64166de9623652e11d47c7f9392f098d0757ef245d7b4f"
+    },
+    {
+      "case_id": "Nf816b73e83bc3d3e7f61",
+      "disposition": "mask_repair_candidate",
+      "visual_evidence": "A small rectangular mask covers the middle of a larger vertically extended dark region. Substantial dark material lies below the mask.",
+      "next_step": "Inspect wider context and draft a proposal only if the complete nuclear boundary is visible.",
+      "state_sha256": "77067137942b0b9e1642dc3b5f61a7e0b1cb2441ea249e43528fccb3f9d2e8c5"
+    },
+    {
+      "case_id": "Nf6ab19c5db90f625ddf5",
+      "disposition": "apparently_supported",
+      "visual_evidence": "The mask plausibly follows the oblique dark oval; the surrounding cell rim is separate. Soft edges limit exact boundary precision.",
+      "next_step": "Retain as an AI-supported original mask for comparison, without a human acceptance claim.",
+      "state_sha256": "d8c0347666b854adce28c9ce78513bd780499061b05848a2013c844a3888ff4e"
+    },
+    {
+      "case_id": "N43c690b2793f7e4113f7",
+      "disposition": "uncertain",
+      "visual_evidence": "The right side contains pale mottled material and lower-right dark marks, with no clear complete nuclear boundary.",
+      "next_step": "Inspect wider context; do not force a replacement contour from this crop.",
+      "state_sha256": "a24397fad12555907c6d066804d0bb31f414553219d7955d9531eaa7fcbf91fd"
+    },
+    {
+      "case_id": "N511af262e0ae5d062690",
+      "disposition": "apparently_supported",
+      "visual_evidence": "The central dark oval is plausibly enclosed. The lower edge is soft, but no clear nuclear region can be identified outside the mask.",
+      "next_step": "Retain as an AI-supported original mask for comparison, without a human acceptance claim.",
+      "state_sha256": "168b08a2c4d8db737d9b01a31da042bfad074539cfc929291f5f356db395e208"
+    },
+    {
+      "case_id": "N74aa2a4a14c09db41dfc",
+      "disposition": "uncertain",
+      "visual_evidence": "A neighboring dark region above and to the right obscures part of the target perimeter.",
+      "next_step": "Inspect wider context for touching or folded material.",
+      "state_sha256": "8f28541b860092d6f93d720d73ba7630beafc958f610ed17bf7b00e01f77ce30"
+    },
+    {
+      "case_id": "N815f697d43b9efed92c4",
+      "disposition": "missing_tile_context",
+      "visual_evidence": "The dark nucleus is clipped at the top of the retained tile. The label starts at y=1, so label-edge metadata alone misses the visual clipping.",
+      "next_step": "Recover north neighbor tile_y016384_x040960.tiff or decode the required strip from original Process_414 VSI/ETS; do not invent missing pixels.",
+      "state_sha256": "ff5369792cf69fb9f0b61c39528fb50f21d26daa59fd21c835ccf7c6263692e1"
+    },
+    {
+      "case_id": "Ndca5f722c05f5d0c0f53",
+      "disposition": "apparently_supported",
+      "visual_evidence": "The mask plausibly follows the vertical oval. The lower extent is soft rather than an unequivocal excluded nuclear region.",
+      "next_step": "Retain as an AI-supported original mask for comparison, without a human acceptance claim.",
+      "state_sha256": "c95bac4299581b1b8776ce35caccde4af934c7c4ed66f9c4af9302242626f36c"
+    },
+    {
+      "case_id": "Ne7ab0b9d1e54d32f2792",
+      "disposition": "uncertain",
+      "visual_evidence": "The mask has a flat lower edge, and diffuse gray material extends below it. Low contrast prevents a confident complete contour.",
+      "next_step": "Inspect wider context before deciding whether the mask is incomplete.",
+      "state_sha256": "83f385412e58e95af146105009865065a96bb9ba700699dad144f19312b88796"
+    },
+    {
+      "case_id": "N823287fa03ce457343f0",
+      "disposition": "mask_repair_candidate",
+      "visual_evidence": "The horizontal lower mask edge crosses a vertically extended dark region, with darker material continuing below it.",
+      "next_step": "Inspect wider context and draft a proposal only if the complete nuclear boundary is visible.",
+      "state_sha256": "7bf1c112d4212eeb68e3afe2d89eb8d8c684c751180e353d248beb8314ec9f79"
+    },
+    {
+      "case_id": "Ncf47a0f18f718c508252",
+      "disposition": "mask_repair_candidate",
+      "visual_evidence": "A separate cyan mask island lies above-left of the main region. Parts of the main boundary are also rectilinear and may omit dark material.",
+      "next_step": "Check the disconnected component against source pixels and draft a component-removal proposal; assess the main boundary separately.",
+      "state_sha256": "1a05133b7cb46837d08e00e08804e4fafb3de60ee54984a6ee1b5ef0e8194483"
+    },
+    {
+      "case_id": "N36d18e6fd8115581fd04",
+      "disposition": "apparently_supported",
+      "visual_evidence": "The oblique oval nucleus is plausibly enclosed. The darker lower cell rim should not be added to the nuclear mask.",
+      "next_step": "Retain as an AI-supported original mask for comparison, without a human acceptance claim.",
+      "state_sha256": "34c7ac24e9a0a9dd388b73a1f6d6ff9ab6de35ed3815931a0f68e1554bad1dad"
+    },
+    {
+      "case_id": "N8b0094520272983eaf2f",
+      "disposition": "uncertain",
+      "visual_evidence": "Dark lobes extend above a straight mask edge, but the region is heterogeneous and folded. The crop does not resolve a complete nuclear boundary.",
+      "next_step": "Inspect wider context rather than expanding the mask to every dark lobe.",
+      "state_sha256": "13d2800631846e6fe6fdb54de219d40e13d8a4b394295cb4b70a12e0115ea89e"
+    },
+    {
+      "case_id": "N3291d5e0a6bc3fe2af23",
+      "disposition": "missing_tile_context",
+      "visual_evidence": "The nucleus and mask reach the bottom of the retained tile, leaving the lower nuclear extent unavailable.",
+      "next_step": "Recover south neighbor tile_y012288_x045056.tiff or decode the required strip from original Process_413 VSI/ETS; do not invent missing pixels.",
+      "state_sha256": "ba6de0724d3faaaf3585f90594f5b7b9e3ddb6e154fd8f411b449dd751502d3d"
+    },
+    {
+      "case_id": "N56dcc29cc96818a0cc8d",
+      "disposition": "uncertain",
+      "visual_evidence": "A pale pocket separates the main oval from a lower dark crescent, leaving the nuclear extent ambiguous.",
+      "next_step": "Inspect wider context before assigning the lower crescent to the nucleus.",
+      "state_sha256": "dbb55ac52368924014db3f0ebf0389601545354c3da7a2015516c78150da7a59"
+    },
+    {
+      "case_id": "N6282b7c6feb9d588a6f0",
+      "disposition": "apparently_supported",
+      "visual_evidence": "The dark vertical oval is plausibly enclosed at both ends and sides. A faint lower extent does not establish a clear mask failure.",
+      "next_step": "Retain as an AI-supported original mask for comparison, without a human acceptance claim.",
+      "state_sha256": "3d0ea401a8c09709352c43006eef6cb613fce28aad571a064a2a43b296b7a959"
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "disposition": "mask_repair_candidate",
+      "visual_evidence": "The small central mask excludes a contiguous dark upper-left lobe of the visible target region.",
+      "next_step": "Inspect wider context and draft a proposal only if the target can be separated from nearby dark material.",
+      "state_sha256": "d4704d6de72f86c8783fb1050bd284c73ba9b782834f0f937f9ac348305daed4"
+    },
+    {
+      "case_id": "N102331110a9f9d8a1b19",
+      "disposition": "uncertain",
+      "visual_evidence": "A side protrusion merges with folded or touching dark material, obscuring the target boundary.",
+      "next_step": "Inspect wider context; preserve uncertainty if separation remains unclear.",
+      "state_sha256": "80488a91f842fa7e610224c9538d5bf1863d46f5b340401679b04f113bf79348"
+    }
+  ],
+  "input_manifest_sha256": "a34ae12102a683c03398579479882137feac274d6dbb35f976a3d6f146dd2c38",
+  "timestamp_utc": "2026-10-14T15:06:16.231223+00:00"
+}

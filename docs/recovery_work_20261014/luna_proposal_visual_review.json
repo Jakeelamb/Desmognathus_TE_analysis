@@ -1,0 +1,17 @@
+{
+  "review_kind": "AI_visual_assessment_not_acceptance",
+  "configured_model": "gpt-6-luna",
+  "image_sha256": "354ea52f4c0009c7eb1949ccfdd1097c6ea139d8cd44723aaa4d20f8493b7543",
+  "cases": [
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "proposed_mask_vs_original": "better",
+      "concrete_boundary_limits": "The raw dark region has a lower taper that extends below the original cyan boundary; the green proposal follows that taper and the visible upper/side extent. Its edge approaches the faint surrounding halo, so the outer limit is visually soft."
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "proposed_mask_vs_original": "better",
+      "concrete_boundary_limits": "The raw irregular dark focus has a left lobe outside the original cyan mask; the green proposal includes that lobe and the lower-right body. The connecting waist and outer perimeter are blurred, so their precise edge remains uncertain."
+    }
+  ]
+}

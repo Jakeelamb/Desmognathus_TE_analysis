@@ -1,0 +1,113 @@
+{
+  "kind": "independent_AI_diagnostic_followup_verification",
+  "verdict": "PASS",
+  "scope": "Final public wider-context and two contour-trial additions, with original diagnostic 82/20 records unchanged. Exact staged documentary artifacts checked; producer reruns and full-suite testing excluded.",
+  "verifier": "/root/ai_review_verification",
+  "revision": "73fb1753b8b2ee0bb9dbe386801ea6640cc6147c",
+  "started_utc": "2026-10-14T15:27:42.423280+00:00",
+  "artifact_pins": {
+    "context_findings.json": "f9342e59f239ca80fef67a4e8b5c3dcccf28690ea782d41d0b3a817bec0afaee",
+    "wider_context_receipt.json": "c9f850905bb2058ec1857f8355fe983590942f99ed926124cf2dfa7b13819156",
+    "contour_trials_summary.json": "901add512b54333489406a284aa3e830421c9d903f5b002585fe9a81f89a712f",
+    "sol_proposal_visual_review.json": "3d8a2c27fdbe426b7f09e3b0c9b5d898d1c03804526fffe7a8e39e307337ac06",
+    "luna_proposal_visual_review.json": "f4083ebef58023be5be085ec5b8872a765e23ed689619170879d7c933338139f",
+    "AI_VISUAL_REVIEW.md": "7b8f3615aa1b91ca8914d17eb0f5ef367f95ca69c6ff453ef841defddbf9360a",
+    "independent_initial_verification.json": "9f16c95f28ab20b95a54b68d27a4b19da2f14b35e7dff6f29ca6ce888cbea6b1",
+    "followup_preservation.json": "9cde5b662295b94e9bb397f1f3c29e84e8cd2e9c79d0ca75a6176e16be7529d5"
+  },
+  "uncovered_risks": [
+    "No producer or full test suite was rerun. Native ImageJ execution is supported by retained source, ROI bytes, stdout and exit receipts, not fresh producer execution.",
+    "True biological boundaries, physical camera response, and DNA calibration remain unqualified. N7 is held as ambiguous despite greater area/IOD.",
+    "Wider source hashes, display hashes, original packet subregion pixels and 64-pixel crop arithmetic were checked; the added outer context pixels were not independently decoded again from native tiles.",
+    "Model input blinding and pre-IOD selection are retained record/chronology claims, not independently attested internal model behavior.",
+    "The 12,282 protected-entry inventory was not rehashed again after proposals during this bounded follow-up. Public preservation projection agrees with the earlier independent byte inventory; original packet/source pins and immutable review records were independently checked again."
+  ],
+  "broken_tools_or_missing_evidence": [
+    "No broken tool prevented these checks. Initial broad JSON inspection was tool-output truncated; compact complete projections and pinned native files were subsequently checked.",
+    "Source inventory shell command ended 1 because its final rg filename search found no separate followup/preservation path under the searched private directories; preceding reads and staging inventory succeeded. The public preservation record was inspected and checked directly.",
+    "Historical missing editor-parent attempts and malformed review_approved_subset projection are retained in trial records; this verifier reran no producer."
+  ],
+  "complete_private_receipt_sha256": "cb4ca9cdbb23645c7f50dc467cb3ec03b081f425867fe7a0a9e0bc133607ca72",
+  "checks": [
+    {
+      "check": "additions exact public/private copies",
+      "pass": true
+    },
+    {
+      "check": "original 82/20 reviews and display/verification unchanged",
+      "pass": true
+    },
+    {
+      "check": "public initial verification projection accurate",
+      "pass": true
+    },
+    {
+      "check": "context exact 12 cases/counts/states",
+      "pass": true
+    },
+    {
+      "check": "wider context pins/subregion pixels/64px extent arithmetic",
+      "pass": true
+    },
+    {
+      "check": "trial metadata and zero approval projection",
+      "pass": true
+    },
+    {
+      "check": "maintained read-only proposal identity loader",
+      "pass": true
+    },
+    {
+      "check": "trial cases exact native proposal/report projection",
+      "pass": true
+    },
+    {
+      "check": "genuine retained producer/import/raster/report receipts",
+      "pass": true
+    },
+    {
+      "check": "native proposal geometry and independent signed IOD check",
+      "pass": true
+    },
+    {
+      "check": "model judgments and held disagreement",
+      "pass": true
+    },
+    {
+      "check": "final doc rounded numbers/counts/status/links",
+      "pass": true
+    },
+    {
+      "check": "negative controls detect wrong projection or acceptance",
+      "pass": true
+    },
+    {
+      "check": "original packet still unchanged/blank authored state",
+      "pass": true
+    },
+    {
+      "check": "final identified public additions unchanged during checks",
+      "pass": true
+    },
+    {
+      "check": "final preservation projection/source pins/staged exact docs",
+      "pass": true
+    }
+  ],
+  "negative_controls": [
+    {
+      "mutation": "altered_area",
+      "detected": true,
+      "errors": [
+        "N11f41a0edb7dac8d23bb:proposal_projection"
+      ]
+    },
+    {
+      "mutation": "manufactured_acceptance",
+      "detected": true,
+      "errors": [
+        "manufactured_acceptance"
+      ]
+    }
+  ]
+}

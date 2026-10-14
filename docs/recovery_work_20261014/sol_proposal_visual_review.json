@@ -1,0 +1,30 @@
+{
+  "review_kind": "AI_visual_diagnostic",
+  "configured_model": "gpt-6.1-sol",
+  "reviewer_role": "pstack_deep",
+  "image_sha256": "354ea52f4c0009c7eb1949ccfdd1097c6ea139d8cd44723aaa4d20f8493b7543",
+  "timestamp_utc": "2026-10-14T15:21:13Z",
+  "assessments": [
+    {
+      "case_id": "N11f41a0edb7dac8d23bb",
+      "enclosure": "better",
+      "visual_evidence": "In the upper row, the proposal includes the visible dark tapered lower nuclear tip left outside the original mask and follows the upper-left dark margin more closely.",
+      "limits": [
+        "The raw nuclear edge remains blurred, so this image cannot establish the exact biological boundary.",
+        "This is a relative AI visual judgment, not an acceptance decision or physical validation."
+      ],
+      "confidence": "medium"
+    },
+    {
+      "case_id": "N7fce100ee144e5a90c39",
+      "enclosure": "uncertain",
+      "visual_evidence": "In the lower row, the proposal encloses the upper-left dark body and joins it through a narrow gray bridge to the larger lower-right body, while the original mask excludes that left body.",
+      "limits": [
+        "The image does not resolve whether the upper-left body belongs to the same nucleus, touches it, or is separate dark material.",
+        "Enclosing more visible dark material therefore does not establish a better nuclear mask.",
+        "This is an AI visual judgment without an acceptance decision or physical validation."
+      ],
+      "confidence": "medium"
+    }
+  ]
+}
