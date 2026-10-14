@@ -5,7 +5,7 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 resolve_pixi_environment() {
   environment_name="${PIXI_ENVIRONMENT_NAME:-${PIXI_ENV_NAME:-default}}"
   case "$environment_name" in
-    default|bonsai|image-qc) ;;
+    default|bonsai|image-qc|recovery) ;;
     *) echo "Unsupported Pixi environment: $environment_name" >&2; return 1 ;;
   esac
   environment_prefix="$project_root/.pixi/envs/$environment_name"

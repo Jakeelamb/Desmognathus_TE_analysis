@@ -207,6 +207,14 @@ environment and `standard-qc` in `image-qc`. See the
 fresh output directories. The image audit requires the preserved microscopy
 archive; the small review gallery is included in the repository.
 
+The [microscopy recovery workflow](docs/MICROSCOPY_RECOVERY.md) uses a separate
+locked `recovery` environment, pinned ImageJ ROI exchange, a blinded review queue,
+and a Rust original-pixel reducer. It prepares the 47-standard/35-target pilot
+without changing released measurements. Imported contours and human decisions
+remain separate; diagnostic reports do not validate an absolute genome-size scale.
+The [verification record](docs/recovery_work_20261013/VERIFICATION.md) includes
+executed native and GUI checks, explicit test skips and preservation receipts.
+
 The focal 46-tip collaborator tree is preserved, but its final source and
 calibration citation is still unresolved. That is a publication blocker, not a
 reason to invent provenance.

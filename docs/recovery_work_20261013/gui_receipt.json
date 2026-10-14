@@ -1,0 +1,72 @@
+{
+  "verdict": "PASS within final GUI scope",
+  "time_utc": "2026-10-14T03:17:53.926644+00:00",
+  "revision": "8a5c00b33c0359b4a47f2df2ead145039554d623",
+  "final_source_hashes": {
+    "scripts/microscopy/recovery.py": "9aafedba21482498e23c02b95eef52b839d18740662991332d1a95dddbc15273",
+    "scripts/microscopy/recovery_review.html": "0b8e6c8b6d0e7001e897c1e8cab8097292724145215bd89e7bd4ba69fda540d1",
+    "scripts/microscopy/recovery_backend.py": "500306eeec11665cd42a5435ef09a29a215196cccd5148cc2ac0edb33bb99b3d",
+    "pixi.toml": "5624506b4ecad15af581804aae10dfcfcb26293233238ec79a3b1039413f7ecf",
+    "pixi.lock": "792ffc8c6f71bc0b63c4fe183df816de5d4ec8c4c88e5af6d8f7269eb38c2cc4"
+  },
+  "browser": "Google Chrome 155.0.8059.79",
+  "gui_recipe": ".git/recovery_tooling_20261013/gui_final/proposal_browser.py",
+  "proposal_state": "172039ef16c65cff8db6740fe4cebe6d7a0614511b330636cdf174b354ad19af",
+  "proposal_mask_pixels": 6,
+  "browser_test_event_count": 1,
+  "negative_controls": [
+    "empty export",
+    "missing reason",
+    "missing reviewer"
+  ],
+  "real_packet_preservation": {
+    "status": "PASS",
+    "time_utc": "2026-10-14T03:16:19.625423+00:00",
+    "head": "8a5c00b33c0359b4a47f2df2ead145039554d623",
+    "real_packet_files": 498,
+    "real_packet_file_mismatches": [],
+    "real_packet_cases": 82,
+    "real_packet_authored_decisions": 0,
+    "real_packet_authored_proposals": 0,
+    "final_sources": {
+      "scripts/microscopy/recovery.py": "9aafedba21482498e23c02b95eef52b839d18740662991332d1a95dddbc15273",
+      "scripts/microscopy/recovery_review.html": "0b8e6c8b6d0e7001e897c1e8cab8097292724145215bd89e7bd4ba69fda540d1",
+      "scripts/microscopy/recovery_backend.py": "500306eeec11665cd42a5435ef09a29a215196cccd5148cc2ac0edb33bb99b3d",
+      "pixi.toml": "5624506b4ecad15af581804aae10dfcfcb26293233238ec79a3b1039413f7ecf",
+      "pixi.lock": "792ffc8c6f71bc0b63c4fe183df816de5d4ec8c4c88e5af6d8f7269eb38c2cc4"
+    }
+  },
+  "limitations": [
+    "Cua default X11 service returned no windows; private Wayland service was required.",
+    "Cua native AT-SPI unavailable; browser binding refused consumer_profile_endpoint_requires_grant. Isolated agent-desktop DOM fallback and native screenshots supplied actual UI proof.",
+    "No new genuine scientific contour or acceptance event was authored. The single decision is explicitly TEST ONLY and belongs to the synthetic packet.",
+    "Prior GUI ROI drawing and save lineage was inspected from retained evidence; this continuation did not redraw or resave the ROI.",
+    "This evidence verifies queue display, state-bound export, refusal controls and real-packet preservation, not biological mask correctness, stain equivalence, camera linearity or absolute calibration."
+  ],
+  "evidence_pins": {
+    ".git/recovery_tooling_20261013/gui_final/before.json": "da4e1ea64928e867458f4ab9f71a5fed7d3b98565f899c6591929b387232040d",
+    ".git/recovery_tooling_20261013/gui_final/real-server.log": "f822c5f95c878f48129c71a60249f3cc2222716d4b7fd1fbe58f5cdafc856c76",
+    ".git/recovery_tooling_20261013/gui_final/capture_cli.py": "e028521dca7b9575a8e8ae3287aba17d69d13cf5a2af4dc34fabc4923a70f48b",
+    ".git/recovery_tooling_20261013/gui_final/cua-windows.receipt.json": "601ecea18178ee48c961f9e3d4f67de968624cee45ba8d3d8d7bb13d634cca5d",
+    ".git/recovery_tooling_20261013/gui_final/cua-doctor.receipt.json": "f1d1e8f349caf2ecd0d6edf805d797db0967f69ec9c64e1d419d5b8f5f0d69da",
+    ".git/recovery_tooling_20261013/gui_final/cua-wayland-windows.receipt.json": "f11889b35aa5a7079603a9f10697753576841c299f3637b7eeb1078a3a1f5875",
+    ".git/recovery_tooling_20261013/gui_final/real-native.png": "b85dc38cd42ca61e299235eebe5dbd0ec8b7c22d82d92ae69a65ae51b1e3f7cd",
+    ".git/recovery_tooling_20261013/gui_final/cua-real-snapshot.receipt.json": "4e73a04050b9e995e5068a637c01d78fe151ad7f6b0f8c1e6fa96e7259b3ab87",
+    ".git/recovery_tooling_20261013/gui_final/cua-browser-bind.receipt.json": "97f4813c757cddbca76f6dddf645b0d2c187ddae21aa4ac85a47b7e6f2264d31",
+    ".git/recovery_tooling_20261013/gui_final/real-400-mask-hidden.png": "67de36d3d628f7763a17e59a863d9d926cd165f81ea8f89a9a241bd604da1d94",
+    ".git/recovery_tooling_20261013/gui_final/real-browser-readonly.json": "2e7176887a7e569f4e324c2ab58e8feb49353417a9f422319a42af35a1692746",
+    ".git/recovery_tooling_20261013/gui_final/proposal-server.log": "a3bc9e18b83ada208ad15b4428a36241d15f2583c93c8ff3b89f4304f4489817",
+    ".git/recovery_tooling_20261013/gui_final/proposal-inputs.json": "6eebc622247a3a105300d08414d1370ff76affcefd3f22ad4b9beadcac52af62",
+    ".git/recovery_tooling_20261013/gui_final/proposal_browser.py": "d553a5906223f1d1fdeff35a29c4830d7911ed8de45a5c923461ee6acd269e90",
+    ".git/recovery_tooling_20261013/gui_final/proposal-mask-800.png": "fb74c236ed6611c872cc0d57141365445cccf8cefee0ba92b3ba8579212a45a6",
+    ".git/recovery_tooling_20261013/gui_final/proposal-hidden-800.png": "c2b8df70f1f88aca0fced1e4b220920c260f15e8d9e689b4294321ae66dde1b3",
+    ".git/recovery_tooling_20261013/gui_final/proposal-test-event.json": "533c4ee4eef5a02f94f98001ec5359ffdcc3db4af36d92b511ea9e6545d65392",
+    ".git/recovery_tooling_20261013/gui_final/proposal-test-exported.png": "1353e54e5f07e065aea6930bd88213b60ac1536acfad468ef388661546234ded",
+    ".git/recovery_tooling_20261013/gui_final/proposal-browser-2026-10-14T03-15-08.537268+00-00.receipt.json": "c8a9f7805589eecfb399c3f0d38eeb2e1ee605af8d65efdf8eae781b44da2660",
+    ".git/recovery_tooling_20261013/gui_final/ui-tests.receipt.json": "a8667426352cfc236f301f9879a41adaa6ed2e2849dd08d89822089f1adc807b",
+    ".git/recovery_tooling_20261013/gui_final/proposal-native-exported.png": "4de4ff70193551699b3a6b8321d268266430a04c3453f4e25f212b92a51bb4b0",
+    ".git/recovery_tooling_20261013/gui_final/cua-proposal-exported.receipt.json": "b1e6c167225d1d0e4c572f9e9c2cbbc6f9a107ef3d46560dcc75915b620801a4",
+    ".git/recovery_tooling_20261013/gui_final/after.json": "f56a6982bf715ebb86ac0d408011e707e7f838b77840559ddced23cab6e1aa23",
+    ".git/recovery_tooling_20261013/gui_final/chrome-version.receipt.json": "63e18fabe0f118f01583eed45952843701f12eb8ca78cbc05205cf0e21e828e6"
+  }
+}

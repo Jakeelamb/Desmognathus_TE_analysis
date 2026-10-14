@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nucleus mask review</title>
+<style>
+:root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #172d37; background: #edf2f3; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header, main { max-width: 1500px; margin: auto; padding: 1.2rem 1.6rem; }
+h1 { margin: 0; font-size: 1.65rem; }
+h2 { margin: 0 0 .65rem; font-size: 1.15rem; }
+p { margin: .5rem 0; }
+.muted { color: #516771; font-size: .9rem; }
+.toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: .8rem; }
+button, select, input, textarea { font: inherit; }
+button, select, input[type=text] { border: 1px solid #98adb6; border-radius: .35rem; padding: .4rem .65rem; background: white; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .5; }
+button.primary { color: white; background: #116779; border-color: #116779; }
+:focus-visible { outline: 3px solid #dc880c; outline-offset: 2px; }
+main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.2rem; }
+.panel { background: white; border: 1px solid #c6d4da; border-radius: .55rem; padding: 1rem; }
+.viewer { margin-top: .8rem; height: min(65vh, 760px); min-height: 300px; overflow: auto; background: #23292b; border: 1px solid #73858e; }
+#image-stage { position: relative; }
+#raw-image { display: block; image-rendering: pixelated; }
+#mask-overlay { position: absolute; inset: 0; pointer-events: none; background: #00e5cb; mask-mode: luminance; mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; }
+fieldset { border: 0; padding: 0; margin: 1rem 0; }
+legend { font-weight: 650; margin-bottom: .4rem; }
+.choice { display: block; margin: .4rem 0; }
+textarea { width: 100%; min-height: 100px; resize: vertical; border: 1px solid #98adb6; border-radius: .35rem; padding: .5rem; }
+#reviewer { width: 100%; }
+#message { padding: .55rem .8rem; border-left: 4px solid #116779; background: #e1f1f2; }
+#message.error { border-color: #a13c21; background: #fff0ea; }
+ol { padding-left: 1.3rem; margin: .5rem 0; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } header, main { padding: 1rem; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Nucleus mask review</h1>
+  <p>Inspect the original pixels and supplied mask, then record your judgment.</p>
+  <p class="muted">This queue hides identifying metadata. Image appearance may still provide context. Browser drafts and exported files are not recorded approvals.</p>
+  <p id="message" role="status" aria-live="polite">Loading review cases…</p>
+</header>
+<main id="queue" hidden>
+  <section class="panel" aria-label="Image inspection">
+    <div class="toolbar">
+      <button id="previous" type="button">← Previous</button>
+      <label>Case <select id="case-select" aria-label="Choose case"></select></label>
+      <button id="next" type="button">Next →</button>
+      <span id="position" class="muted"></span>
+    </div>
+    <h2 id="case-title" style="margin-top:1rem"></h2>
+    <div class="toolbar">
+      <label><input id="show-mask" type="checkbox" checked> Show mask</label>
+      <label>Opacity <input id="opacity" type="range" min="0" max="100" value="35" aria-label="Mask opacity"></label>
+      <label>Zoom <select id="zoom"><option value="1">100% · native pixels</option><option value="2">200%</option><option value="4">400%</option><option value="8">800%</option></select></label>
+    </div>
+    <div class="viewer" tabindex="0" aria-label="Scrollable original image and mask">
+      <div id="image-stage"><img id="raw-image" alt="Original nucleus crop"><div id="mask-overlay" aria-hidden="true"></div></div>
+    </div>
+    <p id="image-status" class="muted"></p>
+    <p class="muted">100% shows one image pixel per CSS pixel. Zoom uses nearest-neighbor display. Cyan shows mask membership; hide it to inspect the boundary. Use ← / → to navigate and M to toggle the mask when outside a form field.</p>
+  </section>
+  <aside class="panel">
+    <h2>Review rubric</h2>
+    <ol>
+      <li>Inspect the whole nucleus with the mask hidden.</li>
+      <li>Compare the mask with the visible boundary, including faint edges.</li>
+      <li>Check for clipping, neighboring nuclei, overlap, and included debris.</li>
+    </ol>
+    <p class="muted">Keep: a complete, isolated nucleus with a supported mask. Problem: a visible defect. Unsure: the pixels do not support a confident judgment. Review does not validate a measurement or calibration.</p>
+    <label for="reviewer">Reviewer name</label>
+    <input id="reviewer" type="text" autocomplete="off" maxlength="200" placeholder="Enter your name">
+    <form id="review-form">
+      <fieldset id="decision-fields"><legend>Decision · choose explicitly</legend>
+        <label class="choice"><input type="radio" name="decision" value="keep"> Keep</label>
+        <label class="choice"><input type="radio" name="decision" value="problem"> Problem</label>
+        <label class="choice"><input type="radio" name="decision" value="unsure"> Unsure</label>
+      </fieldset>
+      <fieldset id="reason-fields"><legend>Reasons · select at least one</legend>
+        <label class="choice"><input type="checkbox" name="reason" value="complete_isolated_nucleus"> Complete, isolated nucleus; boundary supported</label>
+        <label class="choice"><input type="checkbox" name="reason" value="incomplete_boundary"> Mask misses part of the nucleus</label>
+        <label class="choice"><input type="checkbox" name="reason" value="multiple_nuclei"> Mask includes multiple nuclei</label>
+        <label class="choice"><input type="checkbox" name="reason" value="overlap_or_debris"> Overlap or included debris</label>
+        <label class="choice"><input type="checkbox" name="reason" value="edge_truncation"> Nucleus clipped at image edge</label>
+        <label class="choice"><input type="checkbox" name="reason" value="uncertain_boundary"> Boundary cannot be judged confidently</label>
+        <label class="choice"><input type="checkbox" name="reason" value="other"> Other · explain in note</label>
+      </fieldset>
+      <label for="note">Note</label><textarea id="note" maxlength="10000" placeholder="Describe the visible evidence"></textarea>
+      <button id="clear-draft" type="button">Clear this draft</button>
+    </form>
+    <p id="case-status" class="muted"></p>
+    <p id="counts" aria-live="polite"></p>
+    <button id="export" class="primary" type="button">Export authored decisions</button>
+    <p class="muted">Export omits cases without a decision. Incomplete decisions block export. Exported events are fixed for this session; import the file through the recovery decision command to record them. Refresh restores editable drafts only.</p>
+    <p id="cache-status" class="muted"></p>
+  </aside>
+</main>
+<script id="review-model">
+"use strict";
+const CASE_FIELDS = ["case_id", "raw", "mask", "width", "height", "state_sha256"];
+const DECISIONS = ["keep", "problem", "unsure"];
+const REASONS = ["complete_isolated_nucleus", "incomplete_boundary", "multiple_nuclei", "overlap_or_debris", "edge_truncation", "uncertain_boundary", "other"];
+function relativeImagePath(value) {
+  return typeof value === "string" && /^[A-Za-z0-9_./-]+\.png$/.test(value)
+    && !value.startsWith("/") && value.split("/").every(part => part && part !== "." && part !== "..");
+}
+function validateCases(rows) {
+  if (!Array.isArray(rows) || rows.length === 0) throw new Error("Expected a nonempty case list.");
+  const ids = new Set();
+  for (const row of rows) {
+    if (!row || typeof row !== "object" || Array.isArray(row)
+      || Object.keys(row).length !== CASE_FIELDS.length || !CASE_FIELDS.every(key => Object.hasOwn(row, key))) {
+      throw new Error("Case metadata does not match the blinded review contract.");
+    }
+    if (typeof row.case_id !== "string" || !/^[A-Za-z0-9_-]{1,100}$/.test(row.case_id) || ids.has(row.case_id)) {
+      throw new Error("Invalid or duplicate case identifier.");
+    }
+    if (!relativeImagePath(row.raw) || !relativeImagePath(row.mask)
+      || !Number.isSafeInteger(row.width) || row.width < 1 || !Number.isSafeInteger(row.height) || row.height < 1
+      || typeof row.state_sha256 !== "string" || !/^[a-f0-9]{64}$/.test(row.state_sha256)) {
+      throw new Error("Invalid case image or state binding.");
+    }
+    ids.add(row.case_id);
+  }
+  return rows;
+}
+function blankDraft() { return {decision: "", reasons: [], note: ""}; }
+function validateDraft(draft) {
+  if (!draft || !["", ...DECISIONS].includes(draft.decision) || !Array.isArray(draft.reasons)
+    || draft.reasons.some(reason => !REASONS.includes(reason)) || new Set(draft.reasons).size !== draft.reasons.length
+    || typeof draft.note !== "string" || draft.note.length > 10000) throw new Error("Invalid browser draft.");
+  return {decision: draft.decision, reasons: [...draft.reasons], note: draft.note};
+}
+function createEvent(row, draft, reviewer, time) {
+  validateDraft(draft);
+  if (!DECISIONS.includes(draft.decision) || draft.reasons.length === 0) throw new Error("Choose a decision and at least one reason.");
+  if (draft.reasons.includes("other") && !draft.note.trim()) throw new Error("Explain the other reason in a note.");
+  if (typeof reviewer !== "string" || !reviewer.trim() || reviewer.trim().length > 200) throw new Error("Enter a reviewer name before exporting.");
+  if (typeof time !== "string" || !/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(time) || !Number.isFinite(Date.parse(time))) {
+    throw new Error("An event needs a valid time with timezone.");
+  }
+  return Object.freeze({case_id: row.case_id, state_sha256: row.state_sha256, reviewer: reviewer.trim(), time,
+    decision: draft.decision, reasons: Object.freeze([...draft.reasons]), note: draft.note});
+}
+function draftKey(packet, row) { return `nucleus-review-draft-v1:${packet}:${row.case_id}:${row.state_sha256}`; }
+</script>
+<script id="review-app">
+"use strict";
+const el = id => document.getElementById(id);
+const decisionInputs = [...document.querySelectorAll('input[name="decision"]')];
+const reasonInputs = [...document.querySelectorAll('input[name="reason"]')];
+let cases = [], index = 0, packet = "", cacheAvailable = true, imageReady = false, imageGeneration = 0;
+const drafts = new Map(), events = new Map(), inspected = new Set();
+function message(text, error = false) { el("message").textContent = text; el("message").classList.toggle("error", error); }
+function cacheNotice() { el("cache-status").textContent = cacheAvailable ? "Drafts cached in this browser for this exact packet and case state. Export a file to retain your decisions." : "Browser storage is unavailable. Drafts remain in this tab only; export a file before leaving."; }
+function storeDraft(row) {
+  try { localStorage.setItem(draftKey(packet, row), JSON.stringify({reviewer: el("reviewer").value, ...drafts.get(row.case_id)})); }
+  catch (_) { cacheAvailable = false; }
+  cacheNotice();
+}
+function updateCounts() {
+  const selected = cases.filter(row => drafts.get(row.case_id).decision).length;
+  el("counts").textContent = `${selected} decisions drafted · ${events.size} exported in this session · ${cases.length - selected} unreviewed cases omitted from export`;
+}
+function setFormEnabled(enabled) {
+  for (const input of [...decisionInputs, ...reasonInputs, el("note"), el("clear-draft")]) input.disabled = !enabled;
+}
+function updateCaseStatus() {
+  const row = cases[index];
+  el("case-status").textContent = events.has(row.case_id) ? "Exported event fixed for this session. Browser cache remains a draft, not recorded approval." : drafts.get(row.case_id).decision ? "Decision draft; no recorded approval." : "Unreviewed · no decision selected.";
+  setFormEnabled(imageReady && !events.has(row.case_id));
+}
+function captureDraft() {
+  const row = cases[index];
+  if (!row || events.has(row.case_id) || !imageReady) return;
+  drafts.set(row.case_id, {decision: decisionInputs.find(input => input.checked)?.value || "",
+    reasons: reasonInputs.filter(input => input.checked).map(input => input.value), note: el("note").value});
+  storeDraft(row); updateCounts(); updateCaseStatus();
+}
+function displayScale() {
+  if (!cases.length) return;
+  const row = cases[index], zoom = Number(el("zoom").value);
+  const width = `${row.width * zoom}px`, height = `${row.height * zoom}px`;
+  for (const item of [el("image-stage"), el("raw-image")]) { item.style.width = width; item.style.height = height; }
+  el("mask-overlay").hidden = !el("show-mask").checked;
+  el("mask-overlay").style.opacity = Number(el("opacity").value) / 100;
+}
+function showCase(nextIndex) {
+  index = Math.max(0, Math.min(cases.length - 1, nextIndex));
+  const row = cases[index], draft = drafts.get(row.case_id), generation = ++imageGeneration;
+  imageReady = false;
+  el("case-title").textContent = row.case_id;
+  el("position").textContent = `${index + 1} / ${cases.length}`;
+  el("case-select").value = String(index);
+  el("previous").disabled = index === 0; el("next").disabled = index === cases.length - 1;
+  for (const input of decisionInputs) input.checked = input.value === draft.decision;
+  for (const input of reasonInputs) input.checked = draft.reasons.includes(input.value);
+  el("note").value = draft.note;
+  el("image-stage").hidden = true;
+  el("image-status").textContent = "Loading original image and mask…";
+  updateCaseStatus(); displayScale();
+  const raw = new Image(), mask = new Image();
+  Promise.all([raw, mask].map(image => new Promise((resolve, reject) => {
+    image.onload = () => image.naturalWidth === row.width && image.naturalHeight === row.height ? resolve() : reject(new Error("Image dimensions differ from the case record."));
+    image.onerror = () => reject(new Error("Original image or mask could not be loaded."));
+  }))).then(() => {
+    if (generation !== imageGeneration) return;
+    el("raw-image").src = row.raw;
+    el("mask-overlay").style.maskImage = `url("${row.mask}")`;
+    el("mask-overlay").style.webkitMaskImage = `url("${row.mask}")`;
+    el("image-stage").hidden = false; imageReady = true; inspected.add(row.case_id);
+    el("image-status").textContent = `${row.width} × ${row.height} pixels · original image and supplied mask`;
+    updateCaseStatus();
+  }).catch(error => {
+    if (generation !== imageGeneration) return;
+    inspected.delete(row.case_id); el("image-status").textContent = error.message;
+    message("Image inspection failed. This case cannot be exported until its images load correctly.", true);
+  });
+  raw.src = row.raw; mask.src = row.mask;
+}
+function exportEvents() {
+  try {
+    const additions = [];
+    for (const row of cases) {
+      const draft = drafts.get(row.case_id);
+      if (!draft.decision || events.has(row.case_id)) continue;
+      if (!inspected.has(row.case_id)) throw new Error(`Inspect ${row.case_id} before exporting its draft.`);
+      additions.push(createEvent(row, draft, el("reviewer").value, new Date().toISOString()));
+    }
+    if (!additions.length && !events.size) throw new Error("No authored decisions to export. Choose a decision and reason first.");
+    const snapshot = cases.map(row => events.get(row.case_id) || additions.find(event => event.case_id === row.case_id)).filter(Boolean);
+    const url = URL.createObjectURL(new Blob([JSON.stringify(snapshot, null, 2) + "\n"], {type: "application/json"}));
+    const link = document.createElement("a"); link.href = url; link.download = `nucleus-review-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+    document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    for (const event of additions) events.set(event.case_id, event);
+    el("reviewer").disabled = events.size > 0;
+    updateCounts(); updateCaseStatus();
+    message(`Exported ${snapshot.length} authored events. Omitted ${cases.length - snapshot.length} unreviewed cases. Import the file to record the events; this page has not recorded approvals.`);
+  } catch (error) { message(error.message, true); }
+}
+async function initialize() {
+  try {
+    const response = await fetch("cases.json", {cache: "no-store"});
+    if (!response.ok) throw new Error("Review case list could not be loaded. Serve the reviewer folder over localhost HTTP.");
+    const text = await response.text(); cases = validateCases(JSON.parse(text));
+    const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    packet = Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, "0")).join("");
+    let rememberedReviewer = "";
+    for (const [position, row] of cases.entries()) {
+      let draft = blankDraft();
+      try {
+        const saved = JSON.parse(localStorage.getItem(draftKey(packet, row)) || "null");
+        if (saved) {
+          draft = validateDraft(saved);
+          if (typeof saved.reviewer === "string" && saved.reviewer.length <= 200) {
+            if (!rememberedReviewer) rememberedReviewer = saved.reviewer;
+            if (saved.reviewer && saved.reviewer !== rememberedReviewer) throw new Error("Draft reviewer mismatch.");
+          }
+        }
+      } catch (_) { cacheAvailable = false; draft = blankDraft(); }
+      drafts.set(row.case_id, draft);
+      const option = document.createElement("option"); option.value = String(position); option.textContent = row.case_id; el("case-select").appendChild(option);
+    }
+    el("reviewer").value = rememberedReviewer;
+    el("queue").hidden = false; cacheNotice(); updateCounts(); showCase(0);
+    message("Ready. Each case starts unreviewed unless a browser draft was restored. No decisions are inferred.");
+  } catch (_) { message("Review queue could not load. Check cases.json and serve only the reviewer folder over localhost HTTP. No decisions were exported.", true); }
+}
+el("previous").addEventListener("click", () => showCase(index - 1));
+el("next").addEventListener("click", () => showCase(index + 1));
+el("case-select").addEventListener("change", () => showCase(Number(el("case-select").value)));
+for (const id of ["show-mask", "opacity", "zoom"]) el(id).addEventListener("input", displayScale);
+el("review-form").addEventListener("input", captureDraft);
+el("review-form").addEventListener("submit", event => event.preventDefault());
+el("reviewer").addEventListener("input", () => { for (const row of cases) storeDraft(row); });
+el("clear-draft").addEventListener("click", () => { if (imageReady && !events.has(cases[index].case_id)) { drafts.set(cases[index].case_id, blankDraft()); storeDraft(cases[index]); updateCounts(); showCase(index); } });
+el("export").addEventListener("click", exportEvents);
+document.addEventListener("keydown", event => {
+  if (!cases.length || event.altKey || event.ctrlKey || event.metaKey || ["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(event.target.tagName) || event.target.isContentEditable) return;
+  if (event.key === "ArrowLeft") { event.preventDefault(); showCase(index - 1); }
+  if (event.key === "ArrowRight") { event.preventDefault(); showCase(index + 1); }
+  if (event.key.toLowerCase() === "m") { event.preventDefault(); el("show-mask").checked = !el("show-mask").checked; displayScale(); }
+});
+initialize();
+</script>
+</body>
+</html>

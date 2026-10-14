@@ -25,7 +25,7 @@ OVERLAY_IDENTITY = {
 
 def runtime_prefix() -> tuple[str, Path]:
     name = os.environ.get("PIXI_ENVIRONMENT_NAME", os.environ.get("PIXI_ENV_NAME", "default"))
-    if name not in {"default", "bonsai", "image-qc"}:
+    if name not in {"default", "bonsai", "image-qc", "recovery"}:
         raise ValueError(f"Unsupported Pixi environment: {name}")
     prefix = ROOT / ".pixi/envs" / name
     if Path(os.environ.get("PIXI_PROJECT_ROOT", "")).resolve() != ROOT:

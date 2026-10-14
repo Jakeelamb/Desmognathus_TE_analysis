@@ -63,16 +63,29 @@ existing-mask standards audit without segmentation or changes to released
 measurements. Run its installed-package check with
 `pixi run -e image-qc --clean-env --locked --no-install check-env`.
 
+The separate `recovery` environment adds Rust 1.99.0 and OpenJDK 21.0.10 while
+retaining the existing analysis and image-QC pins. Explicit `recovery-setup`
+fetches checksum-pinned ImageJ 1.54p, compiles the numerical reducer and ROI bridge,
+and qualifies them on synthetic native fixtures. `microscopy-recovery` inventories
+original inputs, prepares a blinded 82-case packet, imports authored ROI proposals
+and decisions, and produces diagnostic sensitivities. It does not modify or
+promote the retained release. See [MICROSCOPY_RECOVERY.md](MICROSCOPY_RECOVERY.md).
+
 The [Methods recovery records](submission_work_20261013/PLAN.md) distinguish
 recovered specimen and model evidence from unresolved calibration,
 camera and upstream-runtime records. Local audit tasks require fresh output
 directories and preserve the released tables.
 
 The [Methods audit verification](submission_work_20261013/VERIFICATION.md)
-records the current three-environment checks, actual local task replays and
+records the earlier three-environment checks, actual local task replays and
 scientific preservation. The default suite passed 365 tests with 11 native
 archive-dependent skips; all skipped cases passed in the separate 23-test
 image-QC run. Existing default and Bonsai lock records were unchanged.
+
+The later [recovery verification](recovery_work_20261013/VERIFICATION.md) records
+the fourth environment, 415 default-test passes with explicit image/native skips,
+132 recovery-test passes and the real 82-case pixel replay. Existing scientific
+artifacts and all three earlier environments' package records were preserved.
 
 `setup` checksum-verifies CRAN `phylopath` 1.3.1 and installs it into a private
 `.pixi/r-library` directory. Setup checks a staged library before publishing it.

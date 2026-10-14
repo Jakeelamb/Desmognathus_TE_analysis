@@ -310,10 +310,15 @@ python = "3.14.*"
 "scipy" = "==1.17.1"
 "matplotlib" = "==3.11.0"
 
+[feature.recovery.dependencies]
+"rust" = "==1.99.0"
+"openjdk" = "==21.0.10"
+
 [environments]
 default = { features = ["analysis"] }
 bonsai = { features = ["bonsai"] }
 image-qc = { features = ["analysis", "image-qc"] }
+recovery = { features = ["analysis", "image-qc", "recovery"] }
 
 [tasks]
 setup = "bash scripts/setup_r.sh"
@@ -346,3 +351,7 @@ bonsai-bootstrap-rerun = "python scripts/run_bonsai.py bootstrap"
 
 [feature.image-qc.tasks]
 standard-qc = "python scripts/microscopy/standard_qc.py"
+
+[feature.recovery.tasks]
+recovery-setup = "python scripts/microscopy/setup_recovery_tools.py"
+microscopy-recovery = "python scripts/microscopy/recovery.py"

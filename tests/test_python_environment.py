@@ -46,6 +46,8 @@ def manifest():
         ("bonsai", (3, 13, 11), False),
         ("image-qc", (3, 13, 11), True),
         ("image-qc", (3, 14, 2), False),
+        ("recovery", (3, 13, 11), True),
+        ("recovery", (3, 14, 2), False),
     ],
 )
 def test_python_environment_version(checker, monkeypatch, name, version, valid):

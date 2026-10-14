@@ -13,6 +13,11 @@ UV and Conda setup instructions for local work.
   environment for the pinned upstream Bonsai runner.
 - Use `image-qc` for the existing-mask standard-slide audit. It adds image
   dependencies without changing the default or Bonsai dependency sets.
+- Use `recovery` for microscopy recovery tooling. Run explicit `recovery-setup`
+  before `microscopy-recovery`; never repair a failed tool cache in place.
+  Keep original packets, authored ROI proposals and review decisions separate.
+  Do not create real acceptance events in infrastructure tests or use diagnostic
+  reports to promote a calibration. See `docs/MICROSCOPY_RECOVERY.md`.
 - Keep `pyproject.toml`, `uv.lock`, `environment.yml`, and
   `environment-linux-64.explicit.txt` unchanged. They are retained dependency
   snapshots; scientific manifests hash several of them.

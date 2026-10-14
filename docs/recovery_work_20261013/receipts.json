@@ -1,0 +1,217 @@
+{
+  "scope": "Recovery tooling; no biological contour acceptance or calibration promotion",
+  "base_revision": "8a5c00b33c0359b4a47f2df2ead145039554d623",
+  "created_utc": "2026-10-14T03:26:20.201707+00:00",
+  "commands": [
+    {
+      "label": "maintained-check-env",
+      "command": "make check-env",
+      "exit": 0,
+      "started_utc": "2026-10-14T01:26:51Z",
+      "finished_utc": "2026-10-14T01:26:54Z",
+      "log_sha256": "61a32e6d2fc28e807ee617f372103f4c5fb7d48ced5d4485dc41cd6596380758",
+      "retained_local_log": ".git/recovery_tooling_20261013/maintained-check-env.log",
+      "result": "PASS"
+    },
+    {
+      "label": "maintained-test-complete",
+      "command": "make test",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:15:55Z",
+      "finished_utc": "2026-10-14T03:18:24Z",
+      "log_sha256": "c6825d194d0124d516ce00b8af09547c54b8fed6c32c63c98a89c5486f18f295",
+      "retained_local_log": ".git/recovery_tooling_20261013/maintained-test-complete.log",
+      "result": "415 passed; 29 explicit skips"
+    },
+    {
+      "label": "maintained-lint-final",
+      "command": "make lint",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:20:48Z",
+      "finished_utc": "2026-10-14T03:20:48Z",
+      "log_sha256": "aff1ee4212af445f2dc4a4a063af015d2ede0e91e900dddb6e7c7576ba847bba",
+      "retained_local_log": ".git/recovery_tooling_20261013/maintained-lint-final.log",
+      "result": "PASS"
+    },
+    {
+      "label": "native-final",
+      "command": "pixi run -e recovery --clean-env --locked --no-install --executable python -m pytest tests/test_recovery_backend.py tests/test_microscopy_recovery.py tests/test_recovery_review.py -q",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:09:02Z",
+      "finished_utc": "2026-10-14T03:09:23Z",
+      "log_sha256": "22a0452b99527d202d26393505b408c87a80061bdd24ef348fae7c23c26b7731",
+      "retained_local_log": ".git/recovery_tooling_20261013/native-final.log",
+      "result": "132 passed; no skips"
+    },
+    {
+      "label": "core-tests-final",
+      "command": "pixi run -e recovery --clean-env --locked --no-install --executable python -m pytest tests/test_microscopy_recovery.py -q",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:14:14Z",
+      "finished_utc": "2026-10-14T03:14:30Z",
+      "log_sha256": "ba1f2164e6c4044880c75bb3d5e1f41b44a21020925b1c4a7013de9e6eb906a4",
+      "retained_local_log": ".git/recovery_tooling_20261013/core-tests-final.log",
+      "result": "67 passed; no skips"
+    },
+    {
+      "label": "archive-native-controls",
+      "command": "pixi run -e image-qc --clean-env --locked --no-install --executable env STANDARD_QC_NATIVE=1 STANDARD_QC_PAPER_ROOT=<paper> STANDARD_QC_CELL_ROOT=<cell> STANDARD_QC_ARCHIVE_ROOT=<archive> python -m pytest tests/test_standard_qc.py -q",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:20:47Z",
+      "finished_utc": "2026-10-14T03:20:50Z",
+      "log_sha256": "42a76f4232b44ba3dbecb39bb6c8b7929104eb00e761fe9a4c60bf95842cd5bc",
+      "retained_local_log": ".git/recovery_tooling_20261013/archive-native-controls.log",
+      "result": "23 passed; no skips"
+    },
+    {
+      "label": "recovery-setup-final",
+      "command": "pixi run -e recovery --clean-env --locked --no-install recovery-setup",
+      "exit": 0,
+      "started_utc": "2026-10-14T01:20:04Z",
+      "finished_utc": "2026-10-14T01:20:10Z",
+      "log_sha256": "5b99aff04d35623b3180660225c6bc53a082e7973f869d6f9e164e5512812055",
+      "retained_local_log": ".git/recovery_tooling_20261013/recovery-setup-final.log",
+      "result": "PASS; five geometry controls, ten geometry refusals and Rust controls"
+    },
+    {
+      "label": "real-inventory",
+      "command": "microscopy-recovery inventory --paper-root . --cell-root ../cellprofiler_test --out <fresh inventory>",
+      "exit": 0,
+      "started_utc": "2026-10-14T01:23:31Z",
+      "finished_utc": "2026-10-14T01:23:44Z",
+      "log_sha256": "11289325a15ec9443001944c4b63a9d8ed73fc13e41637c83e38bcb48a325fb2",
+      "retained_local_log": ".git/recovery_tooling_20261013/real-inventory.log",
+      "result": "82 original cases"
+    },
+    {
+      "label": "real-pack",
+      "command": "microscopy-recovery pack --inventory <inventory.json> --out <fresh packet>",
+      "exit": 0,
+      "started_utc": "2026-10-14T01:24:01Z",
+      "finished_utc": "2026-10-14T01:24:16Z",
+      "log_sha256": "ce006fe6a3634db494d8c3dfafde4445a1f61b915e679585304884b8c4069b1a",
+      "retained_local_log": ".git/recovery_tooling_20261013/real-pack.log",
+      "result": "82; zero authored proposals/decisions"
+    },
+    {
+      "label": "real-validate-final",
+      "command": "microscopy-recovery validate --packet <real packet>",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:14:14Z",
+      "finished_utc": "2026-10-14T03:14:21Z",
+      "log_sha256": "03cd0d5672eb364a8bdc04dd10db82f225a82d6f8803f4efe3e6d40ee1d36050",
+      "retained_local_log": ".git/recovery_tooling_20261013/real-validate-final.log",
+      "result": "82 source pixel/mask/numeric replay matches"
+    },
+    {
+      "label": "real-baseline-report",
+      "command": "microscopy-recovery report --packet <real packet> --out <fresh baseline>",
+      "exit": 0,
+      "started_utc": "2026-10-14T01:25:21Z",
+      "finished_utc": "2026-10-14T01:25:36Z",
+      "log_sha256": "8acd075c527cb14f726bd03a0363fd9e1e1be074d518a034e02c7922bc764e43",
+      "retained_local_log": ".git/recovery_tooling_20261013/real-baseline-report.log",
+      "result": "82 missing reviews; zero authored state"
+    },
+    {
+      "label": "gui-proposal-decision",
+      "command": "synthetic-only bridge decision --event <GUI TEST export> --proposals <explicit proposal> --out <fresh events>",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:16:40Z",
+      "finished_utc": "2026-10-14T03:16:42Z",
+      "log_sha256": "57ee8997695ff74128e4d20302b54ab5453a176a64c7143bf82f713c2fe460b1",
+      "retained_local_log": ".git/recovery_tooling_20261013/gui-proposal-decision.log",
+      "result": "1 explicitly authored synthetic event"
+    },
+    {
+      "label": "gui-proposal-report",
+      "command": "synthetic-only bridge report --events <GUI events> --proposals <explicit proposal> --policy <selected-state policy> --out <fresh report>",
+      "exit": 0,
+      "started_utc": "2026-10-14T03:18:42Z",
+      "finished_utc": "2026-10-14T03:18:44Z",
+      "log_sha256": "e0b52a7dca86b74c26bd839b7c4fb6c94b890e25157e7ec3f90958e9f71d20bd",
+      "retained_local_log": ".git/recovery_tooling_20261013/gui-proposal-report.log",
+      "result": "1 fixture keep; 81 missing reviews"
+    }
+  ],
+  "source_sha256": {
+    "pixi.toml": "5624506b4ecad15af581804aae10dfcfcb26293233238ec79a3b1039413f7ecf",
+    "pixi.lock": "792ffc8c6f71bc0b63c4fe183df816de5d4ec8c4c88e5af6d8f7269eb38c2cc4",
+    "scripts/activate_pixi.sh": "023de4d48ae87246f54a346bd5cccd8d5734a360f3f459a2a892f98fcc846d8c",
+    "scripts/check_environment.py": "34f4843b3f50d1ed37fc69fed2df1e9ba8ac38d9cafd219f62c1a6dd265027eb",
+    "scripts/microscopy/recovery.py": "9aafedba21482498e23c02b95eef52b839d18740662991332d1a95dddbc15273",
+    "scripts/microscopy/recovery_backend.py": "500306eeec11665cd42a5435ef09a29a215196cccd5148cc2ac0edb33bb99b3d",
+    "scripts/microscopy/recovery_review.html": "0b8e6c8b6d0e7001e897c1e8cab8097292724145215bd89e7bd4ba69fda540d1",
+    "scripts/microscopy/setup_recovery_tools.py": "7ff778f1d2d9c98cf4a74a5bc6888095c1758296707444f607c3906893c81978",
+    "scripts/microscopy/src/RecoveryRoiBridge.java": "ad2a019901b9abd2230128454cef67031a88947703d4113410b08051a3fd30e9",
+    "scripts/microscopy/src/microscopy_recovery.rs": "ba00497960eed89d45bdba44aae7af19e2b75b774bc1246ffa3b0e6293801550",
+    "tests/test_python_environment.py": "05353b8ad017c69d5839e53fbe528d9de5d73ce136422afaf650a91a6c2f9b9a",
+    "tests/test_microscopy_recovery.py": "0208cc42f34a25abc11676c9c1e80c58f5edb9e64f477f01e35df21f84006f8a",
+    "tests/test_recovery_backend.py": "ead8a3a0cec95fcdbc13a24c05f4822863eaf38dbebf5079e03ad09be5ae5283",
+    "tests/test_recovery_review.py": "7d3d528f8e65b4d8700c6ac1cede92626874b80ec5a8e7dc7adfff295e5d80f1"
+  },
+  "real82": {
+    "case_count": 82,
+    "max_absolute_iod_replay_delta": 4.895912297797622e-07,
+    "recorded_background_counts": {
+      "255.0": 67,
+      "218.0": 5,
+      "216.0": 10
+    },
+    "original_mask_area_exact": true,
+    "source_label_edge_count": 1,
+    "context_padding_clipped_count": 2,
+    "authored_proposals": 0,
+    "authored_decisions": 0,
+    "cohort_counts": {
+      "fuscus_target": 35,
+      "standard414": 16,
+      "standard413": 31
+    }
+  },
+  "real_packet_sha256": "fd9afdd0fc827d304553d31a003dc9cef6c46a0caaeed0680bbed106650baa94",
+  "protected_preservation": {
+    "status": "PASS",
+    "started_utc": "2026-10-14T03:25:14.435826+00:00",
+    "finished_utc": "2026-10-14T03:25:15.166004+00:00",
+    "baseline_head": "8a5c00b33c0359b4a47f2df2ead145039554d623",
+    "baseline_sha256": "7a2646e6e2898177d6749916226a0fac5f2554f16c2ee948d01131e98c3e8f7b",
+    "entries": 12282,
+    "file_bytes": 434825677,
+    "missing": [],
+    "added": [],
+    "changed": [],
+    "authorized_exceptions": []
+  },
+  "old_environment_records": {
+    "default": {
+      "package_records": 287,
+      "environment_and_records_unchanged": true
+    },
+    "bonsai": {
+      "package_records": 290,
+      "environment_and_records_unchanged": true
+    },
+    "image-qc": {
+      "package_records": 301,
+      "environment_and_records_unchanged": true
+    }
+  },
+  "default_skips": {
+    "native_backend": 17,
+    "native_standard_qc": 11,
+    "core_image_module": 1,
+    "core_image_cases_covered_in_recovery": 67
+  },
+  "native_toolchain_identity": "5c35cb7aaba13706e1a11c0c819a65c841b964d735aa0ea9ab28a243e2c1aae5",
+  "comment_trim": {
+    "deleted_redundant_comments": 3,
+    "before_sha256": "07fd3f1d846c861a6c045cf2426d6da3568e032176b7cfb35608d796cc4b75f3",
+    "after_sha256": "9aafedba21482498e23c02b95eef52b839d18740662991332d1a95dddbc15273",
+    "ast_equal_without_location_attributes": true,
+    "retained": {
+      "setup_cache_comment": "Explicit public no-repair contract; no new architecture required.",
+      "ImageJ_role_comment": "External ROI protocol allows display names independent from ZIP role; genuine fixture proves mismatch."
+    }
+  }
+}
