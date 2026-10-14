@@ -355,3 +355,5 @@ standard-qc = "python scripts/microscopy/standard_qc.py"
 [feature.recovery.tasks]
 recovery-setup = "python scripts/microscopy/setup_recovery_tools.py"
 microscopy-recovery = "python scripts/microscopy/recovery.py"
+source-reader-setup = "python scripts/microscopy/source_reader.py setup"
+microscopy-source-reader = "python scripts/microscopy/source_reader.py"

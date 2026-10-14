@@ -30,10 +30,67 @@ Tools and receipts live under `.pixi/recovery-tools/`. A failed setup is retaine
 it is not repaired in place. A completed toolchain is checked before use. Changes
 to source, lock, runtime, or qualification evidence invalidate it.
 
-ImageJ is the contour editor and canonical ROI rasterizer. This environment
-does not install Fiji's plugin collection or Bio-Formats, operate the camera,
-or run learned segmentation. Broader tools remain options for specific future
-experiments.
+ImageJ is the contour editor and canonical ROI rasterizer. Bio-Formats is an
+optional, separately installed source reader described below. This environment
+does not install Fiji's plugin collection, operate the camera or run learned
+segmentation.
+
+## Read original microscope files
+
+Install the optional checksum-pinned Bio-Formats 8.5.0 JAR through Pixi:
+
+```bash
+pixi run -e recovery --clean-env --locked --no-install source-reader-setup
+```
+
+The reader uses the locked Java runtime and keeps its JAR under
+`.pixi/source-reader-tools/`. A failed cache is retained and refused rather than
+repaired in place. Setup also accepts `--jar /path/to/bioformats_package.jar` as
+a local seed; its published SHA-256 must match before it can be used.
+
+Inspect native metadata without decoding image pixels:
+
+```bash
+pixi run -e recovery --clean-env --locked --no-install microscopy-source-reader metadata \
+  --source '/run/media/jake/easystore/20250521/Slide glass_1321/Process_413.vsi' \
+  --out .pixi/runs/microscopy-recovery/native-metadata-v1
+```
+
+Recover a small green-channel region spanning a retained tile boundary:
+
+```bash
+pixi run -e recovery --clean-env --locked --no-install microscopy-source-reader crop \
+  --source '/run/media/jake/easystore/20250521/Slide glass_1322/Process_414.vsi' \
+  --x 41975 --y 20416 --width 237 --height 179 \
+  --out .pixi/runs/microscopy-recovery/native-context-v1
+```
+
+Coordinates are slide-global pixels with a top-left origin. The crop selects
+flattened series 0, green sample 1, Z=0 and T=0. Its area is limited to one million
+pixels. The reader rejects outputs with extra TIFF planes, the wrong dimensions,
+RGB samples or a dtype other than uint8. It performs no autoscaling, casting or
+pixel normalization. `-noflat` is deliberately absent from conversion: the
+upstream converter would otherwise attempt additional pyramid resolutions.
+
+Output directories must be fresh and below `.pixi/runs/`. The command retains
+native stdout, stderr, exit status, tool/source pins and a receipt even if
+conversion or validation fails. The reader opens source files for reading and
+disables the upstream update check; it does not request reader caches beside the
+source. A writable source mount is not described as read-only. VSI files are
+hashed before and after reading; large ETS companions are not fully hashed by
+this command.
+
+Use recovered context as a separate diagnostic input. It does not replace packet
+pixels, enlarge an existing ROI or transfer a prior decision. The
+[Bio-Formats conversion documentation](https://bio-formats.readthedocs.io/en/stable/users/comlinetools/conversion.html)
+describes the native region selection. The
+[connected-source recovery record](recovery_work_20261014/NATIVE_SOURCE_RECOVERY.md)
+documents the actual crops and their byte comparisons.
+
+Recovery packets bind to their toolchain identity, including `pixi.toml`.
+After registry changes, run explicit `recovery-setup` and create a fresh inventory
+and packet in a new run directory. Preserve the old packet and its historical
+qualification; do not rewrite it or transfer its decisions into the fresh packet.
 
 ## Build a new review packet
 

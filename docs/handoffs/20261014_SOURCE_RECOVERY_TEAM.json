@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "paused_by_user",
+  "automatic_resume": false,
+  "workspace": "/home/jake/Projects/Desmognathus_TE",
+  "branch": "codex/microscopy-recovery-tooling",
+  "base_head": "93282800655f6d3e8de71ebd27c9d371f98ce243",
+  "handoff": "docs/handoffs/20261014_SOURCE_RECOVERY_PAUSED.md",
+  "max_concurrent_agents_including_root": 4,
+  "coordinator": {
+    "agent_name": "/root",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "xhigh",
+    "owns": ["shared Pixi registry", "documentation", "integration", "preservation audit", "final checks and Git landing"],
+    "first_resume_action": "Read the handoff, verify local pins and evidence availability, then restore the independent verifier. Do not rerun completed producers."
+  },
+  "pins": {
+    "scripts/microscopy/source_reader.py": "9cb60a82d9bf6e9eacf1a233e0ae49de1b17bfc08564078257f87305418f4251",
+    "tests/test_source_reader.py": "c0601cb9ad479a763da2e37b18a41280d4881b9b3735756473b6088bb8ea2ef3",
+    "pixi.toml": "c5e964b5dd56eeecbe2338d7154d0d28ec279d9c400a9002e0db93044a158d68",
+    "pixi.lock": "792ffc8c6f71bc0b63c4fe183df816de5d4ec8c4c88e5af6d8f7269eb38c2cc4"
+  },
+  "restore_protocol": {
+    "surviving_agent": "collaboration.followup_task using agent_name and resume_brief",
+    "new_session": "collaboration.spawn_agent using task_name, agent_type, fork_turns none and resume_brief; native role supplies model and effort",
+    "order": ["ai_review_verification", "source_reader_tooling only for accepted findings", "source_context_recovery only for evidence questions", "other completed specialists only for a new bounded question"],
+    "shared_state": "Root alone integrates shared files and Git. Every writer must preserve other workers' edits. No worker starts while paused."
+  },
+  "workers": [
+    {
+      "agent_name": "/root/ai_review_verification",
+      "task_name": "ai_review_verification",
+      "agent_type": "pstack_verifier",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "xhigh",
+      "fork_turns": "none",
+      "status": "interrupted_by_pause",
+      "active_processes": false,
+      "owns": [".git/drive_recovery_20261014/source-reader-review/tiff-page/"],
+      "last_receipt": ".git/drive_recovery_20261014/source-reader-review/tiff-page/PAUSED_HANDOFF.md",
+      "resume_brief": "Resume independent review of the exact latest TIFF-page/stat-only reader. Read the central handoff and your PAUSED_HANDOFF first. You own only fresh verification evidence under .git/drive_recovery_20261014/source-reader-review/tiff-page/. Other workers share this checkout; do not edit or revert their files. Verify current pins, inspect retained all-35 target equality and fresh packet equivalence, then finish bounded independent tile seam, edge, missing/truncated segment, exact read-range and full crop-initialization checks. Prior PASS covers the older reader only. No source writes, real acceptance events, ROI/IOD changes, calibration promotion or producer reruns merely to fix reporting. Use locked Pixi; report exact revision and limits."
+    },
+    {
+      "agent_name": "/root/source_reader_tooling",
+      "task_name": "source_reader_tooling",
+      "agent_type": "pstack_worker",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "fork_turns": "none",
+      "status": "completed_frozen",
+      "active_processes": false,
+      "owns": ["scripts/microscopy/source_reader.py", "tests/test_source_reader.py", ".git/drive_recovery_20261014/tooling/"],
+      "last_receipt": ".git/drive_recovery_20261014/tooling/verification-tiff-page.json",
+      "resume_brief": "Files are frozen at the handoff pins. Resume only when root supplies accepted independent-verifier findings. Own only source_reader.py, test_source_reader.py and fresh private tooling evidence. You are not alone in the checkout: preserve others' edits, and leave shared Pixi/docs/Git to root. Fix the smallest accepted issue, run appropriate locked recovery-environment controls, record source/test pins and exact commands/exits, then freeze again. Do not change sources, existing outputs, Methods, masks or recovery acceptance state."
+    },
+    {
+      "agent_name": "/root/source_context_recovery",
+      "task_name": "source_context_recovery",
+      "agent_type": "pstack_worker",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "fork_turns": "none",
+      "status": "completed_before_pause",
+      "active_processes": false,
+      "last_session_id": 97278,
+      "last_session_exit": 0,
+      "owns": [".pixi/runs/microscopy-recovery/source-context-v1/", ".pixi/runs/microscopy-recovery/registered-reader-v1/", ".pixi/runs/microscopy-recovery/target-source-pixels-v1/"],
+      "last_receipt": ".pixi/runs/microscopy-recovery/target-source-pixels-v1/summary.json",
+      "resume_brief": "All producers completed: two seam-spanning standard contexts, current-toolchain 82-case equivalent packet, and all 35 exact native target-green comparisons. Read retained receipts and answer a specific root/verifier evidence question. Do not rerun verify_targets.py or write existing output folders. If root explicitly needs a new observation, use a fresh bounded scratch directory and locked Pixi. You are not alone; do not edit code, shared registry/docs or other workers' data. No ROI, decision, mask, IOD or source changes. Source payloads have stat pins, not full hashes."
+    },
+    {
+      "agent_name": "/root/acquisition_evidence_audit",
+      "task_name": "acquisition_evidence_audit",
+      "agent_type": "pstack_investigator",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "medium",
+      "fork_turns": "none",
+      "status": "earlier_task_completed_not_live_in_final_inventory",
+      "owns": [".git/drive_recovery_20261014/metadata/"],
+      "last_receipt": ".git/drive_recovery_20261014/metadata/targets-v2/receipt.json",
+      "resume_brief": "Reuse native-v1 and targets-v2 metadata/header/export evidence. Resume only for a specific remaining acquisition or source-identity question. Own fresh private audit evidence, never overwrite historical unavailable/not-found records. No pixel producer, whole-source hash, source modification or physical calibration inference. Root handles shared docs and integration; preserve others' files. Distinguish export basename linkage from absent original target VSI paths, copied OME metadata from actual TIFF headers, and recorded settings from physical response validation."
+    },
+    {
+      "agent_name": "/root/ai_boundary_review_sol",
+      "task_name": "ai_boundary_review_sol",
+      "agent_type": "pstack_deep",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "xhigh",
+      "fork_turns": "none",
+      "status": "earlier_review_completed_not_live_in_final_inventory",
+      "owns": ["independent blinded visual-review findings only"],
+      "last_receipt": "docs/recovery_work_20261014/AI_VISUAL_REVIEW.md",
+      "resume_brief": "Resume only if root provides genuinely new blinded visual inputs, such as recovered source context or a newly authored proposal. Original 82-case and two-proposal reviews are complete; do not repeat unchanged images. Inspect raw pixels and boundary support without prior measurements or species labels. Keep uncertainties explicit. Return image-based findings; do not create acceptance events, modify masks or infer camera calibration. Review agreement is not biological ground truth."
+    },
+    {
+      "agent_name": "/root/ai_boundary_review_luna",
+      "task_name": "ai_boundary_review_luna",
+      "agent_type": "pstack_helper",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "high",
+      "fork_turns": "none",
+      "status": "earlier_review_completed_not_live_in_final_inventory",
+      "owns": ["independent blinded visual-review findings only"],
+      "last_receipt": "docs/recovery_work_20261014/AI_VISUAL_REVIEW.md",
+      "resume_brief": "Resume only for genuinely new blinded visual inputs supplied by root. Original 82-case and two-proposal reviews are complete. Judge supported versus uncertain nuclear boundaries independently, using images only. Preserve disagreement and ambiguity; do not repeat unchanged images, write masks, create acceptance events, calculate IOD or qualify camera/genome calibration. Return bounded visual findings for coordinator integration."
+    }
+  ],
+  "historical_workers": [
+    {"task_name": "bonsai_clean_env_fix", "status": "historical_completed_work_not_live", "agent_type": null, "resume": "Do not restart without a new scoped issue; exact role settings are not retained."},
+    {"task_name": "cleanup_code_plan", "status": "historical_completed_work_not_live", "agent_type": null, "resume": "Do not restart cleanup."},
+    {"task_name": "cleanup_environment_plan", "status": "historical_completed_work_not_live", "agent_type": null, "resume": "Do not restart dependency migration."},
+    {"task_name": "cleanup_python_entrypoints", "status": "historical_completed_work_not_live", "agent_type": null, "resume": "Do not rewrite historical or hash-bound runners."},
+    {"task_name": "cleanup_r_entrypoints", "status": "historical_completed_work_not_live", "agent_type": null, "resume": "Do not rewrite historical or hash-bound runners."}
+  ]
+}
