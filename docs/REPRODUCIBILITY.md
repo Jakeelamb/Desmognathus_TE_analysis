@@ -71,6 +71,14 @@ original inputs, prepares a blinded 82-case packet, imports authored ROI proposa
 and decisions, and produces diagnostic sensitivities. It does not modify or
 promote the retained release. See [MICROSCOPY_RECOVERY.md](MICROSCOPY_RECOVERY.md).
 
+The optional `microscopy-source-reader` task reads native VSI files through
+checksum-pinned Bio-Formats 8.5.0 or extracts unchanged green pixels from supported
+single-page RGB TIFF exports through an explicit TIFF-page mode. Source files
+remain external inputs. Cached crops and receipts support offline review, while
+new extraction and live source comparisons require those inputs. The
+[offline continuation record](recovery_work_20261014/OFFLINE_CONTINUATION.md)
+records the qualified checks and remaining source limits.
+
 The [Methods recovery records](submission_work_20261013/PLAN.md) distinguish
 recovered specimen and model evidence from unresolved calibration,
 camera and upstream-runtime records. Local audit tasks require fresh output

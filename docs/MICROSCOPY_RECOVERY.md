@@ -37,6 +37,10 @@ segmentation.
 
 ## Read original microscope files
 
+The default `bioformats` reader handles native VSI files. The explicit
+`tiff-page` reader handles the single-page RGB TIFF exports described below.
+Both preserve green-channel pixel values and require fresh output directories.
+
 Install the optional checksum-pinned Bio-Formats 8.5.0 JAR through Pixi:
 
 ```bash
@@ -86,6 +90,79 @@ pixels, enlarge an existing ROI or transfer a prior decision. The
 describes the native region selection. The
 [connected-source recovery record](recovery_work_20261014/NATIVE_SOURCE_RECOVERY.md)
 documents the actual crops and their byte comparisons.
+
+### Read a single-page RGB TIFF export
+
+Use `--reader tiff-page` when the actual TIFF page is the coordinate authority.
+This mode uses the locked NumPy and tifffile packages in `recovery` and does not
+require the optional Bio-Formats JAR.
+
+The restored Process 314, 315, 320 and 321 exports each contain one actual tiled
+RGB page. Their copied OME metadata refers to additional pyramid images, and
+Bio-Formats OME-TIFF reads failed. This reader retains the embedded description
+without using it to choose a series or index pixels. It does not repair the
+source metadata.
+
+Inspect the actual page header without decoding image pixels:
+
+```bash
+pixi run -e recovery --clean-env --locked --no-install microscopy-source-reader metadata \
+  --reader tiff-page --source-hash stat-only \
+  --source '/run/media/jake/easystore/Dried_blood_nopmount/Process_314/Process_314_raw.ome.btf' \
+  --out .pixi/runs/microscopy-recovery/rgb-header-v1
+```
+
+Extract a green-channel crop using absolute page coordinates:
+
+```bash
+pixi run -e recovery --clean-env --locked --no-install microscopy-source-reader crop \
+  --reader tiff-page --source-hash stat-only \
+  --source '/run/media/jake/easystore/Dried_blood_nopmount/Process_314/Process_314_raw.ome.btf' \
+  --x 26671 --y 26451 --width 121 --height 136 \
+  --out .pixi/runs/microscopy-recovery/rgb-crop-v1
+```
+
+The supported input is one uncompressed CONTIG RGB3 uint8 page with orientation
+1, no predictor, extra samples or subresolutions. Tiled input uses tifffile's
+canonical decoder for only the intersecting tile byte ranges. Contiguous input
+must support a read-only memory map. The reader rejects missing or truncated
+selected tiles instead of filling absent pixels.
+
+The crop limit is one million pixels. Each tile must contain at most one million
+pixels, and the intersecting tiles together must contain at most four million.
+These bounds cover pixel decoding. TIFF parsing and the recorded offset/count
+arrays do not have a separate general metadata-allocation bound.
+
+`--source-hash full` is the default for both readers. For a completed run, it
+hashes the named source before and after reading, including a metadata request.
+Failures may occur before the final source pin. The explicit
+`stat-only` option avoids whole-file scans of large exports. Its receipt has a
+null source SHA-256 and checks size, mtime, ctime, device and inode before and
+after reading. Stat equality does not establish full-payload identity. Neither
+mode hashes VSI companion ETS payloads.
+
+Once an output directory has been created, the reader retains `receipt.json`
+for success or failure. Decoder operations also retain command logs. Successful
+TIFF header parsing retains the embedded description. TIFF-page receipts record
+actual header fields, decoder method and selected tile offsets/counts. The
+operation runs in Python, so its native-subprocess exit field is null. The outer
+CLI command supplies the process exit status.
+
+Require `status: complete` in the final `receipt.json` before using a crop. A
+decoder can finish and write `crop.tiff` before the final source-state comparison
+fails. Neither an existing crop file nor a completed command alone qualifies it.
+
+### Continue when the source drive is disconnected
+
+Existing local crops, masks and receipts can be inspected without the source
+drive. Synthetic tests also run locally. A new native crop or live source-state
+comparison requires the original source to be available. Keep an unavailable
+source check pending rather than replacing it with cached pixels.
+
+Completed producer directories are immutable evidence. Do not rerun a producer
+in its old directory or turn an old stat fingerprint into a current source
+observation. The [offline continuation record](recovery_work_20261014/OFFLINE_CONTINUATION.md)
+distinguishes local checks from observations made while the drive was connected.
 
 Recovery packets bind to their toolchain identity, including `pixi.toml`.
 After registry changes, run explicit `recovery-setup` and create a fresh inventory

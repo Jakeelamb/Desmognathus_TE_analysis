@@ -1,0 +1,219 @@
+{
+  "schema": "microscopy-source-reader-offline-verification-v1",
+  "generated_utc": "2026-10-15T06:27:05.062961+00:00",
+  "reviewed_revision": "0254d00c17830c7c1a4a319e51d032b8613f7033",
+  "reader_verdict": "PASS_OFFLINE_PINNED_READER_AND_CACHED_ARTIFACTS",
+  "blocking_code_findings": [],
+  "code_and_runtime_pins": {
+    "scripts/microscopy/source_reader.py": "9cb60a82d9bf6e9eacf1a233e0ae49de1b17bfc08564078257f87305418f4251",
+    "tests/test_source_reader.py": "c0601cb9ad479a763da2e37b18a41280d4881b9b3735756473b6088bb8ea2ef3",
+    "pixi.toml": "c5e964b5dd56eeecbe2338d7154d0d28ec279d9c400a9002e0db93044a158d68",
+    "pixi.lock": "792ffc8c6f71bc0b63c4fe183df816de5d4ec8c4c88e5af6d8f7269eb38c2cc4"
+  },
+  "original_drive_available": false,
+  "new_original_source_reads": false,
+  "live_source_verdict": "NOT_RETESTED_DRIVE_UNPLUGGED",
+  "checks": [
+    {
+      "label": "make_check_env",
+      "command": "make check-env",
+      "start_utc": "2026-10-15T06:17:08Z",
+      "end_utc": "2026-10-15T06:17:11Z",
+      "exit_code": 0,
+      "passed": null,
+      "skipped": null,
+      "warnings": null,
+      "stdout": {
+        "path": ".git/drive_recovery_resume_20261014/checks/make_check_env.stdout.log",
+        "sha256": "18e32e36d3db25154e549b5045f44ae842f7b409335a9224eb00e1165f46fb86"
+      },
+      "stderr": {
+        "path": ".git/drive_recovery_resume_20261014/checks/make_check_env.stderr.log",
+        "sha256": "8a4302e5b18b30f002ec8d96b249c1cd68afe830a97d8f3c0234ba214a9aefac"
+      }
+    },
+    {
+      "label": "make_lint",
+      "command": "make lint",
+      "start_utc": "2026-10-15T06:17:11Z",
+      "end_utc": "2026-10-15T06:17:11Z",
+      "exit_code": 0,
+      "passed": null,
+      "skipped": null,
+      "warnings": null,
+      "stdout": {
+        "path": ".git/drive_recovery_resume_20261014/checks/make_lint.stdout.log",
+        "sha256": "5ac5c5a4609086da7b187a64ff21bbb416b61ebe4ced5afbeff718c1bb8b0ca2"
+      },
+      "stderr": {
+        "path": ".git/drive_recovery_resume_20261014/checks/make_lint.stderr.log",
+        "sha256": "ad0ab87b506f3a709228b23eff1f8ed9f2e24cbac4620356b6fa312be4715b0a"
+      }
+    },
+    {
+      "label": "make_test",
+      "command": "make test",
+      "start_utc": "2026-10-15T06:17:11Z",
+      "end_utc": "2026-10-15T06:20:08Z",
+      "exit_code": 0,
+      "passed": 429,
+      "skipped": 58,
+      "warnings": 1,
+      "stdout": {
+        "path": ".git/drive_recovery_resume_20261014/checks/make_test.stdout.log",
+        "sha256": "afe4adcd665bb05ee09bb1be268bd742572f438fd1c7dc054287e1b1dcd57407"
+      },
+      "stderr": {
+        "path": ".git/drive_recovery_resume_20261014/checks/make_test.stderr.log",
+        "sha256": "e4b731b76a5442e76559477715227564036cb821b207cac6c0fc574460c6fba4"
+      }
+    },
+    {
+      "label": "recovery_pytest_tmp",
+      "command": "pixi run -e recovery --clean-env --locked --no-install --executable python -m pytest tests/test_recovery_backend.py tests/test_microscopy_recovery.py tests/test_recovery_review.py tests/test_source_reader.py -q --basetemp /tmp/desmognathus_te_recovery_resume_20261014_pytest",
+      "start_utc": "2026-10-15T06:22:12Z",
+      "end_utc": "2026-10-15T06:22:39Z",
+      "exit_code": 0,
+      "passed": 175,
+      "skipped": 0,
+      "warnings": 1,
+      "stdout": {
+        "path": ".git/drive_recovery_resume_20261014/checks/recovery_pytest_tmp.stdout.log",
+        "sha256": "1cd14ebb07f8c14b4c3d5287569a4774c45f845ffca0fd6ec4da65affff64cb7"
+      },
+      "stderr": {
+        "path": ".git/drive_recovery_resume_20261014/checks/recovery_pytest_tmp.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "cached_artifacts": {
+    "target_crops_equal": 35,
+    "counts_per_process": {
+      "314": 12,
+      "315": 8,
+      "320": 5,
+      "321": 10
+    },
+    "case_states_equal": 82,
+    "png_pairs_equal_bytes_and_pixels": 246,
+    "packet_assets_checked": {
+      "new": 496,
+      "old": 496
+    },
+    "original_packet_files_unchanged": 498,
+    "fresh_original_source_decode": false,
+    "full_large_source_hashes_computed": false
+  },
+  "preservation": {
+    "status": "passed",
+    "baseline_head": "8a5c00b33c0359b4a47f2df2ead145039554d623",
+    "baseline_sha256": "7a2646e6e2898177d6749916226a0fac5f2554f16c2ee948d01131e98c3e8f7b",
+    "started_utc": "2026-10-15T06:25:21.772472+00:00",
+    "finished_utc": "2026-10-15T06:25:22.695456+00:00",
+    "entries": 12282,
+    "file_bytes": 434825677,
+    "missing": [],
+    "added": [],
+    "changed": [],
+    "authorized_exceptions": []
+  },
+  "context_review": {
+    "models": [
+      "gpt-6.1-sol",
+      "gpt-6-luna"
+    ],
+    "cross_family_panel": false,
+    "N815f697d43b9efed92c4": "Exploratory contour trial is reasonable; complete boundary remains uncertain; original mask partial.",
+    "N3291d5e0a6bc3fe2af23": "Hold; closed nuclear boundary unresolved.",
+    "spatial_description_correction": "Coordinator locates the N815 mask on the lower dark body; Luna upper-fragment wording is not adopted.",
+    "new_roi_or_acceptance_events": false,
+    "new_iod_measurements": false
+  },
+  "failed_attempts_preserved": [
+    "Recovery collection included unintended dot target, exit 2",
+    "Recovery basetemp inside checkout triggered output guard, exit 1",
+    "Nested Pixi help recorder failed before reader execution; direct locked-Python check passed"
+  ],
+  "limitations": [
+    "No current read or stat of unplugged original source files was attempted; cached crop equality is independent local rechecking, not a fresh independent source decode",
+    "Stat-only pins do not cryptographically identify the full source payload; large source hashes remain absent",
+    "Pixel bounds do not cap TIFF page enumeration, metadata, description or offset/count allocation; not a general resource-bounded untrusted-TIFF parser",
+    "Unselected source tiles are outside each crop operation and were not decoded or qualified",
+    "Tested native fixtures cover the supported encoding; arbitrary vendor TIFF encodings remain explicitly rejected or unqualified",
+    "Failed final source-state checks can leave crop.tiff and a complete command record; only final receipt status complete qualifies the crop",
+    "Target original VSI paths, absolute acquisition linkage, nuclear biological boundaries, camera linearity, physical zero offset and genome-size calibration are not established by these checks",
+    "Local ignored evidence is not portable with a Git clone; full workspace preservation is coordinator-owned"
+  ],
+  "evidence_portable_with_clone": false,
+  "local_evidence_pins": [
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/verdict.json",
+      "sha256": "4a4530bb8acc444603186d2123afc0060a0f84499e564eb27589ab4b4983ea67"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/REPORT.md",
+      "sha256": "134842c0622c50cfba061e3f9e9b5c78c0321d221a8436aa8bac9fe355334065"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/cached-audit-result.json",
+      "sha256": "f758b27cd9c4b775d2ee9b16f4423b69f5d7693bd062e299417b8d3623cc0164"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/native-tiff-result.json",
+      "sha256": "199e08a9fef451294379343e148e9a41b5e9eac4002e1430468a61251e7835b6"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/decoder-guard-result.json",
+      "sha256": "30f6bd8725cb6909f0ff146954a794490792c09e1e828db28d81f6a2720c3e78"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/static-review-result.json",
+      "sha256": "994fdc33c3b624fa838749904915d7a21541aff54968dcca9eb5346619b2c246"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/verifier/final-checks-audit.json",
+      "sha256": "6913b05106edb662b9b74a044fd5823ab007144b3f2da2fb15717f6d3932db63"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/checks/summary.txt",
+      "sha256": "c3bb20182d3aef79230f57ae47db329d0ced97f5fdcfb8ca5e88876ac5453998"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/root/preservation-before.json",
+      "sha256": "af0716228640b3765fee8f7d316af09d62c47f02e70bcafc48be5c32e111b2d0"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/root/preservation-after.json",
+      "sha256": "304463914f4b195865cac79d22f1fa1607f865efd966c0d8bc763af815744bf1"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/visual-sol/findings.md",
+      "sha256": "3a6837cc0f9de2519c0ec31c936ebd43383702c23d8c98b847acd0215856d796"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/visual-sol/image-hashes.sha256",
+      "sha256": "0b2be39f9b7a1923fec17e9fee81eb61bba50f685440c78543af4bd519be005f"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/visual-luna/findings.md",
+      "sha256": "c27d3f8acac756076f753532b3bf8b321f66f5680883a2c482ef6c196d66281a"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/root/context-coordination.json",
+      "sha256": "2aa18c1b763feb9a8fbb03d3b446f2d5a4fa704b4a9570e0d9f18c142de43b01"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/root/metadata-help-launcher-failure.json",
+      "sha256": "d37838394561f80904cd08bb074665d864587458a43b944e4f59d468426b690c"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/root/metadata-help-direct.receipt.json",
+      "sha256": "91770874c86e17be2a3b4cacfbd947b465c16b6da5b81e992e04ae788e9d7350"
+    },
+    {
+      "path": ".git/drive_recovery_resume_20261014/decisions.tsv",
+      "sha256": "892e6e5254630b2b518e94c2880965e67facb09a03e15a463851f1337c52a3e4"
+    }
+  ]
+}

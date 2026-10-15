@@ -1,5 +1,12 @@
 # Paused microscopy source recovery — 14 October 2026
 
+The user subsequently resumed without the source drive. The
+[offline continuation](../recovery_work_20261014/OFFLINE_CONTINUATION.md) closes
+the pending reader review and local checks below. Start there for current
+results. The checklist and team manifest here retain the earlier pause state;
+do not repeat completed producers or checks merely because this snapshot lists
+them as pending.
+
 **Paused at Jake's request before temporarily unplugging the computer.** Do not
 resume jobs, source reads, tests or agent dispatch until Jake asks to resume.
 This is a restart checkpoint, not a completed source-reader qualification or a
